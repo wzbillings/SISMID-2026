@@ -3,6 +3,7 @@ title: "Power and Sample Size"
 format: revealjs
 editor: visual
 echo: true
+eval: false
 ---
 
 ## Lets import our package for these calculations
@@ -15,11 +16,11 @@ library(pwrss)
 
 ## Generic Functions
 
--   These functions compute statistical power and can plot Type I and II errors if test statistics and degrees of freedom are known.
+- These functions compute statistical power and can plot Type I and II errors if test statistics and degrees of freedom are known.
 
--   They’re useful because z, t, \$\\chi\^{2}\$, and F stats with degrees of freedom are often reported in publications or software outputs.
+- They’re useful because z, t, \$\\chi\^{2}\$, and F stats with degrees of freedom are often reported in publications or software outputs.
 
--   Power can be calculated from test statistics as noncentrality parameters, but post-hoc power estimates should be interpreted cautiously.
+- Power can be calculated from test statistics as noncentrality parameters, but post-hoc power estimates should be interpreted cautiously.
 
 ## *t* Test
 
@@ -30,7 +31,7 @@ library(pwrss)
 #| warning: false
 #| output-location: slide
 power.t.test(ncp = 1.96, df = 99, alpha = 0.05,
-             alternative = "equivalent", plot = TRUE)
+             alternative = "one.sided", plot = TRUE)
 ```
 
 ## *z* Test
@@ -41,8 +42,8 @@ power.t.test(ncp = 1.96, df = 99, alpha = 0.05,
 #| fig.height: 5
 #| warning: false 
 #| output-location: slide
-power.z.test(ncp = 1.96, alpha = 0.05, 
-             alternative = "not equal", plot = TRUE)
+power.z.test(mean = 1, alpha = 0.05, 
+             alternative = "two.sided", plot = TRUE)
 ```
 
 ## $\chi^2$ Test
@@ -86,7 +87,7 @@ power.t.test(
   plot = FALSE,
   df = 99, 
   alpha = 0.05, 
-  alternative = "not equal")
+  alternative = "two.sided")
 ```
 
 ## *z* Test
@@ -291,21 +292,21 @@ pwrss.t.2means(mu1 = 0.1883, paired = TRUE, paired.r = 0.50,
 
 ## Non-parametric Tests
 
--   Means might be compared for variables that aren’t normally distributed, due to small samples or inherently non-normal population distributions (e.g. uniform, exponential).
+- Means might be compared for variables that aren’t normally distributed, due to small samples or inherently non-normal population distributions (e.g. uniform, exponential).
 
--   In such cases, t-tests may give biased results.
+- In such cases, t-tests may give biased results.
 
--   For non-parametric tests, use `pwrss.np.2groups()` instead of `pwrss.t.2means()`, with the same arguments.
+- For non-parametric tests, use `pwrss.np.2groups()` instead of `pwrss.t.2means()`, with the same arguments.
 
 ## Non-parametric Tests
 
--   You can specify the parent distribution (e.g. `"normal"`, `"uniform"`, `"exponential"`) using the `dist` argument.
+- You can specify the parent distribution (e.g. `"normal"`, `"uniform"`, `"exponential"`) using the `dist` argument.
 
 <!-- -->
 
--   Although the function uses means and standard deviations as inputs, it actually tests differences in mean ranks.
+- Although the function uses means and standard deviations as inputs, it actually tests differences in mean ranks.
 
--   Mean differences are converted to Cohen’s *d* and then to probability of superiority, making it easier to compare and switch between parametric and non-parametric tests.
+- Mean differences are converted to Cohen’s *d* and then to probability of superiority, making it easier to compare and switch between parametric and non-parametric tests.
 
 ## Independent Samples (Wilcoxon-Mann-Whitney Test)
 
@@ -514,11 +515,11 @@ pwrss.t.reg(beta1 = 0.60, sdy = 12, sdx = 4, k = 3, r2 = 0.30,
 
 ## Single Regression Coefficient (*z* or *t* Test)
 
--   When the main predictor is binary (e.g. treatment/control), its standardized regression coefficient equals Cohen’s d.
+- When the main predictor is binary (e.g. treatment/control), its standardized regression coefficient equals Cohen’s d.
 
--   The predictor’s standard deviation is \$\\sqrt{p(1-p)}\$, where \$p\$ is the group proportion; for \$p = 0.50\$, what’s the minimum required sample size?
+- The predictor’s standard deviation is \$\\sqrt{p(1-p)}\$, where \$p\$ is the group proportion; for \$p = 0.50\$, what’s the minimum required sample size?
 
--   Provide Cohen’s d for β₁ and set sdx = sqrt(p\*(1-p)) when calculating.
+- Provide Cohen’s d for β₁ and set sdx = sqrt(p\*(1-p)) when calculating.
 
 ```{r}
 #| message: false
@@ -619,9 +620,9 @@ Therefore the odds ratio is defined as $$OR = exp(\beta_1) = \frac{P_1}{1- P_1} 
 
 ### Example:
 
--   A squared multiple correlation of 0.20 between $X_1$ and other covariates (`r2.other.x = 0.20` in the code). It can be found in the form of adjusted R-square via regressing $X_1$ on $X_2$ and $X_3$. Higher values require larger sample sizes. The default is 0 (zero).
--   A base probability of $P_0 = 0.15$. This is the rate when predictor $X_1 = 0$ or when $\beta_1 = 0$.
--   Increasing $X_1$ from 0 to 1 reduces the probability of being in group 1 from 0.15 to 0.10 ($P_1 = 0.10$).
+- A squared multiple correlation of 0.20 between $X_1$ and other covariates (`r2.other.x = 0.20` in the code). It can be found in the form of adjusted R-square via regressing $X_1$ on $X_2$ and $X_3$. Higher values require larger sample sizes. The default is 0 (zero).
+- A base probability of $P_0 = 0.15$. This is the rate when predictor $X_1 = 0$ or when $\beta_1 = 0$.
+- Increasing $X_1$ from 0 to 1 reduces the probability of being in group 1 from 0.15 to 0.10 ($P_1 = 0.10$).
 
 ## Logistic Regression (Wald's *z* Test)
 
@@ -731,9 +732,9 @@ pwrss.z.logreg(p0 = 0.15, beta1 = -0.4626, r2.other.x = 0.20,
 
 ## ANOVA: Analysis of Variance ANCOVA: Analysis of Covariance
 
--   **One-way ANOVA/ANCOVA:** Compares means across groups; ANCOVA adjusts for covariates.
+- **One-way ANOVA/ANCOVA:** Compares means across groups; ANCOVA adjusts for covariates.
 
--   **Two- or Three-way ANOVA/ANCOVA:** Examines interactions between factors; ANCOVA adjusts interactions for covariates and determines required sample size for complex designs.
+- **Two- or Three-way ANOVA/ANCOVA:** Examines interactions between factors; ANCOVA adjusts interactions for covariates and determines required sample size for complex designs.
 
 ## One-way
 
