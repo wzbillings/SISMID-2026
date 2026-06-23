@@ -1,0 +1,316 @@
+---
+title: "R as A GIS"
+author: "Alex Edwards"
+format: html
+editor: visual
+---
+
+## Directions
+
+This is a learning document that includes lecture components, examples, and your lab. Please follow along and the examples as shown here and in lecture. At the end of this document you will find your lab with sections for your to complete. You can use the code in the examples as a template to complete your lab.
+
+## Learning Objectives
+
+-   Identify the appropriate packages used for GIS in R
+
+-   Explain why we use R for mapping and its benefits
+
+-   Import GIS data as dataframes using the `sf` packages
+
+-   Recognize the unique qualities of an `sf` 'simple features' spatial dataframe
+
+-   Map simple features
+
+## Packages of note for GIS
+
+Packages are small pieces of software that enhance and add extra capability to the R programming language. You can install packages using code; however, this is not common. For this course your packages will be installed for you; however, you can always click the 'Packages' tab in the file window to your right and then the 'Install' button. From there, type in the name of the package you wish to install and it will install it for you. You may see red text in the console below, but it is *not* an error.
+
+We will use the following packages for the rest of the semester, please note these are not the only ones we will be using.
+
+-   `tidyverse`
+
+    -   The 'tidyverse' is a set of packages that work in harmony because they share common data representations and 'design. This package actually loads many packages that help us clean and visualize data.
+
+-   `sf`
+
+    -   Simple Features, this is your general use package for reading, writing, and formatting spatial data.
+
+-   `tmap`
+
+    -   This is your graphics package for visualizing spatial data. This allows us to build maps using layers defined by code.
+
+Once a package is installed, you do not need to install it again. You only need to *attach* to it using the `library` function as you see in the chunk below. Note, you get come feedback when you attach to some of the package, they are not errors just some information.
+
+```{r}
+library(tidyverse)
+library(sf)
+library(tmap)
+```
+
+## Why R?
+
+A thought exercise, no need to type any answers:
+
+Thinking back to your time using ArcGIS Pro in DATA-530 answer the following in your mind:
+
+-   Did you ever lose your work and have to start over recreating the map from scratch?
+
+-   If you were asked to recreate your first map from 530, how long would that take you if you had to point and click the whole way?
+
+-   If I needed to share the data and tell someone how to recreate my map, how much work would that be?
+
+Those questions disappear when we deal with R insted of ArcGIS because the code we write is reproducible and will return the same results each time as long as the code and data do not change. This is easier on us as analyst and better for science as a while. You can pass your code and data to anyone (including your future self) and should get the same result every time.
+
+## Sidetrack: What are functions?
+
+Functions are at the core of using R. Functions are how you perform tasks and operations. Many functions come installed with R, many more are available for download in *packages*.
+
+This basics section on functions explains:
+
+-   What a function is and how they work
+
+-   What function *arguments* are
+
+### **Simple functions**
+
+**A function is like a machine that receives inputs, does some action with those inputs, and produces an output.** What the output is depends on the function.
+
+**Functions typically operate upon some object placed within the function’s parentheses**. For example, the function `sqrt()` calculates the square root of a number:
+
+```{r}
+sqrt(49)
+```
+
+### Functions with multiple arguments
+
+Functions often ask for several inputs, called arguments, located within the parentheses of the function, usually separated by commas.
+
+-   Some arguments are required for the function to work correctly, others are optional
+
+-   Optional arguments have default settings
+
+-   Arguments can take character, numeric, logical (TRUE/FALSE), and other inputs
+
+Here is a fun fictional function, called `oven_bake()`, as an example of a typical function. It takes an input object (e.g. a dataset, or in this example “dough”) and performs operations on it as specified by additional arguments (`minutes` = and `temperatur`e =). The output can be printed to the console, or saved as an object using the assignment operator \<-.
+
+![](https://www.epirhandbook.com/en/images/Function_Bread_Example.png){fig-align="center"}
+
+## Importing Shapefiles
+
+The `sf` package gives use a useful function called `st_read()` that we will use to read in shapefiles. In the console window type `?st_read` and browse the documentation that appears in the 'Help' tab of the file window to your right. If an error appears and the documentation does not appear, make sure you successfully ran the first chunk in this document that attaches the libraries we need.
+
+The main argument needed for `st_read` is the *path* to the files we wish to import into R. In this project pur data is located in the 'data/example' folder. So, if we wish to import the file 'roads.shp' our argument would be formatted as "data/example/roads.shp" so that the function knows where to locate our data.
+
+Also notice, we are importing the roads shapefile into an object called `roads` See the example below:
+
+```{r}
+roads <- st_read("data/example/roads.shp" )
+```
+
+Look at all the information we received back from that function:
+
+```         
+Reading layer `roads' from data source `/cloud/project/data/example/roads.shp' using driver `ESRI Shapefile'
+Simple feature collection with 157 features and 7 fields
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 499992.6 ymin: 4996835 xmax: 509830.3 ymax: 5004743
+Projected CRS: NAD83 / UTM zone 15N
+```
+
+-   We have 157 features and 7 fields, this means we have 157 rows and 7 columns or variables
+
+-   The geometry type is LINESTRING; meaning, this file contains vector lines.
+
+-   The bounding box is the extent of the data, how wide and tall the area captured in the data is. The four points are the points that make up the min and max coordinates for the data.
+
+-   Projected CRS is just the projection the data are in. In this case NAD83 UTM zone 15N
+
+Now, in the upper right corner you will see a new object in the 'Environment' tab called `roads`. Lets inspect it using the `View()` function with the object name `roads` as the argument. ***Note: R is case sensitive, make sure you are using the proper case***
+
+```{r}
+View(roads)
+```
+
+You should see:
+
+-   157 rows that represent each line segment of a road
+
+-   8 variables, but wait the info above said only 7 variables were in the dataset, what is the deal with that?
+
+    -   7 of the variables are the data, like `LENGTH` and `ROADS_ID`
+
+    -   `geometry` and is a special column that is not for analysis. The column is the coordinate data for mapping. The `geometry` column is what makes this an `sf` dataframe and a spatial dataframe.
+
+Let's read in one more file that we will need to make our first map. The code below reads in the lakes shapefile
+
+```{r}
+lakes <- st_read('data/example/lakes.shp')
+```
+
+Looking at the `lake` dataset info from the `st_read` function the `lakes` data is type POLYGON.
+
+## Our first map
+
+Now, you should have two data objects in your environment `lakes` and `roads`. Let's recreate the first map we every made in DATA-530 using this data.
+
+Think of graphing and mapping in R using this story:
+
+![](https://img.freepik.com/premium-vector/male-artist-drawing-blank-canvas-tripod-illustration-vector-hand-drawn-isolated_121263-641.jpg){fig-align="center" width="346"}
+
+You're an artist that wishes to paint a beautiful portrait, but you're just learning the way. You go to the store to buy a brand new canvas and paint. You return home and set up and prep your canvas and then you add layers of paint to create your masterpiece. You paint an object, then another until the layers add up to build an image.
+
+How does this relate to our task?
+
+Each graph or map in R starts with a blank canvas that is based on our dataset(s) and is created using the `tm_shape` function from the `tmap` package. We then 'paint' our first layer using a geometry. In this case, `roads` is a LINESTRING type so we use `tm_lines` function.(note, we will leave `tm_lines` without attributes for now) This is additive, as we are adding the layers of 'paint' so we use a + between each line.
+
+Run the chunk below and take a peek at the result:
+
+```{r}
+tm_shape(roads)+
+  tm_lines()
+```
+
+This map is a great start, but we need those lakes included. We will use the 'longer way' of adding them for now, but will learn a simpler way as the semester progresses. Now, how do we add that `lake` layer?
+
+With another plus sign of course. However, note that because lakes is a different dataset, we need to use a `tm_shape` again too. Note, `lakes` is of type POLYGON as requires the `tm_polygons` function.
+
+```{r}
+tm_shape(roads)+
+  tm_lines()+
+  tm_shape(lakes)+
+  tm_polygons()
+```
+
+That is looking great, except we need to set the color of the lakes to be blue. Let's make that change. We can just add an attribute to the `tm_polygons` function called fill and set it equal to the color we want. Make sure you always put color names in quotes.
+
+```{r}
+tm_shape(roads)+
+  tm_lines()+
+  tm_shape(lakes)+
+  tm_polygons(fill="cyan3") #Notice the quotes!
+```
+
+A list of colors is here:
+
+![](https://r-graph-gallery.com/42-colors-names_files/figure-html/thecode-1.png){fig-align="center" width="601"}
+
+But, what about the elements of a good map like legend, north arrow, scale bar, and title?
+
+Well, we have 'paint' layers for that:
+
+-   add a title
+
+    -   `tm_title`
+
+    -   takes a string argument that is the title you wish to use
+
+-   add a scale bar
+
+    -   `tm_scalebar`
+    -   takes one argument to indicate `position` that we set to the 'BOTTOM' and 'LEFT'. ***No need to study this code too hard***, just know you can copy and pate it and just change the two options in the combine `c()` function to indicate where you want the bar to go.
+
+-   add a north arrow (a.k.a a compass)
+
+    -   `tm_compass`
+
+-   set the margins so the scalebar is not in the map
+
+    -   `tm_layout(inner.margins = c(0.1, 0.1, 0.1, 0.2))`
+    -   Do not alter this code, you can just stick with these margins. The four numbers indicate each side in the following order, *bottom, left, top, right*
+
+Let's try these out:
+
+```{r}
+tm_shape(roads)+
+  tm_lines()+
+  tm_shape(lakes)+
+  tm_polygons(fill="cyan3")+
+  tm_title("Hugo Roads and Lakes")+ #notice the quotes
+  tm_scalebar(position=c("RIGHT","BOTTOM"))+
+  tm_compass()+
+  tm_layout(inner.margins = c(0.1, 0.1, 0.1, 0.2))
+
+```
+
+What about that legend? Well....
+
+The legend appears when we use a variable in the dataset to set the colors. An example:
+
+```{r}
+tm_shape(roads)+
+  tm_lines()+
+  tm_shape(lakes)+
+  tm_polygons(fill="SIZE_CLS")
+```
+
+`SIZE_CLS` is the variable that indicated what class a lake falls into based on its size. This is a variable from the dataset lakes. **Important:** Make sure you include quotes around the variable name and that it is of the right case!
+
+We will save changing the legend title for another day.
+
+So, our final map looks something like this:
+
+```{r}
+tm_shape(roads)+
+  tm_lines()+
+  tm_shape(lakes)+
+  tm_polygons(fill="SIZE_CLS")+
+  tm_title("Hugo Roads and Lakes")+
+  tm_scalebar(position=c("RIGHT","BOTTOM"))+
+  tm_compass()+
+  tm_layout(inner.margins = c(0.1, 0.1, 0.1, 0.2))
+```
+
+## Lab Two
+
+-   Do not worry about color settings right now. For this lab, focus on just creating a map – not a *perfect* map.
+
+-   All data for this assignment is in the 'data/example' folder from before.
+
+-   Your work should auto-save; however, you can always go to File and then Save in the upper left of this window to save. Or, click the save icon on the tool bar just below the tab with the file name above.
+
+-   In the upper right of this window is a tiny meter that says RAM, you will need to increase the parameters for this lab. Click on the meter, set the RAM to 16GB, and the CPU Allocated to 4. Note, this will restart your R session so make sure you save any work before click 'Apply Changes'
+
+Now complete the task below:
+
+1.  In the chunk below read in the wet_lands.shp file. Name the dataset something meaningful.
+
+    ```{r}
+
+    ```
+
+2.  What type of data is in the wetlands data? Type your answer below at the bullet point.
+
+    -   
+
+3.  Make a map of the wetlands using tmap, color should be based on the *variable* `WETLAND_TY` in the wetland dataset. Add a scalebar, arrow, and title "Wetlands". Type your code in the chunk below.
+
+    ```{r}
+
+    ```
+
+4.  In the chunk below read in the 40_corners, streams, and cl_roads data files. Name each data frame something meaningful
+
+    ```{r}
+
+    ```
+
+5.  What type of data is in each file? Type your answer below as bullets.
+
+    -   
+
+6.  Recreate the map below in the given chunk. Note, do not try to add the legend and the layout that you see does not need to be adhered to. Do not worry about the scale bar units. Just get close.
+
+    ![](images/map.png)
+
+    ```{r}
+
+    ```
+
+7.  Use the documentation found at `?tm_dots` and tell me what you think the function does.
+
+    -   
+
+8.  Thinking about the lecture from last week, what function would you use to choose only certain lakes. As an example, maybe we want yo choose all lakes that have a particular value in the SIZE_CLS variable. Hint: each lake is a row.
+
+    -   

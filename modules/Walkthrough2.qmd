@@ -1,0 +1,13 @@
+---
+title: "Data science walkthrough 2"
+format:
+  revealjs:
+    toc: false
+---
+
+## A whole paper using R and quarto
+
+- For this data science walkthough, I wanted to briefly walkthrough a paper I wrote a published that is done almost 100\% in R and Quarto.
+- The analyses use a lot of tools that we've talked about, so we'll discuss how these can be useful.
+- Please ask any questions you have!
+- You can see the public code for the paper here: https://github.com/ahgroup/billings-high-dose-heterologous-public/.

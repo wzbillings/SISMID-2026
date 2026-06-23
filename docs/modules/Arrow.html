@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Alex Edwards">
+  <meta name="author" content="Zane Billings">
+  <title>SISMID R for ID Materials (2026) – Introduction To Arrow</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Introduction To Arrow</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> 
+</div>
+</div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://wzbillings.com/">Zane Billings</a> 
+</div>
+</div>
+</div>
+
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Page Items</h2>
+<ul>
+<li><a href="#/learning-objectives" id="/toc-learning-objectives"><strong>Learning objectives:</strong></a></li>
+<li><a href="#/why-learn-arrow" id="/toc-why-learn-arrow">Why learn {arrow}?</a></li>
+<li><a href="#/packages-used" id="/toc-packages-used">Packages used</a></li>
+<li><a href="#/download-data" id="/toc-download-data">Download data</a></li>
+<li><a href="#/open-the-data" id="/toc-open-the-data">Open the data</a></li>
+<li><a href="#/glimpse-the-data" id="/toc-glimpse-the-data">Glimpse the data</a></li>
+<li><a href="#/manipulate-the-data" id="/toc-manipulate-the-data">Manipulate the data</a></li>
+<li><a href="#/parquet-csv" id="/toc-parquet-csv">Parquet &gt; CSV</a></li>
+<li><a href="#/benefits-of-parquet" id="/toc-benefits-of-parquet">Benefits of parquet</a></li>
+<li><a href="#/partitioning" id="/toc-partitioning">Partitioning</a></li>
+<li><a href="#/seattle-library-csv-to-parquet" id="/toc-seattle-library-csv-to-parquet">Seattle library CSV to parquet</a></li>
+<li><a href="#/seattle-library-parquet-files" id="/toc-seattle-library-parquet-files">Seattle library parquet files</a></li>
+<li><a href="#/parquet-arrow-dplyr" id="/toc-parquet-arrow-dplyr">parquet + {arrow} + {dplyr}</a></li>
+<li><a href="#/results-uncollected" id="/toc-results-uncollected">Results (uncollected)</a></li>
+<li><a href="#/results-collected" id="/toc-results-collected">Results (collected)</a></li>
+<li><a href="#/available-verbs" id="/toc-available-verbs">Available verbs</a></li>
+<li><a href="#/performance" id="/toc-performance">Performance</a></li>
+</ul>
+</nav>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2><strong>Learning objectives:</strong></h2>
+<ul>
+<li>Use {arrow} to load large data files into R efficiently</li>
+<li>Partition large data files into parquet files for quicker access, less memory usage, and quicker wrangling</li>
+<li>Wrangle {arrow} data using existing {dplyr} operations</li>
+</ul>
+</section>
+<section id="why-learn-arrow" class="slide level2 unnumbered">
+<h2>Why learn {arrow}?</h2>
+<ul>
+<li>CSV files = very common for ease of access and use</li>
+<li>Big/messy CSVs = slow</li>
+<li>{arrow} 📦 reads large datasets quickly &amp; uses {dplyr} syntax</li>
+</ul>
+</section>
+<section id="packages-used" class="slide level2 unnumbered">
+<h2>Packages used</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(arrow)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(curl)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-data" class="slide level2 unnumbered">
+<h2>Download data</h2>
+<ul>
+<li>Case study: <a href="https://data.seattle.gov/Community/Checkouts-by-Title/tmmm-ytt6">item checkouts dataset from Seattle libraries</a></li>
+<li><strong>DON’T <code>download.file()</code>!!!</strong> (41,389,465 rows of data)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="st">"https://r4ds.s3.us-west-2.amazonaws.com/seattle-library-checkouts.csv"</span>,<span class="er">}</span></span>
+<span id="cb2-2"><a></a>  <span class="st">"data/seattle-library-checkouts.csv"</span>,</span>
+<span id="cb2-3"><a></a>  resume <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb2-4"><a></a><span class="er">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="open-the-data" class="slide level2 unnumbered">
+<h2>Open the data</h2>
+<ul>
+<li>Size in memory ≈ 2 × size on disk</li>
+<li><del><code>read_csv()</code></del> ➡️ <code>arrow::open_dataset()</code></li>
+<li>Scans a few thousand rows to determine dataset structure
+<ul>
+<li><code>ISBN</code> is empty for 80k rows, so we specify</li>
+</ul></li>
+<li>Does NOT load entire dataset into memory</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>seattle_csv <span class="ot">&lt;-</span> <span class="fu">open_dataset</span>(</span>
+<span id="cb3-2"><a></a>  <span class="at">sources =</span> <span class="st">"data/seattle-library-checkouts.csv"</span>, </span>
+<span id="cb3-3"><a></a>  <span class="at">col_types =</span> <span class="fu">schema</span>(<span class="at">ISBN =</span> <span class="fu">string</span>()),</span>
+<span id="cb3-4"><a></a>  <span class="at">format =</span> <span class="st">"csv"</span></span>
+<span id="cb3-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="glimpse-the-data" class="slide level2 unnumbered">
+<h2>Glimpse the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>seattle_csv <span class="sc">|&gt;</span> <span class="fu">glimpse</span>()</span>
+<span id="cb4-2"><a></a><span class="co">#&gt; FileSystemDataset with 1 csv file</span></span>
+<span id="cb4-3"><a></a><span class="co">#&gt; 41,389,465 rows x 12 columns</span></span>
+<span id="cb4-4"><a></a><span class="co">#&gt; $ UsageClass      &lt;string&gt; "Physical", "Physical", "Digital", "Physical", "Ph…</span></span>
+<span id="cb4-5"><a></a><span class="co">#&gt; $ CheckoutType    &lt;string&gt; "Horizon", "Horizon", "OverDrive", "Horizon", "Hor…</span></span>
+<span id="cb4-6"><a></a><span class="co">#&gt; $ MaterialType    &lt;string&gt; "BOOK", "BOOK", "EBOOK", "BOOK", "SOUNDDISC", "BOO…</span></span>
+<span id="cb4-7"><a></a><span class="co">#&gt; $ CheckoutYear     &lt;int64&gt; 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 20…</span></span>
+<span id="cb4-8"><a></a><span class="co">#&gt; $ CheckoutMonth    &lt;int64&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,…</span></span>
+<span id="cb4-9"><a></a><span class="co">#&gt; $ Checkouts        &lt;int64&gt; 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 2, 3, 2, 1, 3, 2,…</span></span>
+<span id="cb4-10"><a></a><span class="co">#&gt; $ Title           &lt;string&gt; "Super rich : a guide to having it all / Russell S…</span></span>
+<span id="cb4-11"><a></a><span class="co">#&gt; $ ISBN            &lt;string&gt; "", "", "", "", "", "", "", "", "", "", "", "", ""…</span></span>
+<span id="cb4-12"><a></a><span class="co">#&gt; $ Creator         &lt;string&gt; "Simmons, Russell", "Barclay, James, 1965-", "Tim …</span></span>
+<span id="cb4-13"><a></a><span class="co">#&gt; $ Subjects        &lt;string&gt; "Self realization, Conduct of life, Attitude Psych…</span></span>
+<span id="cb4-14"><a></a><span class="co">#&gt; $ Publisher       &lt;string&gt; "Gotham Books,", "Pyr,", "Random House, Inc.", "Di…</span></span>
+<span id="cb4-15"><a></a><span class="co">#&gt; $ PublicationYear &lt;string&gt; "c2011.", "2010.", "2015", "2005.", "c2004.", "c20…</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="manipulate-the-data" class="slide level2 unnumbered">
+<h2>Manipulate the data</h2>
+<ul>
+<li>Can use {dplyr} functions on data</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>seattle_csv <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a></a>  <span class="fu">group_by</span>(CheckoutYear) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a></a>  <span class="fu">summarise</span>(<span class="at">Checkouts =</span> <span class="fu">sum</span>(Checkouts)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a></a>  <span class="fu">arrange</span>(CheckoutYear) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a></a>  <span class="fu">collect</span>()</span>
+<span id="cb5-6"><a></a><span class="co">#&gt; # A tibble: 18 × 2</span></span>
+<span id="cb5-7"><a></a><span class="co">#&gt;   CheckoutYear Checkouts</span></span>
+<span id="cb5-8"><a></a><span class="co">#&gt;          &lt;int&gt;     &lt;int&gt;</span></span>
+<span id="cb5-9"><a></a><span class="co">#&gt; 1         2005   3798685</span></span>
+<span id="cb5-10"><a></a><span class="co">#&gt; 2         2006   6599318</span></span>
+<span id="cb5-11"><a></a><span class="co">#&gt; 3         2007   7126627</span></span>
+<span id="cb5-12"><a></a><span class="co">#&gt; 4         2008   8438486</span></span>
+<span id="cb5-13"><a></a><span class="co">#&gt; 5         2009   9135167</span></span>
+<span id="cb5-14"><a></a><span class="co">#&gt; 6         2010   8608966</span></span>
+<span id="cb5-15"><a></a><span class="co">#&gt; # ℹ 12 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="parquet-csv" class="slide level2 unnumbered">
+<h2>Parquet &gt; CSV</h2>
+<ul>
+<li>Slow: Manipulating large CSV datasets with {readr}</li>
+<li>Faster: Manipulating large CSV datasets with {arrow}</li>
+<li>Much faster: Manipulating large <code>parquet</code> datasets with {arrow}
+<ul>
+<li>Data subdivided into multiple files</li>
+</ul></li>
+</ul>
+</section>
+<section id="benefits-of-parquet" class="slide level2 unnumbered">
+<h2>Benefits of parquet</h2>
+<ul>
+<li>Smaller files than CSV (efficient encodings + compression)</li>
+<li>Stores datatypes (vs CSV storing all as character &amp; guessing)</li>
+<li>“Column-oriented” (“thinks” like a dataframe)</li>
+<li>Splits data into chunks you can (often) skip (faster)</li>
+</ul>
+<p><strong>But:</strong></p>
+<ul>
+<li>Not human-readable</li>
+</ul>
+</section>
+<section id="partitioning" class="slide level2 unnumbered">
+<h2>Partitioning</h2>
+<ul>
+<li>Split data across files so analyses can skip unused data</li>
+<li>Experiment to find best partition for your data</li>
+<li>Recommendations:
+<ul>
+<li>20 MB &lt; Filesize &lt; 2 GB</li>
+<li>&lt;= 10,000 files</li>
+</ul></li>
+</ul>
+</section>
+<section id="seattle-library-csv-to-parquet" class="slide level2 unnumbered">
+<h2>Seattle library CSV to parquet</h2>
+<ul>
+<li><code>dplyr::group_by()</code> to define partitions</li>
+<li><code>arrow::write_dataset()</code> to save as parquet</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>pq_path <span class="ot">&lt;-</span> <span class="st">"data/seattle-library-checkouts"</span></span>
+<span id="cb6-2"><a></a>seattle_csv <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a></a>  <span class="fu">group_by</span>(CheckoutYear) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a></a>  <span class="fu">write_dataset</span>(<span class="at">path =</span> pq_path, <span class="at">format =</span> <span class="st">"parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="seattle-library-parquet-files" class="slide level2 unnumbered">
+<h2>Seattle library parquet files</h2>
+<ul>
+<li><a href="https://hive.apache.org/">Apache Hive</a> “self-describing” directory/file names</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">tibble</span>(</span>
+<span id="cb7-2"><a></a>  <span class="at">files =</span> <span class="fu">list.files</span>(pq_path, <span class="at">recursive =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-3"><a></a>  <span class="at">size_MB =</span> <span class="fu">file.size</span>(<span class="fu">file.path</span>(pq_path, files)) <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb7-4"><a></a>)</span>
+<span id="cb7-5"><a></a><span class="co">#&gt; # A tibble: 18 × 2</span></span>
+<span id="cb7-6"><a></a><span class="co">#&gt;   files                            size_MB</span></span>
+<span id="cb7-7"><a></a><span class="co">#&gt;   &lt;chr&gt;                              &lt;dbl&gt;</span></span>
+<span id="cb7-8"><a></a><span class="co">#&gt; 1 CheckoutYear=2005/part-0.parquet    109.</span></span>
+<span id="cb7-9"><a></a><span class="co">#&gt; 2 CheckoutYear=2006/part-0.parquet    164.</span></span>
+<span id="cb7-10"><a></a><span class="co">#&gt; 3 CheckoutYear=2007/part-0.parquet    178.</span></span>
+<span id="cb7-11"><a></a><span class="co">#&gt; 4 CheckoutYear=2008/part-0.parquet    195.</span></span>
+<span id="cb7-12"><a></a><span class="co">#&gt; 5 CheckoutYear=2009/part-0.parquet    214.</span></span>
+<span id="cb7-13"><a></a><span class="co">#&gt; 6 CheckoutYear=2010/part-0.parquet    222.</span></span>
+<span id="cb7-14"><a></a><span class="co">#&gt; # ℹ 12 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="parquet-arrow-dplyr" class="slide level2 unnumbered">
+<h2>parquet + {arrow} + {dplyr}</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>seattle_pq <span class="ot">&lt;-</span> <span class="fu">open_dataset</span>(pq_path)</span>
+<span id="cb8-2"><a></a>query <span class="ot">&lt;-</span> seattle_pq <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a></a>  <span class="fu">filter</span>(CheckoutYear <span class="sc">&gt;=</span> <span class="dv">2018</span>, MaterialType <span class="sc">==</span> <span class="st">"BOOK"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a></a>  <span class="fu">group_by</span>(CheckoutYear, CheckoutMonth) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a></a>  <span class="fu">summarize</span>(<span class="at">TotalCheckouts =</span> <span class="fu">sum</span>(Checkouts)) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a></a>  <span class="fu">arrange</span>(CheckoutYear, CheckoutMonth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="results-uncollected" class="slide level2 unnumbered">
+<h2>Results (uncollected)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>query</span>
+<span id="cb9-2"><a></a><span class="co">#&gt; FileSystemDataset (query)</span></span>
+<span id="cb9-3"><a></a><span class="co">#&gt; CheckoutYear: int32</span></span>
+<span id="cb9-4"><a></a><span class="co">#&gt; CheckoutMonth: int64</span></span>
+<span id="cb9-5"><a></a><span class="co">#&gt; TotalCheckouts: int64</span></span>
+<span id="cb9-6"><a></a><span class="co">#&gt; </span></span>
+<span id="cb9-7"><a></a><span class="co">#&gt; * Grouped by CheckoutYear</span></span>
+<span id="cb9-8"><a></a><span class="co">#&gt; * Sorted by CheckoutYear [asc], CheckoutMonth [asc]</span></span>
+<span id="cb9-9"><a></a><span class="co">#&gt; See $.data for the source Arrow object</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="results-collected" class="slide level2 unnumbered">
+<h2>Results (collected)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>query <span class="sc">|&gt;</span> <span class="fu">collect</span>()</span>
+<span id="cb10-2"><a></a><span class="co">#&gt; # A tibble: 58 × 3</span></span>
+<span id="cb10-3"><a></a><span class="co">#&gt; # Groups:   CheckoutYear [5]</span></span>
+<span id="cb10-4"><a></a><span class="co">#&gt;   CheckoutYear CheckoutMonth TotalCheckouts</span></span>
+<span id="cb10-5"><a></a><span class="co">#&gt;          &lt;int&gt;         &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb10-6"><a></a><span class="co">#&gt; 1         2018             1         355101</span></span>
+<span id="cb10-7"><a></a><span class="co">#&gt; 2         2018             2         309813</span></span>
+<span id="cb10-8"><a></a><span class="co">#&gt; 3         2018             3         344487</span></span>
+<span id="cb10-9"><a></a><span class="co">#&gt; 4         2018             4         330988</span></span>
+<span id="cb10-10"><a></a><span class="co">#&gt; 5         2018             5         318049</span></span>
+<span id="cb10-11"><a></a><span class="co">#&gt; 6         2018             6         341825</span></span>
+<span id="cb10-12"><a></a><span class="co">#&gt; # ℹ 52 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="available-verbs" class="slide level2 unnumbered">
+<h2>Available verbs</h2>
+<ul>
+<li><a href="https://arrow.apache.org/docs/r/reference/acero.html"><code>?arrow-dplyr</code></a> for supported functions
+<ul>
+<li>(book uses <code>?acero</code> but that’s way harder to remember)</li>
+</ul></li>
+</ul>
+</section>
+<section id="performance" class="slide level2 unnumbered">
+<h2>Performance</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>x <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a></a>  <span class="fu">filter</span>(CheckoutYear <span class="sc">==</span> <span class="dv">2021</span>, MaterialType <span class="sc">==</span> <span class="st">"BOOK"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a></a>  <span class="fu">group_by</span>(CheckoutMonth) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a></a>  <span class="fu">summarize</span>(<span class="at">TotalCheckouts =</span> <span class="fu">sum</span>(Checkouts)) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(CheckoutMonth)) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a></a>  <span class="fu">collect</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb11-7"><a></a>  <span class="fu">system.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>CSV: 11.951s</li>
+<li>Parquet: <strong>0.263s</strong></li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

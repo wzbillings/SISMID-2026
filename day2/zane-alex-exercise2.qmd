@@ -1,0 +1,120 @@
+---
+title: "Exercise 2"
+format: docx
+editor: visual
+execute:
+  echo: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+library(readxl)
+library(gtsummary)
+
+qcrc <- readxl::read_excel(
+	here::here("data/QCRC_FINAL_Deidentified.xlsx"),
+	# Any values that are blank or periods become NAs
+	# when we read in the data
+	na = c("", ".")
+)
+```
+
+# Introduction
+
+Having COVID and being in the ICU is not good for you.
+
+In our study, we analyze data from Emory University's ICU. We predicted whether patients died or were discharged from the ICU after being hospitalized with COVID-19 using sex, BMI, whether they got remdesivir, whether they got epoprostonol, whether they were intubated, pressor days, C-reactive protein concentration, hemodialysis days and continuous renal replacement therapy (CRRT) days.
+
+# Methods
+
+```{r}
+#| label: data cleaning and formatting
+
+# We have some numeric variables that are actually categorical, so we'll
+# format them nicely before we do any calculations.
+qcrc_clean <-
+	qcrc |>
+	# transmute() is like a mutate() and a select() at the same time
+	transmute(
+		died = factor(
+			Died,
+			levels = c(0, 1),
+			labels = c("No", "Yes")
+		),
+		died_numeric = Died,
+		sex = factor(Female) |> relevel(ref = "Female"),
+		bmi = BMI,
+		remdesivir = factor(
+			Remdesivir_or_placebo,
+			levels = c(0, 1),
+			labels = c("Placebo", "Remdesivir")
+		),
+		epoprostenol = factor(
+			Epoprostenol,
+			levels = c(0, 1),
+			labels = c("No", "Yes")
+		),
+		crp = CRP,
+		log_ddimer = log(`D dimer`)
+	) |>
+	# Only keep complete cases in the data
+	# (rows that have no NA values)
+	tidyr::drop_na()
+```
+
+First, we calculated descriptive statistics for the variables of interest in our dataset, stratified by mortality.
+
+# Results
+
+@tbl-demographics shows the summary statistics for the variables we considered, stratified by whether patients died in the ICU or not.
+
+```{r}
+#| label: tbl-demographics
+#| tbl-cap: "Demographics and summary statistics for our sample, stratified by whether the patient survived to discharge."
+
+gtsummary::tbl_summary(
+	qcrc_clean,
+	by = died,
+	include = -died_numeric
+)
+```
+
+We fit a simple logistic regression model to get crude odds ratios for each exposure of interest, and then we estimated all of them in a multivariable odds ratio to get adjusted estimates.
+
+@tbl-table2 shows the logistic regression results.
+
+```{r}
+#| label: tbl-table2
+#| tbl-cap: "This table shows our crude and adjusted odds ratios."
+crude_estimates <- gtsummary::tbl_uvregression(
+	qcrc_clean,
+	y = died_numeric,
+	include = -died,
+	method = "glm",
+	method.args = list(family = "binomial"),
+	exponentiate = TRUE
+)
+
+adjusted_model <- glm(
+	died_numeric ~ sex + bmi + remdesivir + epoprostenol +
+		crp + log_ddimer,
+	data = qcrc_clean,
+	family = "binomial"
+)
+
+adjusted_estimate <-
+	adjusted_model |>
+	gtsummary::tbl_regression(exponentiate = TRUE)
+
+table2 <- gtsummary::tbl_merge(
+	list(crude_estimates, adjusted_estimate),
+	tab_spanner = c("Crude", "Adjusted")
+)
+
+table2
+```
+
+# Discussion

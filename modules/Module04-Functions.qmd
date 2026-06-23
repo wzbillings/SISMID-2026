@@ -1,0 +1,334 @@
+---
+title: "Module 4: Functions"
+format: 
+  revealjs:
+    scrollable: true
+    toc: false
+---
+
+## Learning Objectives
+
+After module XX, you should be able to:
+
+- Name the parts of a function
+- Write a function
+- Use the R/RStudio debugging tools for functions
+
+## Writing your own functions
+
+**why create your own function?**
+
+1. to cut down on repetitive coding
+2. to organize code into manageable chunks
+3. to avoid running code unintentionally
+4. to use names that make sense to you
+
+## Writing your own functions
+
+Here we will write a function that multiplies some number (x) by 2:
+
+```{r eval=TRUE, echo=TRUE}
+times_2 <- function(x) x*2
+```
+When you run the line of code above, you make it ready to use (no output yet!)
+Let's test it!
+
+```{r eval=TRUE, echo=TRUE}
+times_2(x=10)
+```
+
+## Writing your own functions: { }
+
+Adding the curly brackets - `{ }` - allows you to use functions spanning multiple lines:
+
+
+```{r eval=TRUE, echo=TRUE}
+times_3 <- function(x) {
+  x*3
+}
+times_3(x=10)
+```
+
+## Writing your own functions: `return`
+
+If we want something specific for the function's output, we use `return()`. Note, if you want to return more than one object, you need to put it into a list using the `list()` function.
+
+```{r eval=TRUE, echo=TRUE}
+times_4 <- function(x) {
+  output <- x * 4
+  return(list(output, x))
+}
+times_4(x = 10)
+```
+
+- R will "implicitly" return the last evaluated expression by default. 
+- You should get in the habit of using "explicit" return statements so that you don't get unexpected output.
+
+## Function Syntax
+
+This is a brief introduction. The syntax is:
+
+```
+functionName = function(inputs) {
+< function body >
+return(list(value1, value2))
+}
+```
+
+Note to create the function for use you need to 
+
+1. Code/type the function
+2. Execute/run the lines of code
+
+Only then will the function be available in the Environment pane and ready to use.
+
+## Writing your own functions: multiple arguments
+
+Functions can take multiple arguments / inputs. Here the function has two arguments `x` and `y`
+
+```{r eval=TRUE, echo=TRUE}
+times_2_plus_y <- function(x, y) {
+  out <- x * 2 + y
+  return(out)
+}
+times_2_plus_y(x = 10, y = 3)
+```
+
+## Writing your own functions: arugment defaults
+
+Functions can have default arguments. This lets us use the function without specifying the arguments
+
+```{r eval=TRUE, echo=TRUE}
+times_2_plus_y <- function(x = 10, y = 3) {
+  out <- x * 2 + y
+  return(out)
+}
+times_2_plus_y()
+```
+
+We got an answer b/c we put defaults into the function arguments.
+
+## Writing a simple function
+
+Let's write a function, `sqdif`, that:
+
+1. takes two numbers `x` and `y` with default values of 2 and 3.
+2. takes the difference
+3. squares this difference
+4. then returns the final value
+
+```
+functionName = function(inputs) {
+< function body >
+return(list(value1, value2))
+}
+```
+
+```{r eval=TRUE, echo=TRUE}
+sqdif <- function(x=2,y=3){
+     output <- (x-y)^2
+     return(output)
+}
+
+sqdif()
+sqdif(x=10,y=5)
+sqdif(10,5)
+```
+
+. . .
+
+* Note that this function is implicitly vectorized even if we didn't mean for it to be.
+
+```{r}
+sqdif(c(2, 3, 4), c(7, 3.14, 98))
+```
+
+## Writing your own functions: characters
+
+Functions can have any kind of data type input. For example, here is a function with characters:
+
+```{r eval=TRUE, echo=TRUE}
+loud <- function(word) {
+  output <- rep(toupper(word), 5)
+  return(output)
+}
+loud(word = "hooray!")
+```
+
+## The `...` (elipsis) argument {.incremental}
+
+* What if we want our function to take in an arbitrary amount of numbers?
+* As an example, let's consider a function that calculates the **geometric mean**.
+
+$$
+\text{geometric mean}(\mathbf{x}) = \sqrt[n]{x_1 \cdot x_2 \cdot \ldots \cdot x_n} = \exp\left( \frac{1}{n}\left(\log x_1 + \ldots + \log x_n \right) \right)
+$$
+
+* We can do this on a vector, of course.
+
+```{r}
+geo_mean <- function(x) {
+	output <- exp(mean(log(x)))
+	return(output)
+}
+
+geo_mean(c(2, 3, 4, 5))
+```
+
+## The `...` (elipsis) argument {.incremental}
+
+* But sometimes it's easier to write this a different way.
+
+```{r}
+geo_mean <- function(...) {
+	x <- c(...)
+	output <- exp(mean(log(x)))
+	return(output)
+}
+
+geo_mean(2, 3, 4, 5)
+```
+
+* `...` is a placeholder for as many arguments as you want.
+
+## `...` for pass-through {.scrollable}
+
+* The most common use of `...` is to "pass-through" arguments to underlying functions.
+
+* `mean()` has additional arguments, what if we want to use those in our geometric mean calculation?
+
+```{r}
+geo_mean <- function(x, trim = 0, na.rm = FALSE) {
+		output <- exp(mean(log(x), trim = trim, na.rm = na.rm))
+	return(output)
+}
+```
+
+. . .
+
+Or we can do this an easier way.
+
+## Function debugging tools if you get stuck
+
+- `traceback()`
+- `browser()`
+- `debug()` and `debugonce()`
+- RStudio breakpoints
+- **Last resort:** printing and dumping
+- More info: [https://adv-r.hadley.nz/debugging.html](https://adv-r.hadley.nz/debugging.html)
+
+## Function instead of Loop {.scrollable}
+
+Now, let's see how we can repeat our loop example from the measles dataset with a function instead.
+
+Here we are going to set up a function that takes our data frame and outputs the median, first and third quartiles, and range of measles cases for a specified country.
+
+```{r eval=TRUE, echo=TRUE}
+get_country_stats <- function(df, iso3_code){
+	
+	country_data <- subset(df, iso3c == iso3_code)
+	
+	# Get the summary statistics for this country
+	country_cases <- country_data$measles_cases
+	country_quart <- quantile(
+		country_cases, na.rm = TRUE, probs = c(0.25, 0.5, 0.75)
+	)
+	country_range <- range(country_cases, na.rm = TRUE)
+	
+	country_name <- unique(country_data$country)
+	
+	country_summary <- data.frame(
+		country = country_name,
+		min = country_range[[1]],
+		Q1 = country_quart[[1]],
+		median = country_quart[[2]],
+		Q3 = country_quart[[3]],
+		max = country_range[[2]]
+	)
+	
+	return(country_summary)
+}
+```
+
+Now we can use the function.
+
+```{r eval=TRUE, echo=TRUE}
+meas <- readRDS(here::here("data", "measles_final.Rds"))
+get_country_stats(df=meas, iso3_code="IND")
+get_country_stats(df=meas, iso3_code="PAK")
+```
+
+
+## Summary
+
+- Simple functions take the form:
+```
+functionName = function(arguments) {
+	< function body >
+	return(list(outputs))
+}
+```
+- We can specify arguments defaults when you create the function
+
+
+## You try it!
+
+Create your own function that calculates the incidence rate per $K$ cases in a given country for all years where that country appeared (e.g. incidence per 10,000 people or another number $K$).
+
+Step 1. Determine your arguments.
+
+Step 2. Begin your function by subsetting the data to include only the country specified in the arguments (i.e, `country_data`).
+
+Step 3. Get the years of interest (what errors might you run into here?).
+
+Step 4. Calculate the incidence rate per $K$ people in each year.
+
+Step 5. Return the output neatly.
+
+**Bonus exercise:** allow the country code argument to be optional, or add a new argument that allows the user to only calculate the incidence for certain years.
+
+## Mini Exercise Answer
+
+```{r echo=TRUE}
+get_incidence <- function(df, iso3_code, K = 10000){
+	
+	country_data <- subset(df, iso3c == iso3_code)
+	
+	incidence <- country_data$measles_cases / country_data$population * K
+	names(incidence) <- country_data$year
+	
+	return(incidence)
+}
+
+get_incidence(df=meas, iso3_code="IND")
+get_incidence(df=meas, iso3_code="PAK")
+```
+
+## Sidenote: combining functions and loops {.scrollable}
+
+- Writing functions is a way to make complex code a lot easier to understand.
+- These two loops do exactly the same thing, but the one with the function is much easier to read for most people.
+
+```{r}
+my_countries <- c("IND", "PAK", "BGD", "NPL", "BTN")
+n <- length(my_countries)
+res <- vector(mode = "list", length = n)
+```
+
+```{r}
+for (i in 1:n) {
+	this_country <- my_countries[[i]]
+	country_data <- subset(meas, iso3c == this_country)
+	incidence <- country_data$measles_cases / country_data$population * 10000
+	names(incidence) <- country_data$year
+	res[[i]] <- incidence
+}
+str(res)
+```
+
+```{r}
+for (i in 1:n) {
+	res[[i]] <- get_incidence(meas, my_countries[[i]], 10000)
+}
+str(res)
+```

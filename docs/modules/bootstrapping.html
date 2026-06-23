@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Alex Edwards">
+  <meta name="author" content="Zane Billings">
+  <title>SISMID R for ID Materials (2026) – Module XX: Bootstrapping can be easy and fun</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Module XX: Bootstrapping can be easy and fun</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> 
+</div>
+</div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://wzbillings.com/">Zane Billings</a> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="learning-goals" class="slide level2">
+<h2>Learning goals</h2>
+<ol type="1">
+<li>Understand the basics of bootstrapping – be able to construct your own bootstrap resamples and calculate a bootstrap CI for a statistic.</li>
+<li>Make your own bootstraps with loops or functional programming.</li>
+<li>Combine your own knowledge of R programming techniques with the <code>boot</code> package for easy bootstrapping.</li>
+<li>Use the <code>rsample</code> package and advanced R programming techniques to iterate over lists of bootstrap resamples.</li>
+</ol>
+</section>
+<section id="what-is-bootstrapping" class="slide level2 scrollable">
+<h2>What is bootstrapping?</h2>
+<ul>
+<li><strong>bootstrapping</strong> is a method for obtaining standard error estimates or confidence intervals by <strong>resampling</strong>.</li>
+<li>We’ll specifically talk about the <strong>nonparametric bootstrap</strong> but there are entire books about bootstrap methods.</li>
+</ul>
+
+<img data-src="../images/Illustration_bootstrap.svg.png" width="960" class="r-stretch quarto-figure-center"><p class="caption">credit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg</p></section>
+<section id="what-is-bootstrapping-1" class="slide level2 incremental">
+<h2>What is bootstrapping?</h2>
+<ul>
+<li>We have some statistic <span class="math inline">\(\theta\)</span> that we want to estimate from the dataset.</li>
+<li>We create <span class="math inline">\(B\)</span> resamples of the dataset by randomly sampling from it, and then we calculate the statistic <span class="math inline">\(\theta_B\)</span> on each dataset.</li>
+<li>If we create these resamples the correct way, the observed distribution of <span class="math inline">\(\theta_1, \ldots, \theta_B\)</span> will converge to the true sampling distribution of <span class="math inline">\(\theta\)</span>.</li>
+<li>Specifically, we create a resample by sampling <span class="math inline">\(n\)</span> (our sample size) rows from the original dataset <strong>with replacement</strong>.</li>
+</ul>
+</section>
+<section id="what-is-bootstrapping-2" class="slide level2">
+<h2>What is bootstrapping?</h2>
+<ul>
+<li>That’s math jargon to say that sometimes doing this resampling thing will give us better confidence intervals than normality assumptions.</li>
+<li>Usually bootstrapping works well for small datasets, estimates with complex (or nonexistant) standard error formulas, or for statistics with highly skewed distributions.</li>
+</ul>
+
+<img data-src="../images/Illustration_bootstrap.svg.png" width="960" class="r-stretch quarto-figure-center"><p class="caption">credit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg</p></section>
+<section id="low-birthweight-data-and-the-data-function" class="slide level2">
+<h2>Low birthweight data and the <code>data()</code> function</h2>
+<ul>
+<li>For this example, we’ll use a famous epidemiological dataset about babies with low birthweight.</li>
+<li>Many R packages have built-in datasets, which you can access with the <code>data()</code> function.</li>
+<li>The low birth weight dataset, called <code>birthwt</code>, is in the <code>MASS</code> package, so you can access it with either <code>MASS::birthwt</code> or <code>data("birthwt", package = "MASS")</code>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># This will create the global variable "birthwt"</span></span>
+<span id="cb1-2"><a></a><span class="fu">data</span>(<span class="st">"birthwt"</span>, <span class="at">package =</span> <span class="st">"MASS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bootstrapping-example" class="slide level2 scrollable">
+<h2>Bootstrapping example</h2>
+<ul>
+<li>Use bootstrapping to calculate a 95% CI for the risk difference in low birth weight (<code>low</code>, 1 is low birth weight) between mothers who smoke (<code>smoke = 1</code>) and don’t (<code>smoke</code> = 0).</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>First create the resamples. <strong>We need to use <code>set.seed()</code> to make sure our results are the same every time we run our code!</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">set.seed</span>(<span class="dv">370</span>)</span>
+<span id="cb2-2"><a></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb2-3"><a></a><span class="co"># Alternatively use replicate() if you don't like the weird function here</span></span>
+<span id="cb2-4"><a></a><span class="co"># or use a loop</span></span>
+<span id="cb2-5"><a></a>resamples <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb2-6"><a></a>    <span class="dv">1</span><span class="sc">:</span>B,</span>
+<span id="cb2-7"><a></a>    \(n) birthwt[<span class="fu">sample.int</span>(<span class="fu">nrow</span>(birthwt), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb2-8"><a></a>)</span>
+<span id="cb2-9"><a></a></span>
+<span id="cb2-10"><a></a><span class="fu">str</span>(resamples, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 1000
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+ $ :'data.frame':   189 obs. of  10 variables:
+  [list output truncated]</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Now write a function to calculate the statistic.</li>
+<li>Make sure to calculate the point estimate on the entire dataset as well.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>rd_smoking <span class="ot">&lt;-</span> <span class="cf">function</span>(resample) {</span>
+<span id="cb4-2"><a></a>    risk_smoke <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>smoke <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb4-3"><a></a>    risk_no_smoke <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>smoke <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb4-4"><a></a>    </span>
+<span id="cb4-5"><a></a>    rd <span class="ot">&lt;-</span> risk_smoke <span class="sc">-</span> risk_no_smoke</span>
+<span id="cb4-6"><a></a>    <span class="fu">return</span>(rd)</span>
+<span id="cb4-7"><a></a>}</span>
+<span id="cb4-8"><a></a></span>
+<span id="cb4-9"><a></a>point_estimate_rd <span class="ot">&lt;-</span> <span class="fu">rd_smoking</span>(birthwt)</span>
+<span id="cb4-10"><a></a>point_estimate_rd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1532315</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Now calculate the statistic on every resample.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>bootstrap_rd <span class="ot">&lt;-</span> <span class="fu">sapply</span>(resamples, rd_smoking)</span>
+<span id="cb6-2"><a></a><span class="fu">str</span>(bootstrap_rd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:1000] 0.2051 0.0224 0.2446 0.1094 0.142 ...</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Now we have to calculate the SE. There are a few different ways. First is the <strong>normal method</strong>, where we calculate the standard error from the bootstrap distribution.</li>
+<li>This is just the standard deviation of the bootstrap estimates. Then we calculate the normal-approximate CI as usual.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>boot_se <span class="ot">&lt;-</span> <span class="fu">sd</span>(bootstrap_rd)</span>
+<span id="cb8-2"><a></a>point_estimate_rd <span class="sc">+</span> boot_se <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006663599 0.299799385</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>That method is kind of bad, but common. A better method is the <strong>percentile method</strong> which uses the quantiles of the bootstrap estimates.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">quantile</span>(bootstrap_rd, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       2.5%       97.5% 
+0.009800072 0.301920525 </code></pre>
+</div>
+</div>
+<ul>
+<li>In this case they’re the same because this RD is easy to estimate. But that won’t always be true!</li>
+</ul>
+</div>
+</section>
+<section id="you-try-it" class="slide level2 scrollable">
+<h2>You try it!</h2>
+<ul>
+<li>Look up the formula for the standard error of the risk ratio.</li>
+<li>Calculate the risk ratio for low birthweight in mothers with (<code>ht</code> = 1) and without (<code>ht = 0</code>) a history of hypertension using the standard CI, and using a bootstrap CI with the percentile method.</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Hint:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>rr_ht <span class="ot">&lt;-</span> <span class="cf">function</span>(resample) {</span>
+<span id="cb12-2"><a></a>    risk_ht_1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>ht <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb12-3"><a></a>    risk_ht_0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>ht <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb12-4"><a></a>    </span>
+<span id="cb12-5"><a></a>    rr <span class="ot">&lt;-</span> risk_ht_1 <span class="sc">/</span> risk_ht_0</span>
+<span id="cb12-6"><a></a>    <span class="fu">return</span>(rr)</span>
+<span id="cb12-7"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Hint: the formula for the SE of the <strong>log</strong> risk ratio is <span class="math display">\[
+\sqrt{\bigg( \frac{1}{a} + \frac{1}{c} \bigg) - \bigg( \frac{1}{a+b} + \frac{1}{c+d}  \bigg)}
+\]</span></li>
+</ul>
+<p>for a <span class="math inline">\(2\times2\)</span> table.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Exposed</th>
+<th style="text-align: left;">Unexposed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Exposed</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">b</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Unexposed</td>
+<td style="text-align: left;">c</td>
+<td style="text-align: left;">d</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Solution: first we calculate the point estimate and the Wald-type CI based on the SE formula.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>point_estimate_rr <span class="ot">&lt;-</span> <span class="fu">rr_ht</span>(birthwt)</span>
+<span id="cb13-2"><a></a>contigency_table_ht <span class="ot">&lt;-</span> <span class="fu">table</span>(</span>
+<span id="cb13-3"><a></a>    <span class="fu">factor</span>(birthwt<span class="sc">$</span>ht, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="fu">c</span>(<span class="st">"Exposed"</span>, <span class="st">"Unexposed"</span>)),</span>
+<span id="cb13-4"><a></a>    <span class="fu">factor</span>(birthwt<span class="sc">$</span>smoke, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="fu">c</span>(<span class="st">"Case"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb13-5"><a></a>)</span>
+<span id="cb13-6"><a></a></span>
+<span id="cb13-7"><a></a>calculate_log_rr_se <span class="ot">&lt;-</span> <span class="cf">function</span>(contigency_table) {</span>
+<span id="cb13-8"><a></a>    a <span class="ot">&lt;-</span> contigency_table[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb13-9"><a></a>    b <span class="ot">&lt;-</span> contigency_table[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb13-10"><a></a>    c <span class="ot">&lt;-</span> contigency_table[<span class="dv">2</span>, <span class="dv">1</span>]</span>
+<span id="cb13-11"><a></a>    d <span class="ot">&lt;-</span> contigency_table[<span class="dv">2</span>, <span class="dv">2</span>]</span>
+<span id="cb13-12"><a></a>    </span>
+<span id="cb13-13"><a></a>    se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((<span class="dv">1</span><span class="sc">/</span>a <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>c) <span class="sc">-</span> (<span class="dv">1</span><span class="sc">/</span>(a<span class="sc">+</span>b) <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>(c<span class="sc">+</span>d)))</span>
+<span id="cb13-14"><a></a>    <span class="fu">return</span>(se)</span>
+<span id="cb13-15"><a></a>}</span>
+<span id="cb13-16"><a></a>log_rr_se <span class="ot">&lt;-</span> <span class="fu">calculate_log_rr_se</span>(contigency_table_ht)</span>
+<span id="cb13-17"><a></a><span class="co"># It's on the log scale, so we have to calculate the CI like this!</span></span>
+<span id="cb13-18"><a></a><span class="fu">exp</span>(log_rr_se <span class="sc">*</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>) <span class="sc">+</span> <span class="fu">log</span>(point_estimate_rr))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9915692 3.9760368</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Solution: now we do the bootstrap CI.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>rr_ht <span class="ot">&lt;-</span> <span class="cf">function</span>(resample) {</span>
+<span id="cb15-2"><a></a>    risk_ht_1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>ht <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb15-3"><a></a>    risk_ht_0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>ht <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb15-4"><a></a>    </span>
+<span id="cb15-5"><a></a>    rr <span class="ot">&lt;-</span> risk_ht_1 <span class="sc">/</span> risk_ht_0</span>
+<span id="cb15-6"><a></a>    <span class="fu">return</span>(rr)</span>
+<span id="cb15-7"><a></a>}</span>
+<span id="cb15-8"><a></a></span>
+<span id="cb15-9"><a></a>bootstrap_rr <span class="ot">&lt;-</span> <span class="fu">sapply</span>(resamples, rr_ht)</span>
+<span id="cb15-10"><a></a><span class="fu">quantile</span>(bootstrap_rr, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    2.5%    97.5% 
+1.032770 3.237805 </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="bootstrapping-multiple-statistics-at-one-time" class="slide level2">
+<h2>Bootstrapping multiple statistics at one time</h2>
+<ul>
+<li>If our bootstrap function returns a <code>vector</code>, we can get multiple statistics at once.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>get_smoking_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(resample) {</span>
+<span id="cb17-2"><a></a>    risk_smoke <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>smoke <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb17-3"><a></a>    risk_no_smoke <span class="ot">&lt;-</span> <span class="fu">mean</span>(resample<span class="sc">$</span>low[resample<span class="sc">$</span>smoke <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb17-4"><a></a>    </span>
+<span id="cb17-5"><a></a>    odds_smoke <span class="ot">&lt;-</span> risk_smoke <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> risk_smoke)</span>
+<span id="cb17-6"><a></a>    odds_no_smoke <span class="ot">&lt;-</span> risk_no_smoke <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> risk_no_smoke)</span>
+<span id="cb17-7"><a></a>    </span>
+<span id="cb17-8"><a></a>    rd <span class="ot">&lt;-</span> risk_smoke <span class="sc">-</span> risk_no_smoke</span>
+<span id="cb17-9"><a></a>    rr <span class="ot">&lt;-</span> risk_smoke <span class="sc">/</span> risk_no_smoke</span>
+<span id="cb17-10"><a></a>    or <span class="ot">&lt;-</span> odds_smoke <span class="sc">/</span> odds_no_smoke</span>
+<span id="cb17-11"><a></a>    </span>
+<span id="cb17-12"><a></a>    out <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb17-13"><a></a>        <span class="st">"Risk difference"</span> <span class="ot">=</span> rd,</span>
+<span id="cb17-14"><a></a>        <span class="st">"Risk ratio"</span> <span class="ot">=</span> rr,</span>
+<span id="cb17-15"><a></a>        <span class="st">"Odds ratio"</span> <span class="ot">=</span> or</span>
+<span id="cb17-16"><a></a>    )</span>
+<span id="cb17-17"><a></a>    <span class="fu">return</span>(out)</span>
+<span id="cb17-18"><a></a>}</span>
+<span id="cb17-19"><a></a></span>
+<span id="cb17-20"><a></a>smoking_stats <span class="ot">&lt;-</span> <span class="fu">sapply</span>(resamples, get_smoking_stats)</span>
+<span id="cb17-21"><a></a><span class="fu">str</span>(smoking_stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:3, 1:1000] 0.2051 2.0082 2.7044 0.0224 1.0879 ...
+ - attr(*, "dimnames")=List of 2
+  ..$ : chr [1:3] "Risk difference" "Risk ratio" "Odds ratio"
+  ..$ : NULL</code></pre>
+</div>
+</div>
+<ul>
+<li>The output looks really confusing. But it’s a matrix so we can use <code>apply()</code>!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>point_estimates <span class="ot">&lt;-</span> <span class="fu">get_smoking_stats</span>(birthwt)</span>
+<span id="cb19-2"><a></a>boot_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(smoking_stats, <span class="dv">1</span>, \(x) <span class="fu">quantile</span>(x, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)))</span>
+<span id="cb19-3"><a></a></span>
+<span id="cb19-4"><a></a><span class="co"># Just some code to show everything neatly</span></span>
+<span id="cb19-5"><a></a><span class="fu">rbind</span>(</span>
+<span id="cb19-6"><a></a>    <span class="st">"Lower"</span> <span class="ot">=</span> boot_cis[<span class="dv">1</span>, ],</span>
+<span id="cb19-7"><a></a>    <span class="st">"Point"</span> <span class="ot">=</span> point_estimates,</span>
+<span id="cb19-8"><a></a>    <span class="st">"Upper"</span> <span class="ot">=</span> boot_cis[<span class="dv">2</span>, ]</span>
+<span id="cb19-9"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb19-10"><a></a>    <span class="fu">t</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-11"><a></a>    <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Lower</th>
+<th style="text-align: right;">Point</th>
+<th style="text-align: right;">Upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Risk difference</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Risk ratio</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">1.61</td>
+<td style="text-align: right;">2.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Odds ratio</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">2.02</td>
+<td style="text-align: right;">4.18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="errors-in-bootstrapping-and-the-boot-package" class="slide level2">
+<h2>Errors in bootstrapping and the <code>boot</code> package</h2>
+<ul>
+<li>The situations we just observed are pretty simple, and our bootstrap estimates are pretty trustworthy (they would be more trustworthy if we increased <code>B</code>, a good rule of thumb is 1,000 just for you, 10,000 for your boss, and 100,000 for a paper if it’s feasible).</li>
+<li>But in some situations, bootstrapping can be <strong>biased</strong>. There is a fix for this called the “BCa” bootstrap.</li>
+<li>BCa is hard to do by hand, but easy to do with the <code>boot</code> package.</li>
+</ul>
+</section>
+<section id="the-boot-package" class="slide level2 scrollable">
+<h2>The <code>boot</code> package</h2>
+<ul>
+<li>We have to write our function a certain way for <code>boot</code>. It must have two arguments, the first is the data, and the second is a list of indices that are included in a resample.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>boot_smoking_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(data, idx) {</span>
+<span id="cb20-2"><a></a>    resample <span class="ot">&lt;-</span> data[idx, ]</span>
+<span id="cb20-3"><a></a>    out <span class="ot">&lt;-</span> <span class="fu">get_smoking_stats</span>(resample)</span>
+<span id="cb20-4"><a></a>    <span class="fu">return</span>(out)</span>
+<span id="cb20-5"><a></a>}</span>
+<span id="cb20-6"><a></a></span>
+<span id="cb20-7"><a></a><span class="fu">library</span>(boot)</span>
+<span id="cb20-8"><a></a>bootstraps_smoking <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">boot</span>(birthwt, boot_smoking_stats, <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb20-9"><a></a>bootstraps_smoking</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ORDINARY NONPARAMETRIC BOOTSTRAP
+
+
+Call:
+boot::boot(data = birthwt, statistic = boot_smoking_stats, R = 1000)
+
+
+Bootstrap Statistics :
+     original       bias    std. error
+t1* 0.1532315 0.0009951909  0.07034402
+t2* 1.6076421 0.0444346127  0.35834007
+t3* 2.0219436 0.1290172225  0.71556649</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>We can see this calculates the point estimate, bias, and boostrap SE for us. The bias is what we didn’t know how to calculate before.</li>
+<li>We can easily compare multiple CI methods with <code>boot</code>.</li>
+<li>For technical reasons that are too complicated to talk about, when you do multiple stats at one time in <code>boot</code>, you must <strong><em>always</em></strong> manually set the <code>index</code> argument.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># Four bootstrap CIs for the risk difference</span></span>
+<span id="cb22-2"><a></a>boot<span class="sc">::</span><span class="fu">boot.ci</span>(bootstraps_smoking, <span class="at">index =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in boot::boot.ci(bootstraps_smoking, index = 1): bootstrap variances
+needed for studentized intervals</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot::boot.ci(boot.out = bootstraps_smoking, index = 1)
+
+Intervals : 
+Level      Normal              Basic         
+95%   ( 0.0144,  0.2901 )   ( 0.0200,  0.2876 )  
+
+Level     Percentile            BCa          
+95%   ( 0.0189,  0.2864 )   ( 0.0153,  0.2834 )  
+Calculations and Intervals on Original Scale</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Of course, we can use loops or FP to do this for all of our statistics.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>smoking_point_estimates <span class="ot">&lt;-</span> bootstraps_smoking<span class="sc">$</span>t0</span>
+<span id="cb25-2"><a></a>smoking_cis_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb25-3"><a></a>    <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(smoking_point_estimates),</span>
+<span id="cb25-4"><a></a>    \(i) boot<span class="sc">::</span><span class="fu">boot.ci</span>(bootstraps_smoking, <span class="at">type =</span> <span class="st">"bca"</span>, <span class="at">index =</span> i)</span>
+<span id="cb25-5"><a></a>)</span>
+<span id="cb25-6"><a></a><span class="fu">str</span>(smoking_cis_list, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ :List of 4
+  ..- attr(*, "class")= chr "bootci"
+ $ :List of 4
+  ..- attr(*, "class")= chr "bootci"
+ $ :List of 4
+  ..- attr(*, "class")= chr "bootci"</code></pre>
+</div>
+</div>
+<ul>
+<li>Cleaning them up is kind of difficult, this is a weirdly formatted S3 object.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>smoking_cis <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb27-2"><a></a>    smoking_cis_list,</span>
+<span id="cb27-3"><a></a>    \(x) x<span class="sc">$</span>bca[<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb27-4"><a></a>)</span>
+<span id="cb27-5"><a></a></span>
+<span id="cb27-6"><a></a><span class="co"># Same cleanup code as before</span></span>
+<span id="cb27-7"><a></a><span class="fu">rbind</span>(</span>
+<span id="cb27-8"><a></a>    <span class="st">"lower"</span> <span class="ot">=</span> smoking_cis[<span class="dv">1</span>, ],</span>
+<span id="cb27-9"><a></a>    <span class="st">"point"</span> <span class="ot">=</span> smoking_point_estimates,</span>
+<span id="cb27-10"><a></a>    <span class="st">"upper"</span> <span class="ot">=</span> smoking_cis[<span class="dv">2</span>, ]</span>
+<span id="cb27-11"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb27-12"><a></a>    <span class="fu">t</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-13"><a></a>    <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">lower</th>
+<th style="text-align: right;">point</th>
+<th style="text-align: right;">upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Risk difference</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Risk ratio</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.61</td>
+<td style="text-align: right;">2.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Odds ratio</td>
+<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">2.02</td>
+<td style="text-align: right;">3.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="you-try-it-1" class="slide level2">
+<h2>You try it!</h2>
+<ul>
+<li>Fit a logistic regression model to predict low birth weight using this dataset. Use any predictors in the dataset that you think are relevant.</li>
+<li>Get the standard confidence intervals using the profile method (that is, with <code>confint()</code>).</li>
+<li>Get bootstrap estimates for the coefficients.</li>
+<li>Do the bootstrap estimates lead you to the same interpretation, or a different interpretation?</li>
+</ul>
+<p>(No solution typed up for this problem, if we have time/interest we can cover it together.)</p>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

@@ -1,0 +1,276 @@
+---
+title: "Basic Spatial Data Operations"
+author: "Alex Edwards"
+format: html
+editor: visual
+---
+
+![](https://johnsnowsociety.org/files/2023/09/Pac_map_cholera-2-1024x698.png){fig-align="center" width="511"}
+
+## Directions
+
+This is a learning document that includes lecture components, examples, and your [lab](#lab). Please follow along and the examples as shown here and in lecture. [At the end of this document you will find your lab with sections for your to complete](#lab). You can use the code in the examples as a template to complete your [lab](#lab). Note, all packages needed for this lecture and lab are installed for you already and you only need to attach to them.
+
+## Learning Objectives
+
+-   [Import spatial data that is in csv, Excel, and other non-spatial data files using the `rio` package.](#import)
+
+-   [Convert of non-spatial dataframes, that contain coordinates, into spatial dataframes using the `sf` package.](#convert)
+
+-   [Project data using the `sf` package.](#convert)
+
+-   [Concatenate, or stack, like spatial data to make a singular dataset using base R.](#concatenate)
+
+-   [Perform a table join of spatial data using the `tidyverse` package.](#tablejoin)
+
+-   [Select data based on attributes using the `tidyverse` package.](#selection)
+
+## Background
+
+This lecture and lab will utilize data from John Snow's cholera outbreak map of 1854. This data was generously shared by Dr. Julie Clennon of Emory University.
+
+**The data for this lecture can be found at the following path 'data/\<filename\>' where you replace \<filename\> with your file of interest.**
+
+All Shapefile data is projected to British National Grid (CRS=27700). This data is represented by the following files:
+
+| File | File Type | Spatial Data Type | Description |
+|----|----|----|----|
+| Cholera_Deaths_period_0_MOR.shp | Shapefile | Point | Index case of cholera |
+| Cholera_Deaths_period_1_JC.shp | Shapefile | Point | Cases on days 1-4 |
+| Cholera_Deaths_period_2_ECB.shp | Shapefile | Point | Cases on days 5-9 |
+| Cholera_Deaths_period_3_LW.shp | Shapefile | Point | Cases on days 10-14 |
+| Cholera_Deaths_period_4\_.shp | Shapefile | Point | Cases on days 15-20 |
+| Estimated_for_Pump_Usage_Areas_18740912.shp | Shapefile | Polygon | The estimated usage area for each of the 13 pumps. |
+| Pumps.xlsx | Excel | Point | One point to represent each water pump on London's Soho area |
+| Soho_345782_Neighborhoods.shp | Shapefile | Polygon | Each polygon represents a neighborhood in London's Soho Area. |
+| soho_census.xlsx | Excel | None | A non-spatial file that contains the estimated population of each Soho neighborhood. Can be linked via ID variable `Id`. |
+
+## 
+
+## Packages of note
+
+This lecture and lab will utilize the `rio` package to read data that is not explicitly in spatial format like Excel or CSV data. This library has been installed for you.
+
+-   `rio`
+
+    -   Its functions `import()` and `export()` can handle many different file types (e.g. .xlsx, .csv, .rds, .tsv). When you provide a file path to either of these functions (including the file extension like “.csv”), **rio** will read the extension and use the correct tool to import or export the file.
+
+***Attach*** the libraries we need.
+
+```{r}
+library(tidyverse)
+library(rio)
+library(sf)
+library(tmap)
+```
+
+## Import {#import}
+
+As discussed in the GIS basics module one of the most basic operations that we perform as analyst is the importation of data. However, not all data we wish to use is in a format recognized by the `sf` package. For most other files, and all files we will use in this class, you should use something like the `rio` package. The two main functions we will use from this package are `import()` and `export()` we will cover `import` here and `export` later in the lecture.
+
+Let's see how the package works by importing the Pumps.xlsx data that contains the coordinates for teach of the 13 Soho pumps.
+
+remember the general format for creating a new data object `name <- function`
+
+```{r}
+pumps <- import("data/Pumps.xlsx")
+```
+
+You should now see the `pumps` object in your upper right environment window. Take a look at the data by clicking on the object in the environment window. Each pump has an `Id`, an `X` coordinate (i.e. longitude) and a `Y` coordinate (i.e. latitude). However, if we look at the *meta data*, or data about the data structure, using the `class()` function we see something strange.
+
+```{r}
+class(pumps)
+```
+
+The `pumps` dataframe is just that a `data.frame` object and [**not**]{.underline} an `sf` simple features dataframe.
+
+Since we know that this data can be spatial due to the coordinates in the `X` and `Y` variable, how do we make it into a spatial dataframe?
+
+## Convert and Project {#convert}
+
+In cases where we have coordinates but the dataframe is not spatial we can use the `sf` package to convert the data into usable spatial data using the `st_as_sf()` function. We will be *projecting* the data at the same time.
+
+A note on projections, in R a projection is ultimately just a long string of letters, words, and numbers that we can type in. However, that is absolutely tedious so instead we can look up the *European Petroleum Survey Group (EPSG)* number that corresponds to our projection. For the British National Grid used this this lab the EPSG is 27700, but how can we find this information. Use [espg.io](epsg.io) to look up common numbers or a good ole\` Google search like this [link](https://www.google.com/search?q=epsg+27700&oq=epsg+27&gs_lcrp=EgZjaHJvbWUqDQgAEAAYkQIYgAQYigUyDQgAEAAYkQIYgAQYigUyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIICAQQABgWGB4yCAgFEAAYFhgeMggIBhAAGBYYHjIGCAcQRRg80gEIMzExN2owajSoAgCwAgA&sourceid=chrome&ie=UTF-8). You can find the information about the British National Grid at this [link](https://epsg.io/27700).
+
+Now, lets convert the `pumps` data into the right format:
+
+```{r}
+pumps_sf <- pumps |>
+            st_as_sf(coords = c("X", "Y"), crs=27700)
+```
+
+Let's take this function apart:
+
+`st_as_sf(coords = c("X", "Y"), crs=27700)`
+
+-   `coords = c("X", "Y")`
+
+    -   This attribute lets the function know that within the `pumps` dataset the coordinates for each pump are defined by their `X` and `Y` values. **Note**: X and Y, or Longitude and Latitude will always be in this order.
+
+-   `crs=27700`
+
+    -   This attribute lets the function know that the new dataset `pumps_sf` will need to be in the EPSG 27700 or British National Grid projection.
+
+You should now see the `pumps_sf` object in your upper right environment window. Take a look at the data by clicking on the object in the environment window. Recall, we know that the `pumps_sf` dataset is now in spatial format because it contains a `geometry` column. You can also look at the `class()` function output.
+
+```{r}
+class(pumps_sf)
+```
+
+The `class` function now shows the data as bothe `sf` and `data.frame` meaning we can now use it for mapping. Note, the output of the chunk below.
+
+```{r}
+tm_shape(pumps_sf)+
+  tm_dots()
+```
+
+## Concatenate {#concatenate}
+
+Sometimes we are given data that is spread across many files that we may not necessarily want distributed in such a way. How can we combine/stack/concatenate these files into one dataframe?
+
+We can use a `base` R function `rbind()` to combine multiple spatial dataframes into one. Keep in mind that the variable names must be consistent across all the dataframes in both spelling, case, and number. See the scenario below:
+
+First, let us read in all of the cholera case data:
+
+```{r}
+index <- st_read("data/Cholera_Deaths_period_0_MOR.shp") 
+tm1 <- st_read("data/Cholera_Deaths_period_1_JC.shp") 
+tm2 <- st_read("data/Cholera_Deaths_period_2_ECB.shp") 
+tm3 <- st_read("data/Cholera_Deaths_period_3_LW.shp") 
+tm4 <- st_read("data/Cholera_Deaths_period_4.shp") 
+```
+
+We now have five files that represent the five cholera epidemic time periods. If we look at the `names()` function for each of these files we can see that they all share a common set of variable names:
+
+```{r}
+names(index)
+names(tm1)
+names(tm2)
+names(tm3)
+names(tm4)
+```
+
+Now, lets combine these datasets into one single `sf` dataframe:
+
+```{r}
+cases_sf <- rbind(index, tm1, tm2, tm3, tm4)
+```
+
+If you look at the data `cases_sf` you will now see 577 rows, each is a case. We can even know which cases in the `cases_sf` dataset come from which period based on the `period` variable. Sweet!
+
+Let's map all the cases and set the point size to 0.25mm:
+
+```{r}
+tm_shape(cases_sf)+
+  tm_dots(size = 0.25)
+```
+
+## Table Join
+
+Table joins in ArcGIS are a point an click affair, and a lot of the logic is hidden away from you behind the scenes. With R and the `tidyverse` package you have more control over how the operations work.
+
+For this section we will need the Soho neighborhood data, and the Soho neighborhood census data. Keep in mind, this example will be joinging together two datasets; however, two is not the limit and you can actually keep joining if you needed. In addition, this example joins together one spatial and one non-spatial data set; however, this join works for any datasets as long as they share a common id.
+
+We will read in two datasets here:
+
+```{r}
+neighborhoods <- st_read("data/Soho__345782_Neighborhoods.shp")#note the double underscore :(
+neighborhoods_census <- import("data/soho_census.xlsx")
+```
+
+Notice: we used st_read for the neighborhoods polygon Shapefile because it is spatial; however, we used import for the census data because it is in Excel format.
+
+Notice-Notice: the census data does not contain coordinates, it is not spatial, so we do not need to do a conversion or projection like we did above.
+
+Now, let's look at this data:
+
+```{r}
+# View(neighborhoods)
+# View(neighborhoods_census)
+```
+
+Notice, all 126 neighborhoods have census data, but there are many rows in the census data that do not match to a row in the neighborhood data. This is fine, we will only match the ones we can and toss the rest aside. For this we will use an inner join by calling the function `inner_join()` that when piping takes only two arguments the dataset we wish to join with and the id variable we wish to join with. The id variable must have its name in quotes for some reason.
+
+Remember, the two datasets must share an id.
+
+Let's join:
+
+```{r}
+neighborhood_w_census <- neighborhoods |>
+                         inner_join(neighborhoods_census, by="Id") 
+```
+
+Let's look at the first few rows with the `head()` function which shows the first rows:
+
+```{r}
+head(neighborhood_w_census)
+```
+
+Yep, the join was successful and we now see that each neighborhood block has a population associated with it. Let's map it using the `fill` argument to `tm_polygons` to color by `Population`:
+
+```{r}
+tm_shape(neighborhood_w_census)+
+  tm_polygons(fill="Population")
+```
+
+## Selection {#selection}
+
+![](https://ehsanx.github.io/intro2R/images/logical.png){fig-align="center" width="332"}
+
+In a prior lecture we discussed how best to subset datasets using the `filter` function for the `tidyverse` package. The table above list the operators that we can use in the `filter` function to select the rows we wish to use. Given that the `sf` dataframes we are working with are 'tidy' we can use that same function and a few helper functions to select observations/rows by an attribute value. Let's see below.
+
+For this example we will be using the `neighborhood_w_census` data that was created in the [Table Join] section of this document. Recall that the dataset consist of 126 polygons that represent each neighborhood in the Soho community of London's East End. After the table join, each of those polygons also has a population value associated with it. What can we do with it?
+
+You can choose the rows that fit certain criteria, for example `Population > 100`
+
+```{r}
+pop_100 <- neighborhood_w_census |>
+           filter(Population > 100)
+```
+
+Now, if we look at the `pop_100` dataframe there are only 100 rows.
+
+What if we want the inverse, `Population <= 100`:
+
+```{r}
+pop_le_100 <- neighborhood_w_census |>
+           filter(Population <= 100)
+```
+
+Now, we only have 26 observations. If you `View` both of those datasets you will see that the `Population` variable matches out given criteria.
+
+But, what about the neighborhood with the highest population? We use a helper function instead of filter, we use `slice_max` to return the one row with the highest population.
+
+```{r}
+pop_max <- neighborhood_w_census |>
+           slice_max(Population)
+```
+
+What about the minimum? We use `slice_min`:
+
+```{r}
+pop_min <- neighborhood_w_census |>
+           slice_min(Population)
+```
+
+Now, let's put this together with what we know to answer the following with a map. This map is incomplete because it would need a scale bar, and north arrow etc.
+
+Create a map that shows all of the Soho neighborhoods colored by population, highlight the neighborhood with the highest population in red.
+
+```{r}
+tm_shape(neighborhood_w_census)+
+  tm_polygons(fill="Population")+
+tm_shape(pop_max)+
+  tm_polygons(fill="red")
+```
+
+See how easy that was?
+
+Now, what if I just want to show the outline of the neighborhoods with no `fill` color, well we use `tm_borders`.
+
+```{r}
+tm_shape(neighborhood_w_census)+
+  tm_borders()+
+tm_shape(pop_max)+
+  tm_polygons(fill="red")
+```

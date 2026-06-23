@@ -1,0 +1,1102 @@
+---
+title: "Power and Sample Size"
+format: revealjs
+editor: visual
+echo: true
+---
+
+## Lets import our package for these calculations
+
+The **`pwrss`** package provides flexible functions for calculating statistical power, required sample size, or detectable effect sizes across a wide range of models, including t-tests, ANOVA, correlation, regression, and generalized linear models. It is designed to handle complex scenarios, such as adjusting for covariates or specifying model-specific parameters like odds ratios or variance explained. This makes it a valuable tool for researchers planning studies to ensure sufficient power and precision in hypothesis testing.
+
+```{r}
+library(pwrss)
+```
+
+## Generic Functions
+
+-   These functions compute statistical power and can plot Type I and II errors if test statistics and degrees of freedom are known.
+
+-   They’re useful because z, t, \$\\chi\^{2}\$, and F stats with degrees of freedom are often reported in publications or software outputs.
+
+-   Power can be calculated from test statistics as noncentrality parameters, but post-hoc power estimates should be interpreted cautiously.
+
+## *t* Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false
+#| output-location: slide
+power.t.test(ncp = 1.96, df = 99, alpha = 0.05,
+             alternative = "equivalent", plot = TRUE)
+```
+
+## *z* Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.z.test(ncp = 1.96, alpha = 0.05, 
+             alternative = "not equal", plot = TRUE)
+```
+
+## $\chi^2$ Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.chisq.test(ncp = 15, df = 20,
+                 alpha = 0.05, plot = TRUE)
+```
+
+## *F* Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.f.test(ncp = 3, df1 = 2, df2 = 98,
+             alpha = 0.05, plot = TRUE)
+```
+
+## Multiple Parameters
+
+Multiple parameters are allowed but plots should be turned off (`plot = FALSE`).
+
+## *t* Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.t.test(
+  ncp = c(0.50, 1.00, 1.50, 2.00, 2.50), 
+  plot = FALSE,
+  df = 99, 
+  alpha = 0.05, 
+  alternative = "not equal")
+```
+
+## *z* Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.z.test(
+  alpha = c(0.001, 0.010, 0.025, 0.050), 
+  plot = FALSE,
+  ncp = 1.96, 
+  alternative = "greater")
+```
+
+## $\chi^2$ Test
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+power.chisq.test(
+  df = c(80, 90, 100, 120, 150, 200), 
+  plot = FALSE, 
+  ncp = 2, 
+  alpha = 0.05)
+```
+
+## Type I and Type II Error Plots
+
+We use the `plot()` function (S3 method) is a wrapper around the generic functions above. Assign results of any `pwrss` function to an R object and pass it to `plot()` function.
+
+## Comparing two means
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+
+design1 <- pwrss.t.2means(
+  mu1 = 0.20, 
+  margin = -0.05, 
+  paired = TRUE,
+  power = 0.80, 
+  alpha = 0.05,
+  alternative = "non-inferior")
+```
+
+## Comparing two means
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false
+plot(design1)
+```
+
+## ANCOVA
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false  
+#| output-location: slide
+design3 <- pwrss.f.ancova(
+  eta2 = 0.10, 
+  n.levels = c(2,3),
+  power = .80, 
+  alpha = 0.05)
+```
+
+## ANCOVA
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false
+plot(design3)
+```
+
+## Mean Difference (*t* Tests) Parametric Tests
+
+### Independent Samples *t* Test
+
+More often than not, unstandardized means and standard deviations are reported in publications for descriptive purposes. Another reason is that they are more intuitive and interpretable (e.g. depression scale). Assume that for the first and second groups expected means are 30 and 28, and expected standard deviations are 12 and 8, respectively.
+
+## Calculate Statistical Power
+
+What is the statistical power given that the sample size for the second group is 50 (`n2 = 50`) and groups have equal sample sizes (`kappa = n1 / n2 = 1`)?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, kappa = 1, 
+               n2 = 50, alpha = 0.05,
+               alternative = "not equal")
+```
+
+## Calculate Minimum Required Sample Size
+
+What is the minimum required sample size given that groups have equal sample sizes (`kappa = 1`)? ($\kappa = n_1 / n_2$)
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, kappa = 1, 
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+```
+
+## Calculate Minimum Required Sample Size
+
+It is sufficient to put pooled standard deviation for `sd1` because `sd2 = sd1` by default. In this case, for a pooled standard deviation of 10.198 the minimum required sample size can be calculated as
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 10.198, kappa = 1,
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+```
+
+## Calculate Minimum Required Sample Size
+
+It is sufficient to put Cohen's *d* or Hedge's *g* (standardized difference between two groups) for `mu1` because `mu2 = 0`, `sd1 = 1`, and `sd2 = sd1` by default. For example, for an effect size as small as 0.196 (based on previous example) the minimum required sample size can be calculated as
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 0.196, kappa = 1,
+               power = .80, alpha = 0.05, 
+               alternative = "not equal")
+```
+
+## Paired Samples *t* Test
+
+Assume for the first (e.g. pretest) and second (e.g. posttest) time points expected means are 30 and 28 (a reduction of 2 points), and expected standard deviations are 12 and 8, respectively. Also assume a correlation of 0.50 between first and second measurements (by default `paired.r = 0.50`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               paired = TRUE, paired.r = 0.50,
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+```
+
+## Calculate Minimum Required Sample Size
+
+It is sufficient to put standard deviation of the difference for `sd1` because `sd2 = sd1` by default. In this case, for a standard deviation of difference of 10.583 the minimum required sample size can be calculated as
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 10.583, 
+               paired = TRUE, paired.r = 0.50,
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+```
+
+## Calculate Minimum Required Sample Size
+
+It is sufficient to put Cohen's *d* or Hedge's *g* (standardized difference between two time points) for `mu1` because `mu2 = 0`, `sd1 = sqrt(1/(2*(1-paired.r)))`, and `sd2 = sd1` by default. For example, for an effect size as small as 0.1883 (based on previous example) the minimum required sample size can be calculated as
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 0.1883, paired = TRUE, paired.r = 0.50,
+               power = .80, alpha = 0.05, 
+               alternative = "not equal")
+```
+
+## Non-parametric Tests
+
+-   Means might be compared for variables that aren’t normally distributed, due to small samples or inherently non-normal population distributions (e.g. uniform, exponential).
+
+-   In such cases, t-tests may give biased results.
+
+-   For non-parametric tests, use `pwrss.np.2groups()` instead of `pwrss.t.2means()`, with the same arguments.
+
+## Non-parametric Tests
+
+-   You can specify the parent distribution (e.g. `"normal"`, `"uniform"`, `"exponential"`) using the `dist` argument.
+
+<!-- -->
+
+-   Although the function uses means and standard deviations as inputs, it actually tests differences in mean ranks.
+
+-   Mean differences are converted to Cohen’s *d* and then to probability of superiority, making it easier to compare and switch between parametric and non-parametric tests.
+
+## Independent Samples (Wilcoxon-Mann-Whitney Test)
+
+The example below uses the same parameters as the example in the independent *t* test section.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.np.2groups(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, kappa = 1, 
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+
+
+```
+
+## Paired Samples (Wilcoxon Signed-rank Test)
+
+The example below uses the same parameters as the example in the paired (dependent) *t* test section.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.np.2groups(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               paired = TRUE, paired.r = 0.50,
+               power = .80, alpha = 0.05,
+               alternative = "not equal")
+
+```
+
+It is sufficient to put Cohen's *d* or Hedge's *g* (standardized difference between two groups or measurements) for `mu1` without specifying `mu2`, `sd1`, and `sd2`.
+
+## Non-inferiority, Superiority, and Equivalence
+
+These tests are useful for testing practically significant difference (non-inferiority/superiority) or practically null difference (equivalence).
+
+## Parametric Tests
+
+**Non-inferiority**: The mean of group 1 is practically not smaller than the mean of group 2. The `mu1 - mu2` difference can be as small as -1 (`margin = -1`) but it will still be considered non-inferior. What is the minimum required sample size?
+
+## Parametric Tests
+
+When higher values of an outcome is better the margin takes NEGATIVE values; whereas when lower values of the outcome is better margin takes POSITIVE values.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               margin = -1, power = 0.80,
+               alternative = "non-inferior")
+```
+
+## Parametric Tests
+
+**Superiority**: The mean of group 1 is practically greater than the mean of group 2. The `mu1 - mu2` difference is at least greater than 1 (`margin = 1`). What is the minimum required sample size?
+
+When higher values of an outcome is better margin takes POSITIVE values; whereas when lower values of the outcome is better margin takes NEGATIVE values.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               margin = 1, power = 0.80,
+               alternative = "superior")
+```
+
+## Parametric Tests
+
+**Equivalence**: The mean of group 1 is practically same as mean of group 2. The `mu1 - mu2` difference can be as small as -1 and as high as 1 (`margin = 1`). What is the minimum required sample size?
+
+Specify the absolute value for the margin.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.2means(mu1 = 30, mu2 = 30, sd1 = 12, sd2 = 8, 
+               margin = 1, power = 0.80,
+               alternative = "equivalent")
+```
+
+## Non-parametric Tests
+
+**Non-inferiority**: The mean of group 1 is practically not smaller than the mean of group 2. The `mu1 - mu2` difference can be as small as -1 (`margin = -1`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.np.2groups(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               margin = -1, power = 0.80,
+               alternative = "non-inferior")
+```
+
+## Non-parametric Tests
+
+**Superiority**: The mean of group 1 is practically greater than the mean of group 2. The `mu1 - mu2` difference is at least greater than 1 (`margin = 1`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.np.2groups(mu1 = 30, mu2 = 28, sd1 = 12, sd2 = 8, 
+               margin = 1, power = 0.80,
+               alternative = "superior")
+```
+
+## Non-parametric Tests
+
+**Equivalence**: The mean of group 1 is practically same as mean of group 2. The `mu1 - mu2` difference can be as small as -1 and as high as 1 (`margin = 1`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.np.2groups(mu1 = 30, mu2 = 30, sd1 = 12, sd2 = 8, 
+               margin = 1, power = 0.80,
+               alternative = "equivalent")
+```
+
+# Linear Regression (*F* and *t* Tests)
+
+## Linear Regression (*F* and *t* Tests)
+
+### Omnibus $F$ Test
+
+#### $R^2 > 0$ in Linear Regression
+
+Omnibus F test in multiple liner regression is used to test whether $R^2$ is greater than 0 (zero). Assume that we want to predict a continuous variable $Y$ using $X_{1}$, $X_{2}$, and $X_{2}$ variables (a combination of binary or continuous).
+
+$$\begin{eqnarray}
+  Y &=& \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} + \beta_{3}X_{3} + r, \quad r \thicksim N(0,\sigma^2) \newline
+  \end{eqnarray}$$
+
+## Linear Regression (*F* and *t* Tests)
+
+We are expecting that these three variables explain 30% of the variance in the outcome ($R^2 = 0.30$ or `r2 = 0.30` in the code). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.f.reg(r2 = 0.30, k = 3, power = 0.80, alpha = 0.05)
+
+```
+
+## Single Regression Coefficient (*z* or *t* Test)
+
+### Standardized versus Unstandardized Input
+
+In the earlier example, assume that we want to predict a continuous variable $Y$ using a continuous predictor $X_{1}$ but control for $X_{2}$, and $X_{2}$ variables (a combination of binary or continuous). We are mainly interested in the effect of $X_{1}$ and expect a standardized regression coefficient of $\beta_{1} = 0.20$.
+
+$$\begin{eqnarray}
+  Y &=& \beta_{0} + \color{red} {\beta_{1} X_{1}} + \beta_{2}X_{2} + \beta_{3}X_{3} + r, \quad r \thicksim N(0,\sigma^2) \newline
+  \end{eqnarray}$$
+
+## Single Regression Coefficient (*z* or *t* Test)
+
+Again, we are expecting that these three variables explain 30% of the variance in the outcome ($R^2 = 0.30$). What is the minimum required sample size? It is sufficient to provide standardized regression coefficient for `beta1` because `sdx = 1` and `sdy = 1` by default.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.reg(beta1 = 0.20, k = 3, r2 = 0.30, 
+            power = .80, alpha = 0.05, alternative = "not equal")
+```
+
+## Single Regression Coefficient (*z* or *t* Test)
+
+For unstandardized coefficients specify `sdy` and `sdx`. Assume we are expecting an unstandardized regression coefficient of `beta1 = 0.60`, a standard deviation of `sdy = 12` for the outcome and a standard deviation of `sdx = 4` for the main predictor. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.t.reg(beta1 = 0.60, sdy = 12, sdx = 4, k = 3, r2 = 0.30, 
+            power = .80, alpha = 0.05, alternative = "not equal")
+
+```
+
+## Single Regression Coefficient (*z* or *t* Test)
+
+-   When the main predictor is binary (e.g. treatment/control), its standardized regression coefficient equals Cohen’s d.
+
+-   The predictor’s standard deviation is \$\\sqrt{p(1-p)}\$, where \$p\$ is the group proportion; for \$p = 0.50\$, what’s the minimum required sample size?
+
+-   Provide Cohen’s d for β₁ and set sdx = sqrt(p\*(1-p)) when calculating.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+p <- 0.50
+pwrss.t.reg(beta1 = 0.20, k = 3, r2 = 0.30, sdx = sqrt(p*(1-p)),
+            power = .80, alpha = 0.05, alternative = "not equal")
+
+```
+
+## Non-inferiority, Superiority, and Equivalence
+
+These tests are useful for testing practically significant effects (non-inferiority/superiority) or practically null effects (equivalence).
+
+## **Non-inferiority**:
+
+The intervention is expected to be non-inferior to some earlier or other interventions. Assume that the effect of an earlier or some other intervention is `beta0 = 0.10`. The `beta1 - beta0` is expected to be positive and should be at least -0.05 (`margin = -0.05`). What is the minimum required sample size?
+
+## **Non-inferiority**:
+
+This is the case when higher values of an outcome is better. When lower values of an outcome is better the `beta1 - beta0` difference is expected to be NEGATIVE and the `margin` takes POSITIVE values.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+p <- 0.50
+pwrss.t.reg(beta1 = 0.20, beta0 = 0.10, margin = -0.05, 
+            k = 3, r2 = 0.30, sdx = sqrt(p*(1-p)),
+            power = .80, alpha = 0.05, alternative = "non-inferior")
+
+```
+
+## **Superiority**
+
+The intervention is expected to be superior to some earlier or other interventions. Assume that the effect of an earlier or some other intervention is `beta0 = 0.10`. The `beta1 - beta0` is expected to be positive and should be at least 0.05 (`margin = 0.05`). What is the minimum required sample size?
+
+## **Superiority**
+
+This is the case when higher values of an outcome is better. When lower values of an outcome is better `beta1 - beta0` difference is expected to be NEGATIVE and the `margin` takes NEGATIVE values.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+p <- 0.50
+pwrss.t.reg(beta1 = 0.20, beta0 = 0.10, margin = 0.05, 
+            k = 3, r2 = 0.30, sdx = sqrt(p*(1-p)),
+            power = .80, alpha = 0.05, alternative = "superior")
+```
+
+## **Equivalence**
+
+The intervention is expected to be equivalent to some earlier or other interventions. Assume the effect of an earlier or some other intervention is `beta0 = 0.20`. The `beta1 - beta0` is expected to be within -0.05 and 0.05 (`margin = 0.05`). What is the minimum required sample size?
+
+## **Equivalence**
+
+`margin` always takes positive values for equivalence. Specify the absolute value.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+p <- 0.50
+pwrss.t.reg(beta1 = 0.20, beta0 = 0.20, margin = 0.05, 
+            k = 3, r2 = 0.30, sdx = sqrt(p*(1-p)),
+            power = .80, alpha = 0.05, alternative = "equivalent")
+```
+
+# Logistic Regression (Wald's *z* Test)
+
+## Logistic Regression (Wald's *z* Test)
+
+In logistic regression a binary outcome variable (0/1: failed/passed, dead/alive, absent/present) is modeled by predicting probability of being in group 1 ($P_1$) via logit transformation (natural logarithm of odds). The base probability $P_0$ is the overall probability of being in group 1 without influence of predictors in the model (null). Under alternative hypothesis, the probability of being in group 1 ($P_1$) deviate from $P_0$ depending on the value of the predictor; whereas under null it is same as the $P_0$.
+
+## Logistic Regression (Wald's *z* Test)
+
+A model with one main predictor ($X_1$) and two other covariates ($X_2$ and $X_3$) can be constructed as
+
+$$\begin{eqnarray}
+  ln(\frac{P_1}{1- P_1}) &=& \beta_{0} + \color{red} {\beta_{1} X_{1}} + \beta_{2}X_{2} + \beta_{3}X_{3} \newline
+  \end{eqnarray}$$
+
+## Logistic Regression (Wald's *z* Test)
+
+Therefore the odds ratio is defined as $$OR = exp(\beta_1) = \frac{P_1}{1- P_1} / \frac{P_0}{1- P_0}$$
+
+## Logistic Regression (Wald's *z* Test)
+
+### Example:
+
+-   A squared multiple correlation of 0.20 between $X_1$ and other covariates (`r2.other.x = 0.20` in the code). It can be found in the form of adjusted R-square via regressing $X_1$ on $X_2$ and $X_3$. Higher values require larger sample sizes. The default is 0 (zero).
+-   A base probability of $P_0 = 0.15$. This is the rate when predictor $X_1 = 0$ or when $\beta_1 = 0$.
+-   Increasing $X_1$ from 0 to 1 reduces the probability of being in group 1 from 0.15 to 0.10 ($P_1 = 0.10$).
+
+## Logistic Regression (Wald's *z* Test)
+
+What is the minimum required sample size? There are three types of specification to statistical power or sample size calculations; (i) probability specification, (ii) odds ratio specification, and (iii) regression coefficient specification (as in standard software output).
+
+## Logistic Regression (Wald's *z* Test)
+
+**Probability specification**:
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.logreg(p0 = 0.15, p1 = 0.10, r2.other.x = 0.20,
+               power = 0.80, alpha = 0.05, 
+               dist = "normal")
+```
+
+## Logistic Regression (Wald's *z* Test)
+
+**Odds ratio specification**: $$OR = \frac{P_1}{1-P1} / \frac{P_0}{1-P_0} = \frac{0.10}{1-0.10} / \frac{0.15}{1-0.15} = 0.6296$$
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.logreg(p0 = 0.15, odds.ratio = 0.6296, r2.other.x = 0.20,
+               alpha = 0.05, power = 0.80,
+               dist = "normal")
+```
+
+## Logistic Regression (Wald's *z* Test)
+
+**Regression coefficient specification**: $$\beta_1 = ln(\frac{P_1}{1-P1} / \frac{P_0}{1-P_0}) = ln(0.6296) = -0.4626$$
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.logreg(p0 = 0.15, beta1 = -0.4626, r2.other.x = 0.20,
+               alpha = 0.05, power = 0.80,
+               dist = "normal")
+```
+
+## Logistic Regression (Wald's *z* Test)
+
+**Change the distribution's parameters for predictor X**:
+
+The mean and standard deviation of a normally distributed main predictor is 0 and 1 by default. They can be modified. In the following example the mean is 25 and the standard deviation is 8.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+dist.x <- list(dist = "normal", mean = 25, sd = 8)
+
+pwrss.z.logreg(p0 = 0.15, beta1 = -0.4626, r2.other.x = 0.20,
+               alpha = 0.05, power = 0.80,
+               dist = dist.x)
+```
+
+## Logistic Regression (Wald's *z* Test)
+
+**Change the distribution family of predictor X**:
+
+More distribution types are supported by the function. For example, the main predictor can be binary (e.g. treatment/control groups). Often half of the sample is assigned to the treatment group and the other half to the control (`prob = 0.50` by default).
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.logreg(p0 = 0.15, beta1 = -0.4626, r2.other.x = 0.20,
+               alpha = 0.05, power = 0.80,
+               dist = "bernoulli")
+```
+
+## Logistic Regression (Wald's *z* Test)
+
+**Change the treatment group allocation rate of the binary predictor X** (`prob = 0.40`):
+
+Sometimes treatment groups cost more per subject or are harder to recruit than control groups, making an unbalanced sample practical. For example, with 40% of subjects in the treatment group, what is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+dist.x <- list(dist = "bernoulli", prob = 0.40)
+
+pwrss.z.logreg(p0 = 0.15, beta1 = -0.4626, r2.other.x = 0.20,
+               alpha = 0.05, power = 0.80,
+               dist = dist.x)
+```
+
+# Analysis of (Co)Variance (*F* Test)
+
+## ANOVA: Analysis of Variance ANCOVA: Analysis of Covariance
+
+-   **One-way ANOVA/ANCOVA:** Compares means across groups; ANCOVA adjusts for covariates.
+
+-   **Two- or Three-way ANOVA/ANCOVA:** Examines interactions between factors; ANCOVA adjusts interactions for covariates and determines required sample size for complex designs.
+
+## One-way
+
+### ANOVA
+
+A researcher is expecting a difference of Cohen's *d* = 0.50 between treatment and control groups (two levels) translating into $\eta^2 = 0.059$ (`eta2 = 0.059`). Means are not adjusted for any covariates. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.f.ancova(eta2 = 0.059, n.levels = 2,
+               power = .80, alpha = 0.05)
+```
+
+## One-way
+
+### ANCOVA
+
+A researcher is expecting an adjusted difference of Cohen's *d* = 0.45 between treatment and control groups (`n.levels = 2`) after controlling for the pretest (`n.cov = 1`) translating into partial $\eta^2 = 0.048$ (`eta2 = 0.048`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.f.ancova(eta2 = 0.048, n.levels = 2, n.cov = 1,
+               alpha = 0.05, power = .80)
+```
+
+`n.cov` (or `n.covariates`) argument has trivial effect on the results. The difference between ANOVA and ANCOVA procedure depends on whether the effect (`eta2`) is unadjusted or covariate-adjusted.
+
+## Two-way
+
+### ANOVA
+
+A researcher is expecting a partial $\eta^2 = 0.03$ (`eta2 = 0.03`) for interaction of treatment/control (Factor A: two levels) with gender (Factor B: two levels). Thus, `n.levels = c(2,2)`. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.f.ancova(eta2 = 0.03, n.levels = c(2,2),
+               alpha = 0.05, power = 0.80)
+```
+
+## Two-way
+
+### ANCOVA
+
+A researcher is expecting a partial $\eta^2 = 0.02$ (`eta2 = 0.02`) for interaction of treatment/control (Factor A) with gender (Factor B) adjusted for the pretest (`n.cov = 1`). What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.f.ancova(eta2 = 0.02, n.levels = c(2,2), n.cov = 1,
+               alpha = 0.05, power = .80)
+```
+
+# Correlation(s) (*z* Test)
+
+## One Correlation
+
+**One-sided Test**: Assume that the expected correlation is 0.20 and it is greater than 0.10. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.corr(r = 0.20, r0 = 0.10,
+             power = 0.80, alpha = 0.05, 
+             alternative = "greater")
+```
+
+## One Correlation
+
+**Two-sided Test**: Assume that the expected correlation is 0.20 and it is different from 0 (zero). The correlation could be 0.20 as well as -0.20. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.corr(r = 0.20, r0 = 0,
+             power = 0.80, alpha = 0.05, 
+             alternative = "not equal")
+```
+
+## Difference between Two Correlations (Independent)
+
+Assume that the expected correlations in the first and second groups are 0.30 and 0.20, respectively (`r1 = 0.30` and `r2 = 0.20`).
+
+## Difference between Two Correlations (Independent)
+
+**One-sided Test**: Expecting `r1 - r2` greater than 0 (zero). The difference could be 0.10 but could not be -0.10. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2corrs(r1 = 0.30, r2 = 0.20,
+               power = .80, alpha = 0.05, 
+               alternative = "greater")
+```
+
+## Difference between Two Correlations (Independent)
+
+**Two-sided Test**: Expecting `r1 - r2` different from 0 (zero). The difference could be -0.10 as well as 0.10. What is the minimum required sample size?
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2corrs(r1 = 0.30, r2 = 0.20,
+               power = .80, alpha = 0.05, 
+               alternative = "not equal")
+```
+
+# Proportion(s) (*z* Test)
+
+## Proportion(s) (*z* Test)
+
+## One Proportion
+
+In the following examples `p` is the proportion under alternative hypothesis and `p0` is the proportion under null hypothesis.
+
+## Proportion(s) (*z* Test)
+
+**One-sided Test**: Expecting `p - p0` smaller than 0 (zero).
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+# normal approximation
+pwrss.z.prop(p = 0.45, p0 = 0.50,
+             alpha = 0.05, power = 0.80,
+             alternative = "less",
+             arcsin.trans = FALSE)
+
+# arcsine transformation
+pwrss.z.prop(p = 0.45, p0 = 0.50,
+             alpha = 0.05, power = 0.80,
+             alternative = "less",
+             arcsin.trans = TRUE)
+```
+
+## Proportion(s) (*z* Test)
+
+**Two-sided Test**: Expecting `p - p0` smaller than 0 (zero) or greater than 0 (zero).
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.45, p0 = 0.50,
+             alpha = 0.05, power = 0.80,
+             alternative = "not equal")
+```
+
+## Proportion(s) (*z* Test)
+
+**Non-inferiority Test**: The case when smaller proportion is better. Expecting `p - p0` smaller than 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.45, p0 = 0.50, margin = 0.01,
+             alpha = 0.05, power = 0.80,
+             alternative = "non-inferior")
+```
+
+## Proportion(s) (*z* Test)
+
+**Non-inferiority Test**: The case when bigger proportion is better. Expecting `p - p0` greater than -0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.55, p0 = 0.50, margin = -0.01,
+             alpha = 0.05, power = 0.80,
+             alternative = "non-inferior")
+```
+
+## Proportion(s) (*z* Test)
+
+**Superiority Test**: The case when smaller proportion is better. Expecting `p - p0` smaller than -0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.45, p0 = 0.50, margin = -0.01,
+             alpha = 0.05, power = 0.80,
+             alternative = "superior")
+```
+
+## Proportion(s) (*z* Test)
+
+**Superiority Test**: The case when bigger proportion is better. Expecting `p - p0` greater than 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.55, p0 = 0.50, margin = 0.01,
+             alpha = 0.05, power = 0.80,
+             alternative = "superior")
+```
+
+## Proportion(s) (*z* Test)
+
+**Equivalence Test**: Expecting `p - p0` between -0.01 and 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.prop(p = 0.50, p0 = 0.50, margin = 0.01,
+             alpha = 0.05, power = 0.80,
+             alternative = "equivalent")
+```
+
+# Difference between Two Proportions (Independent)
+
+## Difference between Two Proportions (Independent)
+
+In the following examples `p1` and `p2` are proportions for the first and second groups under alternative hypothesis. The null hypothesis state `p1 = p2` or `p1 - p2 = 0`.
+
+## Difference between Two Proportions
+
+**One-sided Test:** Expecting `p1 - p2` smaller than 0 (zero).
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+# normal approximation
+pwrss.z.2props(p1 = 0.45, p2 = 0.50,
+               alpha = 0.05, power = 0.80,
+               alternative = "less",
+               arcsin.trans = FALSE)
+```
+
+## Difference between Two Proportions
+
+**Two-sided Test:** Expecting `p1 - p2` smaller than 0 (zero) or greater than 0 (zero).
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.45, p2 = 0.50,
+               alpha = 0.05, power = 0.80,
+               alternative = "not equal")
+```
+
+## Difference between Two Proportions
+
+**Non-inferiority Test**: The case when smaller proportion is better. Expecting `p1 - p2` smaller than 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.45, p2 = 0.50, margin = 0.01,
+               alpha = 0.05, power = 0.80,
+               alternative = "non-inferior")
+```
+
+## Difference between Two Proportions
+
+**Non-inferiority Test**: The case when bigger proportion is better. Expecting `p1 - p2` greater than -0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.55, p2 = 0.50,  margin = -0.01,
+               alpha = 0.05, power = 0.80,
+               alternative = "non-inferior")
+```
+
+## Difference between Two Proportions
+
+**Superiority Test**: The case when smaller proportion is better. Expecting `p1 - p2` smaller than -0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.45, p2 = 0.50, margin = -0.01,
+               alpha = 0.05, power = 0.80,
+               alternative = "superior")
+```
+
+## Difference between Two Proportions
+
+**Superiority Test**: The case when bigger proportion is better. Expecting `p1 - p2` greater than 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.55, p2 = 0.50, margin = 0.01,
+               alpha = 0.05, power = 0.80,
+               alternative = "superior")
+```
+
+## Difference between Two Proportions
+
+**Equivalence Test**: Expecting `p1 - p2` between -0.01 and 0.01.
+
+```{r}
+#| message: false
+#| fig.width: 7
+#| fig.height: 5
+#| warning: false 
+#| output-location: slide
+pwrss.z.2props(p1 = 0.50, p2 = 0.50, margin = 0.01,
+               alpha = 0.05, power = 0.80,
+               alternative = "equivalent")
+```

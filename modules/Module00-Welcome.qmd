@@ -1,0 +1,120 @@
+---
+title: "Welcome!"
+format: 
+  revealjs:
+    scrollable: true
+    smaller: true
+    toc: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Welcome to SISMID Workshop: R Programming for Infectious Disease Modeling!
+
+**Alex Edwards (Any)**
+
+Instructor, Department of Biostatistics and Bioinformatics,
+Emory University
+
+Email: Alex.edwards\@emory.edu
+
+</br>
+
+**Zane Billings (he/him)**
+
+Data Scientist, State Farm
+
+Email: wzbillings\@proton.me
+
+## Introductions
+
+-   Name?
+-   Current position / institution?
+-   Most interesting pathogen/condition/exposure to you?
+
+## Course website
+
+-   All of the materials for this course can be found online here:
+    https://wzbillings.github.io/SISMID-2026/.
+-   This contains the schedule, course resources, and online versions of
+    all of our slide decks.
+-   The **Course Resources** page contains download links for all of the
+    data, exercises, and slides for this class.
+-   Please feel free to download these resources and share them -- all
+    of the course content is under the [Creative Commons BY-NC 4.0
+    license](https://creativecommons.org/licenses/by-nc/4.0/).
+
+## Overall Workshop Objectives
+
+By the end of this workshop, you should be able to
+
+1. Write code that uses advanced R programming tools like control flow and custom functions.
+2. Use advanced R programming tools to answer interesting epidemiology questions.
+3. Be (more) prepared to use R in other SISMID modules
+
+## Workshop Overview
+
+Multiple modules that will each:
+
+-   Start with learning objectives
+-   End with summary slides
+-   Include mini-exercises or practice problems
+
+Themes that will show up throughout the workshop:
+
+-   Reproducibility
+-   Good coding techniques
+-   Thinking algorithmically
+
+Note that we listed a lot of topics on the course description, we won't have time to get in-depth with most of them. What are **you** most interested in learning?
+
+## Course structure
+
+- We'll start the course with some fundamentals.
+- These include advanced programming techniques, applications of those programming techniques, and just some neat things we think will help prepare you for infectious disease modeling.
+- Some examples are: using R packages to improve your life, simulating power, bootstrap confidence intervals.
+- We'll have time for some other advanced topics too, but maybe not all of them depending. These could be: disease mapping, maximum likelihood, differential equations, and advanced linear models.
+
+## Useful (+ Free) Resources
+
+**Want more?**
+
+-   R for Data Science: http://r4ds.had.co.nz/\
+    (great general information)
+
+-   Fundamentals of Data Visualization: https://clauswilke.com/dataviz/
+
+-   R for Epidemiology: https://www.r4epi.com/
+
+-   The Epidemiologist R Handbook: https://epirhandbook.com/en/
+
+-   R basics by Rafael A. Irizarry:
+    https://rafalab.github.io/dsbook/r-basics.html (great general
+    information)
+
+-   Open Case Studies: https://www.opencasestudies.org/\
+    (resource for specific public health cases with statistical
+    implementation and interpretation)
+
+## Useful (+Free) Resources
+
+**Need help?**
+
+-   Various "Cheat Sheets": https://github.com/rstudio/cheatsheets/
+
+-   R reference card:
+    http://cran.r-project.org/doc/contrib/Short-refcard.pdf
+
+-   R jargon:
+    https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf
+
+-   R vs Stata:
+    https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf
+
+-   R terminology:
+    https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf
+
+## Installing R
+
+Hopefully everyone has pre-installed R and RStudio (and Quarto if needed). Let's take a minute to make sure everyone is set up and then jump in!

@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Alex Edwards">
+  <meta name="author" content="Zane Billings">
+  <title>SISMID R for ID Materials (2026) – Inferential Statistics and Modeling Review</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #f8f8f2;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #f8f8f2; } /* Normal */
+    code span.al { color: #f07178; background-color: #2a0f15; font-weight: bold; } /* Alert */
+    code span.an { color: #d4d0ab; } /* Annotation */
+    code span.at { color: #00e0e0; } /* Attribute */
+    code span.bn { color: #d4d0ab; } /* BaseN */
+    code span.bu { color: #abe338; } /* BuiltIn */
+    code span.cf { color: #ffa07a; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #abe338; } /* Char */
+    code span.cn { color: #ffd700; } /* Constant */
+    code span.co { color: #f8f8f2; font-style: italic; } /* Comment */
+    code span.cv { color: #ffd700; } /* CommentVar */
+    code span.do { color: #f8f8f2; } /* Documentation */
+    code span.dt { color: #ffa07a; } /* DataType */
+    code span.dv { color: #d4d0ab; } /* DecVal */
+    code span.er { color: #f07178; text-decoration: underline; } /* Error */
+    code span.ex { color: #00e0e0; font-weight: bold; } /* Extension */
+    code span.fl { color: #d4d0ab; } /* Float */
+    code span.fu { color: #ffa07a; } /* Function */
+    code span.im { color: #abe338; } /* Import */
+    code span.in { color: #d4d0ab; } /* Information */
+    code span.kw { color: #ffa07a; font-weight: bold; } /* Keyword */
+    code span.op { color: #ffa07a; } /* Operator */
+    code span.ot { color: #00e0e0; } /* Other */
+    code span.pp { color: #dcc6e0; } /* Preprocessor */
+    code span.re { color: #00e0e0; background-color: #f8f8f2; } /* RegionMarker */
+    code span.sc { color: #abe338; } /* SpecialChar */
+    code span.ss { color: #abe338; } /* SpecialString */
+    code span.st { color: #abe338; } /* String */
+    code span.va { color: #00e0e0; } /* Variable */
+    code span.vs { color: #abe338; } /* VerbatimString */
+    code span.wa { color: #dcc6e0; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-5b48f34d633aed70c74c672477009ffc.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Inferential Statistics and Modeling Review</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> 
+</div>
+</div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://wzbillings.com/">Zane Billings</a> 
+</div>
+</div>
+</div>
+
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Page Items</h2>
+<ul>
+<li><a href="#/learning-objectives" id="/toc-learning-objectives"><strong>Learning objectives:</strong></a></li>
+<li><a href="#/data" id="/toc-data">Data</a></li>
+<li><a href="#/helpful-package" id="/toc-helpful-package">Helpful Package</a></li>
+<li><a href="#/janitor-example" id="/toc-janitor-example">Janitor Example</a></li>
+<li><a href="#/t-test-one-sample" id="/toc-t-test-one-sample">T-test One Sample</a></li>
+<li><a href="#/t-test-one-sample-question" id="/toc-t-test-one-sample-question">T-test One Sample Question</a>
+<ul>
+<li><a href="#/hypothesis" id="/toc-hypothesis">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/t-test-one-sample-function" id="/toc-t-test-one-sample-function">T-test One Sample Function</a></li>
+<li><a href="#/t-test-one-sample-output" id="/toc-t-test-one-sample-output">T-test One Sample Output</a></li>
+<li><a href="#/t-test-two-sample" id="/toc-t-test-two-sample">T-Test Two Sample</a></li>
+<li><a href="#/t-test-two-sample-question" id="/toc-t-test-two-sample-question">T-Test Two Sample Question</a>
+<ul>
+<li><a href="#/hypothesis-1" id="/toc-hypothesis-1">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/t-test-two-sample-function" id="/toc-t-test-two-sample-function">T-Test Two Sample Function</a></li>
+<li><a href="#/t-test-two-sample-output" id="/toc-t-test-two-sample-output">T-Test Two Sample Output</a></li>
+<li><a href="#/t-test-paired" id="/toc-t-test-paired">T-test Paired</a></li>
+<li><a href="#/t-test-paired-question" id="/toc-t-test-paired-question">T-test Paired Question</a>
+<ul>
+<li><a href="#/hypothesis-2" id="/toc-hypothesis-2">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/t-test-paired-function" id="/toc-t-test-paired-function">T-test Paired Function</a></li>
+<li><a href="#/t-test-paired-output" id="/toc-t-test-paired-output">T-test Paired Output</a></li>
+<li><a href="#/t-test-paired-output-reversed" id="/toc-t-test-paired-output-reversed">T-test Paired Output reversed</a></li>
+<li><a href="#/anova-one-way" id="/toc-anova-one-way">ANOVA One Way</a></li>
+<li><a href="#/anova-question" id="/toc-anova-question">ANOVA Question</a>
+<ul>
+<li><a href="#/hypothesis-3" id="/toc-hypothesis-3">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/anova-functions" id="/toc-anova-functions">ANOVA Function(s)</a></li>
+<li><a href="#/anova-function-arguments" id="/toc-anova-function-arguments">ANOVA Function Arguments</a></li>
+<li><a href="#/anova-output-without-summary" id="/toc-anova-output-without-summary">ANOVA Output Without <code>summary</code></a></li>
+<li><a href="#/anova-output-with-summary" id="/toc-anova-output-with-summary">ANOVA Output With <code>summary</code></a></li>
+<li><a href="#/anova-multiple-comparisons-tukeyhsd-function" id="/toc-anova-multiple-comparisons-tukeyhsd-function">ANOVA Multiple Comparisons <code>TukeyHSD</code> function</a></li>
+<li><a href="#/anova-output-with-tukeyhsd" id="/toc-anova-output-with-tukeyhsd">ANOVA Output with <code>TukeyHSD</code></a></li>
+<li><a href="#/correlation" id="/toc-correlation">Correlation</a></li>
+<li><a href="#/correlation-question" id="/toc-correlation-question">Correlation Question</a>
+<ul>
+<li><a href="#/hypothesis-4" id="/toc-hypothesis-4">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/correlation-function" id="/toc-correlation-function">Correlation Function</a></li>
+<li><a href="#/correlation-output" id="/toc-correlation-output">Correlation Output</a></li>
+<li><a href="#/correlation-output-graph-check" id="/toc-correlation-output-graph-check">Correlation Output Graph Check</a></li>
+<li><a href="#/simple-linear-regression" id="/toc-simple-linear-regression">Simple Linear Regression</a></li>
+<li><a href="#/slr-model-equation" id="/toc-slr-model-equation">SLR Model Equation</a></li>
+<li><a href="#/slr-question" id="/toc-slr-question">SLR Question</a>
+<ul>
+<li><a href="#/hypothesis-5" id="/toc-hypothesis-5">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/slr-function" id="/toc-slr-function">SLR Function</a></li>
+<li><a href="#/slr-output" id="/toc-slr-output">SLR Output</a></li>
+<li><a href="#/output-interpretation" id="/toc-output-interpretation">Output Interpretation</a></li>
+<li><a href="#/multiple-linear-regression" id="/toc-multiple-linear-regression">Multiple Linear Regression</a></li>
+<li><a href="#/mlr-model-equation" id="/toc-mlr-model-equation">MLR Model Equation</a></li>
+<li><a href="#/mlr-question" id="/toc-mlr-question">MLR Question</a>
+<ul>
+<li><a href="#/hypothesis-6" id="/toc-hypothesis-6">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/mlr-function" id="/toc-mlr-function">MLR Function</a></li>
+<li><a href="#/mlr-output" id="/toc-mlr-output">MLR Output</a></li>
+<li><a href="#/mlr-output-interpretation" id="/toc-mlr-output-interpretation">MLR Output Interpretation</a></li>
+<li><a href="#/logistic-regression" id="/toc-logistic-regression">Logistic Regression</a></li>
+<li><a href="#/logistic-model-equation" id="/toc-logistic-model-equation">Logistic Model Equation</a></li>
+<li><a href="#/logistic-question" id="/toc-logistic-question">Logistic Question</a>
+<ul>
+<li><a href="#/hypothesis-7" id="/toc-hypothesis-7">Hypothesis</a></li>
+</ul></li>
+<li><a href="#/logistic-function" id="/toc-logistic-function">Logistic Function</a></li>
+<li><a href="#/logistic-output" id="/toc-logistic-output">Logistic Output</a></li>
+<li><a href="#/logistic-important" id="/toc-logistic-important">Logistic IMPORTANT!!</a></li>
+<li><a href="#/logistic-output-interpretation" id="/toc-logistic-output-interpretation">Logistic Output Interpretation</a></li>
+</ul>
+</nav>
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2><strong>Learning objectives:</strong></h2>
+<ul>
+<li><p>Develop a statistical hypothesis for a given research question</p></li>
+<li><p>Identify appropriate statistical test for a given hypothesis</p></li>
+<li><p>Implement meaningful code to model data and answer research questions</p></li>
+</ul>
+</section>
+<section id="data" class="slide level2">
+<h2>Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>qcrc_main <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>             <span class="fu">mutate</span>(<span class="at">BMI =</span> <span class="fu">as.numeric</span>(BMI),</span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a>                    <span class="at">ICU_LOS =</span> <span class="fu">as.numeric</span>(ICU_LOS))</span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>neo <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">"https://www.kaggle.com/api/v1/datasets/download/zahrazolghadr/neonatal-hypothermia"</span>)</span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co">#This sets the numer of digits for p-values so that we can avoid scientific notation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="helpful-package" class="slide level2">
+<h2>Helpful Package</h2>
+<p>The <code>janitor</code> package can be helpful in expediting the initial data cleaning that comes along with analysis. One particular function I want to draw your attention to is <code>clean_names</code> as it will:</p>
+<ul>
+<li><p>replace spaces with underscores</p></li>
+<li><p>make all letters lowercase</p></li>
+<li><p>remove non-standard characters</p></li>
+</ul>
+</section>
+<section id="janitor-example" class="slide level2">
+<h2>Janitor Example</h2>
+<p>Currently the names are a bit of a mess:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Patient_DEID"     "Decatur_Transfer" "Age"              "Female"          
+[5] "Race"             "Died"             "30D_Mortality"   </code></pre>
+</div>
+</div>
+<p>Let’s clean them:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a>qcrc_main <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(qcrc_main)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, they are much more manageable:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "patient_deid"     "decatur_transfer" "age"              "female"          
+[5] "race"             "died"             "x30d_mortality"  </code></pre>
+</div>
+</div>
+</section>
+<section id="t-test-one-sample" class="slide level2">
+<h2>T-test One Sample</h2>
+<p>Hypothesis test used to determine whether the mean calculated from sample data collected from a <strong>single group</strong> is <em>different</em> from a <strong>designated value</strong> specified by the researcher</p>
+</section>
+<section id="t-test-one-sample-question" class="slide level2">
+<h2>T-test One Sample Question</h2>
+<p>In the QCRC sample, is the average BMI of patients significantly different from the average BMI of the patients examined in the paper, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8081400/">Associations between body-mass index and COVID-19 severity in 6·9 million people in England: a prospective, community-based, cohort study</a> by G.Min Et. Al., of <span class="math inline">\(28.76 kg/m^2\)</span></p>
+<h3 id="hypothesis">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \mu{BMI}_{qcrc} = \mu{BMI}_{covid}\)</span></p>
+<p><span class="math inline">\(H_A: \mu{BMI}_{qcrc} \neq \mu{BMI}_{covid}\)</span></p>
+</section>
+<section id="t-test-one-sample-function" class="slide level2">
+<h2>T-test One Sample Function</h2>
+<p>For all t-test we will use the base R function <code>t.test</code>, the <code>t.test</code> function will calculate the test and give us basic output</p>
+<p>For a one-sample we must provide two arguments:</p>
+<ul>
+<li><p><code>x</code>, the <strong>continuous</strong> data column in the dataset we wish to test against the given mean</p></li>
+<li><p><code>mu</code>, the <strong>given</strong> mean we are comparing against</p></li>
+</ul>
+</section>
+<section id="t-test-one-sample-output" class="slide level2">
+<h2>T-test One Sample Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>qcrc_main<span class="sc">$</span>bmi, <span class="at">mu=</span><span class="fl">28.76</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  qcrc_main$bmi
+t = 5.7635, df = 284, p-value = 0.00000002144
+alternative hypothesis: true mean is not equal to 28.76
+95 percent confidence interval:
+ 30.63377 32.57746
+sample estimates:
+mean of x 
+ 31.60561 </code></pre>
+</div>
+</div>
+</section>
+<section id="t-test-two-sample" class="slide level2">
+<h2>T-Test Two Sample</h2>
+<p>Hypothesis test used to test whether the unknown population <strong>means</strong> of <strong>two groups</strong> are equal or not.</p>
+</section>
+<section id="t-test-two-sample-question" class="slide level2">
+<h2>T-Test Two Sample Question</h2>
+<p>Is there a statistically significant difference in the BMI of male and female COVID patients in the provided sample of Emory Patients?</p>
+<h3 id="hypothesis-1">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \mu{BMI}_{males} = \mu{BMI}_{females}\)</span></p>
+<p><span class="math inline">\(H_A: \mu{BMI}_{males} \neq \mu{BMI}_{females}\)</span></p>
+</section>
+<section id="t-test-two-sample-function" class="slide level2">
+<h2>T-Test Two Sample Function</h2>
+<p>For all t-test we will use the base R function <code>t.test</code>, the <code>t.test</code> function will calculate the test and give us basic output</p>
+<p>For a two-sample we must provide a single argument:</p>
+<ul>
+<li><code>continuous ~ categorical</code> or <code>outcome ~ exposure</code>, formula that models the relationship with your continuous outcome on the left side and two-level categorical variable on the right side separated by a <code>~</code></li>
+</ul>
+</section>
+<section id="t-test-two-sample-output" class="slide level2">
+<h2>T-Test Two Sample Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(qcrc_main<span class="sc">$</span>bmi<span class="sc">~</span>qcrc_main<span class="sc">$</span>female)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  qcrc_main$bmi by qcrc_main$female
+t = 1.6845, df = 249.91, p-value = 0.09333
+alternative hypothesis: true difference in means between group Female and group Male is not equal to 0
+95 percent confidence interval:
+ -0.2864912  3.6734024
+sample estimates:
+mean in group Female   mean in group Male 
+            32.53256             30.83910 </code></pre>
+</div>
+</div>
+</section>
+<section id="t-test-paired" class="slide level2">
+<h2>T-test Paired</h2>
+<p>Hypothesis test used to determine whether the <strong>mean difference</strong> between <strong>two sets of observations</strong> is zero</p>
+</section>
+<section id="t-test-paired-question" class="slide level2">
+<h2>T-test Paired Question</h2>
+<p>In the neonatal hypothermia dataset there exist a statistically significant difference in body temperature between time point one (t.1) and time point two (t.2).</p>
+<h3 id="hypothesis-2">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \mu_{t.2 - t.1} = 0\)</span> or <span class="math inline">\(H_0: \mu_{t.1 - t.2} = 0\)</span> <span class="math inline">\(H_A: \mu_{t.2 - t.1} \ne 0\)</span> or <span class="math inline">\(H_A: \mu_{t.1 - t.2} \ne 0\)</span></p>
+</section>
+<section id="t-test-paired-function" class="slide level2">
+<h2>T-test Paired Function</h2>
+<p>For all t-test we will use the base R function <code>t.test</code>, the <code>t.test</code> function will calculate the test and give us basic output</p>
+<p>For a paired t-test we must provide three arguments:</p>
+<ul>
+<li><p><code>x</code>, the first measurement continuous variable</p></li>
+<li><p><code>y</code>, the second measurement continuous variable</p></li>
+<li><p><code>paired = T</code>, indicator variable to let the function know you want to perform a paired t-test</p></li>
+</ul>
+</section>
+<section id="t-test-paired-output" class="slide level2">
+<h2>T-test Paired Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>neo<span class="sc">$</span>t<span class="fl">.1</span>, <span class="at">y=</span>neo<span class="sc">$</span>t<span class="fl">.2</span>, <span class="at">paired =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  neo$t.1 and neo$t.2
+t = -22.284, df = 199, p-value &lt; 0.00000000000000022
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -1.1668622 -0.9771378
+sample estimates:
+mean difference 
+         -1.072 </code></pre>
+</div>
+</div>
+</section>
+<section id="t-test-paired-output-reversed" class="slide level2">
+<h2>T-test Paired Output reversed</h2>
+<p><strong>Note, a paired t-test looks at magnitude of difference so you can normally ignore the negative signs in the output or reverse the <code>x</code> and <code>y</code> variables in the arguments</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="at">x=</span>neo<span class="sc">$</span>t<span class="fl">.2</span>, <span class="at">y=</span>neo<span class="sc">$</span>t<span class="fl">.1</span>, <span class="at">paired =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  neo$t.2 and neo$t.1
+t = 22.284, df = 199, p-value &lt; 0.00000000000000022
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ 0.9771378 1.1668622
+sample estimates:
+mean difference 
+          1.072 </code></pre>
+</div>
+</div>
+</section>
+<section id="anova-one-way" class="slide level2">
+<h2>ANOVA One Way</h2>
+<p><strong>An</strong>alysis <strong>o</strong>f <strong>Va</strong>riance</p>
+<p>Hypothesis test used to analyze the <em>difference</em> between the <strong>means</strong> of <strong>more than two groups</strong></p>
+</section>
+<section id="anova-question" class="slide level2">
+<h2>ANOVA Question</h2>
+<p>In the Emory dataset, do we find a statistically significant difference in BMI between racial groups?</p>
+<h3 id="hypothesis-3">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \mu_{AA} = \mu_{A} = \mu_{W} = \mu_{M}  = \mu_{U}\)</span></p>
+<p><span class="math inline">\(H_A: At\; least\; one\; \mu_i\; differs\; between\; the\; groups\)</span></p>
+<p>Plain English: At least one group mean is different from at least one other mean</p>
+</section>
+<section id="anova-functions" class="slide level2">
+<h2>ANOVA Function(s)</h2>
+<p>For an ANOVA we will use the base R function <code>aov</code>, the <code>aov</code>function will calculate the test and give us basic output but we need to complement it with the <code>summary</code> function to get the full amount of information</p>
+<p><strong>Note, ANOVA only tells you a group is different. Not which group!</strong></p>
+<p>So, we will also perform a Tukey pairwise comparisons corection to find our different group(s).</p>
+</section>
+<section id="anova-function-arguments" class="slide level2">
+<h2>ANOVA Function Arguments</h2>
+<p>For an ANOVA using <code>aov</code> we need the following argument:</p>
+<ul>
+<li><code>continuous ~ categorical</code> or <code>outcome ~ exposure</code>, formula that models the relationship with your continuous outcome on the left side and 3+ level categorical variable on the right side separated by a <code>~</code></li>
+</ul>
+<p>For the <code>summary</code> function we require one argument:</p>
+<ul>
+<li><code>object</code>, an object created by storing the output of the <code>aov</code> function</li>
+</ul>
+</section>
+<section id="anova-output-without-summary" class="slide level2">
+<h2>ANOVA Output Without <code>summary</code></h2>
+<p>Notice, no confidence intervals or P-values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">aov</span>(qcrc_main<span class="sc">$</span>bmi<span class="sc">~</span>qcrc_main<span class="sc">$</span>race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+   aov(formula = qcrc_main$bmi ~ qcrc_main$race)
+
+Terms:
+                qcrc_main$race Residuals
+Sum of Squares        1678.259 18052.692
+Deg. of Freedom              4       280
+
+Residual standard error: 8.029564
+Estimated effects may be unbalanced
+3 observations deleted due to missingness</code></pre>
+</div>
+</div>
+</section>
+<section id="anova-output-with-summary" class="slide level2">
+<h2>ANOVA Output With <code>summary</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(qcrc_main<span class="sc">$</span>bmi<span class="sc">~</span>qcrc_main<span class="sc">$</span>race)</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+qcrc_main$race   4   1678   419.6   6.508 0.0000508 ***
+Residuals      280  18053    64.5                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+3 observations deleted due to missingness</code></pre>
+</div>
+</div>
+</section>
+<section id="anova-multiple-comparisons-tukeyhsd-function" class="slide level2">
+<h2>ANOVA Multiple Comparisons <code>TukeyHSD</code> function</h2>
+<p>For <code>TukeyHSD</code> we require one argument:</p>
+<ul>
+<li><code>object</code>, an object created by storing the output of the <code>aov</code> function</li>
+</ul>
+</section>
+<section id="anova-output-with-tukeyhsd" class="slide level2">
+<h2>ANOVA Output with <code>TukeyHSD</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = qcrc_main$bmi ~ qcrc_main$race)
+
+$`qcrc_main$race`
+                                                                    diff
+Asian-African American  or Black                              -9.1196581
+Caucasian or White-African American  or Black                 -5.1159544
+Multiple-African American  or Black                           -3.0641026
+Unknown, Unavailable or Unreported-African American  or Black -2.0871795
+Caucasian or White-Asian                                       4.0037037
+Multiple-Asian                                                 6.0555556
+Unknown, Unavailable or Unreported-Asian                       7.0324786
+Multiple-Caucasian or White                                    2.0518519
+Unknown, Unavailable or Unreported-Caucasian or White          3.0287749
+Unknown, Unavailable or Unreported-Multiple                    0.9769231
+                                                                     lwr
+Asian-African American  or Black                              -16.636088
+Caucasian or White-African American  or Black                  -8.506117
+Multiple-African American  or Black                           -25.166827
+Unknown, Unavailable or Unreported-African American  or Black  -6.690034
+Caucasian or White-Asian                                       -3.933860
+Multiple-Asian                                                -17.183251
+Unknown, Unavailable or Unreported-Asian                       -1.493833
+Multiple-Caucasian or White                                   -20.197612
+Unknown, Unavailable or Unreported-Caucasian or White          -2.233779
+Unknown, Unavailable or Unreported-Multiple                   -21.489312
+                                                                    upr
+Asian-African American  or Black                              -1.603228
+Caucasian or White-African American  or Black                 -1.725791
+Multiple-African American  or Black                           19.038622
+Unknown, Unavailable or Unreported-African American  or Black  2.515675
+Caucasian or White-Asian                                      11.941267
+Multiple-Asian                                                29.294363
+Unknown, Unavailable or Unreported-Asian                      15.558790
+Multiple-Caucasian or White                                   24.301316
+Unknown, Unavailable or Unreported-Caucasian or White          8.291328
+Unknown, Unavailable or Unreported-Multiple                   23.443158
+                                                                  p adj
+Asian-African American  or Black                              0.0086325
+Caucasian or White-African American  or Black                 0.0004339
+Multiple-African American  or Black                           0.9955263
+Unknown, Unavailable or Unreported-African American  or Black 0.7249240
+Caucasian or White-Asian                                      0.6378766
+Multiple-Asian                                                0.9528496
+Unknown, Unavailable or Unreported-Asian                      0.1596273
+Multiple-Caucasian or White                                   0.9990901
+Unknown, Unavailable or Unreported-Caucasian or White         0.5113490
+Unknown, Unavailable or Unreported-Multiple                   0.9999539</code></pre>
+</div>
+</div>
+</section>
+<section id="correlation" class="slide level2">
+<h2>Correlation</h2>
+<p>This analysis serves to characterize the relationship between two continuous variable. For instance, if we see an increase in calories do we expect to see an increase in weight. This analysis returns a value <span class="math inline">\(\rho\)</span> that tells you the strength and direction of the relationship and takes the values [-1,1] inclusive. A -1 means a strong negative relationship and a 1 means a strong positive relationship. A zero means no relationship. The closer to zero the weaker the relationship</p>
+<p>Correlation is <u><strong><em>NOT</em></strong></u> Causation!</p>
+</section>
+<section id="correlation-question" class="slide level2">
+<h2>Correlation Question</h2>
+<p>Is there a relationship between BMI and length of hospital stay in the Emory COVID dataset?</p>
+<h3 id="hypothesis-4">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \rho = 0\)</span></p>
+<p><span class="math inline">\(H_A: \rho \ne 0\)</span></p>
+</section>
+<section id="correlation-function" class="slide level2">
+<h2>Correlation Function</h2>
+<p>For correlation we will use the base R function <code>cor.test</code>, the <code>cor.test</code> function will calculate <span class="math inline">\(\rho\)</span> and give us basic output</p>
+<p>For correlation we must provide three arguments:</p>
+<ul>
+<li><p><code>x</code>, the first measurement continuous variable</p></li>
+<li><p><code>y</code>, the second measurement continuous variable</p></li>
+<li><p><code>use = "complete.obs"</code>, ignores missing values for the calculation and uses only complete observations (not sure why it doesn’t use <code>na.rm</code> and yes, it’s obnoxious)</p></li>
+</ul>
+</section>
+<section id="correlation-output" class="slide level2">
+<h2>Correlation Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(qcrc_main<span class="sc">$</span>icu_los, qcrc_main<span class="sc">$</span>bmi, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  qcrc_main$icu_los and qcrc_main$bmi
+t = 3.234, df = 283, p-value = 0.001365
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.07422377 0.29842419
+sample estimates:
+      cor 
+0.1887828 </code></pre>
+</div>
+</div>
+</section>
+<section id="correlation-output-graph-check" class="slide level2">
+<h2>Correlation Output Graph Check</h2>
+<p>Always check your correlation with a graph to make sure the data is linear</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(qcrc_main, <span class="fu">aes</span>(<span class="at">x=</span>bmi, <span class="at">y=</span> icu_los))<span class="sc">+</span></span>
+<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>)<span class="sc">+</span></span>
+<span id="cb21-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="Module02-StatReview_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
+<section id="simple-linear-regression" class="slide level2">
+<h2>Simple Linear Regression</h2>
+<p>This analysis is used to characterize the relationship between two continuous variables, where one is treated as the predictor (independent variable) and the other as the outcome (dependent variable). For example, we can analyze whether an increase in calorie intake is associated with an increase in weight. Simple linear regression provides a model to estimate this relationship using a straight-line equation.</p>
+</section>
+<section id="slr-model-equation" class="slide level2">
+<h2>SLR Model Equation</h2>
+<p><span class="math inline">\(y = \beta_0 + \beta_1x + \epsilon\)</span></p>
+<ul>
+<li><p><span class="math inline">\(\beta_1\)</span>​: The slope of the line, indicating the strength and direction of the relationship.</p></li>
+<li><p>​<span class="math inline">\(\beta_0\)</span>: The y-intercept, representing the value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x=0\)</span>.</p></li>
+<li><p><span class="math inline">\(\epsilon\)</span>: Random error.</p></li>
+</ul>
+<p>Like correlation, regression does not imply causation! Always interpret results within the study’s context and limitations.</p>
+</section>
+<section id="slr-question" class="slide level2">
+<h2>SLR Question</h2>
+<p>Is BMI (predictor) associated with the length of hospital stay (outcome) in the Emory COVID dataset? Meaning, if BMI changes how much (<span class="math inline">\(\beta_1\)</span> ) does it change length of stay?</p>
+<h3 id="hypothesis-5">Hypothesis</h3>
+<p><span class="math inline">\(H_0: \beta_1 = 0\)</span></p>
+<p><span class="math inline">\(H_0: \beta_1 \ne 0\)</span></p>
+</section>
+<section id="slr-function" class="slide level2">
+<h2>SLR Function</h2>
+<p>We can perform simple linear regression in R using the <code>lm()</code> function. Here’s how the key components fit:</p>
+<ul>
+<li><p><code>formula = y ~ x</code> specifies the dependent and independent variables.</p></li>
+<li><p><code>data</code> specifies the dataset to use.</p></li>
+</ul>
+</section>
+<section id="slr-output" class="slide level2">
+<h2>SLR Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a simple linear regression model</span></span>
+<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(icu_los <span class="sc">~</span> bmi, <span class="at">data =</span> qcrc_main)</span>
+<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the results</span></span>
+<span id="cb22-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = icu_los ~ bmi, data = qcrc_main)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-14.180  -6.659  -1.791   4.850  47.637 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   4.3119     2.0068   2.149  0.03251 * 
+bmi           0.1986     0.0614   3.234  0.00137 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.625 on 283 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.03564,   Adjusted R-squared:  0.03223 
+F-statistic: 10.46 on 1 and 283 DF,  p-value: 0.001365</code></pre>
+</div>
+</div>
+</section>
+<section id="output-interpretation" class="slide level2">
+<h2>Output Interpretation</h2>
+<ul>
+<li><p><strong>Estimate for</strong> <span class="math inline">\(\beta_1\)</span>​: Indicates the expected change in the <code>icu_los</code> for a one-unit increase in <code>bmi</code>.</p></li>
+<li><p><strong>P-value</strong>: Tests if <span class="math inline">\(\beta_1\)</span>​ is significantly different from 0.</p></li>
+<li><p><span class="math inline">\(\mathbf{R^2}\)</span>​: Proportion of variance in the outcome explained by the predictor.</p></li>
+</ul>
+</section>
+<section id="multiple-linear-regression" class="slide level2">
+<h2>Multiple Linear Regression</h2>
+<p><br>
+Multiple Linear Regression (MLR) is used to explore and model the relationship between one dependent (outcome) variable and two or more independent (predictor) variables. The goal is to understand how each predictor contributes to the outcome, while controlling for the others.</p>
+</section>
+<section id="mlr-model-equation" class="slide level2">
+<h2>MLR Model Equation</h2>
+<p><span class="math inline">\(y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \dots + \beta_kx_k + \epsilon\)</span><br>
+Where:</p>
+<ul>
+<li><p><span class="math inline">\(y\)</span>: Dependent variable (outcome).</p></li>
+<li><p><span class="math inline">\(x_1, x_2, \dots, x_k\)</span>​: Independent variables (predictors).</p></li>
+<li><p><span class="math inline">\(\beta_0\)</span>​: Intercept (value of <span class="math inline">\(y\)</span> when all <span class="math inline">\(x\)</span>’s are 0).</p></li>
+<li><p><span class="math inline">\(\beta_1, \beta_2, \dots, \beta_k​\)</span>: Regression coefficients, showing the change in <span class="math inline">\(y\)</span> for a one-unit increase in <span class="math inline">\(x\)</span>, holding other variables constant.</p></li>
+<li><p><span class="math inline">\(\epsilon\)</span>: Random error.</p></li>
+</ul>
+</section>
+<section id="mlr-question" class="slide level2">
+<h2>MLR Question</h2>
+<p>Does BMI, age, and gender predict the length of hospital stay in the Emory COVID dataset? Or, in another way, how does length of stay change when BMI changes when we <strong><em>control</em></strong> for age and gender?</p>
+<h3 id="hypothesis-6">Hypothesis</h3>
+<p><span class="math inline">\(H_0:\beta_{BMI}​\;=\;\beta_{age}\;​=\;\beta_{gender}\;​=\;0\)</span></p>
+<p><span class="math inline">\(H_A: At\; least\; one\; \beta \neq 0\)</span></p>
+</section>
+<section id="mlr-function" class="slide level2">
+<h2>MLR Function</h2>
+<p>We can perform multiple linear regression in R using the <code>lm()</code> function. Here’s how the key components fit:</p>
+<ul>
+<li><p><code>formula =</code><span class="math inline">\(x_1\;+\;x_2\;+\dots\;+x_k\)</span> specifies the dependent and independent variables.</p></li>
+<li><p><code>data</code> specifies the dataset to use.</p></li>
+</ul>
+</section>
+<section id="mlr-output" class="slide level2">
+<h2>MLR Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the MLR model</span></span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(icu_los <span class="sc">~</span> bmi <span class="sc">+</span> female <span class="sc">+</span> age, <span class="at">data =</span> qcrc_main)</span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the results</span></span>
+<span id="cb24-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = icu_los ~ bmi + female + age, data = qcrc_main)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-13.698  -6.211  -1.879   4.690  48.262 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -1.43801    3.69327  -0.389 0.697304    
+bmi          0.24431    0.06588   3.708 0.000251 ***
+femaleMale   1.62934    1.02860   1.584 0.114310    
+age          0.05374    0.03511   1.530 0.127022    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.586 on 281 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.05116,   Adjusted R-squared:  0.04103 
+F-statistic: 5.051 on 3 and 281 DF,  p-value: 0.002011</code></pre>
+</div>
+</div>
+</section>
+<section id="mlr-output-interpretation" class="slide level2">
+<h2>MLR Output Interpretation</h2>
+<ul>
+<li><p><strong>Coefficients (</strong><span class="math inline">\(\beta\)</span><strong>)</strong>: The expected change in <span class="math inline">\(y\)</span> for a one-unit increase in the predictor, holding all other predictors constant..</p></li>
+<li><p><strong>P-value</strong>: Small p-values (e.g., &lt;0.05&lt; 0.05&lt;0.05) suggest a significant relationship between the predictor and the outcome.</p></li>
+<li><p><strong>Adjusted</strong> <span class="math inline">\(R^2\)</span>: Higher values indicate a better model fit, accounting for the number of predictors.</p></li>
+</ul>
+</section>
+<section id="logistic-regression" class="slide level2">
+<h2>Logistic Regression</h2>
+<p>Logistic regression is used to model the relationship between a binary outcome variable (e.g., “died” vs.&nbsp;“survived”) and one or more predictor variables. It estimates the probability of the outcome occurring based on the predictors.</p>
+</section>
+<section id="logistic-model-equation" class="slide level2">
+<h2>Logistic Model Equation</h2>
+<p>The logistic regression model predicts the log-odds of the outcome: <span class="math inline">\(\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 \cdot \text{female} + \beta_2 \cdot \text{intubated}\)</span></p>
+<p>Where:</p>
+<ul>
+<li><p><span class="math inline">\(p\)</span>: Probability of the outcome occurring (e.g., <span class="math inline">\(P(died&nbsp;=&nbsp;1)\)</span>).</p></li>
+<li><p><span class="math inline">\(\beta_0\)</span> ​: Intercept (log-odds of the outcome when all predictors are 0).</p></li>
+<li><p><span class="math inline">\(\beta_1\)</span>​: Effect of being female on the log-odds of death, holding intubation status constant.</p></li>
+<li><p><span class="math inline">\(\beta_2\)</span>​: Effect of being intubated on the log-odds of death, holding gender constant.</p></li>
+</ul>
+</section>
+<section id="logistic-question" class="slide level2">
+<h2>Logistic Question</h2>
+<p>Does gender (female) and intubation status predict the likelihood of death in the dataset?</p>
+<h3 id="hypothesis-7">Hypothesis</h3>
+<ul>
+<li><p><span class="math inline">\(H_0:\beta_{female}\;​=\;\beta_{intubated}\;​=\;0\)</span> (Neither gender nor intubation affect the odds of death.)</p></li>
+<li><p><span class="math inline">\(H_a​: At\; least\; one\; \beta \neq 0\)</span>.</p></li>
+</ul>
+</section>
+<section id="logistic-function" class="slide level2">
+<h2>Logistic Function</h2>
+<p>To fit a logistic regression model in R, use the <code>glm()</code> function with <code>family = binomial</code>.</p>
+<ul>
+<li><p><strong><code>formula</code></strong>: Specifies the model to fit using the syntax: <span class="math inline">\(outcome \sim x_1 + x_2 +\dots+x_k\)</span></p></li>
+<li><p><code>data</code> specifies the dataset to use.</p></li>
+<li><p><code>family</code> Specifies the type of regression to perform by defining the error distribution and link function. For logistic regression we use <code>binomial</code> but there are also options for <code>gaussian</code> and <code>poisson</code></p></li>
+</ul>
+</section>
+<section id="logistic-output" class="slide level2">
+<h2>Logistic Output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the logistic regression model</span></span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">glm</span>(died <span class="sc">~</span> female <span class="sc">+</span> intubated, <span class="at">data =</span> qcrc_main, <span class="at">family =</span> binomial)</span>
+<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the results</span></span>
+<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = died ~ female + intubated, family = binomial, data = qcrc_main)
+
+Coefficients:
+            Estimate Std. Error z value  Pr(&gt;|z|)    
+(Intercept) -1.27187    0.30248  -4.205 0.0000261 ***
+femaleMale   0.05613    0.25344   0.221    0.8247    
+intubated    0.75926    0.31004   2.449    0.0143 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 369.34  on 287  degrees of freedom
+Residual deviance: 362.73  on 285  degrees of freedom
+AIC: 368.73
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-important" class="slide level2">
+<h2>Logistic IMPORTANT!!</h2>
+<p>The <span class="math inline">\(\beta\)</span>s that we get from a logistic regression are useless, you <strong>MUST</strong> exponeniate them for them to be meaningful.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)  femaleMale   intubated 
+  0.2803069   1.0577398   2.1366863 </code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-output-interpretation" class="slide level2">
+<h2>Logistic Output Interpretation</h2>
+<p>Example:</p>
+<ul>
+<li><p><span class="math inline">\(\text{Odds Ratio for Female} = \exp(0.056) \approx 1.06\)</span>: The odds of death for females are 1.06 times higher than for males.</p></li>
+<li><p><span class="math inline">\(\text{Odds Ratio for Intubated} = \exp(0.759) \approx 2.13\)</span> : The odds of death for intubated patients are 2.13 times higher than for non-intubated patients.</p></li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

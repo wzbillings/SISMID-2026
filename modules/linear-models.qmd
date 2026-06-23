@@ -1,0 +1,88 @@
+---
+title: "Case study: Linear Models and Linear Monsters"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(printr)
+```
+
+## Learning goals
+
+1. Fit basic linear and generalized linear models including models for counts.
+1. Fit GLMs with interaction terms.
+1. Fit GLMs with random effects using `lme4`.
+
+Optional topics:
+1. Fit GLMs with spline terms using `mgcv`.
+1. Fit binomial and overdispersed binomial models, and compare them to bernoulli models on the same data.
+1. Understand the limitations of frequentist linear models and know that `brms` exists.
+
+## Some notes
+
+- Throughout this course, we're attempted to use relatively few datasets in order to minimize confusion.
+- When trying to show off many different features of data, this is not so easy. Most regression models in real life do not need all of these features at one time, and they are easier to discuss separately.
+- So we have a choice ahead of us: we can either introduce many different datasets, or use a completely fabricated dataset where we know the truth and can ensure that these statistical problems are present.
+- For this workshop, we've simulated a dataset that can help you explore some advanced concepts.
+
+## (Simulated) city cases dataset
+
+- Suppose the Queen of Caldwych is holding court in her capital city of Harcrest when her Royal Chief Epidemiologist (you can pretend that's you, if you want) tells her, "Your Grace! I fear the grimbleth in our nation's water supply is a cause of excess cases of Klaron's gortensia beyond what can be explained by other factors!"
+- Being a kind and benevolent monarch, the Queen immediately commissions a 3 year prospective study to identify all incident cases of Klaron's gortensia in a spatially representative sample of 23 cities in Caldwych, including Harcrest. She also provides funding for a representative sampling of the concentration of grimbleth in the municipal drinking water supply using the latest and greatest assay that can detect parts per million to the nearest hundreth accurately.
+- You can also assume the temperature and population measurements are completely accurate.
+- You know that Klaron's gortensia is a chronic multifactorial condition with no single deterministic cause. Several environmental, (epi)genetic, and time-varying exposures can contribute to the development of Klaron's gortensia. You can assume that we have a 100\% accurate diagnostic method for Klaron's gortensia.
+
+## Poisson regression
+
+- Incident case counts are a **discrete variable** that can only be 0, 1, 2, and so on, potentially up to the total population. These variables are often skewed and cannot be accurately modeled by a normal distribution.
+- Fit a glm that uses the `"poisson"` family where the outcome is case counts and the predictor is log grimbleth concentration in drinking water.
+- You also need to add an `offset` term to your model -- if we want to interpret any case count predictors fairly, we HAVE to do this. You can add the term `offset(log(population))` to the RHS of your model in order to account for this. Once the offset is specified correctly, you can interpret the exponentiated coefficients as incidence rate ratios.
+
+```{r}
+# stuff here
+```
+
+- In many cases, Poisson models are too restrictive for most counts -- this is called **overdispersion**.
+- If there is no overdispersion, the ratio of the explained deviance to the deviance degrees of freedom will be approximately 1. To get a formal test, we can use the fact that the explained deviance follows a chi-square distribution with degrees of freedom equal to the deviance DF if there is no overdispersion.
+- Is there a statistically significant amount of overdispersion in the case counts?
+
+```{r}
+# Get deviance
+# Get deviance DF
+# pchisq(deviance, df, lower.tail = FALSE)
+```
+
+- Usually there is overdispersion in real data, and a common and easy way to handle this is with **negative binomial** (also called gamma-Poisson) regression.
+
+```{r}
+# Do nb glm from MASS here
+```
+
+## Interactions
+
+- Using interaction syntax in a formula (`outcome ~ variable 1 * variable2` or `outcome ~ variable1 + variable2 + variable1:variable2`), check whether region and industry are related to case counts.
+- Does the effect of temperature vary by region?
+- Can you think of any other potential causally important interactions that you think we should test?
+
+## Random effects
+
+- In real life, there will ALWAYS be variance in experimental units that cannot be explained by all of the covariates we measure.
+- In this dataset, our experimental units are cities, and there are factors that vary across cities that confound inferences on case counts, and that we haven't observed. We can control for baseline differences across cities with a random intercept.
+- Use `lme4::glmer()` and `(1 | city)` and check out the random intercept.
+- Are there any other grouping factors we should consider? What makes this tricky?
+- Are there any effects that you think should vary across cities other than the baseline?
+
+## Splines
+
+- Splines are a way to fit nonlinear effects without having to explicitly say what shape we think the effect is. They are easy to implement with `mgcv`.
+- Is there evidence for nonlinear effects of log grimbleth concentration? What about nonlinear effects of temperature?
+- If there is a nonlinear effect of either of these variables, is it the same across all regions? Use the `by` argument of the smoothing spline function `s()` to check this.
+
+## Bayesian models
+
+- It's hard to fit models with both random effects and splines at the same time in frequentist world.
+- However, many complicated models that have no MLE or implementation as frequentist models can be fit using Bayesian methods.
+- Most models can be dropped into the package `brms` and work exactly the same, and the interpretation is much easier. Although they can take much longer to run.

@@ -1,0 +1,124 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "!day1/"
+    - "!day2/"
+    - "!GIS/"
+
+website:
+  title: "SISMID R for ID Materials (2026)"
+  sidebar:
+    style: docked
+    search: true
+    pinned: true
+    tools: 
+      - icon: github
+        href: https://github.com/wzbillings/SISMID-2026
+    contents: 
+      - text: "Welcome!"
+        href: index.qmd
+      - text: "Course Schedule"
+        href: schedule.qmd
+      - text: "Course Resources"
+        href: references.qmd
+      - section: "Modules"
+        contents:
+          - text: "Intro slides"
+            href: modules/Module00-Welcome.qmd
+            target: _blank
+          - text: "Quarto"
+            href: modules/Module01-Quarto.qmd
+            target: _blank
+          - text: "Stats in R"
+            href: modules/Module02-StatReview.qmd
+            target: _blank
+          - text: "Iteration"
+            href: modules/Module03-Iteration.qmd
+            target: _blank
+          - text: "Writing functions"
+            href: modules/Module04-Functions.qmd
+            target: _blank
+          - text: "Functional programming"
+            href: modules/Module05-FunctionalProgramming.qmd
+            target: _blank
+          - text: "S3 and Formulas"
+            href: modules/Module06-S3-lm-formulas.qmd
+            target: _blank
+          - text: "Bootstrapping"
+            href: modules/bootstrapping.qmd
+            target: _blank
+          - text: "Arrow"
+            href: modules/Arrow.qmd
+            target: _blank
+          - text: "Sample size"
+            href: modules/sample-size.qmd
+            target: _blank
+          - text: "Power simulation"
+            href: modules/power-sim.qmd
+            target: _blank
+      - section: "Case studies / advanced topics"
+        contents:
+          - text: "Optim and ODEs"
+            href: modules/ODEs-optim.qmd
+            target: _blank
+          - text: "Advanced linear models"
+            href: modules/linear-models.qmd
+            target: _blank
+          - text: "Disease mapping"
+      - section: "Exercises"
+        contents:
+          - text: "Exercise 1"
+            href: exercises/Exercise1.qmd
+            target: _blank
+          - text: "Exercise 2"
+            href: exercises/Exercise2.qmd
+            target: _blank
+  repo-url: https://github.com/wzbillings/SISMID-2026
+  reader-mode: true
+
+# Default for table of contents
+toc: true
+toc-title: Page Items
+toc-location: right
+
+# Default knitr options
+execute:
+  echo: true
+  message: true
+  warning: true
+  freeze: auto
+
+engine: knitr
+
+# Default author
+author:
+  - name: "Alex Edwards"
+    url: https://sph.emory.edu/profile/faculty/alex-edwards
+  - name: "Zane Billings"
+    url: https://wzbillings.com/
+
+# Default fields for citation
+license: "CC BY-NC"
+
+format:
+  html:
+    theme:
+      light: [cosmo, format/_fonts.scss, format/_light.scss, format/_callouts.scss]
+      dark: [cosmo, format/_fonts.scss, format/_dark.scss, format/_callouts.scss]
+    grid:
+      sidebar-width: 270px
+      body-width: 1000px
+      margin-width: 200px
+      gutter-width: 1rem
+    code-copy: true
+    code-fold: show
+    code-overflow: wrap
+    code-link: true
+    code-tools: true
+    code-line-numbers: true
+
+# Extension Lua filters
+filters:
+  - line-highlight

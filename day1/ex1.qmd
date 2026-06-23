@@ -1,0 +1,206 @@
+---
+title: "Intermediate R Lab using QCRC Data"
+format: html
+editor: visual
+---
+
+# Introduction
+
+In this lab, we’ll analyze the **QCRC_FINAL_Deidentified.xlsx** dataset to practice:
+
+-   Two-sample t-test
+-   Chi-square test
+-   Linear regression
+-   Logistic regression
+-   Writing `if` statements
+-   Iteration using `for` loops and `apply`
+
+Let’s get started!
+
+------------------------------------------------------------------------
+
+# Part 1 - Loading Data
+
+First, load the required packages and read the Excel file.
+
+```{r}
+# Install if not already installed \# install.packages("readxl")
+
+library(readxl)
+library(tidyverse)
+library(janitor)
+
+# Adjust the path if needed
+
+data <-  read_excel(here::here("data","QCRC_FINAL_Deidentified.xlsx"))|>
+	mutate(BMI = as.numeric(BMI),
+				 `Vent LOS` = as.numeric(`Vent LOS`)) |>
+	clean_names()
+
+# View first few rows
+
+head(data)
+
+# View variable names
+
+names(data)
+
+# Quick summary
+
+summary(data)
+```
+
+# Part 2 - Two-Sample t-test
+
+Suppose we want to compare the mean Age of patients who were Intubated vs. those who were not.
+
+```{r}
+# Convert Intubated to a factor for clarity
+data$Intubated <- factor(data$intubated, labels = c("No", "Yes"))
+
+# Check group means
+tapply(data$age, data$intubated, mean, na.rm = TRUE)
+
+# Run t-test
+t.test(age ~ intubated, data = data)
+```
+
+# Exercise
+
+-   Run the above code.
+
+-   Now insert a new code chunk below and write the code to test whether BMI differs between patients who were Intubated vs. those who were not.
+
+    ```{r}
+    t.test(bmi~intubated, data=data)
+    ```
+
+# Part 3 - Chi-square Test
+
+Let’s check if `CRRT` use is associated with mortality (`Died`).
+
+```{r}
+options(scipen=999)
+# Convert to factors
+data$crrt <- factor(data$crrt, labels = c("No", "Yes"))
+data$died <- factor(data$died, labels = c("No", "Yes"))
+
+# Create a contingency table
+tab <- table(data$crrt, data$died)
+tab
+
+# Perform chi-square test
+chisq.test(tab)
+```
+
+## Exercise
+
+-   Run the test above.
+
+-   Now insert a new code chunk below and write the code to repeat the chi-square test for `Intubated` vs. `Died`.
+
+```{r}
+chisq.test(data$intubated, data$died)
+```
+
+# Part 4 - Linear Regression
+
+We’ll model `ICU_LOS` as a function of `Age`.
+
+```{r}
+# Fit linear model
+lm_model <- lm(icu_los ~ age, data = data)
+
+# View results
+summary(lm_model)
+```
+
+## Exercise
+
+-   Run the code above.
+
+-   Now, add a chuck and write the code to fit a model predicting `Vent LOS` using `BMI` adjust the analysis to account for `Age` by adding in an additional covariate.
+
+```{r}
+model <- glm(vent_los ~ bmi + age +age*bmi, data=data)
+
+summary(model)
+```
+
+# Part 5 - Logistic Regression
+
+Let’s predict the odds of dying (`Died`) based on `Age` and `ICU_LOS`.
+
+```{r}
+# Fit logistic regression (notice the family)
+log_model <- glm(Died ~ Age + ICU_LOS, data = data, family = binomial)
+
+# View summary
+summary(log_model)
+
+# View odss ratios
+exp(coef(log_model))
+
+```
+
+## Exercise
+
+-   Run the model above.
+
+-   Now, insert a new chunk ande try predicting `Intubated` using `BMI` and `Age`.
+
+# Part 6 - If Statements
+
+`if` lets you run code when a condition is true.
+
+Example:
+
+```{r}
+# Example using the first patient
+patient_age <- data$Age[1]
+
+if (patient_age > 45) {
+  print("Patient is older than 45.")
+} else {
+  print("Patient is 45 or younger.")
+}
+```
+
+You can also use `else if`:
+
+```{r}
+# Example with more categories
+if (patient_age > 65) {
+  print("Patient is elderly.")
+} else if (patient_age > 45) {
+  print("Patient is middle-aged.")
+} else {
+  print("Patient is young.")
+}
+```
+
+## Exercise
+
+-   Write an if-else statement that tests if a patient’s age is greater than 45 and prints:
+
+    -   “Patient is older than 45.” if true
+
+    -   Otherwise prints “Patient is 45 or younger.”
+
+```{r}
+age_value <- 72
+
+if (age_value > 65) {
+  print("Patient is elderly")
+} else {
+  print("Patient is not elderly")
+}
+```
+
+# Great work! You have practiced:
+
+-   Hypothesis testing
+
+-   Regression models
+
+-   Conditional logic

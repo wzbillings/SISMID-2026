@@ -1,0 +1,228 @@
+---
+title: "Introduction To Arrow"
+format: revealjs
+editor: visual
+echo: true
+---
+
+## **Learning objectives:**
+
+-   Use {arrow} to load large data files into R efficiently
+-   Partition large data files into parquet files for quicker access, less memory usage, and quicker wrangling
+-   Wrangle {arrow} data using existing {dplyr} operations
+
+## Why learn {arrow}? {.unnumbered}
+
+-   CSV files = very common for ease of access and use
+-   Big/messy CSVs = slow
+-   {arrow} 📦 reads large datasets quickly & uses {dplyr} syntax
+
+## Packages used {.unnumbered}
+
+```{r}
+#| echo: true
+#| warning: false
+#| message: false
+library(arrow)
+library(curl)
+library(tidyverse)
+```
+
+## Download data {.unnumbered}
+
+-   Case study: [item checkouts dataset from Seattle libraries](https://data.seattle.gov/Community/Checkouts-by-Title/tmmm-ytt6)
+-   **DON'T `download.file()`!!!** (41,389,465 rows of data)
+
+```{r}
+#| eval: false
+dir.create("data", showWarnings = FALSE)
+curl::multi_download(
+  "https://r4ds.s3.us-west-2.amazonaws.com/seattle-library-checkouts.csv",
+  "data/seattle-library-checkouts.csv",
+  resume = TRUE
+)
+```
+
+## Open the data {.unnumbered}
+
+-   Size in memory ≈ 2 × size on disk
+
+The problem appears as so:
+
+```{r}
+library(readr)
+seattle_library_checkouts <- read_csv("data/seattle-library-checkouts.csv")
+```
+
+-   ~~`read_csv()`~~ ➡️ `arrow::open_dataset()`
+-   Scans a few thousand rows to determine dataset structure
+    -   `ISBN` is empty for 80k rows, so we specify
+-   Does NOT load entire dataset into memory
+
+```{r}
+#| eval: false
+seattle_csv <- open_dataset(
+  sources = "data/seattle-library-checkouts.csv", 
+  col_types = schema(ISBN = string()),
+  format = "csv"
+)
+```
+
+## Glimpse the data {.unnumbered}
+
+```{r}
+#| eval: false
+seattle_csv |> glimpse()
+
+```
+
+## Manipulate the data {.unnumbered}
+
+-   Can use {dplyr} functions on data
+
+```{r}
+#| eval: false
+seattle_csv |> 
+	filter(UsageClass == "Physical", CheckoutYear %in% 2019:2020) |>
+  group_by(CheckoutYear, CheckoutMonth) |> 
+  summarise(Checkouts = sum(Checkouts)) |> 
+  arrange(CheckoutMonth) |> 
+  collect()
+#> # A tibble: 18 × 2
+#>   CheckoutYear Checkouts
+#>          <int>     <int>
+#> 1         2005   3798685
+#> 2         2006   6599318
+#> 3         2007   7126627
+#> 4         2008   8438486
+#> 5         2009   9135167
+#> 6         2010   8608966
+#> # ℹ 12 more rows
+```
+
+## Parquet \> CSV {.unnumbered}
+
+-   Slow: Manipulating large CSV datasets with {readr}
+-   Faster: Manipulating large CSV datasets with {arrow}
+-   Much faster: Manipulating large `parquet` datasets with {arrow}
+    -   Data subdivided into multiple files
+
+## Benefits of parquet {.unnumbered}
+
+-   Smaller files than CSV (efficient encodings + compression)
+-   Stores datatypes (vs CSV storing all as character & guessing)
+-   "Column-oriented" ("thinks" like a dataframe)
+-   Splits data into chunks you can (often) skip (faster)
+
+**But:**
+
+-   Not human-readable
+
+## Partitioning {.unnumbered}
+
+-   Split data across files so analyses can skip unused data
+-   Experiment to find best partition for your data
+-   Recommendations:
+    -   20 MB \< Filesize \< 2 GB
+    -   \<= 10,000 files
+
+## Seattle library CSV to parquet {.unnumbered}
+
+-   `dplyr::group_by()` to define partitions
+-   `arrow::write_dataset()` to save as parquet
+
+```{r}
+#| eval: false
+pq_path <- "data/seattle-library-checkouts"
+seattle_csv |>
+  group_by(CheckoutYear) |>
+  write_dataset(path = pq_path, format = "parquet")
+```
+
+## Seattle library parquet files {.unnumbered}
+
+-   [Apache Hive](https://hive.apache.org/) "self-describing" directory/file names
+
+```{r}
+#| eval: false
+tibble(
+  files = list.files(pq_path, recursive = TRUE),
+  size_MB = file.size(file.path(pq_path, files)) / 1024^2
+)
+#> # A tibble: 18 × 2
+#>   files                            size_MB
+#>   <chr>                              <dbl>
+#> 1 CheckoutYear=2005/part-0.parquet    109.
+#> 2 CheckoutYear=2006/part-0.parquet    164.
+#> 3 CheckoutYear=2007/part-0.parquet    178.
+#> 4 CheckoutYear=2008/part-0.parquet    195.
+#> 5 CheckoutYear=2009/part-0.parquet    214.
+#> 6 CheckoutYear=2010/part-0.parquet    222.
+#> # ℹ 12 more rows
+```
+
+## parquet + {arrow} + {dplyr} {.unnumbered}
+
+```{r}
+#| eval: false
+seattle_pq <- open_dataset(pq_path)
+query <- seattle_pq |> 
+  filter(CheckoutYear >= 2018, MaterialType == "BOOK") |>
+  group_by(CheckoutYear, CheckoutMonth) |>
+  summarize(TotalCheckouts = sum(Checkouts)) |>
+  arrange(CheckoutYear, CheckoutMonth)
+```
+
+## Results (uncollected) {.unnumbered}
+
+```{r}
+#| eval: false
+query
+#> FileSystemDataset (query)
+#> CheckoutYear: int32
+#> CheckoutMonth: int64
+#> TotalCheckouts: int64
+#> 
+#> * Grouped by CheckoutYear
+#> * Sorted by CheckoutYear [asc], CheckoutMonth [asc]
+#> See $.data for the source Arrow object
+```
+
+## Results (collected) {.unnumbered}
+
+```{r}
+#| eval: false
+query |> collect()
+#> # A tibble: 58 × 3
+#> # Groups:   CheckoutYear [5]
+#>   CheckoutYear CheckoutMonth TotalCheckouts
+#>          <int>         <int>          <int>
+#> 1         2018             1         355101
+#> 2         2018             2         309813
+#> 3         2018             3         344487
+#> 4         2018             4         330988
+#> 5         2018             5         318049
+#> 6         2018             6         341825
+#> # ℹ 52 more rows
+```
+
+## Available verbs {.unnumbered}
+
+-   [`?arrow-dplyr`](https://arrow.apache.org/docs/r/reference/acero.html) for supported functions
+    -   (book uses `?acero` but that's way harder to remember)
+
+## Performance {.unnumbered}
+
+```{r}
+#| eval: false
+x |> 
+  filter(CheckoutYear == 2021, MaterialType == "BOOK") |>
+  group_by(CheckoutMonth) |>
+  summarize(TotalCheckouts = sum(Checkouts)) |>
+  arrange(desc(CheckoutMonth)) |>
+  collect() |> 
+  system.time()
+```
+
+-   CSV: 11.951s
+-   Parquet: **0.263s**

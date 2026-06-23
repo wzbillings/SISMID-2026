@@ -1,0 +1,389 @@
+---
+title: "Iteration notes"
+format: html
+editor: visual
+---
+
+## Measles example
+
+"measles" is the variable name for our dataset. You can change the variable name to be anything you want. The part after the `<-` is the actual code.
+
+```{r}
+# Meas
+meas <- readRDS("data/measles_final.Rds")
+str(meas)
+```
+
+Get the median, first and third quartiles, and range of measles case counts for each country.
+
+```{r}
+# First make an empty loop (preallocation)
+countries <- unique(meas$iso3c)
+res <- vector(mode = "list", length = length(countries))
+names(res) <- countries
+
+# Next loop through every country
+for (this_country in countries) {
+	# Get the data just for each country
+	country_data <- subset(meas, iso3c == this_country)
+	
+	# Now get those summary statistics that we wanted
+	country_quantiles <- quantile(
+		country_data$measles_cases,
+		c(0.25, 0.5, 0.75),
+		na.rm = TRUE
+	)
+	
+	country_range <- range(
+		country_data$measles_cases,
+		na.rm = TRUE
+	)
+	
+	# Now put all of those things together so we can store them
+	# neatly
+	out <- data.frame(
+		"minimum" = country_range[1],
+		"Q1" = country_quantiles[1],
+		"median" = country_quantiles[2],
+		"Q3" = country_quantiles[3],
+		"maximum" = country_range[2]
+	)
+	
+	# Assigning outputs to the correct NAME, not by position
+	# To do this right, we have to set the names of the empty
+	# list before we run the loop.
+	# This is called a FOR - EACH construction.
+	# This is "idiomatic" to R -- that means it only works
+	# in R and doesn't work well in other languages.
+	res[[this_country]] <- out
+}
+```
+
+Now we'll do the same thing with a "FOR" construction, not a "FOR EACH" construction.
+
+```{r}
+res2 <- vector(mode = "list", length = length(countries))
+
+# Next loop through every country
+for (i in 1:length(countries)) {
+	# Get the country code associated with the current index
+	this_country <- countries[i]
+	
+	# Get the data just for each country
+	country_data <- subset(meas, iso3c == this_country)
+	
+	# Now get those summary statistics that we wanted
+	country_quantiles <- quantile(
+		country_data$measles_cases,
+		c(0.25, 0.5, 0.75),
+		na.rm = TRUE
+	)
+	
+	country_range <- range(
+		country_data$measles_cases,
+		na.rm = TRUE
+	)
+	
+	# Now put all of those things together so we can store them
+	# neatly
+	out <- data.frame(
+		"minimum" = country_range[1],
+		"Q1" = country_quantiles[1],
+		"median" = country_quantiles[2],
+		"Q3" = country_quantiles[3],
+		"maximum" = country_range[2]
+	)
+	
+	# Assigning outputs to the correct NAME, not by position
+	# To do this right, we have to set the names of the empty
+	# list before we run the loop.
+	# This is called a FOR - EACH construction.
+	# This is "idiomatic" to R -- that means it only works
+	# in R and doesn't work well in other languages.
+	res2[[i]] <- out
+}
+names(res2) <- countries
+```
+
+We can use `do.call()` to combine this into a nice format.
+
+```{r}
+country_stats_df <- do.call(rbind, res)
+```
+
+```{r}
+rbind(
+	res[[1]],
+	res[[2]]
+)
+```
+
+What is `do.call()` doing for us?
+
+```{r}
+#| eval: false
+
+out <- do.call(rbind, res)
+# Is the same thing as 
+out <- rbind(res[[1]], res[[2]], ..., res[[length(res)]])
+rownames(out) <- names(res)
+
+```
+
+## Next loop problem for the measles dataset
+
+1.  Calculate the incidence per 10k people for each country/year in the dataset.
+2.  Make a plot that shows incidence per 10k people vs. year, with a separate line for each country.
+
+$$
+\text{incidence per } 10000 \text{ people} = \frac{\text{Cases}}{\text{Population}} \times 10{,}000
+$$
+
+```{r}
+# Calculate incidence per 10k, this is vectorized!!
+meas$incidence_per_10k <-
+	meas$measles_cases / meas$population * 10000
+
+# Next, we need to make a blank plot to draw on.
+plot(
+	x = NULL, y = NULL,
+	xlim = range(meas$year),
+	ylim = range(meas$incidence_per_10k, na.rm = TRUE),
+	xlab = "Year",
+	ylab = "Incidence per 10,000"
+)
+
+# So now we need to plot a line for each country.
+# THis code plots a line for the first country, but you should
+# write a loop instead of copying this 213 times.
+# country_1_data <- subset(meas, iso3c == countries[[1]])
+# lines(
+# 	x = country_1_data$year,
+# 	y = country_1_data$incidence_per_10k
+# )
+for (i in 1:length(countries)) {
+	this_country <- countries[[i]]
+	this_country_data <- subset(meas, iso3c == this_country)
+	
+	lines(
+		x = this_country_data$year,
+		y = this_country_data$incidence_per_10k
+	)
+	Sys.sleep(5)
+}
+
+```
+
+Let's run some code manually to see what is happening.
+
+```{r}
+plot(
+	x = NULL, y = NULL,
+	xlim = range(meas$year),
+	ylim = range(meas$incidence_per_10k, na.rm = TRUE),
+	xlab = "Year",
+	ylab = "Incidence per 10,000"
+)
+
+# Plot for country 1
+country_1 <- countries[[1]]
+country_1_data <- subset(meas, iso3c == country_1)
+
+lines(
+	x = country_1_data$year,
+	y = country_1_data$incidence_per_10k
+)
+
+# Plot for country 2
+country_2 <- countries[[2]]
+country_2_data <- subset(meas, iso3c == country_2)
+
+lines(
+	x = country_2_data$year,
+	y = country_2_data$incidence_per_10k
+)
+
+# Plot for country 3
+country_3 <- countries[[3]]
+country_3_data <- subset(meas, iso3c == country_3)
+
+lines(
+	x = country_3_data$year,
+	y = country_3_data$incidence_per_10k
+)
+```
+
+## What is a function?
+
+-   A function takes an input and gives you an output. It can only give you one output for the same input (usually).
+
+-   In R, functions are little chunks of code that you put something into, it runs that code, and gives you an output. For example, `sum()`.
+
+```{r}
+inputs <- c(1, 2, 3)
+output <- sum(inputs)
+output
+```
+
+-   When R sees a function, it looks up the list of code steps it needs to run, and runs them.
+
+```{r}
+square <- function(x) {
+	return(x ^ 2)
+}
+
+square(3)
+square(-898)
+square(1:10)
+```
+
+```{r}
+sum <- function(x, y) {
+	return(y - x)
+}
+
+sum(3, 4)
+
+# this is a consequence of the LGB
+# Local
+# Global
+# Built-in
+```
+
+You can also write functions in one line.
+
+```{r}
+times_two <- function(x) 2 * x
+```
+
+Why returning stuff in functions matters:
+
+```{r}
+my_function <- function(x) {
+	# Inside of the function is the local scope
+	# What happens in the function stays in the function
+	x_squared <- x^2
+	x_plus_two <- x + 2
+	e_to_the_x <- exp(x)
+	a_string <- as.character(x)
+	
+	return(list(x_squared, x_plus_two, e_to_the_x, a_string))
+}
+
+my_function(3)
+```
+
+# Parts of a function
+
+```{r}
+#| eval: false
+# The first line of a function looks like this
+# function_name <- function(list of arguments)
+# and this is called the "Function signature"
+
+# Two ways to write the function "body"
+# One line function
+# function_name <- function(list of arguments) body
+
+# Multi-line function
+# function_name <- function(list of arguments) {
+# 	body
+# }
+
+# The name of the argument in your function is called
+# the "formal argument"
+# The value that you put into a formal argument is called
+# the "actual argument"
+
+# Formal argument: x
+# Actual argument of x: 2
+times_two(2)
+```
+
+-   Functions can have many different arguments
+
+```{r}
+power_law <- function(x, a, b) {
+	y <- a * (x ^ b)
+	return(y)
+}
+
+power_law(2, 2, 3)
+```
+
+-   If some actual arguments are very common, we can specify them as the defaults.
+
+```{r}
+# The equals signs for the arguments specify the default
+# values
+# When we specify the argument defaults we HAVE to use one
+# equals sign. Not two, and not the arrow.
+power_law_with_defaults <- function(x, a = 1, b = 2) {
+	y <- a * (x ^ b)
+	return(y)
+}
+
+power_law_with_defaults(4)
+power_law_with_defaults(4, 1, 2)
+power_law_with_defaults(4, 2, 3)
+```
+
+-   Vectorization gets confusing when you have multiple arguments.
+
+```{r}
+# We can vectorize over EVERY argument by default!
+power_law_with_defaults(1:3, 2:4, 5:7)
+power_law_with_defaults(1, 2, 5)
+power_law_with_defaults(2, 3, 6)
+```
+
+-   R will RECYCLE values to make sure all vectorized operations get finished.
+
+```{r}
+# Good recycling
+power_law_with_defaults(
+	x= c(100, 2, 7, 9),
+	a = 2,
+	b = c(3, 4)
+)
+# R recycles vectors to complete the function call for the
+# actual argument that has the most entries
+power_law_with_defaults(
+	x = c(100, 2, 7, 9),
+	a = c(2, 2, 2, 2),
+	b = c(3, 4, 3, 4)
+)
+
+# Bad recycling
+power_law_with_defaults(
+	x = c(100, 2, 7, 9),
+	a = 2,
+	b = c(3, 4, 5)
+)
+```
+
+# Function example: let's write a function to compute the sum of squared differences
+
+The SSD (sum of squared differences) is defined as
+
+$$
+SSD = \sum_{i=1}^n (x_i - \bar{x})^2; \quad i = 1, 2, \ldots, n
+$$
+
+```{r}
+ssd <- function(x) {
+	# Calculate the x_i - x_bar
+	x_no_missing <- na.omit(x)
+	x_bar <- mean(x_no_missing)
+	differences <- x_no_missing - x_bar
+	
+	# Next square all of the differences
+	squared_differences <- differences ^ 2
+	
+	# And then get the sum of the squared differences
+	sum_sq_differences <- sum(squared_differences)
+	return(sum_sq_differences)
+}
+
+ssd(meas$measles_cases)
+```

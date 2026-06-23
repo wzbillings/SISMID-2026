@@ -1,0 +1,344 @@
+---
+title: "Module 6: S3 and R Formulas"
+format:
+  revealjs:
+    toc: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(printr)
+```
+
+## Learning goals
+
+1. Explain what S3 is and give an example of an S3 method
+1. Understand the R help pages for S3 methods
+1. Use vectorization to replace unnecessary loops
+1. Understand when and how to use the R formula syntax
+1. Write basic linear models with R formulas
+
+# Part 1: S3 stands for 3/10 Scariness
+
+## Objects and classes and methods {.incremental}
+
+- We've talked about imperative programming and functional programming. Now we'll talk about **object-oriented programming.**
+- S3 is a "functional OOP" system, which is different from OOP you might have dealt with in Python or C++.
+- The main propery of S3 is **polymorphism**: one **generic function** can act differently on different **classes** of objects, but symbolically represents the same thing and has a consistent interface.
+
+## An S3 example {.scrollable}
+
+```{r}
+#| include: false
+
+data(birthwt, package = "MASS")
+birthwt$id <- factor(1:nrow(birthwt))
+
+an_lm <- lm(bwt ~ age, data = birthwt)
+a_glm <- glm(low ~ age, data = birthwt, family = "binomial")
+a_glmm <- lme4::glmer(
+	low ~ age + (1 | id),
+	data = birthwt, family = "binomial"
+)
+```
+
+- `summary()` is an example of an S3 **generic**. And the documentation tells us this.
+
+```{r}
+?summary
+```
+
+## Polymorphism of summary {.scrollable}
+
+- When we call `summary(an_object)` it determines what it should do based on the class of `an_object`.
+- Each of the following summaries shows us different statistics.
+
+```{r}
+class(an_lm)
+summary(an_lm)
+```
+
+. . .
+
+```{r}
+class(a_glm)
+summary(a_glm)
+```
+
+. . .
+
+```{r}
+class(a_glmm)
+summary(a_glmm)
+```
+
+## Some OOP definitions {.smaller}
+
+- A **class** is a category of object. Objects of the same class have the same **fields** or attributes.
+- A **generic** is a function that has different behavior for multiple classes of inputs.
+- The **methods** for a function are the function implementations for specific classes.
+- **Method dispatch** is the process where you call a generic function, the generic function checks the class of the input, and the generic function calls the method for that class.
+- A **default method** is dispatched by a generic function when there is no specific method for the class of the input. Not every generic has a default method.
+
+## S3 classes {.incremental}
+
+- Everything that exists in R is an object and has a **type**.
+- But not everything is an S3 object, and only S3 objects have a **class**.
+- This is confusing, because the function `class()` will tell you something for every object, no matter what. **If an object does not have a class, `class()` will return the type.**
+- To check if an object *has* an S3 class, you have to check the extremely confusing `attr(an_object, "class")` instead.
+
+## S3 classes (and types)
+
+- These objects have types but not classes: `NULL`, vectors, lists, functions, and some other special ones that you won't use.
+- You can pretty much pretend that types are classes.
+
+## S3 classes (and types)
+
+```{r}
+an_object <- 1:10
+typeof(an_object)
+class(an_object)
+attr(an_object, "class")
+```
+
+## S3 classes (and types)
+
+```{r}
+typeof(an_lm)
+class(an_lm)
+attr(an_lm, "class")
+```
+
+## S3 classes (and types) {.scrollable}
+
+- If an object has an S3 class, then it is a list.
+- The only things that aren't lists are the other special objects with types.
+- Complicated S3 classes are just lists where the elements have specific names.
+
+```{r}
+str(an_lm)
+```
+
+. . .
+
+```{r}
+?lm
+```
+
+## S3 help pages
+
+- Now you know enough to understand the help pages for S3 objects.
+
+```{r}
+?summary
+```
+
+## Finding classes and finding methods
+
+- Use the `methods()` function to find all methods that are available for a specific generic function.
+
+```{r}
+methods(summary)
+```
+
+. . .
+
+- Also use the `methods(class = ...)` function to find all methods that are available for a specific class.
+
+```{r}
+methods(class = "lm")
+```
+
+. . .
+
+- You can use a dot (`.`) to reference specific methods, not just generics.
+
+```{r}
+?summary.lm
+```
+
+
+# Part 2: Formulas / Formulae
+
+## Utility of S3 methods {.scrollable}
+
+- Hopefully you can now see why understanding S3 methods is important.
+- But if you aren't convinced, maybe `formula` objects can convince you. Look how many methods there are!
+
+```{r}
+methods(class = "formula")
+```
+
+. . .
+
+- And that doesn't include functions like `lm()` which ONLY have methods for formulas, not generics.
+
+## Formula example {.scrollable}
+
+- Say you want to get the correlation between MCV1 coverage rate and measles cases in Pakistan. You can call the `cor.test()` function by passing two vectors.
+
+```{r}
+meas <- readr::read_rds(here::here("data", "measles_final.Rds"))
+
+cor.test(
+	x = meas$MCV1_coverage[meas$iso3c == "PAK"],
+	y = meas$measles_cases[meas$iso3c == "PAK"]
+)
+```
+
+. . .
+
+- But if we inspect the methods for `cor.test`, we see it is an S3 generic with a method for `formula` class objects.
+
+```{r}
+methods(cor.test)
+```
+
+. . .
+
+- Typing in the code is easier, and reading the output is easier.
+
+```{r}
+cor.test(
+	~ measles_cases + MCV1_coverage,
+	data = subset(meas, iso3c == "PAK")
+)
+```
+
+. . .
+
+- But it pays to understand S3, because in certain circumstances, using the default method is easier!
+
+## Writing formulas {.incremental}
+
+- The formula language is a smaller language inside of R used for writing statistical models, and the full details [are in the `?formula` documentation](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html).
+- This little formula language is so useful it is now used in many textbooks and other languages (Python and Julia).
+- The basic syntax is `dv ~ iv1 + iv2 + ...`.
+- Recall that in `cor.test()` our formula didn't have a LHS -- there is no dependent variable in correlation.
+
+## You try it! {.scrollable}
+
+- Before, we saw that `boxplot` had a formula method. Use `boxplot()` with a formula to make boxplots of measles cases in 2002 for each `region` in the dataset.
+
+. . .
+
+- Hint: your code should look like this for the correct DV and IV.
+
+```{r, eval = FALSE}
+boxplot(dv ~ iv, data = subset(meas, year == 2002))
+```
+
+. . .
+
+- Solution:
+
+```{r}
+boxplot(measles_cases ~ region, data = subset(meas, year == 2002))
+```
+
+## You try it (more advanced) {.scrollable}
+
+- Load the QCRC dataset, you only need the sheet "Main_Dataset" for this.
+- Fit a logistic regression model with 30 day mortality (`30D_Mortality` in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.
+- Use appropriate S3 generic functions to get statistics about your model that you would want to report.
+
+. . .
+
+- Hint: to read in the data, do this.
+- Hint: you might need to do some data cleaning, because missing data are written as a period in the spreadsheet.
+
+```{r}
+qcrc <- readxl::read_xlsx(
+	here::here("data", "QCRC_FINAL_Deidentified.xlsx"),
+	sheet = "Main_Dataset"
+)
+```
+
+. . .
+
+- Hint: your logistic regression code should look like this.
+- Hint: you need to put backticks (this thing: \`, NOT an apostrophe. It's made by the ~ key on american keyboards.) around the name of the variable \`30D_Mortality\`.
+
+```{r, eval = FALSE}
+model_30dm <- glm(
+	something ~ something + something + ...,
+	data = qcrc,
+	family = "binomial"
+)
+```
+
+. . .
+
+- Hint: some useful functions with methods for `glm`-class objects are `summary`, `coef`, and `confint`. (You probably also need the function `exp`!)
+
+. . .
+
+- One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 Day mortality.
+
+```{r}
+# A little cleaning for D Dimer
+# First turn the "." into actual NA's and make it a real number
+qcrc$d_dimer <- as.numeric(dplyr::na_if(qcrc$`D dimer`, "."))
+# Take the log cause it's skewed and positive
+qcrc$d_dimer <- log(qcrc$d_dimer)
+# Impute missing values with the median -- there are much better ways to do this
+med_d_dimer <- median(qcrc$d_dimer, na.rm = FALSE)
+qcrc$d_dimer <- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)
+
+# A little cleaning for Race
+qcrc$Race <- factor(qcrc$Race) |>
+	# Make White the reference level
+	relevel(ref = "Caucasian or White") |>
+	# Groups other than "Causian or White" and "Black or African American" are
+	# really small and heterogeneous so put them together
+	# Not ideal but sometimes the best we can do
+	forcats::fct_lump_n(n = 2)
+
+# Fit a model that controls for treatment, d_dimer, and race/ethnicity
+model_30dm <- glm(
+	`30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + Race,
+	data = qcrc,
+	family = "binomial"
+)
+```
+
+. . .
+
+- Look at a lot of useful information with `summary()`.
+
+```{r}
+summary(model_30dm)
+```
+
+. . .
+
+- Get the OR's with `coef()`.
+
+```{r}
+coef(model_30dm) |>
+	exp() |>
+	round(2)
+```
+
+. . .
+
+- Get the profile CI's with `confint()`.
+
+```{r}
+confint(model_30dm) |>
+	exp() |>
+	round(2)
+```
+
+. . .
+
+- A basic interpretation of the coefficient for `Remdesivir_or_placebo` (coded as 1 for remdesivir and 0 for placebo) might be "Odds of mortality after 30 days in the remdesivisir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the $\alpha = 0.05$ significance group, but is suggestive that at least some patients benefitted from remdesivir treatment."
+
+## Summary
+
+- We learned the basics of "functional OOP" and specifically R's S3 system, including how to check classes and find S3 methods for a class or classes for an S3 method.
+- We learned the basics of R formulas, a consistent and powerful sub-language in R for writing statistical models.
+- There's a lot more to formulas, but we'll discuss them more in a separate module based on interest/time.
+- If you want to read more about S3 or OOP in R, check out [the OOP section in Wickham's Advanced R](https://adv-r.hadley.nz/oo.html).

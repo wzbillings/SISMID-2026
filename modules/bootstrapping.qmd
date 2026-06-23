@@ -1,0 +1,322 @@
+---
+title: "Module XX: Bootstrapping can be easy and fun"
+format:
+  revealjs:
+    toc: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(printr)
+```
+
+## Learning goals
+
+1.  Understand the basics of bootstrapping -- be able to construct your own bootstrap resamples and calculate a bootstrap CI for a statistic.
+2.  Make your own bootstraps with loops or functional programming.
+3.  Combine your own knowledge of R programming techniques with the `boot` package for easy bootstrapping.
+4.  Use the `rsample` package and advanced R programming techniques to iterate over lists of bootstrap resamples.
+
+## What is bootstrapping? {.scrollable}
+
+- **bootstrapping** is a method for obtaining standard error estimates or confidence intervals by **resampling**.
+- We'll specifically talk about the **nonparametric bootstrap** but there are entire books about bootstrap methods.
+
+```{r}
+#| echo: false
+#| fig-cap: "credit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg"
+knitr::include_graphics(here::here("images", "Illustration_bootstrap.svg.png"))
+```
+
+## What is bootstrapping? {.incremental}
+
+- We have some statistic $\theta$ that we want to estimate from the dataset.
+- We create $B$ resamples of the dataset by randomly sampling from it, and then we calculate the statistic $\theta_B$ on each dataset.
+- If we create these resamples the correct way, the observed distribution of $\theta_1, \ldots, \theta_B$ will converge to the true sampling distribution of $\theta$.
+- Specifically, we create a resample by sampling $n$ (our sample size) rows from the original dataset **with replacement**.
+
+## What is bootstrapping?
+
+- That's math jargon to say that sometimes doing this resampling thing will give us better confidence intervals than normality assumptions.
+- Usually bootstrapping works well for small datasets, estimates with complex (or nonexistant) standard error formulas, or for statistics with highly skewed distributions.
+
+```{r}
+#| echo: false
+#| fig-cap: "credit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg"
+knitr::include_graphics(here::here("images", "Illustration_bootstrap.svg.png"))
+```
+
+## Low birthweight data and the `data()` function
+
+-   For this example, we'll use a famous epidemiological dataset about babies with low birthweight.
+-   Many R packages have built-in datasets, which you can access with the `data()` function.
+-   The low birth weight dataset, called `birthwt`, is in the `MASS` package, so you can access it with either `MASS::birthwt` or `data("birthwt", package = "MASS")`.
+
+```{r}
+# This will create the global variable "birthwt"
+data("birthwt", package = "MASS")
+```
+
+## Bootstrapping example {.scrollable}
+
+- Use bootstrapping to calculate a 95\% CI for the risk difference in low birth weight (`low`, 1 is low birth weight) between mothers who smoke (`smoke = 1`) and don't (`smoke` = 0).
+
+. . .
+
+- First create the resamples. **We need to use `set.seed()` to make sure our results are the same every time we run our code!**
+
+```{r}
+set.seed(370)
+B <- 1000
+# Alternatively use replicate() if you don't like the weird function here
+# or use a loop
+resamples <- lapply(
+	1:B,
+	\(n) birthwt[sample.int(nrow(birthwt), replace = TRUE), ]
+)
+
+str(resamples, 1)
+```
+
+. . .
+
+- Now write a function to calculate the statistic.
+- Make sure to calculate the point estimate on the entire dataset as well.
+
+```{r}
+rd_smoking <- function(resample) {
+	risk_smoke <- mean(resample$low[resample$smoke == 1])
+	risk_no_smoke <- mean(resample$low[resample$smoke == 0])
+	
+	rd <- risk_smoke - risk_no_smoke
+	return(rd)
+}
+
+point_estimate_rd <- rd_smoking(birthwt)
+point_estimate_rd
+```
+
+. . .
+
+- Now calculate the statistic on every resample.
+
+```{r}
+bootstrap_rd <- sapply(resamples, rd_smoking)
+str(bootstrap_rd)
+```
+
+. . .
+
+- Now we have to calculate the SE. There are a few different ways. First is the **normal method**, where we calculate the standard error from the bootstrap distribution.
+- This is just the standard deviation of the bootstrap estimates. Then we calculate the normal-approximate CI as usual.
+
+```{r}
+boot_se <- sd(bootstrap_rd)
+point_estimate_rd + boot_se * c(-1.96, 1.96)
+```
+
+. . .
+
+- That method is kind of bad, but common. A better method is the **percentile method** which uses the quantiles of the bootstrap estimates.
+
+```{r}
+quantile(bootstrap_rd, prob = c(0.025, 0.975))
+```
+
+- In this case they're the same because this RD is easy to estimate. But that won't always be true!
+
+## You try it! {.scrollable}
+
+- Look up the formula for the standard error of the risk ratio.
+- Calculate the risk ratio for low birthweight in mothers with (`ht` = 1) and without (`ht = 0`) a history of hypertension using the standard CI, and using a bootstrap CI with the percentile method.
+
+. . .
+
+- Hint: 
+
+```{r}
+rr_ht <- function(resample) {
+	risk_ht_1 <- mean(resample$low[resample$ht == 1])
+	risk_ht_0 <- mean(resample$low[resample$ht == 0])
+	
+	rr <- risk_ht_1 / risk_ht_0
+	return(rr)
+}
+```
+
+- Hint: the formula for the SE of the **log** risk ratio is
+$$
+\sqrt{\bigg( \frac{1}{a} + \frac{1}{c} \bigg) - \bigg( \frac{1}{a+b} + \frac{1}{c+d}  \bigg)}
+$$
+
+for a $2\times2$ table.
+
+```{r}
+#| echo: false
+
+a <- matrix(c("a", "c", "b", "d"), nrow = 2)
+rownames(a) <- c("Exposed", "Unexposed")
+colnames(a) <- c("Exposed", "Unexposed")
+a
+```
+
+. . .
+
+- Solution: first we calculate the point estimate and the Wald-type CI based on the SE formula.
+
+```{r}
+point_estimate_rr <- rr_ht(birthwt)
+contigency_table_ht <- table(
+	factor(birthwt$ht, c(1, 0), c("Exposed", "Unexposed")),
+	factor(birthwt$smoke, c(1, 0), c("Case", "Control"))
+)
+
+calculate_log_rr_se <- function(contigency_table) {
+	a <- contigency_table[1, 1]
+	b <- contigency_table[1, 2]
+	c <- contigency_table[2, 1]
+	d <- contigency_table[2, 2]
+	
+	se <- sqrt((1/a + 1/c) - (1/(a+b) + 1/(c+d)))
+	return(se)
+}
+log_rr_se <- calculate_log_rr_se(contigency_table_ht)
+# It's on the log scale, so we have to calculate the CI like this!
+exp(log_rr_se * c(-1.96, 1.96) + log(point_estimate_rr))
+```
+
+. . .
+
+- Solution: now we do the bootstrap CI.
+
+```{r}
+rr_ht <- function(resample) {
+	risk_ht_1 <- mean(resample$low[resample$ht == 1])
+	risk_ht_0 <- mean(resample$low[resample$ht == 0])
+	
+	rr <- risk_ht_1 / risk_ht_0
+	return(rr)
+}
+
+bootstrap_rr <- sapply(resamples, rr_ht)
+quantile(bootstrap_rr, c(0.025, 0.975))
+```
+
+## Bootstrapping multiple statistics at one time
+
+- If our bootstrap function returns a `vector`, we can get multiple statistics at once.
+
+```{r}
+get_smoking_stats <- function(resample) {
+	risk_smoke <- mean(resample$low[resample$smoke == 1])
+	risk_no_smoke <- mean(resample$low[resample$smoke == 0])
+	
+	odds_smoke <- risk_smoke / (1 - risk_smoke)
+	odds_no_smoke <- risk_no_smoke / (1 - risk_no_smoke)
+	
+	rd <- risk_smoke - risk_no_smoke
+	rr <- risk_smoke / risk_no_smoke
+	or <- odds_smoke / odds_no_smoke
+	
+	out <- c(
+		"Risk difference" = rd,
+		"Risk ratio" = rr,
+		"Odds ratio" = or
+	)
+	return(out)
+}
+
+smoking_stats <- sapply(resamples, get_smoking_stats)
+str(smoking_stats)
+```
+
+- The output looks really confusing. But it's a matrix so we can use `apply()`!
+
+```{r}
+point_estimates <- get_smoking_stats(birthwt)
+boot_cis <- apply(smoking_stats, 1, \(x) quantile(x, c(0.025, 0.975)))
+
+# Just some code to show everything neatly
+rbind(
+	"Lower" = boot_cis[1, ],
+	"Point" = point_estimates,
+	"Upper" = boot_cis[2, ]
+) |>
+	t() |>
+	round(digits = 2)
+```
+
+## Errors in bootstrapping and the `boot` package
+
+- The situations we just observed are pretty simple, and our bootstrap estimates are pretty trustworthy (they would be more trustworthy if we increased `B`, a good rule of thumb is 1,000 just for you, 10,000 for your boss, and 100,000 for a paper if it's feasible).
+- But in some situations, bootstrapping can be **biased**. There is a fix for this called the "BCa" bootstrap.
+- BCa is hard to do by hand, but easy to do with the `boot` package.
+
+## The `boot` package {.scrollable}
+
+- We have to write our function a certain way for `boot`. It must have two arguments, the first is the data, and the second is a list of indices that are included in a resample.
+
+```{r}
+boot_smoking_stats <- function(data, idx) {
+	resample <- data[idx, ]
+	out <- get_smoking_stats(resample)
+	return(out)
+}
+
+library(boot)
+bootstraps_smoking <- boot::boot(birthwt, boot_smoking_stats, R = 1000)
+bootstraps_smoking
+```
+
+. . .
+
+- We can see this calculates the point estimate, bias, and boostrap SE for us. The bias is what we didn't know how to calculate before.
+- We can easily compare multiple CI methods with `boot`.
+- For technical reasons that are too complicated to talk about, when you do multiple stats at one time in `boot`, you must ***always*** manually set the `index` argument.
+
+```{r}
+# Four bootstrap CIs for the risk difference
+boot::boot.ci(bootstraps_smoking, index = 1)
+```
+
+. . .
+
+- Of course, we can use loops or FP to do this for all of our statistics.
+
+```{r}
+smoking_point_estimates <- bootstraps_smoking$t0
+smoking_cis_list <- lapply(
+	1:length(smoking_point_estimates),
+	\(i) boot::boot.ci(bootstraps_smoking, type = "bca", index = i)
+)
+str(smoking_cis_list, 1)
+```
+
+- Cleaning them up is kind of difficult, this is a weirdly formatted S3 object.
+
+```{r}
+smoking_cis <- sapply(
+	smoking_cis_list,
+	\(x) x$bca[4:5]
+)
+
+# Same cleanup code as before
+rbind(
+	"lower" = smoking_cis[1, ],
+	"point" = smoking_point_estimates,
+	"upper" = smoking_cis[2, ]
+) |>
+	t() |>
+	round(digits = 2)
+```
+
+## You try it!
+
+- Fit a logistic regression model to predict low birth weight using this dataset. Use any predictors in the dataset that you think are relevant.
+- Get the standard confidence intervals using the profile method (that is, with `confint()`).
+- Get bootstrap estimates for the coefficients.
+- Do the bootstrap estimates lead you to the same interpretation, or a different interpretation?
+
+(No solution typed up for this problem, if we have time/interest we can cover it together.)

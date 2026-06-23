@@ -1,0 +1,42 @@
+---
+title: Course Resources
+bibliography: SISMID-Module.bib
+nocite: "@*"
+---
+
+# Data and Exercise downloads
+
+* Download the zip file from [the GitHub page](https://github.com/wzbillings/SISMID-2026).
+
+# Useful (+ Free) Resources
+
+- R for Data Science: http://r4ds.had.co.nz/  
+(great general information)
+- Fundamentals of Data Visualization: https://clauswilke.com/dataviz/ 
+- R for Epidemiology: https://www.r4epi.com/
+- The Epidemiologist R Handbook: https://epirhandbook.com/en/
+- R basics by Rafael A. Irizarry: https://rafalab.github.io/dsbook/r-basics.html
+(great general information)
+- Open Case Studies: https://www.opencasestudies.org/  
+(resource for specific public health cases with statistical implementation and interpretation)
+- Tidytuesday: https://github.com/rfordatascience/tidytuesday (data for R practice)
+
+**Slides on making tables**
+https://github.com/wzbillings/idig-tables
+
+**Book on SIR-type modeling with differential equations**
+https://andreashandel.github.io/IDEMAbook/
+
+# Need help?
+
+- Various "Cheat Sheets": [https://github.com/rstudio/cheatsheets/](https://github.com/rstudio/cheatsheets/)
+- R reference card: [http://cran.r-project.org/doc/contrib/Short-refcard.pdf](http://cran.r-project.org/doc/contrib/Short-refcard.pdf)  
+- R jargon: [https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf](https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf)
+- R vs Stata: [https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf](https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf)
+- R terminology: [https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf](https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf)
+
+
+# Other references {.unnumbered}
+
+::: {#refs}
+:::

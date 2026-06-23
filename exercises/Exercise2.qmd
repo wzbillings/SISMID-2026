@@ -1,0 +1,25 @@
+---
+title: "Exercise 2: Exercises for Tuesday"
+format: html
+---
+
+In this exercise, you'll build a neat report about a dataset you've seen before. This will be a practical example for you to put together all the skills you've learned so far. In particular, we want you to practice: Tableone and other useful packages, linear models, bootstrapping, and power, all in the context of the programming skills you've been developing. And you'll do it all in Quarto to get a nice report!
+
+# Exercise guidelines
+
+1. Write a report about an epidemiological question you think you can answer from the QCRC dataset. It's ok if you only use the "Main_Dataset" sheet but if you're comfortable with joins, feel free to combine information from other sheets. Your report should be a neatly formatted Quarto document with standard introduction, methods, results, and discussion sections (but each section can be short, and you don't need references). We recommend that you use the "pdf", "typst", or "docx" output formats, because these are more useful than HTML in real life and can be a bit more challenging to work with.
+1. Select an outcome variable, and then choose an exposure of interest. Select other covariates that you think could be effect modifiers or confounders, and justify your choices. State a research question and your hypothesis.
+1. Include a "table one" of descriptive statistics.
+1. Fit an appropriate GLM for your outcome. Report appropriate crude and adjusted measures of effect for each of the covariates you chose to analyze.
+1. Perform any other analyses you think are necessary to get your point across -- this could be correlations, plots, quantiles, other methods you like to use, anything.
+1. Report and interpret your findings in the context of your research question.
+
+**Bonus questions**
+
+If you finish the main questions, you can try any of these bonus problems that interest you to make your report better. You'll need to use the course resources and/or google and/or AI (RESPONSIBLY!!!) to work on these.
+
+1. Try to compare multiple models using AIC or analysis of deviance (you can google how to do these). Interpret the model comparisons, but remember that model selection *is not causal*.
+1. Calculate bootstrap confidence intervals for your model using the BCa method, and compare them to the profile confidence intervals. How different are they? If you really want to get your hands dirty, also calculate approximate Wald-type confidence intervals (±1.96 times the estimated standard error for a coefficient).
+1. Pretend that the sample size you observed was a true constraint based on budget, and do a power analysis for the effect of your main exposure in your model. Since this is post-hoc, it doesn't give you a lot of information, but how would you interpret this if you ran it before collecting the data?
+1. Get meaningful predictions/estimates from your model and interpret those -- for example, if you chose a binary outcome, you could calculate risk differences for specific strata, or for a continuous/count outcome you could get predicted outcomes in specific strata.
+1. Add a bibliography to your document and cite some references.
