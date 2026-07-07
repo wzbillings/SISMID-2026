@@ -411,9 +411,9 @@ age -0.966</code></pre>
 <section id="s3-classes-and-types-3" class="slide level2 scrollable">
 <h2>S3 classes (and types)</h2>
 <ul>
-<li>If an object has an S3 class, then it is a list.</li>
-<li>The only things that aren’t lists are the other special objects with types.</li>
-<li>Complicated S3 classes are just lists where the elements have specific names.</li>
+<li>Many S3 objects you will meet in modeling, including <code>lm</code> and <code>glm</code> objects, are lists with a class attribute.</li>
+<li>Some S3 objects are built on other types, like factors and dates, so do not use “is it a list?” as the definition of S3.</li>
+<li>Complicated model objects are usually lists where the elements have specific names.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">str</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1159,7 +1159,7 @@ sample estimates:
 <span id="cb51-4"><a></a><span class="co"># Take the log cause it's skewed and positive</span></span>
 <span id="cb51-5"><a></a>qcrc<span class="sc">$</span>d_dimer <span class="ot">&lt;-</span> <span class="fu">log</span>(qcrc<span class="sc">$</span>d_dimer)</span>
 <span id="cb51-6"><a></a><span class="co"># Impute missing values with the median -- there are much better ways to do this</span></span>
-<span id="cb51-7"><a></a>med_d_dimer <span class="ot">&lt;-</span> <span class="fu">median</span>(qcrc<span class="sc">$</span>d_dimer, <span class="at">na.rm =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-7"><a></a>med_d_dimer <span class="ot">&lt;-</span> <span class="fu">median</span>(qcrc<span class="sc">$</span>d_dimer, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb51-8"><a></a>qcrc<span class="sc">$</span>d_dimer <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(qcrc<span class="sc">$</span>d_dimer), med_d_dimer, qcrc<span class="sc">$</span>d_dimer)</span>
 <span id="cb51-9"><a></a></span>
 <span id="cb51-10"><a></a><span class="co"># A little cleaning for Race</span></span>
@@ -1193,20 +1193,19 @@ glm(formula = `30D_Mortality` ~ Remdesivir_or_placebo + d_dimer +
 
 Coefficients:
                                Estimate Std. Error z value Pr(&gt;|z|)   
-(Intercept)                     -2.4352     0.8190  -2.973  0.00295 **
-Remdesivir_or_placebo           -0.7004     0.4105  -1.706  0.08793 . 
-d_dimer                          0.1848     0.1015   1.820  0.06871 . 
-RaceAfrican American  or Black   0.2738     0.3899   0.702  0.48260   
-RaceOther                        0.7733     0.4990   1.550  0.12119   
+(Intercept)                    -2.03215    0.78762  -2.580  0.00988 **
+Remdesivir_or_placebo          -0.81056    0.38659  -2.097  0.03602 * 
+d_dimer                         0.16538    0.09948   1.662  0.09642 . 
+RaceAfrican American  or Black  0.11798    0.34799   0.339  0.73460   
+RaceOther                       0.57667    0.46526   1.239  0.21518   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 317.14  on 256  degrees of freedom
-Residual deviance: 308.52  on 252  degrees of freedom
-  (31 observations deleted due to missingness)
-AIC: 318.52
+    Null deviance: 363.80  on 287  degrees of freedom
+Residual deviance: 355.17  on 283  degrees of freedom
+AIC: 365.17
 
 Number of Fisher Scoring iterations: 4</code></pre>
 </div>
@@ -1222,11 +1221,11 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <span id="cb54-3"><a></a>    <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   (Intercept)          Remdesivir_or_placebo 
-                          0.09                           0.50 
+                          0.13                           0.44 
                        d_dimer RaceAfrican American  or Black 
-                          1.20                           1.31 
+                          1.18                           1.13 
                      RaceOther 
-                          2.17 </code></pre>
+                          1.78 </code></pre>
 </div>
 </div>
 </div>
@@ -1253,28 +1252,28 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.61</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Remdesivir_or_placebo</td>
-<td style="text-align: right;">0.21</td>
-<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">0.92</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">d_dimer</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1.47</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.44</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">RaceAfrican American or Black</td>
-<td style="text-align: right;">0.63</td>
-<td style="text-align: right;">2.93</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">2.28</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">RaceOther</td>
-<td style="text-align: right;">0.82</td>
-<td style="text-align: right;">5.86</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">4.47</td>
 </tr>
 </tbody>
 </table>

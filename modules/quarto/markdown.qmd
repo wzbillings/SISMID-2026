@@ -35,7 +35,9 @@ superscript^2^ subscript~2~
 
 [linked phrase](http://example.com)
 
-![optional caption text](quarto.png){fig-alt="Quarto logo and the word quarto spelled in small case letters"}
+```markdown
+![optional caption text](path/to/image.png){fig-alt="Short image description"}
+```
 
 ## Tables
 

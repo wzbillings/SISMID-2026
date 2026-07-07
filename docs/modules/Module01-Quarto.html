@@ -147,7 +147,6 @@
 <nav role="doc-toc"> 
 <h2 id="toc-title">Page Items</h2>
 <ul>
-
 <li><a href="#/learning-objectives" id="/toc-learning-objectives">Learning objectives:</a></li>
 <li><a href="#/introduction" id="/toc-introduction">Introduction</a></li>
 <li><a href="#/where-to-find-help" id="/toc-where-to-find-help">Where to find help</a></li>
@@ -172,10 +171,6 @@
 </ul>
 </nav>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/quarto-dark-bg.jpeg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="learning-objectives" class="slide level2">
 <h2>Learning objectives:</h2>
 <ul>
@@ -226,10 +221,10 @@
 <section id="getting-started" class="slide level2">
 <h2>Getting Started</h2>
 <ul>
-<li>To get started with your own .qmd file, select File &gt; New File &gt; Quarto Document… in the menu bar.</li>
+<li><p>To get started with your own .qmd file, select File &gt; New File &gt; Quarto Document… in the menu bar.</p></li>
+<li><p>For the first few examples, choose HTML output. HTML renders quickly and makes it easy to see what changed.</p></li>
 </ul>
-
-<img data-src="images/28-fig28.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+</section>
 <section id="run-code-in-quarto" class="slide level2 unnumbered">
 <h2>Run code in quarto</h2>
 <ul>
@@ -248,11 +243,9 @@
 </ul>
 </div>
 <div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/28-quarto-visual-editor.png" class="quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
+<ul>
+<li>Use the editor toggle to switch between Visual and Source modes. The rendered document is the same either way; the difference is how much raw Markdown you see while editing.</li>
+</ul>
 </div>
 </div>
 </section>
@@ -306,7 +299,9 @@ superscript^2^ subscript~2~
 
 [linked phrase](http://example.com)
 
-![optional caption text](quarto.png){fig-alt="Quarto logo and the word quarto spelled in small case letters"}
+```markdown
+![optional caption text](path/to/image.png){fig-alt="Short image description"}
+```
 
 ## Tables
 
@@ -332,15 +327,16 @@ superscript^2^ subscript~2~
 <section id="chunk-label" class="slide level2 unnumbered">
 <h2>Chunk label</h2>
 <p>Chunks can be given an optional label, e.g.</p>
-
-<img data-src="images/28-chunk-label.png" class="quarto-figure quarto-figure-center r-stretch" width="324"></section>
+<ul>
+<li>Chunk header: <code>```{r qcrc-bmi-histogram}</code></li>
+<li>Chunk option: <code>#| fig-cap: "BMI distribution in the QCRC sample"</code></li>
+<li>Chunk code: <code>hist(qcrc_main$bmi)</code></li>
+</ul>
+</section>
 <section id="this-has-three-advantages" class="slide level2">
 <h2>This has three advantages:</h2>
 <ol type="1">
-<li>Navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor:</li>
-</ol>
-
-<img data-src="images/quarto-chunk-nav.png" class="quarto-figure quarto-figure-center r-stretch"><ol start="2" type="1">
+<li><p>Navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor:</p></li>
 <li><p>Graphics produced by the chunks will have useful names that make them easier to use elsewhere.</p></li>
 <li><p>You can set up networks of cached chunks to avoid re-performing expensive computations on every run.</p></li>
 </ol>
@@ -361,7 +357,11 @@ superscript^2^ subscript~2~
 <li><p>Chunk output can be customized with <strong>options</strong>.</p></li>
 <li><p>You can see the full list at <a href="https://yihui.org/knitr/options." class="uri">https://yihui.org/knitr/options.</a></p></li>
 <li><p>Each of these chunk options get added to the header of the chunk, following <code>#|</code>.</p>
-<p><img data-src="images/28-chunk-options.png" width="474"></p></li>
+<ul>
+<li><code>#| echo: false</code></li>
+<li><code>#| warning: false</code></li>
+<li><code>summary(cars)</code></li>
+</ul></li>
 </ul>
 </section>
 <section id="the-main-options-are" class="slide level2">

@@ -247,7 +247,7 @@ tight deadline or can't get a loop or function to work, you might need to.
 
 ```{r}
 #| echo: false
-knitr::include_graphics(here::here("images", "hadley-tweet.png"))
+knitr::include_graphics(here::here("images", "hadley-tweet.PNG"))
 ```
 
 ## You try it!

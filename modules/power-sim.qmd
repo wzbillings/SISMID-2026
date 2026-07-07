@@ -64,7 +64,7 @@ power.t.test(
 
 - The G Power calculation is actually a bit more flexible.
 
-![From G Power where I typed the numbers in.](../images/gpower.png)
+![From G Power where I typed the numbers in.](../images/gpower.PNG)
 
 - The estimate is a bit different because of how G Power deals with unequal sample sizes between groups.
 

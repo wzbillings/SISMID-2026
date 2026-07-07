@@ -4,8 +4,6 @@ format: revealjs
 editor: visual
 ---
 
-![](images/quarto-dark-bg.jpeg){fig-align="center"}
-
 ## Learning objectives:
 
 -   Understand the basic components of a Quarto document.
@@ -48,7 +46,8 @@ editor: visual
 
 -   To get started with your own .qmd file, select File \> New File \> Quarto Document… in the menu bar.
 
-![](images/28-fig28.png){fig-align="center"}
+-   For the first few examples, choose HTML output. HTML renders quickly and
+    makes it easy to see what changed.
 
 ## Run code in quarto {.unnumbered}
 
@@ -70,7 +69,9 @@ editor: visual
 
 <div>
 
-![](images/28-quarto-visual-editor.png){fig-align="center"}
+-   Use the editor toggle to switch between Visual and Source modes. The
+    rendered document is the same either way; the difference is how much raw
+    Markdown you see while editing.
 
 </div>
 :::::
@@ -108,14 +109,13 @@ cat(readr::read_file("quarto/markdown.qmd"))
 
 Chunks can be given an optional label, e.g.
 
-![](images/28-chunk-label.png){fig-align="center" width="324"}
+-   Chunk header: ```` ```{r qcrc-bmi-histogram} ````
+-   Chunk option: `#| fig-cap: "BMI distribution in the QCRC sample"`
+-   Chunk code: `hist(qcrc_main$bmi)`
 
 ## This has three advantages:
 
 1.  Navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor:
-
-![](images/quarto-chunk-nav.png){fig-align="center"}
-
 2.  Graphics produced by the chunks will have useful names that make them easier to use elsewhere.
 
 3.  You can set up networks of cached chunks to avoid re-performing expensive computations on every run.
@@ -136,7 +136,9 @@ Chunks can be given an optional label, e.g.
 
 -   Each of these chunk options get added to the header of the chunk, following `#|`.
 
-    ![](images/28-chunk-options.png){width="474"}
+    -   `#| echo: false`
+    -   `#| warning: false`
+    -   `summary(cars)`
 
 ## The main options are:
 

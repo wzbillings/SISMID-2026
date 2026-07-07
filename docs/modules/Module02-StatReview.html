@@ -302,8 +302,11 @@
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>qcrc_main <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>             <span class="fu">mutate</span>(<span class="at">BMI =</span> <span class="fu">as.numeric</span>(BMI),</span>
 <span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a>                    <span class="at">ICU_LOS =</span> <span class="fu">as.numeric</span>(ICU_LOS))</span>
-<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>neo <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">"https://www.kaggle.com/api/v1/datasets/download/zahrazolghadr/neonatal-hypothermia"</span>)</span>
-<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co">#This sets the numer of digits for p-values so that we can avoid scientific notation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>neo <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">t.1 =</span> <span class="fu">c</span>(<span class="fl">36.1</span>, <span class="fl">36.4</span>, <span class="fl">35.8</span>, <span class="fl">36.0</span>, <span class="fl">36.3</span>, <span class="fl">35.9</span>, <span class="fl">36.2</span>, <span class="fl">36.5</span>, <span class="fl">36.1</span>, <span class="fl">36.0</span>),</span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">t.2 =</span> <span class="fu">c</span>(<span class="fl">36.6</span>, <span class="fl">36.7</span>, <span class="fl">36.1</span>, <span class="fl">36.4</span>, <span class="fl">36.8</span>, <span class="fl">36.2</span>, <span class="fl">36.5</span>, <span class="fl">36.9</span>, <span class="fl">36.4</span>, <span class="fl">36.3</span>)</span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co">#This sets the numer of digits for p-values so that we can avoid scientific notation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="helpful-package" class="slide level2">
@@ -419,7 +422,7 @@ mean in group Female   mean in group Male
 </section>
 <section id="t-test-paired-question" class="slide level2">
 <h2>T-test Paired Question</h2>
-<p>In the neonatal hypothermia dataset there exist a statistically significant difference in body temperature between time point one (t.1) and time point two (t.2).</p>
+<p>In this small neonatal temperature example, is there a statistically significant difference in body temperature between time point one (t.1) and time point two (t.2)?</p>
 <h3 id="hypothesis-2">Hypothesis</h3>
 <p><span class="math inline">\(H_0: \mu_{t.2 - t.1} = 0\)</span> or <span class="math inline">\(H_0: \mu_{t.1 - t.2} = 0\)</span> <span class="math inline">\(H_A: \mu_{t.2 - t.1} \ne 0\)</span> or <span class="math inline">\(H_A: \mu_{t.1 - t.2} \ne 0\)</span></p>
 </section>
@@ -442,13 +445,13 @@ mean in group Female   mean in group Male
     Paired t-test
 
 data:  neo$t.1 and neo$t.2
-t = -22.284, df = 199, p-value &lt; 0.00000000000000022
+t = -13.5, df = 9, p-value = 0.0000002807
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- -1.1668622 -0.9771378
+ -0.4203242 -0.2996758
 sample estimates:
 mean difference 
-         -1.072 </code></pre>
+          -0.36 </code></pre>
 </div>
 </div>
 </section>
@@ -462,13 +465,13 @@ mean difference
     Paired t-test
 
 data:  neo$t.2 and neo$t.1
-t = 22.284, df = 199, p-value &lt; 0.00000000000000022
+t = 13.5, df = 9, p-value = 0.0000002807
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- 0.9771378 1.1668622
+ 0.2996758 0.4203242
 sample estimates:
 mean difference 
-          1.072 </code></pre>
+           0.36 </code></pre>
 </div>
 </div>
 </section>
@@ -861,7 +864,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </section>
 <section id="logistic-important" class="slide level2">
 <h2>Logistic IMPORTANT!!</h2>
-<p>The <span class="math inline">\(\beta\)</span>s that we get from a logistic regression are useless, you <strong>MUST</strong> exponeniate them for them to be meaningful.</p>
+<p>The <span class="math inline">\(\beta\)</span>s from a logistic regression are on the log-odds scale. For most applied reports, exponentiate them to get odds ratios.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">

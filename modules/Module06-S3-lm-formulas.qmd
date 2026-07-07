@@ -113,9 +113,9 @@ attr(an_lm, "class")
 
 ## S3 classes (and types) {.scrollable}
 
-- If an object has an S3 class, then it is a list.
-- The only things that aren't lists are the other special objects with types.
-- Complicated S3 classes are just lists where the elements have specific names.
+- Many S3 objects you will meet in modeling, including `lm` and `glm` objects, are lists with a class attribute.
+- Some S3 objects are built on other types, like factors and dates, so do not use "is it a list?" as the definition of S3.
+- Complicated model objects are usually lists where the elements have specific names.
 
 ```{r}
 str(an_lm)
@@ -284,7 +284,7 @@ qcrc$d_dimer <- as.numeric(dplyr::na_if(qcrc$`D dimer`, "."))
 # Take the log cause it's skewed and positive
 qcrc$d_dimer <- log(qcrc$d_dimer)
 # Impute missing values with the median -- there are much better ways to do this
-med_d_dimer <- median(qcrc$d_dimer, na.rm = FALSE)
+med_d_dimer <- median(qcrc$d_dimer, na.rm = TRUE)
 qcrc$d_dimer <- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)
 
 # A little cleaning for Race
