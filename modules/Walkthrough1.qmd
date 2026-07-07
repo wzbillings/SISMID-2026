@@ -1,0 +1,25 @@
+---
+title: "Data science walkthrough 1"
+format:
+  revealjs:
+    toc: false
+---
+
+## Purpose
+
+This instructor-led walkthrough connects the first day of the course to the
+exercises. We will take a small analysis from raw data to a rendered Quarto
+output and point out where the Day 1 modules appear in real work.
+
+## Walkthrough goals
+
+- Read and inspect a course dataset.
+- Make one statistical summary or model output.
+- Use iteration or a function to remove copied code.
+- Render a small Quarto document with results that update from code.
+
+## Discussion prompts
+
+- Which part of the analysis would be easiest to break by hand-editing results?
+- Where would a function make the code easier to trust?
+- What would you need to add before sending this to a collaborator?

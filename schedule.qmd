@@ -4,52 +4,58 @@ title: "Course Schedule"
 
 *Meeting times:*
 
-* Monday, July 13, 9:00 AM – 5:00 PM
-* Tuesday July 14, 9:00 AM – 5:00 PM
-* Wednesday July 15, 9:00 AM – 12:30 PM
+* Monday, July 13, 9:00 AM - 5:00 PM
+* Tuesday, July 14, 9:00 AM - 5:00 PM
+* Wednesday, July 15, 9:00 AM - 12:30 PM
 
 *Location:* TBA
 
 ::: {.callout-important}
-All times are in Eastern Daylight Time (EDT; UTC-4)
+All times are in Eastern Daylight Time (EDT; UTC-4).
 :::
 
-## Day 01 – Monday 
+## Day 01 - Monday
 
 | Time                | Section |
 |:--------------------|:--------|
-| 09:00 am - 10:00 am | Module 0, 1, 2 |
-| 10:00 am - 10:30 am | Coffee break |
-| 10:30 am - 12:00 pm | module 3 and 4 |
+| 09:00 am - 09:30 am | Module 0: Welcome, course goals, and setup check |
+| 09:30 am - 10:30 am | Module 1: Quarto |
+| 10:30 am - 11:00 am | Coffee break |
+| 11:00 am - 12:00 pm | Module 2: Stats in R |
 | 12:00 pm - 01:30 pm | Lunch (2nd floor lobby) |
-| 01:30 pm - 03:00 pm | module 4 |
+| 01:30 pm - 02:30 pm | Module 3: Iteration |
+| 02:30 pm - 03:00 pm | Module 4: Writing functions |
 | 03:00 pm - 03:30 pm | Coffee break |
-| 03:30 pm - 05:00 pm | Data science walkthrough 1, exercise 1 work time, questions |
+| 03:30 pm - 04:10 pm | Module 4 continued: functions practice and questions |
+| 04:10 pm - 05:00 pm | Data science walkthrough 1 and Exercise 1 launch |
 | 05:00 pm - 07:00 pm | **Networking night** and poster session, Randal Rollins P01 |
 
 : {.striped .hover tbl-colwidths="[25,75]"}
 
-
-## Day 02 – Tuesday
+## Day 02 - Tuesday
 
 | Time                | Section |
 |:--------------------|:--------|
-| 09:00 am - 10:30 am | Functional programming, useful packages |
+| 09:00 am - 10:30 am | Module 5: Functional programming |
 | 10:30 am - 11:00 am | Coffee break |
-| 11:00 am - 12:00 pm | S3/Formulas, arrow |
+| 11:00 am - 11:45 am | Useful R packages for analysis and reporting |
+| 11:45 am - 12:00 pm | Exercise 1 continuation and questions |
 | 12:00 pm - 01:00 pm | Lunch (2nd floor lobby); **Lunch and Learn!** |
-| 01:00 pm - 03:00 pm | Power (maybe power simulation), catch-up time |
+| 01:00 pm - 02:15 pm | Module 6: S3, formulas, and model objects |
+| 02:15 pm - 03:00 pm | Data science walkthrough 2 |
 | 03:00 pm - 03:30 pm | Coffee break |
-| 03:30 pm - 05:00 pm | Exercise 2, data science walkthrough |
+| 03:30 pm - 04:15 pm | Exercise 1 continuation, debrief, and transition |
+| 04:15 pm - 05:00 pm | Exercise 2 launch and work time |
 
 : {.striped .hover tbl-colwidths="[25,75]"}
 
-## Day 03 – Wednesday
+## Day 03 - Wednesday
 
 | Time                | Section |
 |:--------------------|:--------|
-| 09:00 am - 10:30 am | Review or advanced topics |
+| 09:00 am - 10:30 am | ODEs in R with `deSolve` |
 | 10:30 am - 11:00 am | Coffee break |
-| 11:00 am - 12:30 pm | Review or advanced topics |
+| 11:00 am - 12:00 pm | Disease mapping and GIS |
+| 12:00 pm - 12:30 pm | Open questions, review, and Exercise 2 support |
 
 : {.striped .hover tbl-colwidths="[25,75]"}

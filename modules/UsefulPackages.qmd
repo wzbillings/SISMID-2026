@@ -1,0 +1,22 @@
+---
+title: "Useful R packages"
+format:
+  revealjs:
+    toc: false
+---
+
+## 2026 placeholder
+
+Alex will lead this Day 2 core module. The final deck will be added here when it
+is ready.
+
+## Planned scope
+
+- Packages that make common analysis and reporting tasks easier.
+- Table-making and model-summary tools useful for Exercise 2.
+- Practical package choices rather than a long package survey.
+
+## Course connection
+
+This module prepares you to make readable descriptive tables, model summaries,
+and polished report outputs in Exercise 2.

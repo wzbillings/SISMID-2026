@@ -1,0 +1,23 @@
+---
+title: "Disease mapping and GIS"
+format:
+  revealjs:
+    toc: false
+---
+
+## 2026 placeholder
+
+Alex will lead this Day 3 core module. The final disease mapping and GIS deck
+will be added here when it is ready.
+
+## Planned scope
+
+- How spatial data show up in infectious disease analysis.
+- Basic GIS concepts needed to read, map, and interpret spatial data.
+- Disease mapping examples that connect spatial patterns to public health
+  questions.
+
+## Course connection
+
+This session is part of the 2026 core schedule and is separate from the optional
+or archived advanced materials.

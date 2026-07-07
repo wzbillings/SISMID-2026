@@ -4,24 +4,42 @@ title: "Welcome"
 
 Welcome to "R Programming for Infectious Disease Modeling"!
 
-This website contains all of the material for the [2026
-Summer Institute in Statistics and Modeling in Infectious Diseases (SISMID) Module
-"R Programming for Infectious Disease Modeling"](https://sismid.sph.emory.edu/modules/intro-to-r/index.html).
+This website contains the material for the [2026 Summer Institute in Statistics
+and Modeling in Infectious Diseases (SISMID) Module "R Programming for
+Infectious Disease Modeling"](https://sismid.sph.emory.edu/modules/intro-to-r/index.html).
 
-## Prerequisities {.unnumbered}
+## 2026 course path {.unnumbered}
 
-Participants are expected to have a basic understanding of R, including how to open and write R scripts, read in data, and use basic functions and syntax.  Participants are also expected to have prior knowledge of basic descriptive statistics and regression modeling consistent with an introductory statistical course.
+The core course covers Quarto, statistics in R, iteration, functions,
+functional programming, useful R packages, formulas and model objects, ODEs, and
+disease mapping/GIS. Exercise 1 begins on Day 1 and continues on Day 2; Exercise
+2 begins on Day 2 and gives you structured time to build a short Quarto report.
+
+Bootstrapping, Arrow, and power simulation are available as optional or
+take-home materials. General sample-size demonstrations and the advanced linear
+models draft are archived for 2026 rather than presented as active course
+modules.
+
+## Prerequisites {.unnumbered}
+
+Participants are expected to have a basic understanding of R, including how to
+open and write R scripts, read in data, and use basic functions and syntax.
+Participants are also expected to have prior knowledge of basic descriptive
+statistics and regression modeling consistent with an introductory statistical
+course.
 
 Before the course begins, you should install R and RStudio on your laptop.
-**If you are using an older version of R, you should update it before the
-course begins.** You will need at least R version 4.4.1 for this course, but
-using the most recent version (4.5.1 at the time of writing) is always preferable. You'll also need Quarto.
+**If you are using an older version of R, you should update it before the course
+begins.** You will need at least R version 4.4.1 for this course, but using the
+most recent version is always preferable. You'll also need Quarto.
 
 * You can install R from the [CRAN website](https://cran.r-project.org/)
 by clicking on the correct download link for your OS.
 * You can install RStudio from the
 [Posit website](https://posit.co/download/rstudio-desktop/).
-* You can install the latest version of Quarto from the [Quarto website](https://quarto.org/), but if you have a relatively up-to-date version of RStudio, it will also come with Quarto.
+* You can install the latest version of Quarto from the
+[Quarto website](https://quarto.org/), but if you have a relatively up-to-date
+version of RStudio, it will also come with Quarto.
 
 ## About the instructors {.unnumbered}
 
@@ -31,13 +49,29 @@ by clicking on the correct download link for your OS.
 
 <img src="./images/alex.jpg" style="width: 100%"/>
 
-Alex Edwards is an Instructor in the Department of Biostatistics and Bioinformatics at Emory University's Rollins School of Public Health. With a robust background in healthcare and public health research, Alex brings a wealth of knowledge and experience to his teaching. He is an alumnus of the Rollins School of Public Health, where he earned his Master of Science in Public Health (MSPH) in 2017. Currently, Alex is pursuing his PhD at the Stellenbosch University, ZA, focusing on the spatial modeling of HIV multi-morbidity disorder in sub-Saharan Africa.  Alex has published extensively on the intersection of HIV and non-communicable diseases, contributing valuable insights to the field. His dedication to advancing public health is evident in his teaching and research endeavors. 
+Alex Edwards is an Instructor in the Department of Biostatistics and
+Bioinformatics at Emory University's Rollins School of Public Health. With a
+robust background in healthcare and public health research, Alex brings a wealth
+of knowledge and experience to his teaching. He is an alumnus of the Rollins
+School of Public Health, where he earned his Master of Science in Public Health
+(MSPH) in 2017. Currently, Alex is pursuing his PhD at the Stellenbosch
+University, ZA, focusing on the spatial modeling of HIV multi-morbidity disorder
+in sub-Saharan Africa. Alex has published extensively on the intersection of HIV
+and non-communicable diseases, contributing valuable insights to the field. His
+dedication to advancing public health is evident in his teaching and research
+endeavors.
 </div>
 
 <div class="box" style="--width: 50%">
 <h3 style="margin-top:0px; text-align: center">Co-Instructor: [Zane Billings](https://wzbillings.com/ )</h3>
 
-<img src="./images/zane.jpg" style="width: 100%"/>
+<img src="./images/zane.JPG" style="width: 100%"/>
 
-Zane Billings is a Data Scientist at State Farm. He completed his PhD in 2025 at the University of Georgia under the supervision of Andreas Handel. Zane has been using R since 2017, and completed all of his PhD and ongoing research using R. Zane's PhD and ongoing research focuses on the immune response to influenza vaccination using machine learning and multilevel regression modeling in R. Additionally, Zane now uses R for analysis and design of experiments at State Farm.
+Zane Billings is a Data Scientist at State Farm. He completed his PhD in 2025 at
+the University of Georgia under the supervision of Andreas Handel. Zane has been
+using R since 2017, and completed all of his PhD and ongoing research using R.
+Zane's PhD and ongoing research focuses on the immune response to influenza
+vaccination using machine learning and multilevel regression modeling in R.
+Additionally, Zane now uses R for analysis and design of experiments at State
+Farm.
 </div></div>

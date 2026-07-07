@@ -1,0 +1,23 @@
+---
+title: "ODEs with deSolve"
+format:
+  revealjs:
+    toc: false
+---
+
+## 2026 core scope
+
+This Day 3 module focuses on writing and solving ordinary differential equation
+models in R.
+
+## We will cover
+
+- Representing a simple infectious disease model as a system of equations.
+- Translating model equations into an R function.
+- Solving the model with `deSolve`.
+- Inspecting and plotting simulated epidemic trajectories.
+
+## Out of scope for the 2026 core
+
+Parameter optimization with `optim()` and ODE parameter fitting are not part of
+the required 2026 Day 3 session.

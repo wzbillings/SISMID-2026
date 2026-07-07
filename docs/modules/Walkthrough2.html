@@ -26,7 +26,7 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
       vertical-align: middle;
     }
   </style>
@@ -60,12 +60,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none; 
+      list-style-type: none;
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". "; 
+      content: counter(ol) ". ";
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -107,19 +107,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto; 
+      margin-right: auto;
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto; 
+      margin-right: auto;
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0; 
+      margin-right: 0;
     }
   </style>
 </head>
@@ -133,12 +133,12 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> 
+<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a>
 </div>
 </div>
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://wzbillings.com/">Zane Billings</a> 
+<a href="https://wzbillings.com/">Zane Billings</a>
 </div>
 </div>
 </div>
@@ -147,10 +147,33 @@
 <section id="a-whole-paper-using-r-and-quarto" class="slide level2">
 <h2>A whole paper using R and quarto</h2>
 <ul>
-<li>For this data science walkthough, I wanted to briefly walkthrough a paper I wrote a published that is done almost 100% in R and Quarto.</li>
-<li>The analyses use a lot of tools that we’ve talked about, so we’ll discuss how these can be useful.</li>
-<li>Please ask any questions you have!</li>
-<li>You can see the public code for the paper here: https://github.com/ahgroup/billings-high-dose-heterologous-public/.</li>
+<li>This walkthrough uses a published analysis project to connect the Day 1 and Day 2 tools: Quarto, functions, repeated analyses, model output, and reporting.</li>
+<li>The goal is not to understand every line of code. The goal is to see how the pieces fit together in a real project.</li>
+<li>Public code: https://github.com/ahgroup/billings-high-dose-heterologous-public/.</li>
+</ul>
+</section>
+<section id="what-to-look-for" class="slide level2">
+<h2>What to look for</h2>
+<ol type="1">
+<li>Where does the project import and clean data?</li>
+<li>Which files define reusable functions?</li>
+<li>Where are models fit, summarized, and checked?</li>
+<li>How does Quarto turn the analysis into a manuscript-style report?</li>
+</ol>
+</section>
+<section id="during-the-walkthrough" class="slide level2">
+<h2>During the walkthrough</h2>
+<ul>
+<li>Pick one function and identify its inputs, output, and side effects.</li>
+<li>Find one repeated analysis pattern and decide whether it uses a loop, functional programming, or copied code.</li>
+<li>Find one model formula and identify the outcome, exposure, and adjustment variables.</li>
+</ul>
+</section>
+<section id="after-the-walkthrough" class="slide level2">
+<h2>After the walkthrough</h2>
+<ul>
+<li>Write down one project-organization idea you want to reuse in Exercise 2.</li>
+<li>Write down one piece of the project that still feels confusing so we can discuss it during question time.</li>
 </ul>
 
 
@@ -170,7 +193,7 @@
   <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
-  
+
 
   <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
   <script src="../site_libs/revealjs/plugin/search/search.js"></script>
@@ -192,7 +215,7 @@
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'smaller': false,
- 
+
         // Display controls in the bottom right corner
         controls: false,
 
@@ -389,14 +412,14 @@
           toggleBodyColorMode(bsSheetEl);
         }
       }
-      toggleBodyColorPrimary();  
+      toggleBodyColorPrimary();
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
       const isCodeAnnotation = (el) => {
         for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
+          if (clz.startsWith('code-annotation-')) {
             return true;
           }
         }
@@ -416,11 +439,11 @@
           button.setAttribute("data-bs-toggle", "tooltip");
           button.setAttribute("data-bs-placement", "left");
           button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
+          tooltip = new bootstrap.Tooltip(button,
+            { trigger: "manual",
               customClass: "code-copy-button-tooltip",
               offset: [0, -8]});
-          tooltip.show();    
+          tooltip.show();
         }
         setTimeout(function() {
           if (tooltip) {
@@ -462,7 +485,7 @@
             return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
         // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
         for (var i=0; i<links.length; i++) {
           const link = links[i];
           if (!isInternal(link.href)) {
@@ -498,7 +521,7 @@
         }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
-        window.tippy(el, config); 
+        window.tippy(el, config);
       }
       const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
       for (var i=0; i<noterefs.length; i++) {
@@ -555,6 +578,6 @@
       }
     });
     </script>
-    
+
 
 </body></html>

@@ -3,7 +3,12 @@ title: "Exercise 2: Exercises for Tuesday"
 format: html
 ---
 
-In this exercise, you'll build a neat report about a dataset you've seen before. This will be a practical example for you to put together all the skills you've learned so far. In particular, we want you to practice: Tableone and other useful packages, linear models, bootstrapping, and power, all in the context of the programming skills you've been developing. And you'll do it all in Quarto to get a nice report!
+In this exercise, you'll build a short report about a dataset you've seen
+before. This is a practical example for putting together the core skills from
+the course: Quarto, useful reporting packages, formulas and model objects,
+interpretation, and the programming habits you've been developing. Optional
+bonus questions let you try bootstrapping or power simulation after the main
+report is working.
 
 # Exercise guidelines
 

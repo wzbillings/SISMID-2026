@@ -28,42 +28,63 @@ R Programming for Infectious Disease Modeling module.
 
 ### Module Summary
 
-This module aims to enhance R programming skills to prepare participants for advanced mechanistic and statistical infectious disease modeling. It employs an inquiry-based learning approach, using foundational infectious disease modeling tasks—such as writing and solving ordinary differential equations (ODEs) or optimizing functions—as a basis for identifying and teaching essential R programming skills. 
-Hands-on use of R is a major component of this module; users require a laptop and will use it in all sessions. Examples and exercises will use data drawn from biological and medical applications, including infectious diseases and genetics. Participants require a laptop and will use it in all sessions. Suggested pairing: All later modules.
+This module builds practical R programming skills for infectious disease data
+analysis and modeling. The 2026 course moves from reproducible Quarto reports to
+statistical work in R, iteration, functions, functional programming, formulas and
+model objects, ordinary differential equations, and disease mapping/GIS.
+
+Hands-on use of R is a major component of this module. Participants should bring
+a laptop and expect to use R throughout the course. Examples and exercises use
+data drawn from biological, medical, and infectious disease applications.
+
+Optional or take-home materials are available for bootstrapping, Arrow/parquet
+workflows, and power simulation, but those topics are not part of the required
+2026 core schedule.
 
 ### Prerequisites
 
-Participants are expected to have a basic understanding of R, including how to open and write R scripts, read in data, and use basic functions and syntax.  Participants are also expected to have prior knowledge of basic descriptive statistics and regression modeling consistent with an introductory statistical course.
+Participants are expected to have a basic understanding of R, including how to
+open and write R scripts, read in data, and use basic functions and syntax.
+Participants are also expected to have prior knowledge of basic descriptive
+statistics and regression modeling consistent with an introductory statistical
+course.
 
-**Before class starts, you should install R (4.4.1 or newer), RStudio, and Quarto (1.6.0 or newer) on your computer!**
+**Before class starts, you should install R (4.4.1 or newer), RStudio, and
+Quarto (1.6.0 or newer) on your computer.**
 
-### Module Content:
+### Core Module Content
 
-- Create and use RMarkdown
+- Create and render Quarto documents
+- Use R for statistical summaries, tests, and model interpretation
+- Write and use control flow tools, including loops and if/else statements
 - Write, use, and debug custom functions
-- Implement basic functional programming tools such as apply() to manipulate data
-- Write and use control flow tools, including loops and if/else statments
-- Understand and implement of object-oriented programming, including writing and using object-oriented code (e.g., S3/S4)
-- Write and use R formulas, and explore their utility in common functions
-- Implement bootstrapping to estimate confidence intervals
+- Use functional programming tools such as the base R apply family
+- Use R formulas, model objects, and S3 methods in common analysis workflows
 - Solve basic ordinary differential equations in R
-- Optimize functions using the optim() function
+- Use GIS and disease mapping tools in an infectious disease context
 
+### Optional / Take-Home Content
 
-## Repository file structure:
+- Bootstrapping for confidence intervals
+- Arrow and parquet workflows for large data
+- Power simulation
+
+General sample-size package demonstrations and the advanced linear models draft
+are archived for 2026 and are not part of the learner-facing core course.
+
+## Repository File Structure
 
 * `README.qmd`: controls what shows up here on the GitHub page.
 * `index.qmd`: this is the website homepage.
-* `schedule.qmd`: info on the course schedule and logistics
-* `references.qmd`: any references for the course go in the .bib file and
-get rendered on this page.
-* `data` directory: contains datasets used in the course and exercises
-* `exercises`: contains R or Rmd files for each of the exercises
-* `format`: contains code to format the website appearance
-* `images`: put static image files here
-* `modules`: all of the modules go here. Each module gets its own folder with
-an `index.qmd` page that holds the web page content and a separate document
-for the slides.
+* `schedule.qmd`: info on the course schedule and logistics.
+* `references.qmd`: course references and external resources.
+* `data`: datasets used in the course and exercises.
+* `exercises`: student-facing exercises.
+* `format`: website styling.
+* `images`: static image files.
+* `modules`: learner-facing core and optional module source files.
+* `archive/2026`: material preserved from earlier planning but not presented as
+the 2026 learner-facing course.
 * Everything else is housekeeping files needed for the website.
 
 ## Built With

@@ -3,9 +3,11 @@ project:
   output-dir: docs
   render:
     - "*.qmd"
+    - "!archive/"
     - "!day1/"
     - "!day2/"
     - "!GIS/"
+    - "!modules/ODEs-optim.qmd"
 
 website:
   title: "SISMID R for ID Materials (2026)"
@@ -13,60 +15,58 @@ website:
     style: docked
     search: true
     pinned: true
-    tools: 
+    tools:
       - icon: github
         href: https://github.com/wzbillings/SISMID-2026
-    contents: 
+    contents:
       - text: "Welcome!"
         href: index.qmd
       - text: "Course Schedule"
         href: schedule.qmd
       - text: "Course Resources"
         href: references.qmd
-      - section: "Modules"
+      - section: "Day 1 core"
         contents:
-          - text: "Intro slides"
+          - text: "Module 0: Welcome"
             href: modules/Module00-Welcome.qmd
             target: _blank
-          - text: "Quarto"
+          - text: "Module 1: Quarto"
             href: modules/Module01-Quarto.qmd
             target: _blank
-          - text: "Stats in R"
+          - text: "Module 2: Stats in R"
             href: modules/Module02-StatReview.qmd
             target: _blank
-          - text: "Iteration"
+          - text: "Module 3: Iteration"
             href: modules/Module03-Iteration.qmd
             target: _blank
-          - text: "Writing functions"
+          - text: "Module 4: Writing functions"
             href: modules/Module04-Functions.qmd
             target: _blank
-          - text: "Functional programming"
+          - text: "Data science walkthrough 1"
+            href: modules/Walkthrough1.qmd
+            target: _blank
+      - section: "Day 2 core"
+        contents:
+          - text: "Module 5: Functional programming"
             href: modules/Module05-FunctionalProgramming.qmd
             target: _blank
-          - text: "S3 and Formulas"
+          - text: "Useful R packages"
+            href: modules/UsefulPackages.qmd
+            target: _blank
+          - text: "Module 6: S3 and formulas"
             href: modules/Module06-S3-lm-formulas.qmd
             target: _blank
-          - text: "Bootstrapping"
-            href: modules/bootstrapping.qmd
+          - text: "Data science walkthrough 2"
+            href: modules/Walkthrough2.qmd
             target: _blank
-          - text: "Arrow"
-            href: modules/Arrow.qmd
-            target: _blank
-          - text: "Sample size"
-            href: modules/sample-size.qmd
-            target: _blank
-          - text: "Power simulation"
-            href: modules/power-sim.qmd
-            target: _blank
-      - section: "Case studies / advanced topics"
+      - section: "Day 3 core"
         contents:
-          - text: "Optim and ODEs"
-            href: modules/ODEs-optim.qmd
+          - text: "ODEs with deSolve"
+            href: modules/ODEs.qmd
             target: _blank
-          - text: "Advanced linear models"
-            href: modules/linear-models.qmd
+          - text: "Disease mapping and GIS"
+            href: modules/DiseaseMapping.qmd
             target: _blank
-          - text: "Disease mapping"
       - section: "Exercises"
         contents:
           - text: "Exercise 1"
@@ -74,6 +74,17 @@ website:
             target: _blank
           - text: "Exercise 2"
             href: exercises/Exercise2.qmd
+            target: _blank
+      - section: "Optional / take-home"
+        contents:
+          - text: "Bootstrapping"
+            href: modules/bootstrapping.qmd
+            target: _blank
+          - text: "Arrow"
+            href: modules/Arrow.qmd
+            target: _blank
+          - text: "Power simulation"
+            href: modules/power-sim.qmd
             target: _blank
   repo-url: https://github.com/wzbillings/SISMID-2026
   reader-mode: true

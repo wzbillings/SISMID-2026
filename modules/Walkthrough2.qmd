@@ -7,7 +7,29 @@ format:
 
 ## A whole paper using R and quarto
 
-- For this data science walkthough, I wanted to briefly walkthrough a paper I wrote a published that is done almost 100\% in R and Quarto.
-- The analyses use a lot of tools that we've talked about, so we'll discuss how these can be useful.
-- Please ask any questions you have!
-- You can see the public code for the paper here: https://github.com/ahgroup/billings-high-dose-heterologous-public/.
+- This walkthrough uses a published analysis project to connect the Day 1 and
+  Day 2 tools: Quarto, functions, repeated analyses, model output, and reporting.
+- The goal is not to understand every line of code. The goal is to see how the
+  pieces fit together in a real project.
+- Public code: https://github.com/ahgroup/billings-high-dose-heterologous-public/.
+
+## What to look for
+
+1. Where does the project import and clean data?
+1. Which files define reusable functions?
+1. Where are models fit, summarized, and checked?
+1. How does Quarto turn the analysis into a manuscript-style report?
+
+## During the walkthrough
+
+- Pick one function and identify its inputs, output, and side effects.
+- Find one repeated analysis pattern and decide whether it uses a loop,
+  functional programming, or copied code.
+- Find one model formula and identify the outcome, exposure, and adjustment
+  variables.
+
+## After the walkthrough
+
+- Write down one project-organization idea you want to reuse in Exercise 2.
+- Write down one piece of the project that still feels confusing so we can
+  discuss it during question time.

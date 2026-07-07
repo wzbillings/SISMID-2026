@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Welcome!</title>
+  <title>SISMID R for ID Materials (2026) – Data science walkthrough 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -46,7 +46,6 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
-      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -129,7 +128,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Welcome!</h1>
+  <h1 class="title">Data science walkthrough 1</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -145,95 +144,26 @@
 </div>
 
 </section>
-<section id="welcome-to-sismid-workshop-r-programming-for-infectious-disease-modeling" class="slide level2">
-<h2>Welcome to SISMID Workshop: R Programming for Infectious Disease Modeling!</h2>
-<p><strong>Alex Edwards (Any)</strong></p>
-<p>Instructor, Department of Biostatistics and Bioinformatics, Emory University</p>
-<p>Email: Alex.edwards@emory.edu</p>
-<p><br></p>
-<p><strong>Zane Billings (he/him)</strong></p>
-<p>Data Scientist, State Farm</p>
-<p>Email: wzbillings@proton.me</p>
+<section id="purpose" class="slide level2">
+<h2>Purpose</h2>
+<p>This instructor-led walkthrough connects the first day of the course to the exercises. We will take a small analysis from raw data to a rendered Quarto output and point out where the Day 1 modules appear in real work.</p>
 </section>
-<section id="introductions" class="slide level2">
-<h2>Introductions</h2>
+<section id="walkthrough-goals" class="slide level2">
+<h2>Walkthrough goals</h2>
 <ul>
-<li>Name?</li>
-<li>Current position / institution?</li>
-<li>Most interesting pathogen/condition/exposure to you?</li>
+<li>Read and inspect a course dataset.</li>
+<li>Make one statistical summary or model output.</li>
+<li>Use iteration or a function to remove copied code.</li>
+<li>Render a small Quarto document with results that update from code.</li>
 </ul>
 </section>
-<section id="course-website" class="slide level2">
-<h2>Course website</h2>
+<section id="discussion-prompts" class="slide level2">
+<h2>Discussion prompts</h2>
 <ul>
-<li>All of the materials for this course can be found online here: https://wzbillings.github.io/SISMID-2026/.</li>
-<li>This contains the schedule, course resources, and online versions of all of our slide decks.</li>
-<li>The <strong>Course Resources</strong> page contains download links for all of the data, exercises, and slides for this class.</li>
-<li>Please feel free to download these resources and share them – all of the course content is under the <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons BY-NC 4.0 license</a>.</li>
+<li>Which part of the analysis would be easiest to break by hand-editing results?</li>
+<li>Where would a function make the code easier to trust?</li>
+<li>What would you need to add before sending this to a collaborator?</li>
 </ul>
-</section>
-<section id="overall-workshop-objectives" class="slide level2 scrollable">
-<h2>Overall Workshop Objectives</h2>
-<p>By the end of this workshop, you should be able to</p>
-<ol type="1">
-<li>Write code that uses advanced R programming tools like control flow and custom functions.</li>
-<li>Use advanced R programming tools to answer interesting epidemiology questions.</li>
-<li>Be (more) prepared to use R in other SISMID modules</li>
-</ol>
-</section>
-<section id="workshop-overview" class="slide level2">
-<h2>Workshop Overview</h2>
-<p>Multiple modules that will each:</p>
-<ul>
-<li>Start with learning objectives</li>
-<li>End with summary slides</li>
-<li>Include mini-exercises or practice problems</li>
-</ul>
-<p>Themes that will show up throughout the workshop:</p>
-<ul>
-<li>Reproducibility</li>
-<li>Good coding techniques</li>
-<li>Thinking algorithmically</li>
-</ul>
-<p>The 2026 core schedule is set, and we also keep a few optional or take-home topics available for people who want extra practice. What are <strong>you</strong> most interested in learning?</p>
-</section>
-<section id="course-structure" class="slide level2">
-<h2>Course structure</h2>
-<ul>
-<li>Day 1 core: Quarto, statistics in R, iteration, functions, data science walkthrough 1, and Exercise 1.</li>
-<li>Day 2 core: functional programming, useful packages, S3/formulas, data science walkthrough 2, Exercise 1 continuation, and Exercise 2.</li>
-<li>Day 3 core: ODEs in R, disease mapping/GIS, and time for questions.</li>
-<li>Optional or take-home: bootstrapping, Arrow, and power simulation.</li>
-</ul>
-</section>
-<section id="useful-free-resources" class="slide level2">
-<h2>Useful (+ Free) Resources</h2>
-<p><strong>Want more?</strong></p>
-<ul>
-<li><p>R for Data Science: http://r4ds.had.co.nz/<br>
-(great general information)</p></li>
-<li><p>Fundamentals of Data Visualization: https://clauswilke.com/dataviz/</p></li>
-<li><p>R for Epidemiology: https://www.r4epi.com/</p></li>
-<li><p>The Epidemiologist R Handbook: https://epirhandbook.com/en/</p></li>
-<li><p>R basics by Rafael A. Irizarry: https://rafalab.github.io/dsbook/r-basics.html (great general information)</p></li>
-<li><p>Open Case Studies: https://www.opencasestudies.org/<br>
-(resource for specific public health cases with statistical implementation and interpretation)</p></li>
-</ul>
-</section>
-<section id="useful-free-resources-1" class="slide level2">
-<h2>Useful (+Free) Resources</h2>
-<p><strong>Need help?</strong></p>
-<ul>
-<li><p>Various “Cheat Sheets”: https://github.com/rstudio/cheatsheets/</p></li>
-<li><p>R reference card: http://cran.r-project.org/doc/contrib/Short-refcard.pdf</p></li>
-<li><p>R jargon: https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf</p></li>
-<li><p>R vs Stata: https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf</p></li>
-<li><p>R terminology: https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf</p></li>
-</ul>
-</section>
-<section id="installing-r" class="slide level2">
-<h2>Installing R</h2>
-<p>Hopefully everyone has pre-installed R and RStudio (and Quarto if needed). Let’s take a minute to make sure everyone is set up and then jump in!</p>
 
 
 </section>
@@ -273,7 +203,7 @@
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
-'smaller': true,
+'smaller': false,
 
         // Display controls in the bottom right corner
         controls: false,

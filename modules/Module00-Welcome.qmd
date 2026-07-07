@@ -67,14 +67,14 @@ Themes that will show up throughout the workshop:
 -   Good coding techniques
 -   Thinking algorithmically
 
-Note that we listed a lot of topics on the course description, we won't have time to get in-depth with most of them. What are **you** most interested in learning?
+The 2026 core schedule is set, and we also keep a few optional or take-home topics available for people who want extra practice. What are **you** most interested in learning?
 
 ## Course structure
 
-- We'll start the course with some fundamentals.
-- These include advanced programming techniques, applications of those programming techniques, and just some neat things we think will help prepare you for infectious disease modeling.
-- Some examples are: using R packages to improve your life, simulating power, bootstrap confidence intervals.
-- We'll have time for some other advanced topics too, but maybe not all of them depending. These could be: disease mapping, maximum likelihood, differential equations, and advanced linear models.
+- Day 1 core: Quarto, statistics in R, iteration, functions, data science walkthrough 1, and Exercise 1.
+- Day 2 core: functional programming, useful packages, S3/formulas, data science walkthrough 2, Exercise 1 continuation, and Exercise 2.
+- Day 3 core: ODEs in R, disease mapping/GIS, and time for questions.
+- Optional or take-home: bootstrapping, Arrow, and power simulation.
 
 ## Useful (+ Free) Resources
 
