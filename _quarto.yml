@@ -44,7 +44,7 @@ website:
           - text: "Module 4: Writing functions"
             href: modules/Module04-Functions.qmd
             target: _blank
-          - text: "Data science walkthrough 1"
+          - text: "Data science walkthrough 1: conditionals"
             href: modules/Walkthrough1.qmd
             target: _blank
       - section: "Day 2 core"
@@ -58,7 +58,7 @@ website:
           - text: "Module 6: S3 and formulas"
             href: modules/Module06-S3-lm-formulas.qmd
             target: _blank
-          - text: "Data science walkthrough 2"
+          - text: "Data science walkthrough 2: iteration"
             href: modules/Walkthrough2.qmd
             target: _blank
       - section: "Day 3 core"

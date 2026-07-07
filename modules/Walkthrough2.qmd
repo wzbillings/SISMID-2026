@@ -1,35 +1,374 @@
 ---
-title: "Data science walkthrough 2"
+title: "Data science walkthrough 2: Repeating an analysis"
 format:
   revealjs:
     toc: false
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
 ---
 
-## A whole paper using R and quarto
+## The same problem, repeated
 
-- This walkthrough uses a published analysis project to connect the Day 1 and
-  Day 2 tools: Quarto, functions, repeated analyses, model output, and reporting.
-- The goal is not to understand every line of code. The goal is to see how the
-  pieces fit together in a real project.
-- Public code: https://github.com/ahgroup/billings-high-dose-heterologous-public/.
+In Walkthrough 1, we answered one country-level question:
 
-## What to look for
+> In Pakistan since 2000, which years should we flag because MCV1 coverage was
+> low and measles incidence was elevated?
 
-1. Where does the project import and clean data?
-1. Which files define reusable functions?
-1. Where are models fit, summarized, and checked?
-1. How does Quarto turn the analysis into a manuscript-style report?
+Today we ask the next manuscript question:
 
-## During the walkthrough
+> Is Pakistan unusual, or do we see the same pattern across other countries in
+> the region?
 
-- Pick one function and identify its inputs, output, and side effects.
-- Find one repeated analysis pattern and decide whether it uses a loop,
-  functional programming, or copied code.
-- Find one model formula and identify the outcome, exposure, and adjustment
-  variables.
+## What changes today?
 
-## After the walkthrough
+The analysis rule does not change:
 
-- Write down one project-organization idea you want to reuse in Exercise 2.
-- Write down one piece of the project that still feels confusing so we can
-  discuss it during question time.
+> Priority year = MCV1 coverage below 90% and at least 1 measles case per
+> 100,000 people.
+
+The workflow changes:
+
+1. Write the rule once.
+1. Test it on one country.
+1. Repeat it across many countries.
+1. Turn the repeated results into a table for the report.
+
+## Load the data
+
+```{r}
+data_file <- file.path("data", "measles_final.Rds")
+
+if (!file.exists(data_file)) {
+  data_file <- file.path("..", "data", "measles_final.Rds")
+}
+
+measles <- readRDS(data_file)
+```
+
+## Before we loop
+
+Loops are easier when we know the exact task.
+
+For one country, we need to:
+
+1. Keep rows for that country and year range.
+1. Calculate cases per 100,000 people.
+1. Apply the priority-year rule.
+1. Count the priority years.
+1. Return one row of results.
+
+That is a function-shaped problem.
+
+## Function 1: apply the rule
+
+```{r}
+add_priority_rule <- function(country_data,
+                              coverage_cutoff = 90,
+                              incidence_cutoff = 1) {
+  country_data$cases_per_100k <- (
+    country_data$measles_cases / country_data$population * 100000
+  )
+
+  country_data$priority_year <- ifelse(
+    is.na(country_data$MCV1_coverage) | is.na(country_data$cases_per_100k),
+    "missing information",
+    ifelse(
+      country_data$MCV1_coverage < coverage_cutoff &
+        country_data$cases_per_100k >= incidence_cutoff,
+      "priority year",
+      "not priority"
+    )
+  )
+
+  country_data
+}
+```
+
+## Test the rule on one country
+
+```{r}
+pakistan <- measles[
+  measles$country == "Pakistan" & measles$year >= 2000,
+]
+
+pakistan <- pakistan[order(pakistan$year), ]
+pakistan <- add_priority_rule(pakistan)
+
+tail(pakistan[, c("year", "MCV1_coverage", "cases_per_100k", "priority_year")])
+```
+
+## Function 2: summarize one country
+
+```{r}
+summarize_priority_years <- function(country_name,
+                                     data,
+                                     min_year = 2000,
+                                     coverage_cutoff = 90,
+                                     incidence_cutoff = 1) {
+  country_data <- data[
+    data$country == country_name & data$year >= min_year,
+  ]
+
+  country_data <- add_priority_rule(
+    country_data,
+    coverage_cutoff = coverage_cutoff,
+    incidence_cutoff = incidence_cutoff
+  )
+
+  priority_years <- country_data$year[
+    country_data$priority_year == "priority year"
+  ]
+
+  most_recent_priority_year <- if (length(priority_years) == 0) {
+    NA_integer_
+  } else {
+    max(priority_years)
+  }
+
+  max_cases_per_100k <- if (all(is.na(country_data$cases_per_100k))) {
+    NA_real_
+  } else {
+    round(max(country_data$cases_per_100k, na.rm = TRUE), 2)
+  }
+
+  data.frame(
+    country = country_name,
+    region = country_data$region[1],
+    sub_region = country_data$sub_region[1],
+    years = nrow(country_data),
+    priority_years = length(priority_years),
+    missing_information_years = sum(country_data$priority_year == "missing information"),
+    most_recent_priority_year = most_recent_priority_year,
+    max_cases_per_100k = max_cases_per_100k
+  )
+}
+```
+
+## Test the summary function
+
+```{r}
+summarize_priority_years("Pakistan", data = measles)
+```
+
+## Why this helps
+
+Before writing a loop, we made one repeatable unit:
+
+```r
+summarize_priority_years("Pakistan", data = measles)
+```
+
+If that works for Pakistan, the loop only needs to change the country name.
+
+That is the main trick.
+
+## Repeat with a `for` loop
+
+```{r}
+countries <- c("Afghanistan", "Bangladesh", "India", "Nepal", "Pakistan")
+
+country_summaries <- data.frame()
+
+for (country_name in countries) {
+  one_summary <- summarize_priority_years(country_name, data = measles)
+  country_summaries <- rbind(country_summaries, one_summary)
+}
+
+country_summaries
+```
+
+## What did the loop do?
+
+Each loop pass did the same job:
+
+1. Put one country name into `country_name`.
+1. Run `summarize_priority_years()` for that country.
+1. Add the one-row answer to the growing results table.
+
+The computer is doing the repeated typing for us.
+
+## Repeat with `lapply()`
+
+The same idea can be written in a more functional style.
+
+```{r}
+summary_list <- lapply(
+  countries,
+  summarize_priority_years,
+  data = measles
+)
+
+summary_list
+```
+
+## Combine the list
+
+```{r}
+country_summaries_lapply <- do.call(rbind, summary_list)
+
+country_summaries_lapply
+```
+
+## Which version should you use?
+
+Use the version that helps you think clearly.
+
+- A `for` loop is often easier to read while you are learning.
+- `lapply()` is compact once the repeated task is already a function.
+- Both are better than copying and pasting the same analysis five times.
+
+## Now repeat over a whole region
+
+```{r}
+asia <- measles[measles$region == "Asia", ]
+asian_countries <- sort(unique(asia$country))
+
+head(asian_countries)
+length(asian_countries)
+```
+
+## Run the country summary for Asia
+
+```{r}
+asia_summary_list <- lapply(
+  asian_countries,
+  summarize_priority_years,
+  data = asia
+)
+
+asia_summaries <- do.call(rbind, asia_summary_list)
+```
+
+## Sort the results
+
+```{r}
+asia_summaries <- asia_summaries[
+  order(-asia_summaries$priority_years, asia_summaries$country),
+]
+
+head(asia_summaries, 10)
+```
+
+## Make a manuscript-style table
+
+```{r}
+top_asia <- head(asia_summaries, 10)
+
+top_asia[, c(
+  "country",
+  "sub_region",
+  "priority_years",
+  "missing_information_years",
+  "most_recent_priority_year",
+  "max_cases_per_100k"
+)]
+```
+
+## Make a quick figure
+
+```{r}
+barplot(
+  top_asia$priority_years,
+  names.arg = top_asia$country,
+  las = 2,
+  ylab = "Priority years since 2000",
+  main = "Countries in Asia with the most priority years"
+)
+```
+
+## What goes in the report?
+
+**Methods sentence**
+
+We wrote a reusable function to classify each country-year as a priority year
+when MCV1 coverage was below 90% and measles incidence was at least 1 case per
+100,000 people, then applied that function to every country in Asia.
+
+**Results sentence**
+
+The repeated analysis identified several countries in Asia with many priority
+years since 2000, suggesting that the Pakistan pattern was not unique under
+this simple rule.
+
+## Active checkpoint
+
+**Student prompt**
+
+Repeat the regional analysis for Africa.
+
+Your goal is to produce a table of the 10 countries in Africa with the most
+priority years since 2000.
+
+## Active checkpoint: hint
+
+Reuse the objects we already built.
+
+You only need to change:
+
+1. the region filter
+1. the vector of country names
+1. the object names, if you want them to be easier to read
+
+## Active checkpoint: solution
+
+```{r}
+africa <- measles[measles$region == "Africa", ]
+african_countries <- sort(unique(africa$country))
+
+africa_summary_list <- lapply(
+  african_countries,
+  summarize_priority_years,
+  data = africa
+)
+
+africa_summaries <- do.call(rbind, africa_summary_list)
+
+africa_summaries <- africa_summaries[
+  order(-africa_summaries$priority_years, africa_summaries$country),
+]
+
+head(africa_summaries, 10)
+```
+
+## Active checkpoint: one more change
+
+What if the manuscript team decides that 1 case per 100,000 is too sensitive?
+
+Try the Africa analysis again with:
+
+- MCV1 cutoff: 90%
+- incidence cutoff: 5 cases per 100,000
+
+## Active checkpoint: solution
+
+```{r}
+africa_summary_list_strict <- lapply(
+  african_countries,
+  summarize_priority_years,
+  data = africa,
+  coverage_cutoff = 90,
+  incidence_cutoff = 5
+)
+
+africa_summaries_strict <- do.call(rbind, africa_summary_list_strict)
+
+africa_summaries_strict <- africa_summaries_strict[
+  order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),
+]
+
+head(africa_summaries_strict, 10)
+```
+
+## What did we practice?
+
+- Turning one successful analysis into a function
+- Repeating that function with a `for` loop
+- Repeating that function with `lapply()`
+- Combining repeated results with `do.call(rbind, ...)`
+- Creating a manuscript-ready summary table from many repeated analyses
+
+In Exercise 2, this same habit helps you move from a draft analysis to a
+polished report.

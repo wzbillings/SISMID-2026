@@ -14,7 +14,7 @@
     "href": "schedule.html#day-01---monday",
     "title": "Course Schedule",
     "section": "Day 01 - Monday",
-    "text": "Day 01 - Monday\n\n\n\n\n\n\n\nTime\nSection\n\n\n\n\n09:00 am - 09:30 am\nModule 0: Welcome, course goals, and setup check\n\n\n09:30 am - 10:30 am\nModule 1: Quarto\n\n\n10:30 am - 11:00 am\nCoffee break\n\n\n11:00 am - 12:00 pm\nModule 2: Stats in R\n\n\n12:00 pm - 01:30 pm\nLunch (2nd floor lobby)\n\n\n01:30 pm - 02:30 pm\nModule 3: Iteration\n\n\n02:30 pm - 03:00 pm\nModule 4: Writing functions\n\n\n03:00 pm - 03:30 pm\nCoffee break\n\n\n03:30 pm - 04:10 pm\nModule 4 continued: functions practice and questions\n\n\n04:10 pm - 05:00 pm\nData science walkthrough 1 and Exercise 1 launch\n\n\n05:00 pm - 07:00 pm\nNetworking night and poster session, Randal Rollins P01",
+    "text": "Day 01 - Monday\n\n\n\n\n\n\n\nTime\nSection\n\n\n\n\n09:00 am - 09:30 am\nModule 0: Welcome, course goals, and setup check\n\n\n09:30 am - 10:30 am\nModule 1: Quarto\n\n\n10:30 am - 11:00 am\nCoffee break\n\n\n11:00 am - 12:00 pm\nModule 2: Stats in R\n\n\n12:00 pm - 01:30 pm\nLunch (2nd floor lobby)\n\n\n01:30 pm - 02:30 pm\nModule 3: Iteration\n\n\n02:30 pm - 03:00 pm\nModule 4: Writing functions\n\n\n03:00 pm - 03:30 pm\nCoffee break\n\n\n03:30 pm - 04:10 pm\nModule 4 continued: functions practice and questions\n\n\n04:10 pm - 05:00 pm\nData science walkthrough 1: conditionals and Exercise 1 launch\n\n\n05:00 pm - 07:00 pm\nNetworking night and poster session, Randal Rollins P01",
     "crumbs": [
       "Course Schedule"
     ]
@@ -24,7 +24,7 @@
     "href": "schedule.html#day-02---tuesday",
     "title": "Course Schedule",
     "section": "Day 02 - Tuesday",
-    "text": "Day 02 - Tuesday\n\n\n\n\n\n\n\nTime\nSection\n\n\n\n\n09:00 am - 10:30 am\nModule 5: Functional programming\n\n\n10:30 am - 11:00 am\nCoffee break\n\n\n11:00 am - 11:45 am\nUseful R packages for analysis and reporting\n\n\n11:45 am - 12:00 pm\nExercise 1 continuation and questions\n\n\n12:00 pm - 01:00 pm\nLunch (2nd floor lobby); Lunch and Learn!\n\n\n01:00 pm - 02:15 pm\nModule 6: S3, formulas, and model objects\n\n\n02:15 pm - 03:00 pm\nData science walkthrough 2\n\n\n03:00 pm - 03:30 pm\nCoffee break\n\n\n03:30 pm - 04:15 pm\nExercise 1 continuation, debrief, and transition\n\n\n04:15 pm - 05:00 pm\nExercise 2 launch and work time",
+    "text": "Day 02 - Tuesday\n\n\n\n\n\n\n\nTime\nSection\n\n\n\n\n09:00 am - 10:30 am\nModule 5: Functional programming\n\n\n10:30 am - 11:00 am\nCoffee break\n\n\n11:00 am - 11:45 am\nUseful R packages for analysis and reporting\n\n\n11:45 am - 12:00 pm\nExercise 1 continuation and questions\n\n\n12:00 pm - 01:00 pm\nLunch (2nd floor lobby); Lunch and Learn!\n\n\n01:00 pm - 02:15 pm\nModule 6: S3, formulas, and model objects\n\n\n02:15 pm - 03:00 pm\nData science walkthrough 2: iteration and functional programming\n\n\n03:00 pm - 03:30 pm\nCoffee break\n\n\n03:30 pm - 04:15 pm\nExercise 1 continuation, debrief, and transition\n\n\n04:15 pm - 05:00 pm\nExercise 2 launch and work time",
     "crumbs": [
       "Course Schedule"
     ]
@@ -210,168 +210,278 @@
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#draft-note",
-    "href": "modules/Walkthrough1.html#draft-note",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Draft note",
-    "text": "Draft note\nThis walkthrough is preserved from an earlier draft. Code chunks are shown where helpful, but execution is disabled until the diphtheria serosample data are added to the 2026 course repository.",
+    "objectID": "modules/Walkthrough1.html#a-small-manuscript-problem",
+    "href": "modules/Walkthrough1.html#a-small-manuscript-problem",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "A small manuscript problem",
+    "text": "A small manuscript problem\nWe are going to answer one concrete question with the measles data:\n\nIn Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?\n\nThis is a miniature version of the Exercise 1 manuscript arc:\n\nState a question.\nTranslate the question into a data rule.\nRun the rule.\nWrite a cautious result.",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#learning-goals",
-    "href": "modules/Walkthrough1.html#learning-goals",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Learning goals",
-    "text": "Learning goals\n\nUse logical operators, subsetting functions, and math calculations in R\nTranslate human-understandable problem descriptions into instructions that R can understand.",
+    "objectID": "modules/Walkthrough1.html#the-programming-idea",
+    "href": "modules/Walkthrough1.html#the-programming-idea",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "The programming idea",
+    "text": "The programming idea\nWe can describe the rule in plain English:\n\nIf MCV1 coverage is below 90% and measles incidence is at least 1 case per 100,000 people, call it a priority year.\n\nNow the problem is not “Can I memorize R?”\nThe problem is:\n\nHow do I turn that sentence into computer code?",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#instructions",
-    "href": "modules/Walkthrough1.html#instructions",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Instructions",
-    "text": "Instructions\n\nMake a new R script for this case study, and save it to your code folder.\nWe’ll use the diphtheria serosample data from Exercise 1 for this case study. Load it into R and use the functions we’ve learned to look at it.",
+    "objectID": "modules/Walkthrough1.html#load-the-data",
+    "href": "modules/Walkthrough1.html#load-the-data",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Load the data",
+    "text": "Load the data\n\ndata_file &lt;- file.path(\"data\", \"measles_final.Rds\")\n\nif (!file.exists(data_file)) {\n  data_file &lt;- file.path(\"..\", \"data\", \"measles_final.Rds\")\n}\n\nmeasles &lt;- readRDS(data_file)",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#instructions-1",
-    "href": "modules/Walkthrough1.html#instructions-1",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Instructions",
-    "text": "Instructions\n\nMake a new R script for this case study, and save it to your code folder.\nWe’ll use the diphtheria serosample data from Exercise 1 for this case study. Load it into R and use the functions we’ve learned to look at it.\nThe str() of your dataset should look like this.\n\n\nstr(diph)",
+    "objectID": "modules/Walkthrough1.html#look-at-the-data",
+    "href": "modules/Walkthrough1.html#look-at-the-data",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Look at the data",
+    "text": "Look at the data\n\nstr(measles)\n\nClasses 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':    9416 obs. of  9 variables:\n $ iso3c        : chr  \"AFG\" \"AFG\" \"AFG\" \"AFG\" ...\n $ year         : num  2023 2022 2021 2020 2019 ...\n $ measles_cases: num  2792 5166 2900 640 353 ...\n $ population   : num  42239854 41128771 40099462 38972230 37769499 ...\n $ MCV1_coverage: num  NA 68 63 66 64 71 67 64 62 60 ...\n $ MCV2_coverage: num  NA 49 44 43 41 49 40 40 42 44 ...\n $ country      : chr  \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" ...\n $ region       : chr  \"Asia\" \"Asia\" \"Asia\" \"Asia\" ...\n $ sub_region   : chr  \"Southern Asia\" \"Southern Asia\" \"Southern Asia\" \"Southern Asia\" ...\n - attr(*, \"spec\")=List of 3\n  ..$ cols   :List of 6\n  .. ..$ iso3c        : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_character\" \"collector\"\n  .. ..$ year         : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ measles_cases: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ population   : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ MCV1_coverage: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ MCV2_coverage: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  ..$ default: list()\n  .. ..- attr(*, \"class\")= chr [1:2] \"collector_guess\" \"collector\"\n  ..$ delim  : chr \",\"\n  ..- attr(*, \"class\")= chr \"col_spec\"\n - attr(*, \"problems\")=&lt;pointer: (nil)&gt;",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-was-the-overall-prevalence-higher-in-urban-or-rural-areas",
-    "href": "modules/Walkthrough1.html#q1-was-the-overall-prevalence-higher-in-urban-or-rural-areas",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: Was the overall prevalence higher in urban or rural areas?",
-    "text": "Q1: Was the overall prevalence higher in urban or rural areas?\n\n\nHow do we calculate the prevalence from the data?\nHow do we calculate the prevalence separately for urban and rural areas?\nHow do we determine which prevalence is higher and if the difference is meaningful?",
+    "objectID": "modules/Walkthrough1.html#what-do-we-need",
+    "href": "modules/Walkthrough1.html#what-do-we-need",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "What do we need?",
+    "text": "What do we need?\nFor this question, we need:\n\ncountry, because we are starting with Pakistan\nyear, because we only want 2000 and later\nmeasles_cases, because we need incidence\npopulation, because raw case counts are hard to compare\nMCV1_coverage, because that is our coverage variable",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-from-the-data",
-    "href": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-from-the-data",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: How do we calculate the prevalence from the data?",
-    "text": "Q1: How do we calculate the prevalence from the data?\n\n\nThe variable DP_infection in our dataset is binary / dichotomous.\nThe prevalence is the number or percent of people who had the disease over some duration.\nThe average of a binary variable gives the prevalence!\n\n\n\n\nmean(diph$DP_infection)",
+    "objectID": "modules/Walkthrough1.html#step-1-keep-the-country-years-we-need",
+    "href": "modules/Walkthrough1.html#step-1-keep-the-country-years-we-need",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 1: keep the country-years we need",
+    "text": "Step 1: keep the country-years we need\n\npakistan &lt;- measles[\n  measles$country == \"Pakistan\" & measles$year &gt;= 2000,\n]\n\npakistan &lt;- pakistan[order(pakistan$year), ]",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas",
-    "href": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: How do we calculate the prevalence separately for urban and rural areas?",
-    "text": "Q1: How do we calculate the prevalence separately for urban and rural areas?\n\n\nmean(diph[diph$group == \"urban\", ]$DP_infection)\nmean(diph[diph$group == \"rural\", ]$DP_infection)\n\n\n\n\nThere are many ways you could write this code! You can use subset() or you can write the indices many ways.\nUsing tbl_df objects from haven uses different [[ rules than a base R data frame.",
+    "objectID": "modules/Walkthrough1.html#check-the-subset",
+    "href": "modules/Walkthrough1.html#check-the-subset",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Check the subset",
+    "text": "Check the subset\n\nhead(pakistan)\n\n     iso3c year measles_cases population MCV1_coverage MCV2_coverage  country\n6448   PAK 2000          2064  154369924            57            NA Pakistan\n6447   PAK 2001          3849  159217727            59            NA Pakistan\n6446   PAK 2002          3903  163262807            60            NA Pakistan\n6445   PAK 2003          4740  166876680            62            NA Pakistan\n6444   PAK 2004          4248  170648620            63            NA Pakistan\n6443   PAK 2005          2981  174372098            61            NA Pakistan\n     region    sub_region\n6448   Asia Southern Asia\n6447   Asia Southern Asia\n6446   Asia Southern Asia\n6445   Asia Southern Asia\n6444   Asia Southern Asia\n6443   Asia Southern Asia\n\ntail(pakistan)\n\n      iso3c year measles_cases population MCV1_coverage MCV2_coverage country\nNA.18  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.19  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.20  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.21  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.22  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.23  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\n      region sub_region\nNA.18   &lt;NA&gt;       &lt;NA&gt;\nNA.19   &lt;NA&gt;       &lt;NA&gt;\nNA.20   &lt;NA&gt;       &lt;NA&gt;\nNA.21   &lt;NA&gt;       &lt;NA&gt;\nNA.22   &lt;NA&gt;       &lt;NA&gt;\nNA.23   &lt;NA&gt;       &lt;NA&gt;",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas-1",
-    "href": "modules/Walkthrough1.html#q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas-1",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: How do we calculate the prevalence separately for urban and rural areas?",
-    "text": "Q1: How do we calculate the prevalence separately for urban and rural areas?\n\nOne easy way is to use the aggregate() function.\n\n\naggregate(DP_infection ~ group, data = diph, FUN = mean)",
+    "objectID": "modules/Walkthrough1.html#step-2-calculate-incidence",
+    "href": "modules/Walkthrough1.html#step-2-calculate-incidence",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 2: calculate incidence",
+    "text": "Step 2: calculate incidence\nRaw case counts are useful, but they do not account for population size.\nSo we make a new variable:\n\nmeasles cases per 100,000 people\n\n\npakistan$cases_per_100k &lt;- pakistan$measles_cases / pakistan$population * 100000",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-how-do-we-determine-which-prevalence-is-higher-and-if-the-difference-is-meaningful",
-    "href": "modules/Walkthrough1.html#q1-how-do-we-determine-which-prevalence-is-higher-and-if-the-difference-is-meaningful",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: How do we determine which prevalence is higher and if the difference is meaningful?",
-    "text": "Q1: How do we determine which prevalence is higher and if the difference is meaningful?\n\n\nWe probably need to include a confidence interval in our calculation.\nThis is actually not so easy without more advanced tools that we will learn in upcoming modules.\nRight now the best options are to do it by hand or google a function.",
+    "objectID": "modules/Walkthrough1.html#check-the-calculation",
+    "href": "modules/Walkthrough1.html#check-the-calculation",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Check the calculation",
+    "text": "Check the calculation\n\npakistan_check &lt;- pakistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"population\",\n  \"cases_per_100k\"\n)]\n\npakistan_check$cases_per_100k &lt;- round(pakistan_check$cases_per_100k, 2)\n\ntail(pakistan_check, 8)\n\n      year measles_cases population cases_per_100k\nNA.16   NA            NA         NA             NA\nNA.17   NA            NA         NA             NA\nNA.18   NA            NA         NA             NA\nNA.19   NA            NA         NA             NA\nNA.20   NA            NA         NA             NA\nNA.21   NA            NA         NA             NA\nNA.22   NA            NA         NA             NA\nNA.23   NA            NA         NA             NA",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-by-hand",
-    "href": "modules/Walkthrough1.html#q1-by-hand",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: By hand",
-    "text": "Q1: By hand\n\np_urban &lt;- mean(diph[diph$group == \"urban\", ]$DP_infection)\np_rural &lt;- mean(diph[diph$group == \"rural\", ]$DP_infection)\nse_urban &lt;- sqrt(p_urban * (1 - p_urban) / nrow(diph[diph$group == \"urban\", ]))\nse_rural &lt;- sqrt(p_rural * (1 - p_rural) / nrow(diph[diph$group == \"rural\", ]))\n\nresult_urban &lt;- paste0(\n    \"Urban: \", round(p_urban, 2), \"; 95% CI: (\",\n    round(p_urban - 1.96 * se_urban, 2), \", \",\n    round(p_urban + 1.96 * se_urban, 2), \")\"\n)\n\nresult_rural &lt;- paste0(\n    \"Rural: \", round(p_rural, 2), \"; 95% CI: (\",\n    round(p_rural - 1.96 * se_rural, 2), \", \",\n    round(p_rural + 1.96 * se_rural, 2), \")\"\n)\n\ncat(result_urban, result_rural, sep = \"\\n\")",
+    "objectID": "modules/Walkthrough1.html#step-3-translate-each-condition",
+    "href": "modules/Walkthrough1.html#step-3-translate-each-condition",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 3: translate each condition",
+    "text": "Step 3: translate each condition\nThe English rule has two parts:\n\nMCV1 coverage is below 90%.\nMeasles incidence is at least 1 case per 100,000 people.\n\nIn R, each part becomes a logical vector.\n\nlow_coverage &lt;- pakistan$MCV1_coverage &lt; 90\nelevated_incidence &lt;- pakistan$cases_per_100k &gt;= 1",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-by-hand-1",
-    "href": "modules/Walkthrough1.html#q1-by-hand-1",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: By hand",
-    "text": "Q1: By hand\n\nWe can see that the 95% CI’s overlap, so the groups are probably not that different. To be sure, we need to do a 2-sample test! But this is not a statistics class.\nSome people will tell you that coding like this is “bad”. But ‘bad’ code that gives you answers is better than broken code! We will learn techniques for writing this with less work and less repetition in upcoming modules.",
+    "objectID": "modules/Walkthrough1.html#inspect-the-logical-vectors",
+    "href": "modules/Walkthrough1.html#inspect-the-logical-vectors",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Inspect the logical vectors",
+    "text": "Inspect the logical vectors\n\nlogic_check &lt;- data.frame(\n  year = pakistan$year,\n  MCV1_coverage = pakistan$MCV1_coverage,\n  cases_per_100k = round(pakistan$cases_per_100k, 2),\n  low_coverage = low_coverage,\n  elevated_incidence = elevated_incidence\n)\n\ntail(logic_check, 8)\n\n   year MCV1_coverage cases_per_100k low_coverage elevated_incidence\n41   NA            NA             NA           NA                 NA\n42   NA            NA             NA           NA                 NA\n43   NA            NA             NA           NA                 NA\n44   NA            NA             NA           NA                 NA\n45   NA            NA             NA           NA                 NA\n46   NA            NA             NA           NA                 NA\n47   NA            NA             NA           NA                 NA\n48   NA            NA             NA           NA                 NA",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#q1-googling-a-package",
-    "href": "modules/Walkthrough1.html#q1-googling-a-package",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Q1: Googling a package",
-    "text": "Q1: Googling a package\n\n\n# install.packages(\"DescTools\")\nlibrary(DescTools)\n\naggregate(DP_infection ~ group, data = diph, FUN = DescTools::MeanCI)",
+    "objectID": "modules/Walkthrough1.html#missing-values-matter",
+    "href": "modules/Walkthrough1.html#missing-values-matter",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Missing values matter",
+    "text": "Missing values matter\nIf coverage is missing, R cannot decide whether coverage is below 90%.\n\ntable(low_coverage, useNA = \"ifany\")\n\nlow_coverage\nTRUE &lt;NA&gt; \n  23   25 \n\n\nThat is not a failure. It is R refusing to guess.\nFor a manuscript-style analysis, we need to decide what we want to do with missing information.",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#you-try-it",
-    "href": "modules/Walkthrough1.html#you-try-it",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "You try it!",
-    "text": "You try it!\n\nUsing any of the approaches you can think of, answer this question!\nHow many children under 5 were vaccinated? In children under 5, did vaccination lower the prevalence of infection?",
+    "objectID": "modules/Walkthrough1.html#step-4-write-the-decision-rule",
+    "href": "modules/Walkthrough1.html#step-4-write-the-decision-rule",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 4: write the decision rule",
+    "text": "Step 4: write the decision rule\nHere is the rule in full:\n\nIf coverage or incidence is missing, label the row \"missing information\".\nOtherwise, if coverage is below 90% and incidence is at least 1, label the row \"priority year\".\nOtherwise, label the row \"not priority\".",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#you-try-it-1",
-    "href": "modules/Walkthrough1.html#you-try-it-1",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "You try it!",
-    "text": "You try it!\n\n# How many children under 5 were vaccinated\nsum(diph$DP_vacc[diph$age_months &lt; 60])\n\n# Prevalence in both vaccine groups for children under 5\naggregate(\n    DP_infection ~ DP_vacc,\n    data = subset(diph, age_months &lt; 60),\n    FUN = DescTools::MeanCI\n)\n\nIt appears that prevalence was HIGHER in the vaccine group? That is counterintuitive, but the sample size for the unvaccinated group is too small to be sure.",
+    "objectID": "modules/Walkthrough1.html#step-4-code-the-decision-rule",
+    "href": "modules/Walkthrough1.html#step-4-code-the-decision-rule",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 4: code the decision rule",
+    "text": "Step 4: code the decision rule\n\npakistan$priority_year &lt;- ifelse(\n  is.na(pakistan$MCV1_coverage) | is.na(pakistan$cases_per_100k),\n  \"missing information\",\n  ifelse(\n    pakistan$MCV1_coverage &lt; 90 & pakistan$cases_per_100k &gt;= 1,\n    \"priority year\",\n    \"not priority\"\n  )\n)",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
-    "objectID": "modules/Walkthrough1.html#congratulations-for-finishing-the-first-case-study",
-    "href": "modules/Walkthrough1.html#congratulations-for-finishing-the-first-case-study",
-    "title": "Data science walkthrough 1: Data analysis walkthrough",
-    "section": "Congratulations for finishing the first case study!",
-    "text": "Congratulations for finishing the first case study!\n\nWhat R functions and skills did you practice?\nWhat other questions could you answer about the same dataset with the skills you know now?",
+    "objectID": "modules/Walkthrough1.html#what-did-ifelse-do",
+    "href": "modules/Walkthrough1.html#what-did-ifelse-do",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "What did ifelse() do?",
+    "text": "What did ifelse() do?\nifelse() has three pieces:\nifelse(test, value_if_true, value_if_false)\nOur nested version says:\n\nfirst check whether the data are missing\nif not, check whether the year meets the priority rule\ngive every row one label",
     "crumbs": [
       "Day 1 core",
-      "Data science walkthrough 1"
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#step-5-inspect-the-answer",
+    "href": "modules/Walkthrough1.html#step-5-inspect-the-answer",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 5: inspect the answer",
+    "text": "Step 5: inspect the answer\n\npakistan_result &lt;- pakistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV1_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\npakistan_result$cases_per_100k &lt;- round(pakistan_result$cases_per_100k, 2)\n\ntail(pakistan_result, 12)\n\n      year measles_cases MCV1_coverage cases_per_100k       priority_year\nNA.12   NA            NA            NA             NA missing information\nNA.13   NA            NA            NA             NA missing information\nNA.14   NA            NA            NA             NA missing information\nNA.15   NA            NA            NA             NA missing information\nNA.16   NA            NA            NA             NA missing information\nNA.17   NA            NA            NA             NA missing information\nNA.18   NA            NA            NA             NA missing information\nNA.19   NA            NA            NA             NA missing information\nNA.20   NA            NA            NA             NA missing information\nNA.21   NA            NA            NA             NA missing information\nNA.22   NA            NA            NA             NA missing information\nNA.23   NA            NA            NA             NA missing information",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#step-6-summarize-the-answer",
+    "href": "modules/Walkthrough1.html#step-6-summarize-the-answer",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 6: summarize the answer",
+    "text": "Step 6: summarize the answer\n\ntable(pakistan$priority_year)\n\n\nmissing information        not priority       priority year \n                 25                   5                  18 \n\n\n\npakistan$year[pakistan$priority_year == \"priority year\"]\n\n [1] 2000 2001 2002 2003 2004 2005 2006 2007 2010 2011 2012 2013 2016 2017 2018\n[16] 2020 2021 2022",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#make-a-small-manuscript-table",
+    "href": "modules/Walkthrough1.html#make-a-small-manuscript-table",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Make a small manuscript table",
+    "text": "Make a small manuscript table\n\npriority_years &lt;- pakistan$year[pakistan$priority_year == \"priority year\"]\n\ndata.frame(\n  country = \"Pakistan\",\n  start_year = min(pakistan$year),\n  end_year = max(pakistan$year),\n  total_years = nrow(pakistan),\n  priority_years = length(priority_years),\n  most_recent_priority_year = max(priority_years)\n)\n\n   country start_year end_year total_years priority_years\n1 Pakistan         NA       NA          48             18\n  most_recent_priority_year\n1                      2022",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#make-a-quick-figure",
+    "href": "modules/Walkthrough1.html#make-a-quick-figure",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Make a quick figure",
+    "text": "Make a quick figure\n\nplot(\n  pakistan$year,\n  pakistan$cases_per_100k,\n  type = \"b\",\n  xlab = \"Year\",\n  ylab = \"Measles cases per 100,000 people\",\n  main = \"Pakistan measles incidence since 2000\"\n)\n\nabline(h = 1, lty = 2)\n\npoints(\n  pakistan$year[pakistan$priority_year == \"priority year\"],\n  pakistan$cases_per_100k[pakistan$priority_year == \"priority year\"],\n  pch = 19,\n  col = \"red\"\n)",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#what-goes-in-the-report",
+    "href": "modules/Walkthrough1.html#what-goes-in-the-report",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "What goes in the report?",
+    "text": "What goes in the report?\nMethods sentence\nWe defined a priority year as a country-year with MCV1 coverage below 90% and at least 1 reported measles case per 100,000 people; country-years with missing coverage or incidence were labeled as missing information.\nResults sentence\nPakistan had several priority years since 2000 under this rule, with the most recent priority year identified in the summary table.",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint",
+    "href": "modules/Walkthrough1.html#active-checkpoint",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint",
+    "text": "Active checkpoint\nStudent prompt\nChange the question:\n\nIn Afghanistan since 2010, which years should be flagged if MCV2 coverage was below 80% or measles incidence was at least 5 cases per 100,000 people?\n\nWrite the code before looking at the solution.",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-hint",
+    "href": "modules/Walkthrough1.html#active-checkpoint-hint",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: hint",
+    "text": "Active checkpoint: hint\nYou need to change four pieces:\n\nthe country\nthe start year\nthe coverage variable and cutoff\nthe logical connector, because this rule uses “or”\n\nThe R operator for “or” is |.",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-solution",
+    "href": "modules/Walkthrough1.html#active-checkpoint-solution",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: solution",
+    "text": "Active checkpoint: solution\n\nafghanistan &lt;- measles[\n  measles$country == \"Afghanistan\" & measles$year &gt;= 2010,\n]\n\nafghanistan &lt;- afghanistan[order(afghanistan$year), ]\nafghanistan$cases_per_100k &lt;- afghanistan$measles_cases / afghanistan$population * 100000\n\nafghanistan$priority_year &lt;- ifelse(\n  (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage &lt; 80) |\n    (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k &gt;= 5),\n  \"priority year\",\n  ifelse(\n    is.na(afghanistan$MCV2_coverage) | is.na(afghanistan$cases_per_100k),\n    \"missing information\",\n    \"not priority\"\n  )\n)\n\nafghanistan_result &lt;- afghanistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV2_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\nafghanistan_result$cases_per_100k &lt;- round(afghanistan_result$cases_per_100k, 2)\n\nafghanistan_result\n\n      year measles_cases MCV2_coverage cases_per_100k       priority_year\n14    2010          1989            29           7.06       priority year\n13    2011          3013            31          10.30       priority year\n12    2012          2787            33           9.15       priority year\n11    2013           430            38           1.36       priority year\n10    2014           492            44           1.50       priority year\n9     2015          1154            42           3.42       priority year\n8     2016           638            40           1.84       priority year\n7     2017          1511            40           4.24       priority year\n6     2018          2012            49           5.48       priority year\n5     2019           353            41           0.93       priority year\n4     2020           640            43           1.64       priority year\n3     2021          2900            44           7.23       priority year\n2     2022          5166            49          12.56       priority year\n1     2023          2792            NA           6.61       priority year\nNA      NA            NA            NA             NA missing information\nNA.1    NA            NA            NA             NA missing information\nNA.2    NA            NA            NA             NA missing information\nNA.3    NA            NA            NA             NA missing information\nNA.4    NA            NA            NA             NA missing information\nNA.5    NA            NA            NA             NA missing information\nNA.6    NA            NA            NA             NA missing information\nNA.7    NA            NA            NA             NA missing information\nNA.8    NA            NA            NA             NA missing information\nNA.9    NA            NA            NA             NA missing information\nNA.10   NA            NA            NA             NA missing information\nNA.11   NA            NA            NA             NA missing information\nNA.12   NA            NA            NA             NA missing information\nNA.13   NA            NA            NA             NA missing information",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-summarize-it",
+    "href": "modules/Walkthrough1.html#active-checkpoint-summarize-it",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: summarize it",
+    "text": "Active checkpoint: summarize it\n\ntable(afghanistan$priority_year)\n\n\nmissing information       priority year \n                 14                  14 \n\n\n\nafghanistan$year[afghanistan$priority_year == \"priority year\"]\n\n [1] 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#what-did-we-practice",
+    "href": "modules/Walkthrough1.html#what-did-we-practice",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "What did we practice?",
+    "text": "What did we practice?\n\nStarting with a question that a reader can understand\nTurning a plain-English rule into logical conditions\nUsing &, |, is.na(), and ifelse()\nCreating a table, figure, and short manuscript-style interpretation\n\nNext time, we will repeat this same rule across many countries.",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
     ]
   },
   {
@@ -1130,6 +1240,90 @@
     ]
   },
   {
+    "objectID": "exercises/solutions/Exercise1-solution.html",
+    "href": "exercises/solutions/Exercise1-solution.html",
+    "title": "Exercise 1 Solutions: Start a QCRC Mini-Manuscript",
+    "section": "",
+    "text": "Instructor note\nThis is one acceptable solution path for Exercise 1. It uses the recommended QCRC 30-day mortality question. Student reports may choose different exposures or a different course dataset if they preserve the required deliverables.\n\nCodelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)\n\n\nTask 1 solution: Create a report draft\nStudents should start from exercises/qcrc-mini-manuscript-starter.qmd, save a working copy, and render it. The starter file is already a valid solution skeleton because it contains Introduction, Methods, Results, Discussion, and Appendix sections.\nTask 2 solution: Load and inspect QCRC\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nqcrc &lt;- readxl::read_xlsx(\n  here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n  sheet = \"Main_Dataset\"\n) |&gt;\n  janitor::clean_names() |&gt;\n  dplyr::mutate(\n    bmi = to_numeric(bmi),\n    crp = to_numeric(crp),\n    d_dimer = to_numeric(d_dimer),\n    x30d_mortality = factor(\n      x30d_mortality,\n      levels = c(0, 1),\n      labels = c(\"No 30-day mortality\", \"30-day mortality\")\n    ),\n    intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n    remdesivir_or_placebo = factor(\n      remdesivir_or_placebo,\n      levels = c(0, 1),\n      labels = c(\"Placebo\", \"Remdesivir\")\n    ),\n    female = factor(female),\n    race = factor(race)\n  )\n\ndata.frame(rows = nrow(qcrc), columns = ncol(qcrc)) |&gt;\n  knitr::kable(caption = \"QCRC main dataset dimensions.\")\n\n\nQCRC main dataset dimensions.\n\nrows\ncolumns\n\n\n288\n37\n\n\n\nCodenames(qcrc)[1:10]\n\n [1] \"patient_deid\"     \"decatur_transfer\" \"age\"              \"female\"          \n [5] \"race\"             \"died\"             \"x30d_mortality\"   \"x60d_mortality\"  \n [9] \"death_date_deid\"  \"icu_los\"         \n\n\n\nCodeanalysis_vars &lt;- c(\n  \"x30d_mortality\",\n  \"age\",\n  \"bmi\",\n  \"female\",\n  \"intubated\",\n  \"remdesivir_or_placebo\"\n)\n\nmissing_counts &lt;- sapply(qcrc[analysis_vars], \\(x) sum(is.na(x)))\n\ndata.frame(\n  variable = names(missing_counts),\n  missing = as.integer(missing_counts)\n) |&gt;\n  knitr::kable(caption = \"Missingness check for Exercise 1 variables.\")\n\n\nMissingness check for Exercise 1 variables.\n\nvariable\nmissing\n\n\n\nx30d_mortality\n0\n\n\nage\n0\n\n\nbmi\n3\n\n\nfemale\n0\n\n\nintubated\n0\n\n\nremdesivir_or_placebo\n0\n\n\n\n\n\nExample Methods sentence:\n\nWe analyzed the Main_Dataset sheet from the deidentified QCRC COVID-19 ICU workbook. We cleaned variable names, converted selected lab and BMI variables from text to numeric values, and recoded binary variables as factors for reporting.\n\nTask 3 solution: Define the manuscript variables\nExample introduction:\n\nSevere COVID-19 outcomes vary across patient characteristics and clinical factors. In this report, we ask whether age, BMI, intubation, and treatment group are associated with 30-day mortality among patients in the QCRC ICU dataset. We hypothesize that older age and intubation will be associated with higher odds of 30-day mortality. This analysis is descriptive and associational; it should not be interpreted as proving causality.\n\nTask 4 solution: Descriptive table or figure\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected characteristics by 30-day mortality status.\")\n\n\nSelected characteristics by 30-day mortality status.\n\nx30d_mortality\nn\nmean_age\nmean_bmi\nintubated_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n33.1\n68.6\n\n\n30-day mortality\n94\n70.4\n28.5\n84.0\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(x = NULL, y = \"BMI\")\n\n\n\nBMI distribution by 30-day mortality status in the QCRC dataset.\n\n\n\nExample interpretation:\n\nPatients with and without 30-day mortality can be compared on age, BMI, and intubation status before fitting a model. The descriptive table is not an adjusted analysis, but it helps identify patterns and missingness that should be considered in Exercise 2.\n\nTask 5 solution: First-pass analysis\n\nCodet.test(bmi ~ x30d_mortality, data = qcrc)\n\n\n    Welch Two Sample t-test\n\ndata:  bmi by x30d_mortality\nt = 5.2411, df = 263.87, p-value = 3.271e-07\nalternative hypothesis: true difference in means between group No 30-day mortality and group 30-day mortality is not equal to 0\n95 percent confidence interval:\n 2.879238 6.344378\nsample estimates:\nmean in group No 30-day mortality    mean in group 30-day mortality \n                         33.12670                          28.51489 \n\n\n\nCodemodel_30d &lt;- glm(\n  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(model_30d)\n\n\nCall:\nglm(formula = x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodeor_table &lt;- data.frame(\n  term = names(coef(model_30d)),\n  odds_ratio = exp(coef(model_30d)),\n  exp(confint.default(model_30d)),\n  check.names = FALSE\n)\n\nnames(or_table) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\nor_table |&gt;\n  dplyr::mutate(dplyr::across(where(is.numeric), \\(x) round(x, 2))) |&gt;\n  knitr::kable(caption = \"First-pass adjusted odds ratios.\")\n\n\nFirst-pass adjusted odds ratios.\n\n\n\n\n\n\n\n\n\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)\n(Intercept)\n0.10\n0.01\n1.04\n\n\nage\nage\n1.05\n1.02\n1.07\n\n\nbmi\nbmi\n0.93\n0.89\n0.97\n\n\nintubatedYes\nintubatedYes\n4.32\n2.08\n8.98\n\n\nremdesivir_or_placeboRemdesivir\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nExample interpretation:\n\nThe logistic regression estimates adjusted associations with 30-day mortality. Because this is an observational-style course exercise with limited cleaning and variable review, the estimates should be treated as a first-pass signal rather than a definitive clinical conclusion.\n\nTask 6 solution: Mini-manuscript draft\nExpected draft structure:\n\nIntroduction: one paragraph with question and hypothesis.\nMethods: data source, variable cleaning, and analysis choices.\nResults: one descriptive table or figure, one test or model, and a short interpretation.\nDiscussion: main takeaway, limitation, and next step for Exercise 2.\nAdvanced task solution outlines\n\nWorkbook inventory: use readxl::excel_sheets(), lapply(), nrow(), and ncol() to build a sheet-level table.\nHelper summary function: write summarize_numeric &lt;- function(data, var) or use a vector input such as summarize_numeric &lt;- function(x).\nSensitivity endpoint: refit the same code with died or x60d_mortality after recoding that endpoint as a factor.\nAlternate dataset: require the same question, data, descriptive result, analysis, interpretation, and limitation structure.\n\n\n\n\n\nReuseCC BY-NC 4.0"
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html",
+    "href": "exercises/qcrc-mini-manuscript-starter.html",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "",
+    "text": "Codelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#data-source",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#data-source",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "Data source",
+    "text": "Data source\nThe analysis used the Main_Dataset sheet from the deidentified QCRC COVID-19 ICU workbook included with the course materials.\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nread_qcrc_main &lt;- function(path = here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")) {\n  readxl::read_xlsx(path, sheet = \"Main_Dataset\") |&gt;\n    janitor::clean_names() |&gt;\n    dplyr::mutate(\n      bmi = to_numeric(bmi),\n      crp = to_numeric(crp),\n      d_dimer = to_numeric(d_dimer),\n      vent_los = to_numeric(vent_los),\n      x30d_mortality = factor(\n        x30d_mortality,\n        levels = c(0, 1),\n        labels = c(\"No 30-day mortality\", \"30-day mortality\")\n      ),\n      died = factor(died, levels = c(0, 1), labels = c(\"Survived\", \"Died\")),\n      intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n      remdesivir_or_placebo = factor(\n        remdesivir_or_placebo,\n        levels = c(0, 1),\n        labels = c(\"Placebo\", \"Remdesivir\")\n      ),\n      female = factor(female),\n      race = factor(race)\n    )\n}\n\nqcrc &lt;- read_qcrc_main()\n\n\n\nCodedata.frame(\n  rows = nrow(qcrc),\n  columns = ncol(qcrc)\n) |&gt;\n  knitr::kable(caption = \"Basic dimensions of the QCRC analysis dataset.\")\n\n\nBasic dimensions of the QCRC analysis dataset.\n\nrows\ncolumns\n\n\n288\n37\n\n\n\nCodenames(qcrc)[1:10]\n\n [1] \"patient_deid\"     \"decatur_transfer\" \"age\"              \"female\"          \n [5] \"race\"             \"died\"             \"x30d_mortality\"   \"x60d_mortality\"  \n [9] \"death_date_deid\"  \"icu_los\"",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#variables",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#variables",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "Variables",
+    "text": "Variables\nReplace this paragraph with your outcome, exposure, and adjustment variables. For the default report, the outcome is 30-day mortality. Candidate exposures include age, BMI, treatment group, intubation, CRP, or D dimer.\n\nCodeanalysis_vars &lt;- c(\n  \"x30d_mortality\",\n  \"age\",\n  \"bmi\",\n  \"female\",\n  \"intubated\",\n  \"remdesivir_or_placebo\"\n)\n\nmissing_counts &lt;- sapply(qcrc[analysis_vars], \\(x) sum(is.na(x)))\n\ndata.frame(\n  variable = names(missing_counts),\n  missing = as.integer(missing_counts)\n) |&gt;\n  knitr::kable(caption = \"Missing values for the planned analysis variables.\")\n\n\nMissing values for the planned analysis variables.\n\nvariable\nmissing\n\n\n\nx30d_mortality\n0\n\n\nage\n0\n\n\nbmi\n3\n\n\nfemale\n0\n\n\nintubated\n0\n\n\nremdesivir_or_placebo\n0",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#statistical-analysis",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#statistical-analysis",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "Statistical analysis",
+    "text": "Statistical analysis\nReplace this paragraph with your analysis plan. Use cautious language such as “we estimated associations” unless your design supports causal claims.",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#descriptive-results",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#descriptive-results",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "Descriptive results",
+    "text": "Descriptive results\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected QCRC characteristics by 30-day mortality status.\")\n\n\nSelected QCRC characteristics by 30-day mortality status.\n\nx30d_mortality\nn\nmean_age\nmean_bmi\nintubated_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n33.1\n68.6\n\n\n30-day mortality\n94\n70.4\n28.5\n84.0\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(\n    x = NULL,\n    y = \"BMI\"\n  )\n\n\n\nBMI distribution by 30-day mortality status in the QCRC dataset.",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#first-pass-model",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#first-pass-model",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "First-pass model",
+    "text": "First-pass model\n\nCodemodel_30d &lt;- glm(\n  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(model_30d)\n\n\nCall:\nglm(formula = x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodeor_table &lt;- data.frame(\n  term = names(coef(model_30d)),\n  odds_ratio = exp(coef(model_30d)),\n  exp(confint.default(model_30d)),\n  check.names = FALSE\n)\n\nnames(or_table) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\nor_table |&gt;\n  dplyr::mutate(\n    dplyr::across(where(is.numeric), \\(x) round(x, 2))\n  ) |&gt;\n  knitr::kable(caption = \"Adjusted odds ratios from a first-pass logistic regression.\")\n\n\nAdjusted odds ratios from a first-pass logistic regression.\n\n\n\n\n\n\n\n\n\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)\n(Intercept)\n0.10\n0.01\n1.04\n\n\nage\nage\n1.05\n1.02\n1.07\n\n\nbmi\nbmi\n0.93\n0.89\n0.97\n\n\nintubatedYes\nintubatedYes\n4.32\n2.08\n8.98\n\n\nremdesivir_or_placeboRemdesivir\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nReplace this paragraph with a plain-language interpretation of the table. State which estimate matters most for your question, give its direction and rough magnitude, and say whether the uncertainty changes your confidence.",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
+    "objectID": "exercises/qcrc-mini-manuscript-starter.html#day-2-to-do-list",
+    "href": "exercises/qcrc-mini-manuscript-starter.html#day-2-to-do-list",
+    "title": "QCRC Mini-Manuscript Starter",
+    "section": "Day 2 to-do list",
+    "text": "Day 2 to-do list\n\nRecheck variable coding for the main exposure and outcome.\nDecide whether to add or remove adjustment variables.\nPolish captions, prose, and model interpretation.",
+    "crumbs": [
+      "Exercises",
+      "QCRC starter template"
+    ]
+  },
+  {
     "objectID": "exercises/Exercise1.html",
     "href": "exercises/Exercise1.html",
     "title": "Exercise 1: Start a QCRC Mini-Manuscript",
@@ -1141,47 +1335,63 @@
     ]
   },
   {
-    "objectID": "exercises/Exercise1.html#exercise-1",
-    "href": "exercises/Exercise1.html#exercise-1",
-    "title": "Intermediate R Lab using QCRC Data",
-    "section": "Exercise",
-    "text": "Exercise\n\nRun the test above.\nNow insert a new code chunk below and write the code to repeat the chi-square test for Intubated vs. Died.",
+    "objectID": "data-readme.html",
+    "href": "data-readme.html",
+    "title": "Course Data README",
+    "section": "",
+    "text": "Warning\n\n\n\nThis README is a draft for instructor review and updates before teaching. It is based on repository inspection on 2026-07-07. Confirm source, permissions, provenance, and any sensitive-data language before release.",
     "crumbs": [
-      "Exercises",
-      "Exercise 1"
+      "Course Data README"
     ]
   },
   {
-    "objectID": "exercises/Exercise1.html#exercise-2",
-    "href": "exercises/Exercise1.html#exercise-2",
-    "title": "Intermediate R Lab using QCRC Data",
-    "section": "Exercise",
-    "text": "Exercise\n\nRun the code above.\nNow, add a chuck and write the code to fit a model predicting Vent LOS using BMI adjust the analysis to account for Age by adding in an additional covariate.",
+    "objectID": "data-readme.html#qcrc-covid-19-icu-workbook",
+    "href": "data-readme.html#qcrc-covid-19-icu-workbook",
+    "title": "Course Data README",
+    "section": "QCRC COVID-19 ICU workbook",
+    "text": "QCRC COVID-19 ICU workbook\n\nFile: data/QCRC_FINAL_Deidentified.xlsx\nRecommended use: Exercises 1 and 2 mini-manuscript/report arc.\nWhy use it: It is rich enough for descriptive statistics, tests, logistic regression, repeated sheet inspection, formula syntax, and polished Quarto reporting.\nMain sheet for most students: Main_Dataset.\nOther sheets available for advanced students: Oxygen_Delivery, SOFA, Long_Labs, Long_Vitals, Static_Compliance, PAO2_FIO2, ICU_Meds, Intake_Form, and Daily_Form.\nUseful main-sheet variables include age, sex, race, mortality endpoints, ICU length of stay, BMI, treatment indicator, intubation, CRRT, labs, and oxygenation measures.\nImportant caution: Some numeric variables are stored as text, and missing values may be written as \".\". Clean and document variables before modeling.",
     "crumbs": [
-      "Exercises",
-      "Exercise 1"
+      "Course Data README"
     ]
   },
   {
-    "objectID": "exercises/Exercise1.html#exercise-3",
-    "href": "exercises/Exercise1.html#exercise-3",
-    "title": "Intermediate R Lab using QCRC Data",
-    "section": "Exercise",
-    "text": "Exercise\n\nRun the model above.\nNow, insert a new chunk ande try predicting Intubated using BMI and Age.",
+    "objectID": "data-readme.html#measles-vaccination-and-case-data",
+    "href": "data-readme.html#measles-vaccination-and-case-data",
+    "title": "Course Data README",
+    "section": "Measles vaccination and case data",
+    "text": "Measles vaccination and case data\n\nFile: data/measles_final.Rds\nStructure: country-year records with measles cases, population, MCV1/MCV2 coverage, country, region, and sub-region.\nGood for: iteration, functions, functional programming, trend summaries, regional comparisons, and Poisson-style modeling.\nLess ideal for Exercises 1 and 2: It can become a larger ecological analysis quickly, and students may spend more time defining denominators than polishing a compact manuscript.",
     "crumbs": [
-      "Exercises",
-      "Exercise 1"
+      "Course Data README"
     ]
   },
   {
-    "objectID": "exercises/Exercise1.html#exercise-4",
-    "href": "exercises/Exercise1.html#exercise-4",
-    "title": "Intermediate R Lab using QCRC Data",
-    "section": "Exercise",
-    "text": "Exercise\n\n\nWrite an if-else statement that tests if a patient’s age is greater than 45 and prints:\n\n“Patient is older than 45.” if true\nOtherwise prints “Patient is 45 or younger.”\n\n\n\n\nCodeage_value &lt;- 72\n\nif (age_value &gt; 65) {\n  print(\"Patient is elderly\")\n} else {\n  print(\"Patient is not elderly\")\n}\n\n[1] \"Patient is elderly\"",
+    "objectID": "data-readme.html#simulated-city-cases",
+    "href": "data-readme.html#simulated-city-cases",
+    "title": "Course Data README",
+    "section": "Simulated city cases",
+    "text": "Simulated city cases\n\nFile: data/city-cases.csv\nStructure: monthly city-level records with region, industry, date, sex, exposure-like values, population, temperature, and cases.\nGood for: aggregation, plotting, rates, and disease-mapping-adjacent practice.\nLess ideal for the default report: It is simulated and needs more framing before it feels like a manuscript.",
     "crumbs": [
-      "Exercises",
-      "Exercise 1"
+      "Course Data README"
+    ]
+  },
+  {
+    "objectID": "data-readme.html#sir-observed-data",
+    "href": "data-readme.html#sir-observed-data",
+    "title": "Course Data README",
+    "section": "SIR observed data",
+    "text": "SIR observed data\n\nFile: data/SIR-observed.csv\nStructure: daily total cases.\nGood for: ODE and epidemic-curve exercises.\nLess ideal for Exercises 1 and 2: It is intentionally small and does not support many covariate or manuscript-style choices.",
+    "crumbs": [
+      "Course Data README"
+    ]
+  },
+  {
+    "objectID": "data-readme.html#mosquito-surveillance-data",
+    "href": "data-readme.html#mosquito-surveillance-data",
+    "title": "Course Data README",
+    "section": "Mosquito surveillance data",
+    "text": "Mosquito surveillance data\n\nFile: data/mos-nyc.csv\nStructure: county-level PCR-positive and pool-submission counts.\nGood for: binomial proportions, mapping, surveillance summaries, and public health communication.\nLess ideal for the default report: It is narrower than QCRC and may require spatial context that belongs more naturally with the Day 3 GIS module.",
+    "crumbs": [
+      "Course Data README"
     ]
   },
   {
@@ -1194,6 +1404,24 @@
       "Exercises",
       "Exercise 2"
     ]
+  },
+  {
+    "objectID": "exercises/qcrc-report-checklist-rubric.html",
+    "href": "exercises/qcrc-report-checklist-rubric.html",
+    "title": "QCRC Report Checklist and Rubric",
+    "section": "",
+    "text": "Minimum viable report checklist\nA minimum viable report is short, reproducible, and interpretable. It does not need to be fancy.\nCore requirements:\n\nThe report renders without errors.\nThe title names the dataset or topic and the main outcome.\nThe Introduction states a research question and hypothesis.\nThe Methods identify the dataset, sheet or file, variables, cleaning steps, and statistical analysis.\nThe Results include at least one descriptive table or figure.\nThe Results include at least one model or formal test aligned with the question.\nThe Discussion gives the main interpretation, one limitation, and one next step.\nCode chunks have useful labels and avoid dumping unnecessary output.\nClaims use cautious language when the analysis is associational.\n\n\n\nExercise 1 rubric\nUse Exercise 1 to create a solid draft. “Meets expectations” is enough for the end of Day 1.\n\n\n\n\n\n\n\n\n\nArea\nCore learning goal\nMeets expectations\nStretch goal\n\n\n\n\nQuarto structure\nStart a manuscript-style document\nReport has title, sections, runnable chunks, and a successful render\nUses captions, cross-references, or alternate output formats\n\n\nData loading\nLoad and inspect QCRC or justified alternate data\nReads QCRC Main_Dataset, cleans names, checks rows/columns and missingness\nReads all QCRC sheets and summarizes workbook structure\n\n\nStatistics\nConnect a question to an appropriate first-pass analysis\nIncludes one descriptive table/figure and one test or model\nAdds a sensitivity analysis or better variable coding\n\n\nIteration/functions\nUse Day 1 programming habits\nAvoids repeated copy-paste where a simple object or function would help\nWrites a helper function for repeated summaries\n\n\nInterpretation\nDraft realistic prose for adult professional readers\nStates a cautious interpretation and at least one limitation\nClearly separates clinical, public health, and statistical significance\n\n\n\n\n\nExercise 2 rubric\nUse Exercise 2 to turn the draft into a polished deliverable.\n\n\n\n\n\n\n\n\n\nArea\nCore learning goal\nMeets expectations\nStretch goal\n\n\n\n\nContinuity\nContinue the Exercise 1 manuscript arc\nStarts from the Exercise 1 draft and improves it\nShows a short change log from draft to final\n\n\nReusable data workflow\nMake loading and cleaning reproducible\nDefines and uses a data-loading function\nSeparates helper functions into a sourced script\n\n\nFunctional programming\nUse repeated logic intentionally\nUses lapply() or similar logic for a workbook inventory\nReads selected non-main sheets and documents a conservative join\n\n\nFormulas and S3\nFit and inspect model objects\nFits crude and adjusted models with formula syntax and uses summary(), coef(), or confint.default()\nUses predict(), anova(), model comparison, or marginal predictions\n\n\nReporting\nProduce a professional Quarto deliverable\nIncludes polished sections, captions, model table, figure, and limitation\nAdds bibliography, appendix diagnostics, or non-HTML output\n\n\n\n\n\nOptional advanced goals\nAdvanced work should deepen the same report instead of creating a second unrelated analysis.\n\nCompare models with AIC or likelihood ratio tests.\nEstimate absolute risks or risk differences from model predictions.\nAdd a sensitivity analysis for a different mortality endpoint.\nUse a non-main QCRC sheet, with careful documentation of row level and join assumptions.\nAdd a bibliography and cite relevant clinical or epidemiologic literature.\nBootstrap a coefficient or predicted estimate and compare uncertainty intervals.\n\n\n\nInstructor review notes\nReview this rubric before teaching:\n\nConfirm whether QCRC variable coding documentation should be added.\nConfirm whether the treatment variable labels are correct for the current workbook.\nDecide whether solution documents should be distributed before, during, or after class.\n\n\n\n\n\n\n\nReuseCC BY-NC 4.0",
+    "crumbs": [
+      "Exercises",
+      "QCRC report checklist/rubric"
+    ]
+  },
+  {
+    "objectID": "exercises/solutions/Exercise2-solution.html",
+    "href": "exercises/solutions/Exercise2-solution.html",
+    "title": "Exercise 2 Solutions: Polish the QCRC Report",
+    "section": "",
+    "text": "Instructor note\nThis solution continues the Exercise 1 QCRC report. It is an exemplar structure, not the only valid student answer.\n\nCodelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)\n\n\nTask 1 solution: Re-render and triage\nExample Day 2 triage list:\n\nReproducibility fix: move data loading and recoding into a named function.\nAnalysis fix: report both crude and adjusted logistic models for 30-day mortality.\nFormatting fix: replace raw model output with a compact odds-ratio table and add captions.\nTask 2 solution: Reusable data loading\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nread_qcrc_main &lt;- function(path = here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")) {\n  readxl::read_xlsx(path, sheet = \"Main_Dataset\") |&gt;\n    janitor::clean_names() |&gt;\n    dplyr::mutate(\n      bmi = to_numeric(bmi),\n      crp = to_numeric(crp),\n      d_dimer = to_numeric(d_dimer),\n      vent_los = to_numeric(vent_los),\n      x30d_mortality = factor(\n        x30d_mortality,\n        levels = c(0, 1),\n        labels = c(\"No 30-day mortality\", \"30-day mortality\")\n      ),\n      died = factor(died, levels = c(0, 1), labels = c(\"Survived\", \"Died\")),\n      intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n      remdesivir_or_placebo = factor(\n        remdesivir_or_placebo,\n        levels = c(0, 1),\n        labels = c(\"Placebo\", \"Remdesivir\")\n      ),\n      female = factor(female),\n      race = factor(race)\n    )\n}\n\nqcrc &lt;- read_qcrc_main()\n\n\nExample Methods sentence:\n\nWe used a report-local helper function to read the QCRC main sheet, clean variable names, convert selected character variables to numeric values, and recode binary variables for analysis and reporting.\n\nTask 3 solution: Workbook inventory\n\nCodedata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(sheet_names, \\(s) readxl::read_xlsx(data_file, sheet = s))\n\nworkbook_inventory &lt;- data.frame(\n  sheet = sheet_names,\n  rows = sapply(sheet_list, nrow),\n  columns = sapply(sheet_list, ncol)\n)\n\nworkbook_inventory |&gt;\n  knitr::kable(caption = \"QCRC workbook inventory.\")\n\n\nQCRC workbook inventory.\n\nsheet\nrows\ncolumns\n\n\n\nMain_Dataset\n288\n37\n\n\nOxygen_Delivery\n42606\n6\n\n\nSOFA\n288\n8\n\n\nLong_Labs\n15919\n29\n\n\nLong_Vitals\n143220\n11\n\n\nStatic_Compliance\n18281\n11\n\n\nPAO2_FIO2\n5252\n5\n\n\nICU_Meds\n869554\n7\n\n\nIntake_Form\n288\n71\n\n\nDaily_Form\n3612\n36\n\n\n\n\n\nTask 4 solution: Analysis table and figure\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    median_icu_los = round(median(icu_los, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    remdesivir_percent = round(\n      mean(remdesivir_or_placebo == \"Remdesivir\", na.rm = TRUE) * 100,\n      1\n    ),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected characteristics by 30-day mortality status.\")\n\n\nSelected characteristics by 30-day mortality status.\n\n\n\n\n\n\n\n\n\n\nx30d_mortality\nn\nmean_age\nmedian_icu_los\nmean_bmi\nintubated_percent\nremdesivir_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n8\n33.1\n68.6\n20.1\n\n\n30-day mortality\n94\n70.4\n9\n28.5\n84.0\n10.6\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = age)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(x = NULL, y = \"Age\")\n\n\n\nAge distribution by 30-day mortality status.\n\n\n\nExample interpretation:\n\nThe descriptive table and age figure help establish the sample context before adjusted modeling. Differences in descriptive summaries should not be treated as adjusted effects.\n\nTask 5 solution: Crude and adjusted models\n\nCodecrude_model &lt;- glm(\n  x30d_mortality ~ intubated,\n  data = qcrc,\n  family = binomial\n)\n\nadjusted_model &lt;- glm(\n  x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(adjusted_model)\n\n\nCall:\nglm(formula = x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodetidy_or &lt;- function(model) {\n  out &lt;- data.frame(\n    term = names(coef(model)),\n    odds_ratio = exp(coef(model)),\n    exp(confint.default(model)),\n    check.names = FALSE\n  )\n\n  names(out) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\n  out |&gt;\n    dplyr::mutate(dplyr::across(where(is.numeric), \\(x) round(x, 2)))\n}\n\ndplyr::bind_rows(\n  dplyr::mutate(tidy_or(crude_model), model = \"Crude\"),\n  dplyr::mutate(tidy_or(adjusted_model), model = \"Adjusted\")\n) |&gt;\n  dplyr::select(model, term, odds_ratio, conf_low, conf_high) |&gt;\n  knitr::kable(caption = \"Crude and adjusted odds ratios for 30-day mortality.\")\n\n\nCrude and adjusted odds ratios for 30-day mortality.\n\n\n\n\n\n\n\n\n\n\nmodel\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)…1\nCrude\n(Intercept)\n0.25\n0.14\n0.43\n\n\nintubatedYes…2\nCrude\nintubatedYes\n2.42\n1.29\n4.53\n\n\n(Intercept)…3\nAdjusted\n(Intercept)\n0.10\n0.01\n1.04\n\n\nintubatedYes…4\nAdjusted\nintubatedYes\n4.32\n2.08\n8.98\n\n\nage\nAdjusted\nage\n1.05\n1.02\n1.07\n\n\nbmi\nAdjusted\nbmi\n0.93\n0.89\n0.97\n\n\nremdesivir_or_placeboRemdesivir\nAdjusted\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nExample Results paragraph:\n\nIn the crude model, intubation was associated with higher odds of 30-day mortality. After adjustment for age, BMI, and treatment group, the association remained positive, although the exact estimate and confidence interval should be interpreted in light of missingness, variable coding, and the limited scope of this course exercise.\n\nTask 6 solution: Polished deliverable\nExpected final report structure:\n\nTitle: specific and outcome-oriented.\nIntroduction: question, rationale, and hypothesis.\nMethods: data source, cleaning, descriptive analysis, model formula, and uncertainty approach.\nResults: table, figure, model table, and short interpretation.\nDiscussion: main finding, practical meaning, limitation, and next step.\nAppendix: workbook inventory and exploratory checks.\nAdvanced task solution outlines\n\nModel comparison: fit two nested models, then compare with AIC(model1,    model2) or anova(model1, model2, test = \"Chisq\"); remind students this does not choose confounders causally.\nPredictions: create a small newdata grid and call predict(model, newdata,    type = \"response\", se.fit = TRUE); report predicted probabilities.\nSensitivity analysis: repeat crude and adjusted models with died or recoded x60d_mortality; compare direction and rough magnitude.\nNon-main sheet: inspect row level, identify a stable patient identifier, summarize to one row per patient before joining, and document any exclusions.\nBibliography: add a bibliography: field in YAML and cite at least one source in the Introduction or Discussion.\nBootstrap: resample rows with replacement, refit the same model many times, collect the coefficient of interest, and summarize percentile intervals.\n\n\n\n\n\nReuseCC BY-NC 4.0"
   },
   {
     "objectID": "modules/Arrow.html#learning-objectives",
@@ -2461,47 +2689,289 @@
     ]
   },
   {
-    "objectID": "modules/Walkthrough2.html#a-whole-paper-using-r-and-quarto",
-    "href": "modules/Walkthrough2.html#a-whole-paper-using-r-and-quarto",
-    "title": "Data science walkthrough 2",
-    "section": "A whole paper using R and quarto",
-    "text": "A whole paper using R and quarto\n\nThis walkthrough uses a published analysis project to connect the Day 1 and Day 2 tools: Quarto, functions, repeated analyses, model output, and reporting.\nThe goal is not to understand every line of code. The goal is to see how the pieces fit together in a real project.\nPublic code: https://github.com/ahgroup/billings-high-dose-heterologous-public/.",
+    "objectID": "modules/Walkthrough2.html#the-same-problem-repeated",
+    "href": "modules/Walkthrough2.html#the-same-problem-repeated",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "The same problem, repeated",
+    "text": "The same problem, repeated\nIn Walkthrough 1, we answered one country-level question:\n\nIn Pakistan since 2000, which years should we flag because MCV1 coverage was low and measles incidence was elevated?\n\nToday we ask the next manuscript question:\n\nIs Pakistan unusual, or do we see the same pattern across other countries in the region?",
     "crumbs": [
       "Day 2 core",
-      "Data science walkthrough 2"
+      "Data science walkthrough 2: iteration"
     ]
   },
   {
-    "objectID": "modules/Walkthrough2.html#what-to-look-for",
-    "href": "modules/Walkthrough2.html#what-to-look-for",
-    "title": "Data science walkthrough 2",
-    "section": "What to look for",
-    "text": "What to look for\n\nWhere does the project import and clean data?\nWhich files define reusable functions?\nWhere are models fit, summarized, and checked?\nHow does Quarto turn the analysis into a manuscript-style report?",
+    "objectID": "modules/Walkthrough2.html#what-changes-today",
+    "href": "modules/Walkthrough2.html#what-changes-today",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "What changes today?",
+    "text": "What changes today?\nThe analysis rule does not change:\n\nPriority year = MCV1 coverage below 90% and at least 1 measles case per 100,000 people.\n\nThe workflow changes:\n\nWrite the rule once.\nTest it on one country.\nRepeat it across many countries.\nTurn the repeated results into a table for the report.",
     "crumbs": [
       "Day 2 core",
-      "Data science walkthrough 2"
+      "Data science walkthrough 2: iteration"
     ]
   },
   {
-    "objectID": "modules/Walkthrough2.html#during-the-walkthrough",
-    "href": "modules/Walkthrough2.html#during-the-walkthrough",
-    "title": "Data science walkthrough 2",
-    "section": "During the walkthrough",
-    "text": "During the walkthrough\n\nPick one function and identify its inputs, output, and side effects.\nFind one repeated analysis pattern and decide whether it uses a loop, functional programming, or copied code.\nFind one model formula and identify the outcome, exposure, and adjustment variables.",
+    "objectID": "modules/Walkthrough2.html#load-the-data",
+    "href": "modules/Walkthrough2.html#load-the-data",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Load the data",
+    "text": "Load the data\n\ndata_file &lt;- file.path(\"data\", \"measles_final.Rds\")\n\nif (!file.exists(data_file)) {\n  data_file &lt;- file.path(\"..\", \"data\", \"measles_final.Rds\")\n}\n\nmeasles &lt;- readRDS(data_file)",
     "crumbs": [
       "Day 2 core",
-      "Data science walkthrough 2"
+      "Data science walkthrough 2: iteration"
     ]
   },
   {
-    "objectID": "modules/Walkthrough2.html#after-the-walkthrough",
-    "href": "modules/Walkthrough2.html#after-the-walkthrough",
-    "title": "Data science walkthrough 2",
-    "section": "After the walkthrough",
-    "text": "After the walkthrough\n\nWrite down one project-organization idea you want to reuse in Exercise 2.\nWrite down one piece of the project that still feels confusing so we can discuss it during question time.",
+    "objectID": "modules/Walkthrough2.html#before-we-loop",
+    "href": "modules/Walkthrough2.html#before-we-loop",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Before we loop",
+    "text": "Before we loop\nLoops are easier when we know the exact task.\nFor one country, we need to:\n\nKeep rows for that country and year range.\nCalculate cases per 100,000 people.\nApply the priority-year rule.\nCount the priority years.\nReturn one row of results.\n\nThat is a function-shaped problem.",
     "crumbs": [
       "Day 2 core",
-      "Data science walkthrough 2"
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#function-1-apply-the-rule",
+    "href": "modules/Walkthrough2.html#function-1-apply-the-rule",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Function 1: apply the rule",
+    "text": "Function 1: apply the rule\n\nadd_priority_rule &lt;- function(country_data,\n                              coverage_cutoff = 90,\n                              incidence_cutoff = 1) {\n  country_data$cases_per_100k &lt;- (\n    country_data$measles_cases / country_data$population * 100000\n  )\n\n  country_data$priority_year &lt;- ifelse(\n    is.na(country_data$MCV1_coverage) | is.na(country_data$cases_per_100k),\n    \"missing information\",\n    ifelse(\n      country_data$MCV1_coverage &lt; coverage_cutoff &\n        country_data$cases_per_100k &gt;= incidence_cutoff,\n      \"priority year\",\n      \"not priority\"\n    )\n  )\n\n  country_data\n}",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#test-the-rule-on-one-country",
+    "href": "modules/Walkthrough2.html#test-the-rule-on-one-country",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Test the rule on one country",
+    "text": "Test the rule on one country\n\npakistan &lt;- measles[\n  measles$country == \"Pakistan\" & measles$year &gt;= 2000,\n]\n\npakistan &lt;- pakistan[order(pakistan$year), ]\npakistan &lt;- add_priority_rule(pakistan)\n\ntail(pakistan[, c(\"year\", \"MCV1_coverage\", \"cases_per_100k\", \"priority_year\")])\n\n      year MCV1_coverage cases_per_100k       priority_year\nNA.18   NA            NA             NA missing information\nNA.19   NA            NA             NA missing information\nNA.20   NA            NA             NA missing information\nNA.21   NA            NA             NA missing information\nNA.22   NA            NA             NA missing information\nNA.23   NA            NA             NA missing information",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#function-2-summarize-one-country",
+    "href": "modules/Walkthrough2.html#function-2-summarize-one-country",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Function 2: summarize one country",
+    "text": "Function 2: summarize one country\n\nsummarize_priority_years &lt;- function(country_name,\n                                     data,\n                                     min_year = 2000,\n                                     coverage_cutoff = 90,\n                                     incidence_cutoff = 1) {\n  country_data &lt;- data[\n    data$country == country_name & data$year &gt;= min_year,\n  ]\n\n  country_data &lt;- add_priority_rule(\n    country_data,\n    coverage_cutoff = coverage_cutoff,\n    incidence_cutoff = incidence_cutoff\n  )\n\n  priority_years &lt;- country_data$year[\n    country_data$priority_year == \"priority year\"\n  ]\n\n  most_recent_priority_year &lt;- if (length(priority_years) == 0) {\n    NA_integer_\n  } else {\n    max(priority_years)\n  }\n\n  max_cases_per_100k &lt;- if (all(is.na(country_data$cases_per_100k))) {\n    NA_real_\n  } else {\n    round(max(country_data$cases_per_100k, na.rm = TRUE), 2)\n  }\n\n  data.frame(\n    country = country_name,\n    region = country_data$region[1],\n    sub_region = country_data$sub_region[1],\n    years = nrow(country_data),\n    priority_years = length(priority_years),\n    missing_information_years = sum(country_data$priority_year == \"missing information\"),\n    most_recent_priority_year = most_recent_priority_year,\n    max_cases_per_100k = max_cases_per_100k\n  )\n}",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#test-the-summary-function",
+    "href": "modules/Walkthrough2.html#test-the-summary-function",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Test the summary function",
+    "text": "Test the summary function\n\nsummarize_priority_years(\"Pakistan\", data = measles)\n\n   country region sub_region years priority_years missing_information_years\n1 Pakistan   &lt;NA&gt;       &lt;NA&gt;    48             18                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2022              15.02",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#why-this-helps",
+    "href": "modules/Walkthrough2.html#why-this-helps",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Why this helps",
+    "text": "Why this helps\nBefore writing a loop, we made one repeatable unit:\nsummarize_priority_years(\"Pakistan\", data = measles)\nIf that works for Pakistan, the loop only needs to change the country name.\nThat is the main trick.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#repeat-with-a-for-loop",
+    "href": "modules/Walkthrough2.html#repeat-with-a-for-loop",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Repeat with a for loop",
+    "text": "Repeat with a for loop\n\ncountries &lt;- c(\"Afghanistan\", \"Bangladesh\", \"India\", \"Nepal\", \"Pakistan\")\n\ncountry_summaries &lt;- data.frame()\n\nfor (country_name in countries) {\n  one_summary &lt;- summarize_priority_years(country_name, data = measles)\n  country_summaries &lt;- rbind(country_summaries, one_summary)\n}\n\ncountry_summaries\n\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n2  Bangladesh   Asia Southern Asia    48              9\n3       India   Asia Southern Asia    48             15\n4       Nepal   &lt;NA&gt;          &lt;NA&gt;    48             16\n5    Pakistan   &lt;NA&gt;          &lt;NA&gt;    48             18\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022              44.50\n2                        25                      2012              18.40\n3                        25                      2016               5.47\n4                        25                      2020              51.96\n5                        25                      2022              15.02",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#what-did-the-loop-do",
+    "href": "modules/Walkthrough2.html#what-did-the-loop-do",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "What did the loop do?",
+    "text": "What did the loop do?\nEach loop pass did the same job:\n\nPut one country name into country_name.\nRun summarize_priority_years() for that country.\nAdd the one-row answer to the growing results table.\n\nThe computer is doing the repeated typing for us.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#repeat-with-lapply",
+    "href": "modules/Walkthrough2.html#repeat-with-lapply",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Repeat with lapply()",
+    "text": "Repeat with lapply()\nThe same idea can be written in a more functional style.\n\nsummary_list &lt;- lapply(\n  countries,\n  summarize_priority_years,\n  data = measles\n)\n\nsummary_list\n\n[[1]]\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022               44.5\n\n[[2]]\n     country region    sub_region years priority_years\n1 Bangladesh   Asia Southern Asia    48              9\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2012               18.4\n\n[[3]]\n  country region    sub_region years priority_years missing_information_years\n1   India   Asia Southern Asia    48             15                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2016               5.47\n\n[[4]]\n  country region sub_region years priority_years missing_information_years\n1   Nepal   &lt;NA&gt;       &lt;NA&gt;    48             16                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2020              51.96\n\n[[5]]\n   country region sub_region years priority_years missing_information_years\n1 Pakistan   &lt;NA&gt;       &lt;NA&gt;    48             18                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2022              15.02",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#combine-the-list",
+    "href": "modules/Walkthrough2.html#combine-the-list",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Combine the list",
+    "text": "Combine the list\n\ncountry_summaries_lapply &lt;- do.call(rbind, summary_list)\n\ncountry_summaries_lapply\n\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n2  Bangladesh   Asia Southern Asia    48              9\n3       India   Asia Southern Asia    48             15\n4       Nepal   &lt;NA&gt;          &lt;NA&gt;    48             16\n5    Pakistan   &lt;NA&gt;          &lt;NA&gt;    48             18\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022              44.50\n2                        25                      2012              18.40\n3                        25                      2016               5.47\n4                        25                      2020              51.96\n5                        25                      2022              15.02",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#which-version-should-you-use",
+    "href": "modules/Walkthrough2.html#which-version-should-you-use",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Which version should you use?",
+    "text": "Which version should you use?\nUse the version that helps you think clearly.\n\nA for loop is often easier to read while you are learning.\nlapply() is compact once the repeated task is already a function.\nBoth are better than copying and pasting the same analysis five times.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#now-repeat-over-a-whole-region",
+    "href": "modules/Walkthrough2.html#now-repeat-over-a-whole-region",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Now repeat over a whole region",
+    "text": "Now repeat over a whole region\n\nasia &lt;- measles[measles$region == \"Asia\", ]\nasian_countries &lt;- sort(unique(asia$country))\n\nhead(asian_countries)\n\n[1] \"Afghanistan\" \"Armenia\"     \"Azerbaijan\"  \"Bahrain\"     \"Bangladesh\" \n[6] \"Bhutan\"     \n\nlength(asian_countries)\n\n[1] 50",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#run-the-country-summary-for-asia",
+    "href": "modules/Walkthrough2.html#run-the-country-summary-for-asia",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Run the country summary for Asia",
+    "text": "Run the country summary for Asia\n\nasia_summary_list &lt;- lapply(\n  asian_countries,\n  summarize_priority_years,\n  data = asia\n)\n\nasia_summaries &lt;- do.call(rbind, asia_summary_list)",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#sort-the-results",
+    "href": "modules/Walkthrough2.html#sort-the-results",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Sort the results",
+    "text": "Sort the results\n\nasia_summaries &lt;- asia_summaries[\n  order(-asia_summaries$priority_years, asia_summaries$country),\n]\n\nhead(asia_summaries, 10)\n\n                            country region         sub_region years\n1                       Afghanistan   Asia      Southern Asia    68\n14                        Indonesia   Asia South-eastern Asia    68\n34                         Pakistan   &lt;NA&gt;               &lt;NA&gt;    68\n50                            Yemen   &lt;NA&gt;               &lt;NA&gt;    68\n32                            Nepal   &lt;NA&gt;               &lt;NA&gt;    68\n13                            India   Asia      Southern Asia    68\n25 Lao People's Democratic Republic   &lt;NA&gt;               &lt;NA&gt;    68\n36                      Philippines   &lt;NA&gt;               &lt;NA&gt;    68\n16                             Iraq   Asia       Western Asia    68\n8                          Cambodia   Asia South-eastern Asia    68\n   priority_years missing_information_years most_recent_priority_year\n1              22                        45                      2022\n14             19                        45                      2022\n34             18                        45                      2022\n50             17                        46                      2022\n32             16                        45                      2020\n13             15                        45                      2016\n25             15                        45                      2020\n36             14                        45                      2020\n16             13                        48                      2019\n8              12                        45                      2020\n   max_cases_per_100k\n1               44.50\n14              12.91\n34              15.02\n50             144.43\n32              51.96\n13               5.47\n25              36.92\n36              58.08\n16             100.13\n8              100.98",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table",
+    "text": "Make a manuscript-style table\n\ntop_asia &lt;- head(asia_summaries, 10)\n\ntop_asia[, c(\n  \"country\",\n  \"sub_region\",\n  \"priority_years\",\n  \"missing_information_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]\n\n                            country         sub_region priority_years\n1                       Afghanistan      Southern Asia             22\n14                        Indonesia South-eastern Asia             19\n34                         Pakistan               &lt;NA&gt;             18\n50                            Yemen               &lt;NA&gt;             17\n32                            Nepal               &lt;NA&gt;             16\n13                            India      Southern Asia             15\n25 Lao People's Democratic Republic               &lt;NA&gt;             15\n36                      Philippines               &lt;NA&gt;             14\n16                             Iraq       Western Asia             13\n8                          Cambodia South-eastern Asia             12\n   missing_information_years most_recent_priority_year max_cases_per_100k\n1                         45                      2022              44.50\n14                        45                      2022              12.91\n34                        45                      2022              15.02\n50                        46                      2022             144.43\n32                        45                      2020              51.96\n13                        45                      2016               5.47\n25                        45                      2020              36.92\n36                        45                      2020              58.08\n16                        48                      2019             100.13\n8                         45                      2020             100.98",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-quick-figure",
+    "href": "modules/Walkthrough2.html#make-a-quick-figure",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a quick figure",
+    "text": "Make a quick figure\n\nbarplot(\n  top_asia$priority_years,\n  names.arg = top_asia$country,\n  las = 2,\n  ylab = \"Priority years since 2000\",\n  main = \"Countries in Asia with the most priority years\"\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#what-goes-in-the-report",
+    "href": "modules/Walkthrough2.html#what-goes-in-the-report",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "What goes in the report?",
+    "text": "What goes in the report?\nMethods sentence\nWe wrote a reusable function to classify each country-year as a priority year when MCV1 coverage was below 90% and measles incidence was at least 1 case per 100,000 people, then applied that function to every country in Asia.\nResults sentence\nThe repeated analysis identified several countries in Asia with many priority years since 2000, suggesting that the Pakistan pattern was not unique under this simple rule.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint",
+    "href": "modules/Walkthrough2.html#active-checkpoint",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint",
+    "text": "Active checkpoint\nStudent prompt\nRepeat the regional analysis for Africa.\nYour goal is to produce a table of the 10 countries in Africa with the most priority years since 2000.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-hint",
+    "href": "modules/Walkthrough2.html#active-checkpoint-hint",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: hint",
+    "text": "Active checkpoint: hint\nReuse the objects we already built.\nYou only need to change:\n\nthe region filter\nthe vector of country names\nthe object names, if you want them to be easier to read",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution",
+    "text": "Active checkpoint: solution\n\nafrica &lt;- measles[measles$region == \"Africa\", ]\nafrican_countries &lt;- sort(unique(africa$country))\n\nafrica_summary_list &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa\n)\n\nafrica_summaries &lt;- do.call(rbind, africa_summary_list)\n\nafrica_summaries &lt;- africa_summaries[\n  order(-africa_summaries$priority_years, africa_summaries$country),\n]\n\nhead(africa_summaries, 10)\n\n                             country region         sub_region years\n8                           Cameroon Africa Sub-Saharan Africa    68\n13 Congo, Democratic Republic of the Africa Sub-Saharan Africa    68\n38                             Niger   &lt;NA&gt;               &lt;NA&gt;    68\n39                           Nigeria   &lt;NA&gt;               &lt;NA&gt;    68\n20                          Ethiopia Africa Sub-Saharan Africa    68\n9           Central African Republic Africa Sub-Saharan Africa    68\n3                              Benin Africa Sub-Saharan Africa    68\n10                              Chad Africa Sub-Saharan Africa    68\n12                             Congo Africa Sub-Saharan Africa    68\n45                           Somalia   &lt;NA&gt;               &lt;NA&gt;    68\n   priority_years missing_information_years most_recent_priority_year\n8              22                        45                      2022\n13             22                        45                      2022\n38             22                        45                      2022\n39             21                        45                      2022\n20             20                        45                      2022\n9              19                        45                      2022\n3              18                        45                      2022\n10             18                        45                      2022\n12             18                        45                      2022\n45             18                        46                      2022\n   max_cases_per_100k\n8              154.48\n13             370.40\n38             508.73\n39             172.71\n20              19.00\n9               85.31\n3               81.24\n10             291.70\n12             112.52\n45             155.00",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-one-more-change",
+    "href": "modules/Walkthrough2.html#active-checkpoint-one-more-change",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: one more change",
+    "text": "Active checkpoint: one more change\nWhat if the manuscript team decides that 1 case per 100,000 is too sensitive?\nTry the Africa analysis again with:\n\nMCV1 cutoff: 90%\nincidence cutoff: 5 cases per 100,000",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution-1",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution-1",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution",
+    "text": "Active checkpoint: solution\n\nafrica_summary_list_strict &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa,\n  coverage_cutoff = 90,\n  incidence_cutoff = 5\n)\n\nafrica_summaries_strict &lt;- do.call(rbind, africa_summary_list_strict)\n\nafrica_summaries_strict &lt;- africa_summaries_strict[\n  order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),\n]\n\nhead(africa_summaries_strict, 10)\n\n                             country region         sub_region years\n13 Congo, Democratic Republic of the Africa Sub-Saharan Africa    68\n45                           Somalia   &lt;NA&gt;               &lt;NA&gt;    68\n38                             Niger   &lt;NA&gt;               &lt;NA&gt;    68\n39                           Nigeria   &lt;NA&gt;               &lt;NA&gt;    68\n9           Central African Republic Africa Sub-Saharan Africa    68\n10                              Chad Africa Sub-Saharan Africa    68\n2                             Angola Africa Sub-Saharan Africa    68\n12                             Congo Africa Sub-Saharan Africa    68\n15                          Djibouti Africa Sub-Saharan Africa    68\n28                           Liberia   &lt;NA&gt;               &lt;NA&gt;    68\n   priority_years missing_information_years most_recent_priority_year\n13             21                        45                      2021\n45             17                        46                      2022\n38             16                        45                      2022\n39             15                        45                      2022\n9              13                        45                      2021\n10             13                        45                      2022\n2              12                        45                      2022\n12             11                        45                      2022\n15             11                        48                      2022\n28             11                        45                      2022\n   max_cases_per_100k\n13             370.40\n45             155.00\n38             508.73\n39             172.71\n9               85.31\n10             291.70\n2               68.19\n12             112.52\n15              74.30\n28             206.44",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#what-did-we-practice",
+    "href": "modules/Walkthrough2.html#what-did-we-practice",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "What did we practice?",
+    "text": "What did we practice?\n\nTurning one successful analysis into a function\nRepeating that function with a for loop\nRepeating that function with lapply()\nCombining repeated results with do.call(rbind, ...)\nCreating a manuscript-ready summary table from many repeated analyses\n\nIn Exercise 2, this same habit helps you move from a draft analysis to a polished report.",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
     ]
   },
   {
@@ -2634,167 +3104,5 @@
     "crumbs": [
       "Course Resources"
     ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html",
-    "href": "exercises/qcrc-mini-manuscript-starter.html",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "",
-    "text": "Codelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#data-source",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#data-source",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "Data source",
-    "text": "Data source\nThe analysis used the Main_Dataset sheet from the deidentified QCRC COVID-19 ICU workbook included with the course materials.\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nread_qcrc_main &lt;- function(path = here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")) {\n  readxl::read_xlsx(path, sheet = \"Main_Dataset\") |&gt;\n    janitor::clean_names() |&gt;\n    dplyr::mutate(\n      bmi = to_numeric(bmi),\n      crp = to_numeric(crp),\n      d_dimer = to_numeric(d_dimer),\n      vent_los = to_numeric(vent_los),\n      x30d_mortality = factor(\n        x30d_mortality,\n        levels = c(0, 1),\n        labels = c(\"No 30-day mortality\", \"30-day mortality\")\n      ),\n      died = factor(died, levels = c(0, 1), labels = c(\"Survived\", \"Died\")),\n      intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n      remdesivir_or_placebo = factor(\n        remdesivir_or_placebo,\n        levels = c(0, 1),\n        labels = c(\"Placebo\", \"Remdesivir\")\n      ),\n      female = factor(female),\n      race = factor(race)\n    )\n}\n\nqcrc &lt;- read_qcrc_main()\n\n\n\nCodedata.frame(\n  rows = nrow(qcrc),\n  columns = ncol(qcrc)\n) |&gt;\n  knitr::kable(caption = \"Basic dimensions of the QCRC analysis dataset.\")\n\n\nBasic dimensions of the QCRC analysis dataset.\n\nrows\ncolumns\n\n\n288\n37\n\n\n\nCodenames(qcrc)[1:10]\n\n [1] \"patient_deid\"     \"decatur_transfer\" \"age\"              \"female\"          \n [5] \"race\"             \"died\"             \"x30d_mortality\"   \"x60d_mortality\"  \n [9] \"death_date_deid\"  \"icu_los\"",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#variables",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#variables",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "Variables",
-    "text": "Variables\nReplace this paragraph with your outcome, exposure, and adjustment variables. For the default report, the outcome is 30-day mortality. Candidate exposures include age, BMI, treatment group, intubation, CRP, or D dimer.\n\nCodeanalysis_vars &lt;- c(\n  \"x30d_mortality\",\n  \"age\",\n  \"bmi\",\n  \"female\",\n  \"intubated\",\n  \"remdesivir_or_placebo\"\n)\n\nmissing_counts &lt;- sapply(qcrc[analysis_vars], \\(x) sum(is.na(x)))\n\ndata.frame(\n  variable = names(missing_counts),\n  missing = as.integer(missing_counts)\n) |&gt;\n  knitr::kable(caption = \"Missing values for the planned analysis variables.\")\n\n\nMissing values for the planned analysis variables.\n\nvariable\nmissing\n\n\n\nx30d_mortality\n0\n\n\nage\n0\n\n\nbmi\n3\n\n\nfemale\n0\n\n\nintubated\n0\n\n\nremdesivir_or_placebo\n0",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#statistical-analysis",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#statistical-analysis",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "Statistical analysis",
-    "text": "Statistical analysis\nReplace this paragraph with your analysis plan. Use cautious language such as “we estimated associations” unless your design supports causal claims.",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#descriptive-results",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#descriptive-results",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "Descriptive results",
-    "text": "Descriptive results\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected QCRC characteristics by 30-day mortality status.\")\n\n\nSelected QCRC characteristics by 30-day mortality status.\n\nx30d_mortality\nn\nmean_age\nmean_bmi\nintubated_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n33.1\n68.6\n\n\n30-day mortality\n94\n70.4\n28.5\n84.0\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(\n    x = NULL,\n    y = \"BMI\"\n  )\n\n\n\nBMI distribution by 30-day mortality status in the QCRC dataset.",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#first-pass-model",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#first-pass-model",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "First-pass model",
-    "text": "First-pass model\n\nCodemodel_30d &lt;- glm(\n  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(model_30d)\n\n\nCall:\nglm(formula = x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodeor_table &lt;- data.frame(\n  term = names(coef(model_30d)),\n  odds_ratio = exp(coef(model_30d)),\n  exp(confint.default(model_30d)),\n  check.names = FALSE\n)\n\nnames(or_table) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\nor_table |&gt;\n  dplyr::mutate(\n    dplyr::across(where(is.numeric), \\(x) round(x, 2))\n  ) |&gt;\n  knitr::kable(caption = \"Adjusted odds ratios from a first-pass logistic regression.\")\n\n\nAdjusted odds ratios from a first-pass logistic regression.\n\n\n\n\n\n\n\n\n\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)\n(Intercept)\n0.10\n0.01\n1.04\n\n\nage\nage\n1.05\n1.02\n1.07\n\n\nbmi\nbmi\n0.93\n0.89\n0.97\n\n\nintubatedYes\nintubatedYes\n4.32\n2.08\n8.98\n\n\nremdesivir_or_placeboRemdesivir\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nReplace this paragraph with a plain-language interpretation of the table. State which estimate matters most for your question, give its direction and rough magnitude, and say whether the uncertainty changes your confidence.",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-mini-manuscript-starter.html#day-2-to-do-list",
-    "href": "exercises/qcrc-mini-manuscript-starter.html#day-2-to-do-list",
-    "title": "QCRC Mini-Manuscript Starter",
-    "section": "Day 2 to-do list",
-    "text": "Day 2 to-do list\n\nRecheck variable coding for the main exposure and outcome.\nDecide whether to add or remove adjustment variables.\nPolish captions, prose, and model interpretation.",
-    "crumbs": [
-      "Exercises",
-      "QCRC starter template"
-    ]
-  },
-  {
-    "objectID": "exercises/qcrc-report-checklist-rubric.html",
-    "href": "exercises/qcrc-report-checklist-rubric.html",
-    "title": "QCRC Report Checklist and Rubric",
-    "section": "",
-    "text": "Minimum viable report checklist\nA minimum viable report is short, reproducible, and interpretable. It does not need to be fancy.\nCore requirements:\n\nThe report renders without errors.\nThe title names the dataset or topic and the main outcome.\nThe Introduction states a research question and hypothesis.\nThe Methods identify the dataset, sheet or file, variables, cleaning steps, and statistical analysis.\nThe Results include at least one descriptive table or figure.\nThe Results include at least one model or formal test aligned with the question.\nThe Discussion gives the main interpretation, one limitation, and one next step.\nCode chunks have useful labels and avoid dumping unnecessary output.\nClaims use cautious language when the analysis is associational.\n\n\n\nExercise 1 rubric\nUse Exercise 1 to create a solid draft. “Meets expectations” is enough for the end of Day 1.\n\n\n\n\n\n\n\n\n\nArea\nCore learning goal\nMeets expectations\nStretch goal\n\n\n\n\nQuarto structure\nStart a manuscript-style document\nReport has title, sections, runnable chunks, and a successful render\nUses captions, cross-references, or alternate output formats\n\n\nData loading\nLoad and inspect QCRC or justified alternate data\nReads QCRC Main_Dataset, cleans names, checks rows/columns and missingness\nReads all QCRC sheets and summarizes workbook structure\n\n\nStatistics\nConnect a question to an appropriate first-pass analysis\nIncludes one descriptive table/figure and one test or model\nAdds a sensitivity analysis or better variable coding\n\n\nIteration/functions\nUse Day 1 programming habits\nAvoids repeated copy-paste where a simple object or function would help\nWrites a helper function for repeated summaries\n\n\nInterpretation\nDraft realistic prose for adult professional readers\nStates a cautious interpretation and at least one limitation\nClearly separates clinical, public health, and statistical significance\n\n\n\n\n\nExercise 2 rubric\nUse Exercise 2 to turn the draft into a polished deliverable.\n\n\n\n\n\n\n\n\n\nArea\nCore learning goal\nMeets expectations\nStretch goal\n\n\n\n\nContinuity\nContinue the Exercise 1 manuscript arc\nStarts from the Exercise 1 draft and improves it\nShows a short change log from draft to final\n\n\nReusable data workflow\nMake loading and cleaning reproducible\nDefines and uses a data-loading function\nSeparates helper functions into a sourced script\n\n\nFunctional programming\nUse repeated logic intentionally\nUses lapply() or similar logic for a workbook inventory\nReads selected non-main sheets and documents a conservative join\n\n\nFormulas and S3\nFit and inspect model objects\nFits crude and adjusted models with formula syntax and uses summary(), coef(), or confint.default()\nUses predict(), anova(), model comparison, or marginal predictions\n\n\nReporting\nProduce a professional Quarto deliverable\nIncludes polished sections, captions, model table, figure, and limitation\nAdds bibliography, appendix diagnostics, or non-HTML output\n\n\n\n\n\nOptional advanced goals\nAdvanced work should deepen the same report instead of creating a second unrelated analysis.\n\nCompare models with AIC or likelihood ratio tests.\nEstimate absolute risks or risk differences from model predictions.\nAdd a sensitivity analysis for a different mortality endpoint.\nUse a non-main QCRC sheet, with careful documentation of row level and join assumptions.\nAdd a bibliography and cite relevant clinical or epidemiologic literature.\nBootstrap a coefficient or predicted estimate and compare uncertainty intervals.\n\n\n\nInstructor review notes\nReview this rubric before teaching:\n\nConfirm whether QCRC variable coding documentation should be added.\nConfirm whether the treatment variable labels are correct for the current workbook.\nDecide whether solution documents should be distributed before, during, or after class.\n\n\n\n\n\n\n\nReuseCC BY-NC 4.0",
-    "crumbs": [
-      "Exercises",
-      "QCRC report checklist/rubric"
-    ]
-  },
-  {
-    "objectID": "data-readme.html",
-    "href": "data-readme.html",
-    "title": "Course Data README",
-    "section": "",
-    "text": "Warning\n\n\n\nThis README is a draft for instructor review and updates before teaching. It is based on repository inspection on 2026-07-07. Confirm source, permissions, provenance, and any sensitive-data language before release.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "data-readme.html#qcrc-covid-19-icu-workbook",
-    "href": "data-readme.html#qcrc-covid-19-icu-workbook",
-    "title": "Course Data README",
-    "section": "QCRC COVID-19 ICU workbook",
-    "text": "QCRC COVID-19 ICU workbook\n\nFile: data/QCRC_FINAL_Deidentified.xlsx\nRecommended use: Exercises 1 and 2 mini-manuscript/report arc.\nWhy use it: It is rich enough for descriptive statistics, tests, logistic regression, repeated sheet inspection, formula syntax, and polished Quarto reporting.\nMain sheet for most students: Main_Dataset.\nOther sheets available for advanced students: Oxygen_Delivery, SOFA, Long_Labs, Long_Vitals, Static_Compliance, PAO2_FIO2, ICU_Meds, Intake_Form, and Daily_Form.\nUseful main-sheet variables include age, sex, race, mortality endpoints, ICU length of stay, BMI, treatment indicator, intubation, CRRT, labs, and oxygenation measures.\nImportant caution: Some numeric variables are stored as text, and missing values may be written as \".\". Clean and document variables before modeling.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "data-readme.html#measles-vaccination-and-case-data",
-    "href": "data-readme.html#measles-vaccination-and-case-data",
-    "title": "Course Data README",
-    "section": "Measles vaccination and case data",
-    "text": "Measles vaccination and case data\n\nFile: data/measles_final.Rds\nStructure: country-year records with measles cases, population, MCV1/MCV2 coverage, country, region, and sub-region.\nGood for: iteration, functions, functional programming, trend summaries, regional comparisons, and Poisson-style modeling.\nLess ideal for Exercises 1 and 2: It can become a larger ecological analysis quickly, and students may spend more time defining denominators than polishing a compact manuscript.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "data-readme.html#simulated-city-cases",
-    "href": "data-readme.html#simulated-city-cases",
-    "title": "Course Data README",
-    "section": "Simulated city cases",
-    "text": "Simulated city cases\n\nFile: data/city-cases.csv\nStructure: monthly city-level records with region, industry, date, sex, exposure-like values, population, temperature, and cases.\nGood for: aggregation, plotting, rates, and disease-mapping-adjacent practice.\nLess ideal for the default report: It is simulated and needs more framing before it feels like a manuscript.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "data-readme.html#sir-observed-data",
-    "href": "data-readme.html#sir-observed-data",
-    "title": "Course Data README",
-    "section": "SIR observed data",
-    "text": "SIR observed data\n\nFile: data/SIR-observed.csv\nStructure: daily total cases.\nGood for: ODE and epidemic-curve exercises.\nLess ideal for Exercises 1 and 2: It is intentionally small and does not support many covariate or manuscript-style choices.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "data-readme.html#mosquito-surveillance-data",
-    "href": "data-readme.html#mosquito-surveillance-data",
-    "title": "Course Data README",
-    "section": "Mosquito surveillance data",
-    "text": "Mosquito surveillance data\n\nFile: data/mos-nyc.csv\nStructure: county-level PCR-positive and pool-submission counts.\nGood for: binomial proportions, mapping, surveillance summaries, and public health communication.\nLess ideal for the default report: It is narrower than QCRC and may require spatial context that belongs more naturally with the Day 3 GIS module.",
-    "crumbs": [
-      "Course Data README"
-    ]
-  },
-  {
-    "objectID": "exercises/solutions/Exercise1-solution.html",
-    "href": "exercises/solutions/Exercise1-solution.html",
-    "title": "Exercise 1 Solutions: Start a QCRC Mini-Manuscript",
-    "section": "",
-    "text": "Instructor note\nThis is one acceptable solution path for Exercise 1. It uses the recommended QCRC 30-day mortality question. Student reports may choose different exposures or a different course dataset if they preserve the required deliverables.\n\nCodelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)\n\n\nTask 1 solution: Create a report draft\nStudents should start from exercises/qcrc-mini-manuscript-starter.qmd, save a working copy, and render it. The starter file is already a valid solution skeleton because it contains Introduction, Methods, Results, Discussion, and Appendix sections.\nTask 2 solution: Load and inspect QCRC\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nqcrc &lt;- readxl::read_xlsx(\n  here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n  sheet = \"Main_Dataset\"\n) |&gt;\n  janitor::clean_names() |&gt;\n  dplyr::mutate(\n    bmi = to_numeric(bmi),\n    crp = to_numeric(crp),\n    d_dimer = to_numeric(d_dimer),\n    x30d_mortality = factor(\n      x30d_mortality,\n      levels = c(0, 1),\n      labels = c(\"No 30-day mortality\", \"30-day mortality\")\n    ),\n    intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n    remdesivir_or_placebo = factor(\n      remdesivir_or_placebo,\n      levels = c(0, 1),\n      labels = c(\"Placebo\", \"Remdesivir\")\n    ),\n    female = factor(female),\n    race = factor(race)\n  )\n\ndata.frame(rows = nrow(qcrc), columns = ncol(qcrc)) |&gt;\n  knitr::kable(caption = \"QCRC main dataset dimensions.\")\n\n\nQCRC main dataset dimensions.\n\nrows\ncolumns\n\n\n288\n37\n\n\n\nCodenames(qcrc)[1:10]\n\n [1] \"patient_deid\"     \"decatur_transfer\" \"age\"              \"female\"          \n [5] \"race\"             \"died\"             \"x30d_mortality\"   \"x60d_mortality\"  \n [9] \"death_date_deid\"  \"icu_los\"         \n\n\n\nCodeanalysis_vars &lt;- c(\n  \"x30d_mortality\",\n  \"age\",\n  \"bmi\",\n  \"female\",\n  \"intubated\",\n  \"remdesivir_or_placebo\"\n)\n\nmissing_counts &lt;- sapply(qcrc[analysis_vars], \\(x) sum(is.na(x)))\n\ndata.frame(\n  variable = names(missing_counts),\n  missing = as.integer(missing_counts)\n) |&gt;\n  knitr::kable(caption = \"Missingness check for Exercise 1 variables.\")\n\n\nMissingness check for Exercise 1 variables.\n\nvariable\nmissing\n\n\n\nx30d_mortality\n0\n\n\nage\n0\n\n\nbmi\n3\n\n\nfemale\n0\n\n\nintubated\n0\n\n\nremdesivir_or_placebo\n0\n\n\n\n\n\nExample Methods sentence:\n\nWe analyzed the Main_Dataset sheet from the deidentified QCRC COVID-19 ICU workbook. We cleaned variable names, converted selected lab and BMI variables from text to numeric values, and recoded binary variables as factors for reporting.\n\nTask 3 solution: Define the manuscript variables\nExample introduction:\n\nSevere COVID-19 outcomes vary across patient characteristics and clinical factors. In this report, we ask whether age, BMI, intubation, and treatment group are associated with 30-day mortality among patients in the QCRC ICU dataset. We hypothesize that older age and intubation will be associated with higher odds of 30-day mortality. This analysis is descriptive and associational; it should not be interpreted as proving causality.\n\nTask 4 solution: Descriptive table or figure\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected characteristics by 30-day mortality status.\")\n\n\nSelected characteristics by 30-day mortality status.\n\nx30d_mortality\nn\nmean_age\nmean_bmi\nintubated_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n33.1\n68.6\n\n\n30-day mortality\n94\n70.4\n28.5\n84.0\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(x = NULL, y = \"BMI\")\n\n\n\nBMI distribution by 30-day mortality status in the QCRC dataset.\n\n\n\nExample interpretation:\n\nPatients with and without 30-day mortality can be compared on age, BMI, and intubation status before fitting a model. The descriptive table is not an adjusted analysis, but it helps identify patterns and missingness that should be considered in Exercise 2.\n\nTask 5 solution: First-pass analysis\n\nCodet.test(bmi ~ x30d_mortality, data = qcrc)\n\n\n    Welch Two Sample t-test\n\ndata:  bmi by x30d_mortality\nt = 5.2411, df = 263.87, p-value = 3.271e-07\nalternative hypothesis: true difference in means between group No 30-day mortality and group 30-day mortality is not equal to 0\n95 percent confidence interval:\n 2.879238 6.344378\nsample estimates:\nmean in group No 30-day mortality    mean in group 30-day mortality \n                         33.12670                          28.51489 \n\n\n\nCodemodel_30d &lt;- glm(\n  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(model_30d)\n\n\nCall:\nglm(formula = x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodeor_table &lt;- data.frame(\n  term = names(coef(model_30d)),\n  odds_ratio = exp(coef(model_30d)),\n  exp(confint.default(model_30d)),\n  check.names = FALSE\n)\n\nnames(or_table) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\nor_table |&gt;\n  dplyr::mutate(dplyr::across(where(is.numeric), \\(x) round(x, 2))) |&gt;\n  knitr::kable(caption = \"First-pass adjusted odds ratios.\")\n\n\nFirst-pass adjusted odds ratios.\n\n\n\n\n\n\n\n\n\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)\n(Intercept)\n0.10\n0.01\n1.04\n\n\nage\nage\n1.05\n1.02\n1.07\n\n\nbmi\nbmi\n0.93\n0.89\n0.97\n\n\nintubatedYes\nintubatedYes\n4.32\n2.08\n8.98\n\n\nremdesivir_or_placeboRemdesivir\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nExample interpretation:\n\nThe logistic regression estimates adjusted associations with 30-day mortality. Because this is an observational-style course exercise with limited cleaning and variable review, the estimates should be treated as a first-pass signal rather than a definitive clinical conclusion.\n\nTask 6 solution: Mini-manuscript draft\nExpected draft structure:\n\nIntroduction: one paragraph with question and hypothesis.\nMethods: data source, variable cleaning, and analysis choices.\nResults: one descriptive table or figure, one test or model, and a short interpretation.\nDiscussion: main takeaway, limitation, and next step for Exercise 2.\nAdvanced task solution outlines\n\nWorkbook inventory: use readxl::excel_sheets(), lapply(), nrow(), and ncol() to build a sheet-level table.\nHelper summary function: write summarize_numeric &lt;- function(data, var) or use a vector input such as summarize_numeric &lt;- function(x).\nSensitivity endpoint: refit the same code with died or x60d_mortality after recoding that endpoint as a factor.\nAlternate dataset: require the same question, data, descriptive result, analysis, interpretation, and limitation structure.\n\n\n\n\n\nReuseCC BY-NC 4.0"
-  },
-  {
-    "objectID": "exercises/solutions/Exercise2-solution.html",
-    "href": "exercises/solutions/Exercise2-solution.html",
-    "title": "Exercise 2 Solutions: Polish the QCRC Report",
-    "section": "",
-    "text": "Instructor note\nThis solution continues the Exercise 1 QCRC report. It is an exemplar structure, not the only valid student answer.\n\nCodelibrary(dplyr)\nlibrary(ggplot2)\nlibrary(here)\nlibrary(janitor)\nlibrary(knitr)\nlibrary(readxl)\n\n\nTask 1 solution: Re-render and triage\nExample Day 2 triage list:\n\nReproducibility fix: move data loading and recoding into a named function.\nAnalysis fix: report both crude and adjusted logistic models for 30-day mortality.\nFormatting fix: replace raw model output with a compact odds-ratio table and add captions.\nTask 2 solution: Reusable data loading\n\nCodeto_numeric &lt;- function(x) {\n  as.numeric(dplyr::na_if(as.character(x), \".\"))\n}\n\nread_qcrc_main &lt;- function(path = here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")) {\n  readxl::read_xlsx(path, sheet = \"Main_Dataset\") |&gt;\n    janitor::clean_names() |&gt;\n    dplyr::mutate(\n      bmi = to_numeric(bmi),\n      crp = to_numeric(crp),\n      d_dimer = to_numeric(d_dimer),\n      vent_los = to_numeric(vent_los),\n      x30d_mortality = factor(\n        x30d_mortality,\n        levels = c(0, 1),\n        labels = c(\"No 30-day mortality\", \"30-day mortality\")\n      ),\n      died = factor(died, levels = c(0, 1), labels = c(\"Survived\", \"Died\")),\n      intubated = factor(intubated, levels = c(0, 1), labels = c(\"No\", \"Yes\")),\n      remdesivir_or_placebo = factor(\n        remdesivir_or_placebo,\n        levels = c(0, 1),\n        labels = c(\"Placebo\", \"Remdesivir\")\n      ),\n      female = factor(female),\n      race = factor(race)\n    )\n}\n\nqcrc &lt;- read_qcrc_main()\n\n\nExample Methods sentence:\n\nWe used a report-local helper function to read the QCRC main sheet, clean variable names, convert selected character variables to numeric values, and recode binary variables for analysis and reporting.\n\nTask 3 solution: Workbook inventory\n\nCodedata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(sheet_names, \\(s) readxl::read_xlsx(data_file, sheet = s))\n\nworkbook_inventory &lt;- data.frame(\n  sheet = sheet_names,\n  rows = sapply(sheet_list, nrow),\n  columns = sapply(sheet_list, ncol)\n)\n\nworkbook_inventory |&gt;\n  knitr::kable(caption = \"QCRC workbook inventory.\")\n\n\nQCRC workbook inventory.\n\nsheet\nrows\ncolumns\n\n\n\nMain_Dataset\n288\n37\n\n\nOxygen_Delivery\n42606\n6\n\n\nSOFA\n288\n8\n\n\nLong_Labs\n15919\n29\n\n\nLong_Vitals\n143220\n11\n\n\nStatic_Compliance\n18281\n11\n\n\nPAO2_FIO2\n5252\n5\n\n\nICU_Meds\n869554\n7\n\n\nIntake_Form\n288\n71\n\n\nDaily_Form\n3612\n36\n\n\n\n\n\nTask 4 solution: Analysis table and figure\n\nCodeqcrc |&gt;\n  dplyr::group_by(x30d_mortality) |&gt;\n  dplyr::summarise(\n    n = dplyr::n(),\n    mean_age = round(mean(age, na.rm = TRUE), 1),\n    median_icu_los = round(median(icu_los, na.rm = TRUE), 1),\n    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),\n    intubated_percent = round(mean(intubated == \"Yes\", na.rm = TRUE) * 100, 1),\n    remdesivir_percent = round(\n      mean(remdesivir_or_placebo == \"Remdesivir\", na.rm = TRUE) * 100,\n      1\n    ),\n    .groups = \"drop\"\n  ) |&gt;\n  knitr::kable(caption = \"Selected characteristics by 30-day mortality status.\")\n\n\nSelected characteristics by 30-day mortality status.\n\n\n\n\n\n\n\n\n\n\nx30d_mortality\nn\nmean_age\nmedian_icu_los\nmean_bmi\nintubated_percent\nremdesivir_percent\n\n\n\nNo 30-day mortality\n194\n60.1\n8\n33.1\n68.6\n20.1\n\n\n30-day mortality\n94\n70.4\n9\n28.5\n84.0\n10.6\n\n\n\n\n\n\nCodeggplot(qcrc, aes(x = x30d_mortality, y = age)) +\n  geom_boxplot(na.rm = TRUE) +\n  labs(x = NULL, y = \"Age\")\n\n\n\nAge distribution by 30-day mortality status.\n\n\n\nExample interpretation:\n\nThe descriptive table and age figure help establish the sample context before adjusted modeling. Differences in descriptive summaries should not be treated as adjusted effects.\n\nTask 5 solution: Crude and adjusted models\n\nCodecrude_model &lt;- glm(\n  x30d_mortality ~ intubated,\n  data = qcrc,\n  family = binomial\n)\n\nadjusted_model &lt;- glm(\n  x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo,\n  data = qcrc,\n  family = binomial\n)\n\nsummary(adjusted_model)\n\n\nCall:\nglm(formula = x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo, \n    family = binomial, data = qcrc)\n\nCoefficients:\n                                Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  \nintubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***\nage                              0.04436    0.01114   3.983 6.81e-05 ***\nbmi                             -0.07458    0.02301  -3.242  0.00119 ** \nremdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 361.41  on 284  degrees of freedom\nResidual deviance: 300.08  on 280  degrees of freedom\n  (3 observations deleted due to missingness)\nAIC: 310.08\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nCodetidy_or &lt;- function(model) {\n  out &lt;- data.frame(\n    term = names(coef(model)),\n    odds_ratio = exp(coef(model)),\n    exp(confint.default(model)),\n    check.names = FALSE\n  )\n\n  names(out) &lt;- c(\"term\", \"odds_ratio\", \"conf_low\", \"conf_high\")\n\n  out |&gt;\n    dplyr::mutate(dplyr::across(where(is.numeric), \\(x) round(x, 2)))\n}\n\ndplyr::bind_rows(\n  dplyr::mutate(tidy_or(crude_model), model = \"Crude\"),\n  dplyr::mutate(tidy_or(adjusted_model), model = \"Adjusted\")\n) |&gt;\n  dplyr::select(model, term, odds_ratio, conf_low, conf_high) |&gt;\n  knitr::kable(caption = \"Crude and adjusted odds ratios for 30-day mortality.\")\n\n\nCrude and adjusted odds ratios for 30-day mortality.\n\n\n\n\n\n\n\n\n\n\nmodel\nterm\nodds_ratio\nconf_low\nconf_high\n\n\n\n(Intercept)…1\nCrude\n(Intercept)\n0.25\n0.14\n0.43\n\n\nintubatedYes…2\nCrude\nintubatedYes\n2.42\n1.29\n4.53\n\n\n(Intercept)…3\nAdjusted\n(Intercept)\n0.10\n0.01\n1.04\n\n\nintubatedYes…4\nAdjusted\nintubatedYes\n4.32\n2.08\n8.98\n\n\nage\nAdjusted\nage\n1.05\n1.02\n1.07\n\n\nbmi\nAdjusted\nbmi\n0.93\n0.89\n0.97\n\n\nremdesivir_or_placeboRemdesivir\nAdjusted\nremdesivir_or_placeboRemdesivir\n0.35\n0.16\n0.80\n\n\n\n\n\nExample Results paragraph:\n\nIn the crude model, intubation was associated with higher odds of 30-day mortality. After adjustment for age, BMI, and treatment group, the association remained positive, although the exact estimate and confidence interval should be interpreted in light of missingness, variable coding, and the limited scope of this course exercise.\n\nTask 6 solution: Polished deliverable\nExpected final report structure:\n\nTitle: specific and outcome-oriented.\nIntroduction: question, rationale, and hypothesis.\nMethods: data source, cleaning, descriptive analysis, model formula, and uncertainty approach.\nResults: table, figure, model table, and short interpretation.\nDiscussion: main finding, practical meaning, limitation, and next step.\nAppendix: workbook inventory and exploratory checks.\nAdvanced task solution outlines\n\nModel comparison: fit two nested models, then compare with AIC(model1,    model2) or anova(model1, model2, test = \"Chisq\"); remind students this does not choose confounders causally.\nPredictions: create a small newdata grid and call predict(model, newdata,    type = \"response\", se.fit = TRUE); report predicted probabilities.\nSensitivity analysis: repeat crude and adjusted models with died or recoded x60d_mortality; compare direction and rough magnitude.\nNon-main sheet: inspect row level, identify a stable patient identifier, summarize to one row per patient before joining, and document any exclusions.\nBibliography: add a bibliography: field in YAML and cite at least one source in the Introduction or Discussion.\nBootstrap: resample rows with replacement, refit the same model many times, collect the coefficient of interest, and summarize percentile intervals.\n\n\n\n\n\nReuseCC BY-NC 4.0"
   }
 ]

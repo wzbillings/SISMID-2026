@@ -1,181 +1,337 @@
 ---
-title: "Data science walkthrough 1: Data analysis walkthrough"
+title: "Data science walkthrough 1: Conditionals"
 format:
   revealjs:
     toc: false
 execute:
-  echo: false
-  eval: false
+  echo: true
+  eval: true
+  warning: false
+  message: false
 ---
 
-## Draft note
+## A small manuscript problem
 
-This walkthrough is preserved from an earlier draft. Code chunks are shown where
-helpful, but execution is disabled until the diphtheria serosample data are
-added to the 2026 course repository.
+We are going to answer one concrete question with the measles data:
 
-## Learning goals
+> In Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?
 
-* Use logical operators, subsetting functions, and math calculations in R
-* Translate human-understandable problem descriptions into instructions that
-R can understand.
+This is a miniature version of the Exercise 1 manuscript arc:
 
-# Remember, R always does EXACTLY what you tell it to do!
+1. State a question.
+1. Translate the question into a data rule.
+1. Run the rule.
+1. Write a cautious result.
 
-## Instructions
+## The programming idea
 
-* Make a new R script for this case study, and save it to your code folder.
-* We'll use the diphtheria serosample data from Exercise 1 for this case study.
-Load it into R and use the functions we've learned to look at it.
+We can describe the rule in plain English:
 
-## Instructions
+> If MCV1 coverage is below 90% and measles incidence is at least 1 case per 100,000 people, call it a priority year.
 
-* Make a new R script for this case study, and save it to your code folder.
-* We'll use the diphtheria serosample data from Exercise 1 for this case study.
-Load it into R and use the functions we've learned to look at it.
-* The `str()` of your dataset should look like this.
+Now the problem is not "Can I memorize R?"
 
-```{r, include=FALSE}
-library(haven)
-diph <- haven::read_sas(here::here("data", "Diphtheria_IgG_Serology.sas7bdat"))
+The problem is:
+
+> How do I turn that sentence into computer code?
+
+## Load the data
+
+```{r}
+data_file <- file.path("data", "measles_final.Rds")
+
+if (!file.exists(data_file)) {
+  data_file <- file.path("..", "data", "measles_final.Rds")
+}
+
+measles <- readRDS(data_file)
 ```
 
-```{r, echo = TRUE}
-str(diph)
+## Look at the data
+
+```{r}
+str(measles)
 ```
 
-## Q1: Was the overall prevalence higher in urban or rural areas?
+## What do we need?
 
-::: {.incremental}
+For this question, we need:
 
-1. How do we calculate the prevalence from the data?
-1. How do we calculate the prevalence separately for urban and rural areas?
-1. How do we determine which prevalence is higher and if the difference is
-meaningful?
+- `country`, because we are starting with Pakistan
+- `year`, because we only want 2000 and later
+- `measles_cases`, because we need incidence
+- `population`, because raw case counts are hard to compare
+- `MCV1_coverage`, because that is our coverage variable
 
-:::
+## Step 1: keep the country-years we need
 
-## Q1: How do we calculate the prevalence from the data?
+```{r}
+pakistan <- measles[
+  measles$country == "Pakistan" & measles$year >= 2000,
+]
 
-::: {.incremental}
-
-* The variable `DP_infection` in our dataset is binary / dichotomous.
-* The prevalence is the number or percent of people who had the disease over
-some duration.
-* The average of a binary variable gives the prevalence!
-
-:::
-
-. . .
-
-```{r, echo = TRUE}
-mean(diph$DP_infection)
+pakistan <- pakistan[order(pakistan$year), ]
 ```
 
-## Q1: How do we calculate the prevalence separately for urban and rural areas?
+## Check the subset
 
-. . .
-
-```{r, echo = TRUE}
-mean(diph[diph$group == "urban", ]$DP_infection)
-mean(diph[diph$group == "rural", ]$DP_infection)
+```{r}
+head(pakistan)
+tail(pakistan)
 ```
 
-. . .
+## Step 2: calculate incidence
 
-* There are many ways you could write this code! You can use `subset()` or you
-can write the indices many ways.
-* Using `tbl_df` objects from `haven` uses different `[[` rules than a base R
-data frame.
+Raw case counts are useful, but they do not account for population size.
 
-## Q1: How do we calculate the prevalence separately for urban and rural areas?
+So we make a new variable:
 
-* One easy way is to use the `aggregate()` function.
+> measles cases per 100,000 people
 
-```{r, echo = TRUE}
-aggregate(DP_infection ~ group, data = diph, FUN = mean)
+```{r}
+pakistan$cases_per_100k <- pakistan$measles_cases / pakistan$population * 100000
 ```
 
-## Q1: How do we determine which prevalence is higher and if the difference is meaningful?
+## Check the calculation
 
-::: {.incremental}
+```{r}
+pakistan_check <- pakistan[, c(
+  "year",
+  "measles_cases",
+  "population",
+  "cases_per_100k"
+)]
 
-* We probably need to include a confidence interval in our calculation.
-* This is actually not so easy without more advanced tools that we will learn
-in upcoming modules.
-* Right now the best options are to do it by hand or google a function.
+pakistan_check$cases_per_100k <- round(pakistan_check$cases_per_100k, 2)
 
-:::
+tail(pakistan_check, 8)
+```
 
-## Q1: By hand
+## Step 3: translate each condition
 
-```{r, echo = TRUE}
-p_urban <- mean(diph[diph$group == "urban", ]$DP_infection)
-p_rural <- mean(diph[diph$group == "rural", ]$DP_infection)
-se_urban <- sqrt(p_urban * (1 - p_urban) / nrow(diph[diph$group == "urban", ]))
-se_rural <- sqrt(p_rural * (1 - p_rural) / nrow(diph[diph$group == "rural", ]))
+The English rule has two parts:
 
-result_urban <- paste0(
-	"Urban: ", round(p_urban, 2), "; 95% CI: (",
-	round(p_urban - 1.96 * se_urban, 2), ", ",
-	round(p_urban + 1.96 * se_urban, 2), ")"
+1. MCV1 coverage is below 90%.
+1. Measles incidence is at least 1 case per 100,000 people.
+
+In R, each part becomes a logical vector.
+
+```{r}
+low_coverage <- pakistan$MCV1_coverage < 90
+elevated_incidence <- pakistan$cases_per_100k >= 1
+```
+
+## Inspect the logical vectors
+
+```{r}
+logic_check <- data.frame(
+  year = pakistan$year,
+  MCV1_coverage = pakistan$MCV1_coverage,
+  cases_per_100k = round(pakistan$cases_per_100k, 2),
+  low_coverage = low_coverage,
+  elevated_incidence = elevated_incidence
 )
 
-result_rural <- paste0(
-	"Rural: ", round(p_rural, 2), "; 95% CI: (",
-	round(p_rural - 1.96 * se_rural, 2), ", ",
-	round(p_rural + 1.96 * se_rural, 2), ")"
-)
-
-cat(result_urban, result_rural, sep = "\n")
+tail(logic_check, 8)
 ```
 
-## Q1: By hand
+## Missing values matter
 
-* We can see that the 95% CI's overlap, so the groups are probably not that
-different. **To be sure, we need to do a 2-sample test! But this is not a
-statistics class.**
-* Some people will tell you that coding like this is "bad". **But 'bad' code
-that gives you answers is better than broken code!** We will learn techniques
-for writing this with less work and less repetition in upcoming modules.
+If coverage is missing, R cannot decide whether coverage is below 90%.
 
-## Q1: Googling a package
-
-. . .
-
-```{r, echo = TRUE}
-# install.packages("DescTools")
-library(DescTools)
-
-aggregate(DP_infection ~ group, data = diph, FUN = DescTools::MeanCI)
+```{r}
+table(low_coverage, useNA = "ifany")
 ```
 
-## You try it!
+That is not a failure. It is R refusing to guess.
 
-* Using any of the approaches you can think of, answer this question!
-* **How many children under 5 were vaccinated? In children under 5, did
-vaccination lower the prevalence of infection?**
+For a manuscript-style analysis, we need to decide what we want to do with
+missing information.
 
-## You try it!
+## Step 4: write the decision rule
 
-```{r, echo = TRUE}
-# How many children under 5 were vaccinated
-sum(diph$DP_vacc[diph$age_months < 60])
+Here is the rule in full:
 
-# Prevalence in both vaccine groups for children under 5
-aggregate(
-	DP_infection ~ DP_vacc,
-	data = subset(diph, age_months < 60),
-	FUN = DescTools::MeanCI
+1. If coverage or incidence is missing, label the row `"missing information"`.
+1. Otherwise, if coverage is below 90% and incidence is at least 1, label the
+   row `"priority year"`.
+1. Otherwise, label the row `"not priority"`.
+
+## Step 4: code the decision rule
+
+```{r}
+pakistan$priority_year <- ifelse(
+  is.na(pakistan$MCV1_coverage) | is.na(pakistan$cases_per_100k),
+  "missing information",
+  ifelse(
+    pakistan$MCV1_coverage < 90 & pakistan$cases_per_100k >= 1,
+    "priority year",
+    "not priority"
+  )
 )
 ```
 
-It appears that prevalence was HIGHER in the vaccine group? That is
-counterintuitive, but the sample size for the unvaccinated group is too small
-to be sure.
+## What did `ifelse()` do?
 
-## Congratulations for finishing the first case study!
+`ifelse()` has three pieces:
 
-* What R functions and skills did you practice?
-* What other questions could you answer about the same dataset with the skills
-you know now?
+```r
+ifelse(test, value_if_true, value_if_false)
+```
+
+Our nested version says:
+
+- first check whether the data are missing
+- if not, check whether the year meets the priority rule
+- give every row one label
+
+## Step 5: inspect the answer
+
+```{r}
+pakistan_result <- pakistan[, c(
+  "year",
+  "measles_cases",
+  "MCV1_coverage",
+  "cases_per_100k",
+  "priority_year"
+)]
+
+pakistan_result$cases_per_100k <- round(pakistan_result$cases_per_100k, 2)
+
+tail(pakistan_result, 12)
+```
+
+## Step 6: summarize the answer
+
+```{r}
+table(pakistan$priority_year)
+```
+
+```{r}
+pakistan$year[pakistan$priority_year == "priority year"]
+```
+
+## Make a small manuscript table
+
+```{r}
+priority_years <- pakistan$year[pakistan$priority_year == "priority year"]
+
+data.frame(
+  country = "Pakistan",
+  start_year = min(pakistan$year),
+  end_year = max(pakistan$year),
+  total_years = nrow(pakistan),
+  priority_years = length(priority_years),
+  most_recent_priority_year = max(priority_years)
+)
+```
+
+## Make a quick figure
+
+```{r}
+plot(
+  pakistan$year,
+  pakistan$cases_per_100k,
+  type = "b",
+  xlab = "Year",
+  ylab = "Measles cases per 100,000 people",
+  main = "Pakistan measles incidence since 2000"
+)
+
+abline(h = 1, lty = 2)
+
+points(
+  pakistan$year[pakistan$priority_year == "priority year"],
+  pakistan$cases_per_100k[pakistan$priority_year == "priority year"],
+  pch = 19,
+  col = "red"
+)
+```
+
+## What goes in the report?
+
+**Methods sentence**
+
+We defined a priority year as a country-year with MCV1 coverage below 90% and
+at least 1 reported measles case per 100,000 people; country-years with missing
+coverage or incidence were labeled as missing information.
+
+**Results sentence**
+
+Pakistan had several priority years since 2000 under this rule, with the most
+recent priority year identified in the summary table.
+
+## Active checkpoint
+
+**Student prompt**
+
+Change the question:
+
+> In Afghanistan since 2010, which years should be flagged if MCV2 coverage was
+> below 80% or measles incidence was at least 5 cases per 100,000 people?
+
+Write the code before looking at the solution.
+
+## Active checkpoint: hint
+
+You need to change four pieces:
+
+1. the country
+1. the start year
+1. the coverage variable and cutoff
+1. the logical connector, because this rule uses "or"
+
+The R operator for "or" is `|`.
+
+## Active checkpoint: solution
+
+```{r}
+afghanistan <- measles[
+  measles$country == "Afghanistan" & measles$year >= 2010,
+]
+
+afghanistan <- afghanistan[order(afghanistan$year), ]
+afghanistan$cases_per_100k <- afghanistan$measles_cases / afghanistan$population * 100000
+
+afghanistan$priority_year <- ifelse(
+  (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage < 80) |
+    (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k >= 5),
+  "priority year",
+  ifelse(
+    is.na(afghanistan$MCV2_coverage) | is.na(afghanistan$cases_per_100k),
+    "missing information",
+    "not priority"
+  )
+)
+
+afghanistan_result <- afghanistan[, c(
+  "year",
+  "measles_cases",
+  "MCV2_coverage",
+  "cases_per_100k",
+  "priority_year"
+)]
+
+afghanistan_result$cases_per_100k <- round(afghanistan_result$cases_per_100k, 2)
+
+afghanistan_result
+```
+
+## Active checkpoint: summarize it
+
+```{r}
+table(afghanistan$priority_year)
+```
+
+```{r}
+afghanistan$year[afghanistan$priority_year == "priority year"]
+```
+
+## What did we practice?
+
+- Starting with a question that a reader can understand
+- Turning a plain-English rule into logical conditions
+- Using `&`, `|`, `is.na()`, and `ifelse()`
+- Creating a table, figure, and short manuscript-style interpretation
+
+Next time, we will repeat this same rule across many countries.

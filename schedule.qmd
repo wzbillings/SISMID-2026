@@ -27,7 +27,7 @@ All times are in Eastern Daylight Time (EDT; UTC-4).
 | 02:30 pm - 03:00 pm | Module 4: Writing functions |
 | 03:00 pm - 03:30 pm | Coffee break |
 | 03:30 pm - 04:10 pm | Module 4 continued: functions practice and questions |
-| 04:10 pm - 05:00 pm | Data science walkthrough 1 and Exercise 1 launch |
+| 04:10 pm - 05:00 pm | [Data science walkthrough 1: conditionals](modules/Walkthrough1.qmd) and Exercise 1 launch |
 | 05:00 pm - 07:00 pm | **Networking night** and poster session, Randal Rollins P01 |
 
 : {.striped .hover tbl-colwidths="[25,75]"}
@@ -42,7 +42,7 @@ All times are in Eastern Daylight Time (EDT; UTC-4).
 | 11:45 am - 12:00 pm | Exercise 1 continuation and questions |
 | 12:00 pm - 01:00 pm | Lunch (2nd floor lobby); **Lunch and Learn!** |
 | 01:00 pm - 02:15 pm | Module 6: S3, formulas, and model objects |
-| 02:15 pm - 03:00 pm | Data science walkthrough 2 |
+| 02:15 pm - 03:00 pm | [Data science walkthrough 2: iteration and functional programming](modules/Walkthrough2.qmd) |
 | 03:00 pm - 03:30 pm | Coffee break |
 | 03:30 pm - 04:15 pm | Exercise 1 continuation, debrief, and transition |
 | 04:15 pm - 05:00 pm | Exercise 2 launch and work time |
