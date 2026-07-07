@@ -214,9 +214,9 @@
 <ol type="1">
 <li>Explain what S3 is and give an example of an S3 method</li>
 <li>Understand the R help pages for S3 methods</li>
-<li>Use vectorization to replace unnecessary loops</li>
 <li>Understand when and how to use the R formula syntax</li>
-<li>Write basic linear models with R formulas</li>
+<li>Use formula syntax to write basic linear and generalized linear models</li>
+<li>Use common S3 generics to inspect model objects for a report</li>
 </ol>
 </section>
 <section>
@@ -229,7 +229,7 @@
 <ul>
 <li>We’ve talked about imperative programming and functional programming. Now we’ll talk about <strong>object-oriented programming.</strong></li>
 <li>S3 is a “functional OOP” system, which is different from OOP you might have dealt with in Python or C++.</li>
-<li>The main propery of S3 is <strong>polymorphism</strong>: one <strong>generic function</strong> can act differently on different <strong>classes</strong> of objects, but symbolically represents the same thing and has a consistent interface.</li>
+<li>The main property of S3 is <strong>polymorphism</strong>: one <strong>generic function</strong> can act differently on different <strong>classes</strong> of objects, but symbolically represents the same thing and has a consistent interface.</li>
 </ul>
 </section>
 <section id="an-s3-example" class="slide level2 scrollable">
@@ -1084,21 +1084,19 @@ sample estimates:
 </section>
 <section id="you-try-it" class="slide level2 scrollable">
 <h2>You try it!</h2>
+<p><strong>Student prompt</strong></p>
 <ul>
 <li>Before, we saw that <code>boxplot</code> had a formula method. Use <code>boxplot()</code> with a formula to make boxplots of measles cases in 2002 for each <code>region</code> in the dataset.</li>
 </ul>
 <div class="fragment">
-<ul>
-<li>Hint: your code should look like this for the correct DV and IV.</li>
-</ul>
+<p><strong>Hint</strong></p>
+<p>Your code should look like this for the correct DV and IV.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">boxplot</span>(dv <span class="sc">~</span> iv, <span class="at">data =</span> <span class="fu">subset</span>(meas, year <span class="sc">==</span> <span class="dv">2002</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
-<ul>
-<li>Solution:</li>
-</ul>
+<p><strong>Solution</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">boxplot</span>(measles_cases <span class="sc">~</span> region, <span class="at">data =</span> <span class="fu">subset</span>(meas, year <span class="sc">==</span> <span class="dv">2002</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1113,16 +1111,16 @@ sample estimates:
 </section>
 <section id="you-try-it-more-advanced" class="slide level2 scrollable">
 <h2>You try it (more advanced)</h2>
+<p><strong>Student prompt</strong></p>
 <ul>
 <li>Load the QCRC dataset, you only need the sheet “Main_Dataset” for this.</li>
 <li>Fit a logistic regression model with 30 day mortality (<code>30D_Mortality</code> in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.</li>
 <li>Use appropriate S3 generic functions to get statistics about your model that you would want to report.</li>
+<li>This is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.</li>
 </ul>
 <div class="fragment">
-<ul>
-<li>Hint: to read in the data, do this.</li>
-<li>Hint: you might need to do some data cleaning, because missing data are written as a period in the spreadsheet.</li>
-</ul>
+<p><strong>Hint</strong></p>
+<p>To read in the data, do this. You might need to do some data cleaning, because missing data are written as a period in the spreadsheet.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>qcrc <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(</span>
 <span id="cb49-2"><a></a>    here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>),</span>
@@ -1131,10 +1129,8 @@ sample estimates:
 </div>
 </div>
 <div class="fragment">
-<ul>
-<li>Hint: your logistic regression code should look like this.</li>
-<li>Hint: you need to put backticks (this thing: `, NOT an apostrophe. It’s made by the ~ key on american keyboards.) around the name of the variable `30D_Mortality`.</li>
-</ul>
+<p><strong>Hint</strong></p>
+<p>Your logistic regression code should look like this. You need to put backticks (this thing: `, NOT an apostrophe. It’s made by the ~ key on American keyboards.) around the name of the variable `30D_Mortality`.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>model_30dm <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
 <span id="cb50-2"><a></a>    something <span class="sc">~</span> something <span class="sc">+</span> something <span class="sc">+</span> ...,</span>
@@ -1144,14 +1140,12 @@ sample estimates:
 </div>
 </div>
 <div class="fragment">
-<ul>
-<li>Hint: some useful functions with methods for <code>glm</code>-class objects are <code>summary</code>, <code>coef</code>, and <code>confint</code>. (You probably also need the function <code>exp</code>!)</li>
-</ul>
+<p><strong>Hint</strong></p>
+<p>Some useful functions with methods for <code>glm</code>-class objects are <code>summary</code>, <code>coef</code>, and <code>confint</code>. (You probably also need the function <code>exp</code>!)</p>
 </div>
 <div class="fragment">
-<ul>
-<li>One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 Day mortality.</li>
-</ul>
+<p><strong>Solution</strong></p>
+<p>One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 day mortality.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="co"># A little cleaning for D Dimer</span></span>
 <span id="cb51-2"><a></a><span class="co"># First turn the "." into actual NA's and make it a real number</span></span>
@@ -1166,7 +1160,7 @@ sample estimates:
 <span id="cb51-11"><a></a>qcrc<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">factor</span>(qcrc<span class="sc">$</span>Race) <span class="sc">|&gt;</span></span>
 <span id="cb51-12"><a></a>    <span class="co"># Make White the reference level</span></span>
 <span id="cb51-13"><a></a>    <span class="fu">relevel</span>(<span class="at">ref =</span> <span class="st">"Caucasian or White"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb51-14"><a></a>    <span class="co"># Groups other than "Causian or White" and "Black or African American" are</span></span>
+<span id="cb51-14"><a></a>    <span class="co"># Groups other than "Caucasian or White" and "Black or African American" are</span></span>
 <span id="cb51-15"><a></a>    <span class="co"># really small and heterogeneous so put them together</span></span>
 <span id="cb51-16"><a></a>    <span class="co"># Not ideal but sometimes the best we can do</span></span>
 <span id="cb51-17"><a></a>    forcats<span class="sc">::</span><span class="fu">fct_lump_n</span>(<span class="at">n =</span> <span class="dv">2</span>)</span>
@@ -1282,7 +1276,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 <div class="fragment">
 <ul>
-<li>A basic interpretation of the coefficient for <code>Remdesivir_or_placebo</code> (coded as 1 for remdesivir and 0 for placebo) might be “Odds of mortality after 30 days in the remdesivisir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the <span class="math inline">\(\alpha = 0.05\)</span> significance group, but is suggestive that at least some patients benefitted from remdesivir treatment.”</li>
+<li>A basic interpretation of the coefficient for <code>Remdesivir_or_placebo</code> (coded as 1 for remdesivir and 0 for placebo) might be “Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the <span class="math inline">\(\alpha = 0.05\)</span> significance level, but is suggestive that at least some patients benefitted from remdesivir treatment.”</li>
 </ul>
 </div>
 </section>

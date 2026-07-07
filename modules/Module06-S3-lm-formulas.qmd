@@ -16,9 +16,9 @@ library(printr)
 
 1. Explain what S3 is and give an example of an S3 method
 1. Understand the R help pages for S3 methods
-1. Use vectorization to replace unnecessary loops
 1. Understand when and how to use the R formula syntax
-1. Write basic linear models with R formulas
+1. Use formula syntax to write basic linear and generalized linear models
+1. Use common S3 generics to inspect model objects for a report
 
 # Part 1: S3 stands for 3/10 Scariness
 
@@ -26,7 +26,7 @@ library(printr)
 
 - We've talked about imperative programming and functional programming. Now we'll talk about **object-oriented programming.**
 - S3 is a "functional OOP" system, which is different from OOP you might have dealt with in Python or C++.
-- The main propery of S3 is **polymorphism**: one **generic function** can act differently on different **classes** of objects, but symbolically represents the same thing and has a consistent interface.
+- The main property of S3 is **polymorphism**: one **generic function** can act differently on different **classes** of objects, but symbolically represents the same thing and has a consistent interface.
 
 ## An S3 example {.scrollable}
 
@@ -220,11 +220,15 @@ cor.test(
 
 ## You try it! {.scrollable}
 
+**Student prompt**
+
 - Before, we saw that `boxplot` had a formula method. Use `boxplot()` with a formula to make boxplots of measles cases in 2002 for each `region` in the dataset.
 
 . . .
 
-- Hint: your code should look like this for the correct DV and IV.
+**Hint**
+
+Your code should look like this for the correct DV and IV.
 
 ```{r, eval = FALSE}
 boxplot(dv ~ iv, data = subset(meas, year == 2002))
@@ -232,7 +236,7 @@ boxplot(dv ~ iv, data = subset(meas, year == 2002))
 
 . . .
 
-- Solution:
+**Solution**
 
 ```{r}
 boxplot(measles_cases ~ region, data = subset(meas, year == 2002))
@@ -240,14 +244,18 @@ boxplot(measles_cases ~ region, data = subset(meas, year == 2002))
 
 ## You try it (more advanced) {.scrollable}
 
+**Student prompt**
+
 - Load the QCRC dataset, you only need the sheet "Main_Dataset" for this.
 - Fit a logistic regression model with 30 day mortality (`30D_Mortality` in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.
 - Use appropriate S3 generic functions to get statistics about your model that you would want to report.
+- This is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.
 
 . . .
 
-- Hint: to read in the data, do this.
-- Hint: you might need to do some data cleaning, because missing data are written as a period in the spreadsheet.
+**Hint**
+
+To read in the data, do this. You might need to do some data cleaning, because missing data are written as a period in the spreadsheet.
 
 ```{r}
 qcrc <- readxl::read_xlsx(
@@ -258,8 +266,9 @@ qcrc <- readxl::read_xlsx(
 
 . . .
 
-- Hint: your logistic regression code should look like this.
-- Hint: you need to put backticks (this thing: \`, NOT an apostrophe. It's made by the ~ key on american keyboards.) around the name of the variable \`30D_Mortality\`.
+**Hint**
+
+Your logistic regression code should look like this. You need to put backticks (this thing: \`, NOT an apostrophe. It's made by the ~ key on American keyboards.) around the name of the variable \`30D_Mortality\`.
 
 ```{r, eval = FALSE}
 model_30dm <- glm(
@@ -271,11 +280,15 @@ model_30dm <- glm(
 
 . . .
 
-- Hint: some useful functions with methods for `glm`-class objects are `summary`, `coef`, and `confint`. (You probably also need the function `exp`!)
+**Hint**
+
+Some useful functions with methods for `glm`-class objects are `summary`, `coef`, and `confint`. (You probably also need the function `exp`!)
 
 . . .
 
-- One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 Day mortality.
+**Solution**
+
+One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 day mortality.
 
 ```{r}
 # A little cleaning for D Dimer
@@ -291,7 +304,7 @@ qcrc$d_dimer <- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)
 qcrc$Race <- factor(qcrc$Race) |>
 	# Make White the reference level
 	relevel(ref = "Caucasian or White") |>
-	# Groups other than "Causian or White" and "Black or African American" are
+	# Groups other than "Caucasian or White" and "Black or African American" are
 	# really small and heterogeneous so put them together
 	# Not ideal but sometimes the best we can do
 	forcats::fct_lump_n(n = 2)
@@ -334,7 +347,7 @@ confint(model_30dm) |>
 
 . . .
 
-- A basic interpretation of the coefficient for `Remdesivir_or_placebo` (coded as 1 for remdesivir and 0 for placebo) might be "Odds of mortality after 30 days in the remdesivisir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the $\alpha = 0.05$ significance group, but is suggestive that at least some patients benefitted from remdesivir treatment."
+- A basic interpretation of the coefficient for `Remdesivir_or_placebo` (coded as 1 for remdesivir and 0 for placebo) might be "Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the $\alpha = 0.05$ significance level, but is suggestive that at least some patients benefitted from remdesivir treatment."
 
 ## Summary
 

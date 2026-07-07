@@ -1,5 +1,5 @@
 ---
-title: "Module 5: FunctionalProgramming"
+title: "Module 5: Functional Programming"
 format:
   revealjs:
     toc: false
@@ -15,9 +15,10 @@ library(printr)
 
 ## Learning goals
 
-1. Define functional programming
-1. Use functional programming tools in base R to repeat multiple functional calls.
-1. Use the `purrr` package for easily mapping and reducing functions.
+1. Define functional programming in practical R terms.
+1. Use base R functional programming tools to repeat the same operation across many inputs.
+1. Use `lapply()`, `apply()`, `tapply()`, and `split()` for runnable analysis tasks.
+1. Connect repeated data tasks to the QCRC mini-manuscript workflow.
 
 ## What is functional programming?
 
@@ -88,7 +89,7 @@ country_codes <- c("IND", "PAK", "BGD", "NPL")
 
 # Loop setup
 out <- vector(mode = "list", length = length(country_codes))
-for (i in 1:length(out)) {
+for (i in seq_along(country_codes)) {
 	out[[i]] <- get_country_stats(meas, country_codes[[i]])	
 }
 
@@ -100,7 +101,7 @@ out
 - But if we use a functional programming tool called `lapply`, look how easy it is!
 
 ```{r}
-out2 <- lapply(country_codes, function(c) get_country_stats(meas, c))
+out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
 out2
 ```
 
@@ -118,21 +119,21 @@ out2
 - In this code, you can see the keyword `function`.
 
 ```{r}
-out2 <- lapply(country_codes, function(c) get_country_stats(meas, c))
+out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
 ```
 
 . . .
 
-- The function `function(c) get_country_stats(meas, c)` is called an **anonymous function** (or sometimes a lambda).
+- The function `function(code) get_country_stats(meas, code)` is called an **anonymous function** (or sometimes a lambda).
 - It's anonymous because it has no name assigned -- this is just a shortcut for when you only need a function once.
-- In R, you can also write `\(c) ...` as a shortcut for writing `function(c) ...` as an anonymous function.
+- In R, you can also write `\(code) ...` as a shortcut for writing `function(code) ...` as an anonymous function.
 
 . . .
 
 - This code works just as well, but can be a bit of a hassle.
 
 ```{r}
-get_country_stats_from_meas <- function(c) get_country_stats(meas, c)
+get_country_stats_from_meas <- function(code) get_country_stats(meas, code)
 out3 <- lapply(country_codes, get_country_stats_from_meas)
 ```
 
@@ -185,44 +186,68 @@ out <- tapply(
 head(out)
 ```
 
-## You try it with `lapply()`!
+## You try it with `lapply()`! {.scrollable}
 
-- Read in all sheets of the `QCRC_FINAL_Deidentified.xlsx` data using a vector of sheet names and `lapply`.
+**Student prompt**
+
+- Read all sheets of the `QCRC_FINAL_Deidentified.xlsx` workbook using a vector of sheet names and `lapply()`.
+- Name the resulting list with the sheet names.
+- Make a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.
+- This is the same repeated-data task you will use in the Exercise 2 report appendix.
 
 . . .
 
-- Hint:
+**Hint**
 
 ```{r, eval = FALSE}
 data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
 sheet_names <- readxl::excel_sheets(data_file)
 sheet_list <- lapply(
 	sheet_names,
-	\(name) ...
+	\(name) readxl::read_xlsx(data_file, sheet = name)
+)
+names(sheet_list) <- ...
+
+sheet_inventory <- data.frame(
+	sheet = ...,
+	rows = ...,
+	columns = ...
 )
 ```
 
 . . .
+
+**Solution**
 
 ```{r}
 data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
 sheet_names <- readxl::excel_sheets(data_file)
 sheet_list <- lapply(
 	sheet_names,
-	\(name) readxl::read_excel(data_file, sheet = name)
+	\(name) readxl::read_xlsx(data_file, sheet = name)
 )
-str(sheet_list, 1)
+names(sheet_list) <- sheet_names
+
+sheet_inventory <- data.frame(
+	sheet = names(sheet_list),
+	rows = sapply(sheet_list, nrow),
+	columns = sapply(sheet_list, ncol)
+)
+
+sheet_inventory
 ```
 
 
 
-## An `apply()` example
+## You try it with `apply()`! {.scrollable}
+
+**Student prompt**
 
 - You'll use `apply()` less often because it's specifically for matrices, where all data types have to be the same.
 - First, make a matrix from the QCRC main dataset that only has the columns `Died`, `30D_Mortality`, and `60D_Mortality`.
 
 ```{r}
-d_matrix <- sheet_list[[1]] |>
+d_matrix <- sheet_list[["Main_Dataset"]] |>
 	dplyr::select(Died, `30D_Mortality`, `60D_Mortality`) |>
 	as.matrix()
 
@@ -233,7 +258,7 @@ head(d_matrix)
 
 . . .
 
-- Hint:
+**Hint**
 
 ```{r, eval = FALSE}
 apply(
@@ -247,7 +272,7 @@ apply(
 
 . . .
 
-- Solution:
+**Solution**
 
 ```{r}
 apply(
@@ -257,31 +282,27 @@ apply(
 )
 ```
 
-## You try it!
+## You try it with `split()` + `lapply()`! {.scrollable}
 
-- Load the measles dataset. Filter the dataset so you only have records from 2005, and only have complete cases.
+**Student prompt**
+
+- Load the measles dataset. Filter the dataset so you only have records from 2005, and keep complete cases for the variables used in the model.
 - Then, use `split` to split the dataframe into a list by `region`.
 - Now, use `lapply()` to fit a Poisson `glm` for each region separately that includes effects of MCV1 and MCV2 coverage.
 - Find a way, using `lapply()` or `sapply()`, `coef()`, and `do.call()` to make a nice matrix of the coefficients.
+- This is a more advanced version of the same pattern you will use for repeated checks and model summaries in Exercise 2.
 
 . . .
 
-- Solution for data processing
+**Hint**
 
-```{r}
+```{r, eval = FALSE}
 meas <- readr::read_rds(here::here("data", "measles_final.Rds"))
 meas_2005 <- meas |>
 	dplyr::filter(year == 2005) |>
-	tidyr::drop_na()
+	tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)
 
-meas_regions <- split(meas_2005, meas_2005$region)
-```
-
-. . .
-
-- Hint
-
-```{r, eval = FALSE}
+meas_regions <- split(..., ...)
 model_list <- lapply(
 	meas_regions,
 	\(d) glm(...)
@@ -293,9 +314,16 @@ model_coefs_mat <- do.call(...)
 
 . . .
 
-- Solution
+**Solution**
 
 ```{r}
+meas <- readr::read_rds(here::here("data", "measles_final.Rds"))
+meas_2005 <- meas |>
+	dplyr::filter(year == 2005) |>
+	tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)
+
+meas_regions <- split(meas_2005, meas_2005$region)
+
 model_list <- lapply(
 	meas_regions,
 	\(d) glm(

@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Module 5: FunctionalProgramming</title>
+  <title>SISMID R for ID Materials (2026) – Module 5: Functional Programming</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -193,7 +193,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Module 5: FunctionalProgramming</h1>
+  <h1 class="title">Module 5: Functional Programming</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -212,9 +212,10 @@
 <section id="learning-goals" class="slide level2">
 <h2>Learning goals</h2>
 <ol type="1">
-<li>Define functional programming</li>
-<li>Use functional programming tools in base R to repeat multiple functional calls.</li>
-<li>Use the <code>purrr</code> package for easily mapping and reducing functions.</li>
+<li>Define functional programming in practical R terms.</li>
+<li>Use base R functional programming tools to repeat the same operation across many inputs.</li>
+<li>Use <code>lapply()</code>, <code>apply()</code>, <code>tapply()</code>, and <code>split()</code> for runnable analysis tasks.</li>
+<li>Connect repeated data tasks to the QCRC mini-manuscript workflow.</li>
 </ol>
 </section>
 <section id="what-is-functional-programming" class="slide level2">
@@ -292,7 +293,7 @@
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a><span class="co"># Loop setup</span></span>
 <span id="cb2-5"><a></a>out <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> <span class="fu">length</span>(country_codes))</span>
-<span id="cb2-6"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(out)) {</span>
+<span id="cb2-6"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(country_codes)) {</span>
 <span id="cb2-7"><a></a>    out[[i]] <span class="ot">&lt;-</span> <span class="fu">get_country_stats</span>(meas, country_codes[[i]]) </span>
 <span id="cb2-8"><a></a>}</span>
 <span id="cb2-9"><a></a></span>
@@ -321,7 +322,7 @@
 <li>But if we use a functional programming tool called <code>lapply</code>, look how easy it is!</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>out2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(country_codes, <span class="cf">function</span>(c) <span class="fu">get_country_stats</span>(meas, c))</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>out2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(country_codes, <span class="cf">function</span>(code) <span class="fu">get_country_stats</span>(meas, code))</span>
 <span id="cb4-2"><a></a>out2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
@@ -361,13 +362,13 @@
 <li>In this code, you can see the keyword <code>function</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>out2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(country_codes, <span class="cf">function</span>(c) <span class="fu">get_country_stats</span>(meas, c))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>out2 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(country_codes, <span class="cf">function</span>(code) <span class="fu">get_country_stats</span>(meas, code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="fragment">
 <ul>
-<li>The function <code>function(c) get_country_stats(meas, c)</code> is called an <strong>anonymous function</strong> (or sometimes a lambda).</li>
+<li>The function <code>function(code) get_country_stats(meas, code)</code> is called an <strong>anonymous function</strong> (or sometimes a lambda).</li>
 <li>It’s anonymous because it has no name assigned – this is just a shortcut for when you only need a function once.</li>
-<li>In R, you can also write <code>\(c) ...</code> as a shortcut for writing <code>function(c) ...</code> as an anonymous function.</li>
+<li>In R, you can also write <code>\(code) ...</code> as a shortcut for writing <code>function(code) ...</code> as an anonymous function.</li>
 </ul>
 </div>
 <div class="fragment">
@@ -375,7 +376,7 @@
 <li>This code works just as well, but can be a bit of a hassle.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>get_country_stats_from_meas <span class="ot">&lt;-</span> <span class="cf">function</span>(c) <span class="fu">get_country_stats</span>(meas, c)</span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>get_country_stats_from_meas <span class="ot">&lt;-</span> <span class="cf">function</span>(code) <span class="fu">get_country_stats</span>(meas, code)</span>
 <span id="cb7-2"><a></a>out3 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(country_codes, get_country_stats_from_meas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -519,31 +520,41 @@
 </div>
 </div>
 </section>
-<section id="you-try-it-with-lapply" class="slide level2">
+<section id="you-try-it-with-lapply" class="slide level2 scrollable">
 <h2>You try it with <code>lapply()</code>!</h2>
+<p><strong>Student prompt</strong></p>
 <ul>
-<li>Read in all sheets of the <code>QCRC_FINAL_Deidentified.xlsx</code> data using a vector of sheet names and <code>lapply</code>.</li>
+<li>Read all sheets of the <code>QCRC_FINAL_Deidentified.xlsx</code> workbook using a vector of sheet names and <code>lapply()</code>.</li>
+<li>Name the resulting list with the sheet names.</li>
+<li>Make a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.</li>
+<li>This is the same repeated-data task you will use in the Exercise 2 report appendix.</li>
 </ul>
 <div class="fragment">
-<ul>
-<li>Hint:</li>
-</ul>
+<p><strong>Hint</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)</span>
 <span id="cb10-2"><a></a>sheet_names <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">excel_sheets</span>(data_file)</span>
 <span id="cb10-3"><a></a>sheet_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb10-4"><a></a>    sheet_names,</span>
-<span id="cb10-5"><a></a>    \(name) ...</span>
-<span id="cb10-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-5"><a></a>    \(name) readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(data_file, <span class="at">sheet =</span> name)</span>
+<span id="cb10-6"><a></a>)</span>
+<span id="cb10-7"><a></a><span class="fu">names</span>(sheet_list) <span class="ot">&lt;-</span> ...</span>
+<span id="cb10-8"><a></a></span>
+<span id="cb10-9"><a></a>sheet_inventory <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-10"><a></a>    <span class="at">sheet =</span> ...,</span>
+<span id="cb10-11"><a></a>    <span class="at">rows =</span> ...,</span>
+<span id="cb10-12"><a></a>    <span class="at">columns =</span> ...</span>
+<span id="cb10-13"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
+<p><strong>Solution</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)</span>
 <span id="cb11-2"><a></a>sheet_names <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">excel_sheets</span>(data_file)</span>
 <span id="cb11-3"><a></a>sheet_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
 <span id="cb11-4"><a></a>    sheet_names,</span>
-<span id="cb11-5"><a></a>    \(name) readxl<span class="sc">::</span><span class="fu">read_excel</span>(data_file, <span class="at">sheet =</span> name)</span>
+<span id="cb11-5"><a></a>    \(name) readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(data_file, <span class="at">sheet =</span> name)</span>
 <span id="cb11-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Expecting numeric in D6716 / R6716C4: got 'Date\Time Correction'</code></pre>
@@ -581,35 +592,105 @@
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Expecting numeric in E17410 / R17410C5: got 'Date\Time Correction'</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">str</span>(sheet_list, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 10
- $ : tibble [288 × 37] (S3: tbl_df/tbl/data.frame)
- $ : tibble [42,606 × 6] (S3: tbl_df/tbl/data.frame)
- $ : tibble [288 × 8] (S3: tbl_df/tbl/data.frame)
- $ : tibble [15,919 × 29] (S3: tbl_df/tbl/data.frame)
- $ : tibble [143,220 × 11] (S3: tbl_df/tbl/data.frame)
- $ : tibble [18,281 × 11] (S3: tbl_df/tbl/data.frame)
- $ : tibble [5,252 × 5] (S3: tbl_df/tbl/data.frame)
- $ : tibble [869,554 × 7] (S3: tbl_df/tbl/data.frame)
- $ : tibble [288 × 71] (S3: tbl_df/tbl/data.frame)
- $ : tibble [3,612 × 36] (S3: tbl_df/tbl/data.frame)</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">names</span>(sheet_list) <span class="ot">&lt;-</span> sheet_names</span>
+<span id="cb24-2"><a></a></span>
+<span id="cb24-3"><a></a>sheet_inventory <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb24-4"><a></a>    <span class="at">sheet =</span> <span class="fu">names</span>(sheet_list),</span>
+<span id="cb24-5"><a></a>    <span class="at">rows =</span> <span class="fu">sapply</span>(sheet_list, nrow),</span>
+<span id="cb24-6"><a></a>    <span class="at">columns =</span> <span class="fu">sapply</span>(sheet_list, ncol)</span>
+<span id="cb24-7"><a></a>)</span>
+<span id="cb24-8"><a></a></span>
+<span id="cb24-9"><a></a>sheet_inventory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">sheet</th>
+<th style="text-align: right;">rows</th>
+<th style="text-align: right;">columns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Main_Dataset</td>
+<td style="text-align: left;">Main_Dataset</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oxygen_Delivery</td>
+<td style="text-align: left;">Oxygen_Delivery</td>
+<td style="text-align: right;">42606</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SOFA</td>
+<td style="text-align: left;">SOFA</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Long_Labs</td>
+<td style="text-align: left;">Long_Labs</td>
+<td style="text-align: right;">15919</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Long_Vitals</td>
+<td style="text-align: left;">Long_Vitals</td>
+<td style="text-align: right;">143220</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Static_Compliance</td>
+<td style="text-align: left;">Static_Compliance</td>
+<td style="text-align: right;">18281</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PAO2_FIO2</td>
+<td style="text-align: left;">PAO2_FIO2</td>
+<td style="text-align: right;">5252</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICU_Meds</td>
+<td style="text-align: left;">ICU_Meds</td>
+<td style="text-align: right;">869554</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intake_Form</td>
+<td style="text-align: left;">Intake_Form</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">71</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Daily_Form</td>
+<td style="text-align: left;">Daily_Form</td>
+<td style="text-align: right;">3612</td>
+<td style="text-align: right;">36</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </section>
-<section id="an-apply-example" class="slide level2">
-<h2>An <code>apply()</code> example</h2>
+<section id="you-try-it-with-apply" class="slide level2 scrollable">
+<h2>You try it with <code>apply()</code>!</h2>
+<p><strong>Student prompt</strong></p>
 <ul>
 <li>You’ll use <code>apply()</code> less often because it’s specifically for matrices, where all data types have to be the same.</li>
 <li>First, make a matrix from the QCRC main dataset that only has the columns <code>Died</code>, <code>30D_Mortality</code>, and <code>60D_Mortality</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>d_matrix <span class="ot">&lt;-</span> sheet_list[[<span class="dv">1</span>]] <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Died, <span class="st">`</span><span class="at">30D_Mortality</span><span class="st">`</span>, <span class="st">`</span><span class="at">60D_Mortality</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-3"><a></a>    <span class="fu">as.matrix</span>()</span>
-<span id="cb26-4"><a></a></span>
-<span id="cb26-5"><a></a><span class="fu">head</span>(d_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>d_matrix <span class="ot">&lt;-</span> sheet_list[[<span class="st">"Main_Dataset"</span>]] <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Died, <span class="st">`</span><span class="at">30D_Mortality</span><span class="st">`</span>, <span class="st">`</span><span class="at">60D_Mortality</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a></a>    <span class="fu">as.matrix</span>()</span>
+<span id="cb25-4"><a></a></span>
+<span id="cb25-5"><a></a><span class="fu">head</span>(d_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -658,30 +739,26 @@
 <li>Next use <code>apply</code> with the correct choice of <code>MARGIN</code> and <code>FUN</code> to get the proportion of cases that resulted in death at all three time points in one function call.</li>
 </ul>
 <div class="fragment">
-<ul>
-<li>Hint:</li>
-</ul>
+<p><strong>Hint</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">apply</span>(</span>
-<span id="cb27-2"><a></a>    d_matrix,</span>
-<span id="cb27-3"><a></a>    <span class="at">MARGIN =</span> (<span class="dv">1</span> or <span class="dv">2</span>),</span>
-<span id="cb27-4"><a></a>    <span class="at">FUN =</span> some_function</span>
-<span id="cb27-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">apply</span>(</span>
+<span id="cb26-2"><a></a>    d_matrix,</span>
+<span id="cb26-3"><a></a>    <span class="at">MARGIN =</span> (<span class="dv">1</span> or <span class="dv">2</span>),</span>
+<span id="cb26-4"><a></a>    <span class="at">FUN =</span> some_function</span>
+<span id="cb26-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Another hint: you can tell if you chose the correct <code>MARGIN</code> argument by counting the number of elements in the output. There should be 3, one for each column.</li>
 </ul>
 </div>
 <div class="fragment">
-<ul>
-<li>Solution:</li>
-</ul>
+<p><strong>Solution</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">apply</span>(</span>
-<span id="cb28-2"><a></a>    d_matrix,</span>
-<span id="cb28-3"><a></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
-<span id="cb28-4"><a></a>    <span class="at">FUN =</span> mean</span>
-<span id="cb28-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">apply</span>(</span>
+<span id="cb27-2"><a></a>    d_matrix,</span>
+<span id="cb27-3"><a></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
+<span id="cb27-4"><a></a>    <span class="at">FUN =</span> mean</span>
+<span id="cb27-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Died 30D_Mortality 60D_Mortality 
     0.3402778     0.3263889     0.3333333 </code></pre>
@@ -689,56 +766,54 @@
 </div>
 </div>
 </section>
-<section id="you-try-it" class="slide level2">
-<h2>You try it!</h2>
+<section id="you-try-it-with-split-lapply" class="slide level2 scrollable">
+<h2>You try it with <code>split()</code> + <code>lapply()</code>!</h2>
+<p><strong>Student prompt</strong></p>
 <ul>
-<li>Load the measles dataset. Filter the dataset so you only have records from 2005, and only have complete cases.</li>
+<li>Load the measles dataset. Filter the dataset so you only have records from 2005, and keep complete cases for the variables used in the model.</li>
 <li>Then, use <code>split</code> to split the dataframe into a list by <code>region</code>.</li>
 <li>Now, use <code>lapply()</code> to fit a Poisson <code>glm</code> for each region separately that includes effects of MCV1 and MCV2 coverage.</li>
 <li>Find a way, using <code>lapply()</code> or <code>sapply()</code>, <code>coef()</code>, and <code>do.call()</code> to make a nice matrix of the coefficients.</li>
+<li>This is a more advanced version of the same pattern you will use for repeated checks and model summaries in Exercise 2.</li>
 </ul>
 <div class="fragment">
-<ul>
-<li>Solution for data processing</li>
-</ul>
+<p><strong>Hint</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>meas <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>))</span>
+<span id="cb29-2"><a></a>meas_2005 <span class="ot">&lt;-</span> meas <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2005</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(measles_cases, MCV1_coverage, MCV2_coverage, region)</span>
+<span id="cb29-5"><a></a></span>
+<span id="cb29-6"><a></a>meas_regions <span class="ot">&lt;-</span> <span class="fu">split</span>(..., ...)</span>
+<span id="cb29-7"><a></a>model_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb29-8"><a></a>    meas_regions,</span>
+<span id="cb29-9"><a></a>    \(d) <span class="fu">glm</span>(...)</span>
+<span id="cb29-10"><a></a>)</span>
+<span id="cb29-11"><a></a>model_coefs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, ...)</span>
+<span id="cb29-12"><a></a>model_coefs_mat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><strong>Solution</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>meas <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>))</span>
 <span id="cb30-2"><a></a>meas_2005 <span class="ot">&lt;-</span> meas <span class="sc">|&gt;</span></span>
 <span id="cb30-3"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2005</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>()</span>
+<span id="cb30-4"><a></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(measles_cases, MCV1_coverage, MCV2_coverage, region)</span>
 <span id="cb30-5"><a></a></span>
-<span id="cb30-6"><a></a>meas_regions <span class="ot">&lt;-</span> <span class="fu">split</span>(meas_2005, meas_2005<span class="sc">$</span>region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<ul>
-<li>Hint</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>model_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb31-2"><a></a>    meas_regions,</span>
-<span id="cb31-3"><a></a>    \(d) <span class="fu">glm</span>(...)</span>
-<span id="cb31-4"><a></a>)</span>
-<span id="cb31-5"><a></a>model_coefs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, ...)</span>
-<span id="cb31-6"><a></a>model_coefs_mat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div class="fragment">
-<ul>
-<li>Solution</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>model_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb32-2"><a></a>    meas_regions,</span>
-<span id="cb32-3"><a></a>    \(d) <span class="fu">glm</span>(</span>
-<span id="cb32-4"><a></a>        measles_cases <span class="sc">~</span> MCV1_coverage <span class="sc">+</span> MCV2_coverage,</span>
-<span id="cb32-5"><a></a>        <span class="at">data =</span> d, <span class="at">family =</span> <span class="st">"poisson"</span></span>
-<span id="cb32-6"><a></a>    )</span>
-<span id="cb32-7"><a></a>)</span>
-<span id="cb32-8"><a></a>model_coefs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, coef)</span>
-<span id="cb32-9"><a></a>model_coefs_mat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, model_coefs_list)</span>
-<span id="cb32-10"><a></a></span>
-<span id="cb32-11"><a></a>model_coefs_mat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-6"><a></a>meas_regions <span class="ot">&lt;-</span> <span class="fu">split</span>(meas_2005, meas_2005<span class="sc">$</span>region)</span>
+<span id="cb30-7"><a></a></span>
+<span id="cb30-8"><a></a>model_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb30-9"><a></a>    meas_regions,</span>
+<span id="cb30-10"><a></a>    \(d) <span class="fu">glm</span>(</span>
+<span id="cb30-11"><a></a>        measles_cases <span class="sc">~</span> MCV1_coverage <span class="sc">+</span> MCV2_coverage,</span>
+<span id="cb30-12"><a></a>        <span class="at">data =</span> d, <span class="at">family =</span> <span class="st">"poisson"</span></span>
+<span id="cb30-13"><a></a>    )</span>
+<span id="cb30-14"><a></a>)</span>
+<span id="cb30-15"><a></a>model_coefs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, coef)</span>
+<span id="cb30-16"><a></a>model_coefs_mat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, model_coefs_list)</span>
+<span id="cb30-17"><a></a></span>
+<span id="cb30-18"><a></a>model_coefs_mat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -776,9 +851,9 @@
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oceania</td>
-<td style="text-align: right;">-8.355161</td>
-<td style="text-align: right;">0.1176879</td>
-<td style="text-align: right;">-0.0257241</td>
+<td style="text-align: right;">-4.186932</td>
+<td style="text-align: right;">0.0360717</td>
+<td style="text-align: right;">0.0111061</td>
 </tr>
 </tbody>
 </table>
