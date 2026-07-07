@@ -1,23 +1,337 @@
 ---
-title: "ODEs with deSolve"
+title: "Day 3: ODEs with deSolve"
 format:
   revealjs:
     toc: false
+    smaller: true
+    scrollable: true
 ---
 
-## 2026 core scope
+```{r}
+#| label: setup
+#| include: false
 
-This Day 3 module focuses on writing and solving ordinary differential equation
-models in R.
+library(deSolve)
+```
 
-## We will cover
+## What this half-day is for
 
-- Representing a simple infectious disease model as a system of equations.
-- Translating model equations into an R function.
-- Solving the model with `deSolve`.
-- Inspecting and plotting simulated epidemic trajectories.
+By the end of this block, you should be able to:
 
-## Out of scope for the 2026 core
+1. Read a compartment diagram as a system of ordinary differential equations.
+1. Translate the equations into the function shape required by `deSolve`.
+1. Solve the model with `deSolve::ode()`.
+1. Plot and sanity-check simulated epidemic trajectories.
 
-Parameter optimization with `optim()` and ODE parameter fitting are not part of
-the required 2026 Day 3 session.
+The goal is practical fluency: enough structure to read, modify, and run a
+basic infectious disease model in R.
+
+## The `deSolve` workflow
+
+`deSolve::ode()` needs four things from you:
+
+1. `y`: the starting state of the system.
+1. `times`: the time points where you want results.
+1. `func`: a function that calculates the derivatives.
+1. `parms`: the model parameters.
+
+```r
+deSolve::ode(
+  y = initial_state,
+  times = time_points,
+  func = derivative_function,
+  parms = parameters
+)
+```
+
+## Compartment models
+
+Compartment models divide a population into states.
+
+![Source: DOI 10.3390/sym14122583](../images/SIR-model.png)
+
+For a simple SIR model:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta S I \\
+\frac{dI}{dt} &= \beta S I - \gamma I \\
+\frac{dR}{dt} &= \gamma I
+\end{aligned}
+$$
+
+The equations say how quickly people move between compartments.
+
+## Step 1: parameters
+
+For this example:
+
+- `beta`: transmission rate.
+- `gamma`: recovery rate.
+
+```{r}
+sir_parameters <- c(
+  beta = 0.0015,
+  gamma = 0.20
+)
+```
+
+## Step 2: starting state and time
+
+The starting state is a named vector with one value per compartment.
+
+```{r}
+sir_initial_state <- c(
+  S = 999,
+  I = 1,
+  R = 0
+)
+
+sir_times <- seq(0, 80, by = 0.25)
+```
+
+The names matter. They become the column names in the solution.
+
+## Step 3: derivative function
+
+The function signature is always:
+
+```r
+function(t, state, parameters) {
+  ...
+}
+```
+
+Inside the function, calculate one derivative per state variable.
+
+```{r}
+sir_ode <- function(t, state, parameters) {
+  S <- state["S"]
+  I <- state["I"]
+  R <- state["R"]
+
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+
+  dS <- -beta * S * I
+  dI <- beta * S * I - gamma * I
+  dR <- gamma * I
+
+  list(c(S = dS, I = dI, R = dR))
+}
+```
+
+## Step 4: solve
+
+```{r}
+sir_solution <- deSolve::ode(
+  y = sir_initial_state,
+  times = sir_times,
+  func = sir_ode,
+  parms = sir_parameters
+)
+
+head(sir_solution)
+```
+
+`ode()` returns a matrix-like object. The first column is time; the remaining
+columns are your compartments.
+
+## Step 5: plot
+
+```{r}
+sir_df <- as.data.frame(sir_solution)
+sir_colors <- c(S = "deepskyblue3", I = "darkorange2", R = "seagreen4")
+
+matplot(
+  x = sir_df$time,
+  y = sir_df[, c("S", "I", "R")],
+  type = "l",
+  lty = 1,
+  lwd = 2,
+  col = sir_colors,
+  xlab = "Time",
+  ylab = "Number of people",
+  main = "SIR model"
+)
+
+legend(
+  "right",
+  inset = 0.02,
+  legend = names(sir_colors),
+  col = sir_colors,
+  lty = 1,
+  lwd = 2,
+  bty = "n"
+)
+```
+
+## Sanity checks
+
+Before trusting a simulation, ask:
+
+- Are all compartments non-negative?
+- Does the total population stay constant if the model has no births or deaths?
+- Does the direction of movement match the diagram?
+- Does changing one parameter move the curve in the direction you expect?
+
+```{r}
+range(sir_df$S, sir_df$I, sir_df$R)
+
+sir_total <- sir_df$S + sir_df$I + sir_df$R
+range(sir_total)
+```
+
+## Practice checkpoint: SIRS
+
+**Prompt**
+
+Modify the SIR model so recovered people lose immunity and become susceptible
+again. Call the new parameter `zeta`.
+
+![Source: DOI 10.3390/sym14122583 with course edit](../images/SIRS.PNG)
+
+Use:
+
+```r
+sirs_parameters <- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)
+sirs_initial_state <- c(S = 999, I = 1, R = 0)
+sirs_times <- seq(0, 160, by = 0.25)
+```
+
+Plot the result and compare it with the SIR curve.
+
+## Practice checkpoint: hint
+
+The SIRS equations are:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta S I + \zeta R \\
+\frac{dI}{dt} &= \beta S I - \gamma I \\
+\frac{dR}{dt} &= \gamma I - \zeta R
+\end{aligned}
+$$
+
+You only need to change two things:
+
+1. Add `zeta <- parameters["zeta"]`.
+1. Add the `zeta * R` flow into `dS` and out of `dR`.
+
+## Practice checkpoint: solution
+
+```{r}
+sirs_parameters <- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)
+sirs_initial_state <- c(S = 999, I = 1, R = 0)
+sirs_times <- seq(0, 160, by = 0.25)
+
+sirs_ode <- function(t, state, parameters) {
+  S <- state["S"]
+  I <- state["I"]
+  R <- state["R"]
+
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+  zeta <- parameters["zeta"]
+
+  dS <- -beta * S * I + zeta * R
+  dI <- beta * S * I - gamma * I
+  dR <- gamma * I - zeta * R
+
+  list(c(S = dS, I = dI, R = dR))
+}
+
+sirs_solution <- deSolve::ode(
+  y = sirs_initial_state,
+  times = sirs_times,
+  func = sirs_ode,
+  parms = sirs_parameters
+)
+
+sirs_df <- as.data.frame(sirs_solution)
+head(sirs_df)
+```
+
+## Practice checkpoint: solution plot
+
+```{r}
+matplot(
+  x = sirs_df$time,
+  y = sirs_df[, c("S", "I", "R")],
+  type = "l",
+  lty = 1,
+  lwd = 2,
+  col = sir_colors,
+  xlab = "Time",
+  ylab = "Number of people",
+  main = "SIRS model"
+)
+
+legend(
+  "right",
+  inset = 0.02,
+  legend = names(sir_colors),
+  col = sir_colors,
+  lty = 1,
+  lwd = 2,
+  bty = "n"
+)
+```
+
+With waning immunity, infection can persist at a low level instead of dying out
+after a single epidemic wave.
+
+## Optional stretch: environmental pathogen
+
+**Prompt**
+
+For a faster student or take-home extension, add an environmental pathogen
+compartment `P`.
+
+![Source: Andreas Handel's DSAIDE package](../images/sirp.png)
+
+Use these equations:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= n - b_I I S - b_P P S - mS \\
+\frac{dI}{dt} &= b_I I S + b_P P S - gI - mI \\
+\frac{dR}{dt} &= gI - mR \\
+\frac{dP}{dt} &= qI - cP
+\end{aligned}
+$$
+
+**Hint**
+
+Add a fourth state named `P`. Your derivative function should return four
+values: `dS`, `dI`, `dR`, and `dP`.
+
+**Solution outline**
+
+Start from `sirs_ode()`, add `P <- state["P"]`, add parameters named `n`, `b_I`,
+`b_P`, `m`, `g`, `q`, and `c`, then return:
+
+```r
+list(c(S = dS, I = dI, R = dR, P = dP))
+```
+
+Set `n = 0` and `m = 0` for the first run if you want to focus only on the
+environmental transmission path.
+
+## What to keep
+
+The reusable pattern is:
+
+1. Name every state variable.
+1. Name every parameter.
+1. Write one derivative per state variable.
+1. Return the derivatives as `list(c(...))`.
+1. Plot first, then interpret.
+
+## More resources
+
+- Andreas Handel's [DSAIRM](https://cran.r-project.org/package=DSAIRM) and
+  [DSAIDE](https://cran.r-project.org/package=DSAIDE) packages contain many
+  infectious disease model examples.
+- Many other SISMID courses go much deeper into mathematical and statistical
+  modeling of infectious disease systems.

@@ -1,5 +1,5 @@
 ---
-title: "Module XX: Bootstrapping can be easy and fun"
+title: "Optional: Bootstrapping Confidence Intervals"
 format:
   revealjs:
     toc: false

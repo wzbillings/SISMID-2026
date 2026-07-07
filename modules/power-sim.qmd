@@ -1,5 +1,5 @@
 ---
-title: "Module XX: Power 2 (Unlimited Power)"
+title: "Optional: Power Simulation"
 format:
   revealjs:
     toc: false

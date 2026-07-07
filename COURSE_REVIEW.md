@@ -51,7 +51,8 @@ Critical fixes before teaching are: verify the Quarto site renders cleanly; fix 
 
 ## Placeholders, TODOs, and Incomplete Content
 
-- `modules/bootstrapping.qmd:2`, `modules/power-sim.qmd:2`, and `modules/ODEs-optim.qmd:2` still use `Module XX` in titles.
+- Resolved after this review: the learner-facing bootstrapping, power-simulation,
+  and ODE/optimization titles no longer use placeholder module numbering.
 - `modules/Module04-Functions.qmd:11` says "After module XX".
 - `modules/linear-models.qmd:45` has `# stuff here`; `modules/linear-models.qmd:53-61` are code-comment placeholders for deviance and negative binomial modeling. This file should not be student-facing as-is.
 - `_quarto.yml:69` lists "Disease mapping" with no `href`.
@@ -287,7 +288,7 @@ Suggested course arc:
 ### `modules/Module04-Functions.qmd`
 
 - Good: practical, approachable function-writing arc.
-- Issue: `Module XX`, typo in "argument defaults", and misspelling "ellipsis".
+- Issue: placeholder module-number text, typo in "argument defaults", and misspelling "ellipsis".
 - Issue: advice about explicit `return()` should be nuanced.
 - Improvement: add a small input validation example such as stopping when `K <= 0` or country code is absent.
 
@@ -309,7 +310,7 @@ Suggested course arc:
 ### `modules/bootstrapping.qmd`
 
 - Good: strong integration of programming and statistical inference.
-- Issue: `Module XX` title.
+- Resolved after this review: the bootstrapping source title no longer uses placeholder module numbering.
 - Issue: hypertension risk-ratio exercise appears to table hypertension against smoking rather than low birthweight.
 - Issue: final logistic regression bootstrap exercise has no solution.
 - Improvement: add a diagram/checklist for bootstrap workflow: statistic function -> resample -> repeat -> summarize.
@@ -339,7 +340,8 @@ Suggested course arc:
 ### `modules/ODEs-optim.qmd`
 
 - Good: highly relevant advanced content with strong examples.
-- Issue: title `Module XX: FP Applications` is vague.
+- Resolved after this review: the old combined ODE/optimization deck was split
+  into a core ODE lesson plus optional advanced material.
 - Issue: combines too many advanced concepts for the core sequence.
 - Issue: no solution for environmental pathogen ODE exercise.
 - Improvement: make it an optional day-three module, or split into `optim()` and `deSolve`.
@@ -420,7 +422,7 @@ Suggested course arc:
 - Issue: Discussion section is empty.
 - Recommendation: fix and use as a solution exemplar only after Exercise 2, not as the main prompt.
 
-### `day2/Module XX-Arrow.qmd`
+### Excluded duplicate Arrow deck in `day2/`
 
 - Issue: duplicate/older version of `modules/Arrow.qmd`.
 - Recommendation: remove, archive, or mark as obsolete.

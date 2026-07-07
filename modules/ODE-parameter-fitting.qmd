@@ -1,0 +1,234 @@
+---
+title: "Optional Advanced: Fitting ODE Models"
+format:
+  revealjs:
+    toc: false
+    smaller: true
+    scrollable: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(deSolve)
+library(printr)
+```
+
+## Why this is optional
+
+This deck parks the old ODE-fitting extension from the combined ODE/optimization
+material. It is useful for learners who want to see how simulation code can be
+wrapped in an objective function, but it is not part of the Day 3 ODE core.
+
+The point here is the programming pattern, not a recommended inference workflow.
+
+## Data
+
+The observed epidemic curve is local to this repository.
+
+```{r}
+observed_sir <- read.csv(file.path("..", "data", "SIR-observed.csv"))
+head(observed_sir)
+```
+
+```{r}
+plot(
+  observed_sir$day,
+  observed_sir$total_cases,
+  pch = 16,
+  col = "gray30",
+  xlab = "Day",
+  ylab = "Observed infected",
+  main = "Observed epidemic curve"
+)
+```
+
+## Reuse the SIR model
+
+```{r}
+sir_ode <- function(t, state, parameters) {
+  S <- state["S"]
+  I <- state["I"]
+  R <- state["R"]
+
+  beta <- parameters["beta"]
+  gamma <- parameters["gamma"]
+
+  dS <- -beta * S * I
+  dI <- beta * S * I - gamma * I
+  dR <- gamma * I
+
+  list(c(S = dS, I = dI, R = dR))
+}
+```
+
+## Write a simulation helper
+
+```{r}
+simulate_sir <- function(beta, gamma, times) {
+  deSolve::ode(
+    y = c(S = 999, I = 1, R = 0),
+    times = times,
+    func = sir_ode,
+    parms = c(beta = beta, gamma = gamma)
+  )
+}
+
+example_simulation <- simulate_sir(
+  beta = 0.001,
+  gamma = 0.05,
+  times = observed_sir$day
+)
+
+head(example_simulation)
+```
+
+## Compare one simulation to the data
+
+```{r}
+plot(
+  observed_sir$day,
+  observed_sir$total_cases,
+  pch = 16,
+  col = "gray30",
+  xlab = "Day",
+  ylab = "Infected",
+  main = "Observed and simulated infected counts"
+)
+lines(example_simulation[, "time"], example_simulation[, "I"], col = "darkorange2", lwd = 2)
+legend(
+  "topright",
+  legend = c("Observed", "Simulated"),
+  col = c("gray30", "darkorange2"),
+  pch = c(16, NA),
+  lty = c(NA, 1),
+  lwd = c(NA, 2),
+  bty = "n"
+)
+```
+
+## Objective function
+
+We need one number that says how badly a parameter pair fits.
+
+Here we use the sum of squared residuals between observed infected counts and
+the simulated infected compartment:
+
+$$
+SSR = \sum_i \left(I_i - \hat{I}_i(\beta, \gamma)\right)^2
+$$
+
+```{r}
+sir_ssr <- function(par) {
+  beta <- par[1]
+  gamma <- par[2]
+
+  if (beta <= 0 || gamma <= 0) {
+    return(1e12)
+  }
+
+  simulated <- tryCatch(
+    simulate_sir(
+      beta = beta,
+      gamma = gamma,
+      times = observed_sir$day
+    ),
+    error = function(e) NULL
+  )
+
+  if (is.null(simulated)) {
+    return(1e12)
+  }
+
+  predicted_infected <- simulated[, "I"]
+
+  if (any(!is.finite(predicted_infected))) {
+    return(1e12)
+  }
+
+  fit <- sum((observed_sir$total_cases - predicted_infected)^2)
+
+  if (!is.finite(fit)) {
+    return(1e12)
+  }
+
+  fit
+}
+```
+
+## Fit the parameters
+
+```{r}
+sir_fit <- optim(
+  par = c(beta = 0.001, gamma = 0.05),
+  fn = sir_ssr,
+  method = "L-BFGS-B",
+  lower = c(beta = 0.000001, gamma = 0.000001),
+  upper = c(beta = 0.01, gamma = 1)
+)
+
+sir_fit$par
+```
+
+## Plot the fitted trajectory
+
+```{r}
+fitted_simulation <- simulate_sir(
+  beta = sir_fit$par["beta"],
+  gamma = sir_fit$par["gamma"],
+  times = observed_sir$day
+)
+
+plot(
+  observed_sir$day,
+  observed_sir$total_cases,
+  pch = 16,
+  col = "gray30",
+  xlab = "Day",
+  ylab = "Infected",
+  main = "Observed and fitted SIR trajectory"
+)
+lines(fitted_simulation[, "time"], fitted_simulation[, "I"], col = "darkorange2", lwd = 2)
+legend(
+  "topright",
+  legend = c("Observed", "Fitted SIR"),
+  col = c("gray30", "darkorange2"),
+  pch = c(16, NA),
+  lty = c(NA, 1),
+  lwd = c(NA, 2),
+  bty = "n"
+)
+```
+
+## Practice checkpoint
+
+**Prompt**
+
+Change the starting values in `optim()` to `beta = 0.005` and `gamma = 0.50`.
+Do the fitted parameters return to approximately the same values?
+
+**Hint**
+
+Only change the `par = ...` line. Keep the same bounds.
+
+**Solution outline**
+
+Run the same call with:
+
+```r
+par = c(beta = 0.005, gamma = 0.50)
+```
+
+For this small example, the bounds and data are informative enough that the
+result should be very similar. For more complex ODE systems, starting values can
+matter a lot.
+
+## Take-home cautions
+
+- Real case data are noisy, delayed, underreported, and often only partly
+  observed.
+- The observation model matters as much as the ODE model.
+- Parameter uncertainty from this quick example is not reliable.
+- Use this deck to learn how to connect simulation code to a fitting workflow,
+  then reach for a more serious modeling framework for real inference.

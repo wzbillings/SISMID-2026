@@ -91,121 +91,121 @@
   {
     "objectID": "modules/bootstrapping.html#learning-goals",
     "href": "modules/bootstrapping.html#learning-goals",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "Learning goals",
     "text": "Learning goals\n\nUnderstand the basics of bootstrapping – be able to construct your own bootstrap resamples and calculate a bootstrap CI for a statistic.\nMake your own bootstraps with loops or functional programming.\nCombine your own knowledge of R programming techniques with the boot package for easy bootstrapping.\nUse the rsample package and advanced R programming techniques to iterate over lists of bootstrap resamples.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#what-is-bootstrapping",
     "href": "modules/bootstrapping.html#what-is-bootstrapping",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "What is bootstrapping?",
     "text": "What is bootstrapping?\n\nbootstrapping is a method for obtaining standard error estimates or confidence intervals by resampling.\nWe’ll specifically talk about the nonparametric bootstrap but there are entire books about bootstrap methods.\n\n\ncredit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#what-is-bootstrapping-1",
     "href": "modules/bootstrapping.html#what-is-bootstrapping-1",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "What is bootstrapping?",
     "text": "What is bootstrapping?\n\nWe have some statistic \\(\\theta\\) that we want to estimate from the dataset.\nWe create \\(B\\) resamples of the dataset by randomly sampling from it, and then we calculate the statistic \\(\\theta_B\\) on each dataset.\nIf we create these resamples the correct way, the observed distribution of \\(\\theta_1, \\ldots, \\theta_B\\) will converge to the true sampling distribution of \\(\\theta\\).\nSpecifically, we create a resample by sampling \\(n\\) (our sample size) rows from the original dataset with replacement.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#what-is-bootstrapping-2",
     "href": "modules/bootstrapping.html#what-is-bootstrapping-2",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "What is bootstrapping?",
     "text": "What is bootstrapping?\n\nThat’s math jargon to say that sometimes doing this resampling thing will give us better confidence intervals than normality assumptions.\nUsually bootstrapping works well for small datasets, estimates with complex (or nonexistant) standard error formulas, or for statistics with highly skewed distributions.\n\n\ncredit: https://commons.wikimedia.org/wiki/File:Illustration_bootstrap.svg",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#low-birthweight-data-and-the-data-function",
     "href": "modules/bootstrapping.html#low-birthweight-data-and-the-data-function",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "Low birthweight data and the data() function",
     "text": "Low birthweight data and the data() function\n\nFor this example, we’ll use a famous epidemiological dataset about babies with low birthweight.\nMany R packages have built-in datasets, which you can access with the data() function.\nThe low birth weight dataset, called birthwt, is in the MASS package, so you can access it with either MASS::birthwt or data(\"birthwt\", package = \"MASS\").\n\n\n# This will create the global variable \"birthwt\"\ndata(\"birthwt\", package = \"MASS\")",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#bootstrapping-example",
     "href": "modules/bootstrapping.html#bootstrapping-example",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "Bootstrapping example",
     "text": "Bootstrapping example\n\nUse bootstrapping to calculate a 95% CI for the risk difference in low birth weight (low, 1 is low birth weight) between mothers who smoke (smoke = 1) and don’t (smoke = 0).\n\n\n\nFirst create the resamples. We need to use set.seed() to make sure our results are the same every time we run our code!\n\n\nset.seed(370)\nB &lt;- 1000\n# Alternatively use replicate() if you don't like the weird function here\n# or use a loop\nresamples &lt;- lapply(\n    1:B,\n    \\(n) birthwt[sample.int(nrow(birthwt), replace = TRUE), ]\n)\n\nstr(resamples, 1)\n\nList of 1000\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n $ :'data.frame':   189 obs. of  10 variables:\n  [list output truncated]\n\n\n\n\n\nNow write a function to calculate the statistic.\nMake sure to calculate the point estimate on the entire dataset as well.\n\n\nrd_smoking &lt;- function(resample) {\n    risk_smoke &lt;- mean(resample$low[resample$smoke == 1])\n    risk_no_smoke &lt;- mean(resample$low[resample$smoke == 0])\n    \n    rd &lt;- risk_smoke - risk_no_smoke\n    return(rd)\n}\n\npoint_estimate_rd &lt;- rd_smoking(birthwt)\npoint_estimate_rd\n\n[1] 0.1532315\n\n\n\n\n\nNow calculate the statistic on every resample.\n\n\nbootstrap_rd &lt;- sapply(resamples, rd_smoking)\nstr(bootstrap_rd)\n\n num [1:1000] 0.2051 0.0224 0.2446 0.1094 0.142 ...\n\n\n\n\n\nNow we have to calculate the SE. There are a few different ways. First is the normal method, where we calculate the standard error from the bootstrap distribution.\nThis is just the standard deviation of the bootstrap estimates. Then we calculate the normal-approximate CI as usual.\n\n\nboot_se &lt;- sd(bootstrap_rd)\npoint_estimate_rd + boot_se * c(-1.96, 1.96)\n\n[1] 0.006663599 0.299799385\n\n\n\n\n\nThat method is kind of bad, but common. A better method is the percentile method which uses the quantiles of the bootstrap estimates.\n\n\nquantile(bootstrap_rd, prob = c(0.025, 0.975))\n\n       2.5%       97.5% \n0.009800072 0.301920525 \n\n\n\nIn this case they’re the same because this RD is easy to estimate. But that won’t always be true!",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#you-try-it",
     "href": "modules/bootstrapping.html#you-try-it",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "You try it!",
     "text": "You try it!\n\nLook up the formula for the standard error of the risk ratio.\nCalculate the risk ratio for low birthweight in mothers with (ht = 1) and without (ht = 0) a history of hypertension using the standard CI, and using a bootstrap CI with the percentile method.\n\n\n\nHint:\n\n\nrr_ht &lt;- function(resample) {\n    risk_ht_1 &lt;- mean(resample$low[resample$ht == 1])\n    risk_ht_0 &lt;- mean(resample$low[resample$ht == 0])\n    \n    rr &lt;- risk_ht_1 / risk_ht_0\n    return(rr)\n}\n\n\nHint: the formula for the SE of the log risk ratio is \\[\n\\sqrt{\\bigg( \\frac{1}{a} + \\frac{1}{c} \\bigg) - \\bigg( \\frac{1}{a+b} + \\frac{1}{c+d}  \\bigg)}\n\\]\n\nfor a \\(2\\times2\\) table.\n\n\n\n\n\n\nExposed\nUnexposed\n\n\n\n\nExposed\na\nb\n\n\nUnexposed\nc\nd\n\n\n\n\n\n\n\n\nSolution: first we calculate the point estimate and the Wald-type CI based on the SE formula.\n\n\npoint_estimate_rr &lt;- rr_ht(birthwt)\ncontigency_table_ht &lt;- table(\n    factor(birthwt$ht, c(1, 0), c(\"Exposed\", \"Unexposed\")),\n    factor(birthwt$smoke, c(1, 0), c(\"Case\", \"Control\"))\n)\n\ncalculate_log_rr_se &lt;- function(contigency_table) {\n    a &lt;- contigency_table[1, 1]\n    b &lt;- contigency_table[1, 2]\n    c &lt;- contigency_table[2, 1]\n    d &lt;- contigency_table[2, 2]\n    \n    se &lt;- sqrt((1/a + 1/c) - (1/(a+b) + 1/(c+d)))\n    return(se)\n}\nlog_rr_se &lt;- calculate_log_rr_se(contigency_table_ht)\n# It's on the log scale, so we have to calculate the CI like this!\nexp(log_rr_se * c(-1.96, 1.96) + log(point_estimate_rr))\n\n[1] 0.9915692 3.9760368\n\n\n\n\n\nSolution: now we do the bootstrap CI.\n\n\nrr_ht &lt;- function(resample) {\n    risk_ht_1 &lt;- mean(resample$low[resample$ht == 1])\n    risk_ht_0 &lt;- mean(resample$low[resample$ht == 0])\n    \n    rr &lt;- risk_ht_1 / risk_ht_0\n    return(rr)\n}\n\nbootstrap_rr &lt;- sapply(resamples, rr_ht)\nquantile(bootstrap_rr, c(0.025, 0.975))\n\n    2.5%    97.5% \n1.032770 3.237805",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#bootstrapping-multiple-statistics-at-one-time",
     "href": "modules/bootstrapping.html#bootstrapping-multiple-statistics-at-one-time",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "Bootstrapping multiple statistics at one time",
     "text": "Bootstrapping multiple statistics at one time\n\nIf our bootstrap function returns a vector, we can get multiple statistics at once.\n\n\nget_smoking_stats &lt;- function(resample) {\n    risk_smoke &lt;- mean(resample$low[resample$smoke == 1])\n    risk_no_smoke &lt;- mean(resample$low[resample$smoke == 0])\n    \n    odds_smoke &lt;- risk_smoke / (1 - risk_smoke)\n    odds_no_smoke &lt;- risk_no_smoke / (1 - risk_no_smoke)\n    \n    rd &lt;- risk_smoke - risk_no_smoke\n    rr &lt;- risk_smoke / risk_no_smoke\n    or &lt;- odds_smoke / odds_no_smoke\n    \n    out &lt;- c(\n        \"Risk difference\" = rd,\n        \"Risk ratio\" = rr,\n        \"Odds ratio\" = or\n    )\n    return(out)\n}\n\nsmoking_stats &lt;- sapply(resamples, get_smoking_stats)\nstr(smoking_stats)\n\n num [1:3, 1:1000] 0.2051 2.0082 2.7044 0.0224 1.0879 ...\n - attr(*, \"dimnames\")=List of 2\n  ..$ : chr [1:3] \"Risk difference\" \"Risk ratio\" \"Odds ratio\"\n  ..$ : NULL\n\n\n\nThe output looks really confusing. But it’s a matrix so we can use apply()!\n\n\npoint_estimates &lt;- get_smoking_stats(birthwt)\nboot_cis &lt;- apply(smoking_stats, 1, \\(x) quantile(x, c(0.025, 0.975)))\n\n# Just some code to show everything neatly\nrbind(\n    \"Lower\" = boot_cis[1, ],\n    \"Point\" = point_estimates,\n    \"Upper\" = boot_cis[2, ]\n) |&gt;\n    t() |&gt;\n    round(digits = 2)\n\n\n\n\n\nLower\nPoint\nUpper\n\n\n\n\nRisk difference\n0.01\n0.15\n0.30\n\n\nRisk ratio\n1.04\n1.61\n2.57\n\n\nOdds ratio\n1.05\n2.02\n4.18",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#errors-in-bootstrapping-and-the-boot-package",
     "href": "modules/bootstrapping.html#errors-in-bootstrapping-and-the-boot-package",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "Errors in bootstrapping and the boot package",
     "text": "Errors in bootstrapping and the boot package\n\nThe situations we just observed are pretty simple, and our bootstrap estimates are pretty trustworthy (they would be more trustworthy if we increased B, a good rule of thumb is 1,000 just for you, 10,000 for your boss, and 100,000 for a paper if it’s feasible).\nBut in some situations, bootstrapping can be biased. There is a fix for this called the “BCa” bootstrap.\nBCa is hard to do by hand, but easy to do with the boot package.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#the-boot-package",
     "href": "modules/bootstrapping.html#the-boot-package",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "The boot package",
     "text": "The boot package\n\nWe have to write our function a certain way for boot. It must have two arguments, the first is the data, and the second is a list of indices that are included in a resample.\n\n\nboot_smoking_stats &lt;- function(data, idx) {\n    resample &lt;- data[idx, ]\n    out &lt;- get_smoking_stats(resample)\n    return(out)\n}\n\nlibrary(boot)\nbootstraps_smoking &lt;- boot::boot(birthwt, boot_smoking_stats, R = 1000)\nbootstraps_smoking\n\n\nORDINARY NONPARAMETRIC BOOTSTRAP\n\n\nCall:\nboot::boot(data = birthwt, statistic = boot_smoking_stats, R = 1000)\n\n\nBootstrap Statistics :\n     original       bias    std. error\nt1* 0.1532315 0.0009951909  0.07034402\nt2* 1.6076421 0.0444346127  0.35834007\nt3* 2.0219436 0.1290172225  0.71556649\n\n\n\n\nWe can see this calculates the point estimate, bias, and boostrap SE for us. The bias is what we didn’t know how to calculate before.\nWe can easily compare multiple CI methods with boot.\nFor technical reasons that are too complicated to talk about, when you do multiple stats at one time in boot, you must always manually set the index argument.\n\n\n# Four bootstrap CIs for the risk difference\nboot::boot.ci(bootstraps_smoking, index = 1)\n\nWarning in boot::boot.ci(bootstraps_smoking, index = 1): bootstrap variances\nneeded for studentized intervals\n\n\nBOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS\nBased on 1000 bootstrap replicates\n\nCALL : \nboot::boot.ci(boot.out = bootstraps_smoking, index = 1)\n\nIntervals : \nLevel      Normal              Basic         \n95%   ( 0.0144,  0.2901 )   ( 0.0200,  0.2876 )  \n\nLevel     Percentile            BCa          \n95%   ( 0.0189,  0.2864 )   ( 0.0153,  0.2834 )  \nCalculations and Intervals on Original Scale\n\n\n\n\n\nOf course, we can use loops or FP to do this for all of our statistics.\n\n\nsmoking_point_estimates &lt;- bootstraps_smoking$t0\nsmoking_cis_list &lt;- lapply(\n    1:length(smoking_point_estimates),\n    \\(i) boot::boot.ci(bootstraps_smoking, type = \"bca\", index = i)\n)\nstr(smoking_cis_list, 1)\n\nList of 3\n $ :List of 4\n  ..- attr(*, \"class\")= chr \"bootci\"\n $ :List of 4\n  ..- attr(*, \"class\")= chr \"bootci\"\n $ :List of 4\n  ..- attr(*, \"class\")= chr \"bootci\"\n\n\n\nCleaning them up is kind of difficult, this is a weirdly formatted S3 object.\n\n\nsmoking_cis &lt;- sapply(\n    smoking_cis_list,\n    \\(x) x$bca[4:5]\n)\n\n# Same cleanup code as before\nrbind(\n    \"lower\" = smoking_cis[1, ],\n    \"point\" = smoking_point_estimates,\n    \"upper\" = smoking_cis[2, ]\n) |&gt;\n    t() |&gt;\n    round(digits = 2)\n\n\n\n\n\nlower\npoint\nupper\n\n\n\n\nRisk difference\n0.02\n0.15\n0.28\n\n\nRisk ratio\n1.05\n1.61\n2.42\n\n\nOdds ratio\n1.07\n2.02\n3.67",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
   {
     "objectID": "modules/bootstrapping.html#you-try-it-1",
     "href": "modules/bootstrapping.html#you-try-it-1",
-    "title": "Module XX: Bootstrapping can be easy and fun",
+    "title": "Optional: Bootstrapping Confidence Intervals",
     "section": "You try it!",
     "text": "You try it!\n\nFit a logistic regression model to predict low birth weight using this dataset. Use any predictors in the dataset that you think are relevant.\nGet the standard confidence intervals using the profile method (that is, with confint()).\nGet bootstrap estimates for the coefficients.\nDo the bootstrap estimates lead you to the same interpretation, or a different interpretation?\n\n(No solution typed up for this problem, if we have time/interest we can cover it together.)",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Bootstrapping"
     ]
   },
@@ -2977,121 +2977,121 @@
   {
     "objectID": "modules/power-sim.html#learning-goals",
     "href": "modules/power-sim.html#learning-goals",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Learning goals",
     "text": "Learning goals\n\nCompare analytic power methods with power simulations.\nBe able to draw simulated power curves for complicated models",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#calculating-power",
     "href": "modules/power-sim.html#calculating-power",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Calculating power",
     "text": "Calculating power\n\nFor this example, we’ll use birthweight data from the MASS package, called birthwt. You can load this data using the data() function.\n\n\n# Saves a global object called birthwt\ndata(birthwt, package = \"MASS\")\n\n\nLet’s do a two sample \\(t\\)-test for birth weight (bwt) for mothers who smoke and don’t smoke (smoke).\n\n\nsmoke_test &lt;- t.test(bwt ~ smoke, data = birthwt)\nsmoke_test\n\n\n    Welch Two Sample t-test\n\ndata:  bwt by smoke\nt = 2.7299, df = 170.1, p-value = 0.007003\nalternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0\n95 percent confidence interval:\n  78.57486 488.97860\nsample estimates:\nmean in group 0 mean in group 1 \n       3055.696        2771.919 \n\n\n\n\nWe can also calculate the power of this test. It takes a little bit of finagling, but it’s not too hard.\nYou could also use G Power to do this, and it would probably be easier.\nSide note: aggregate is a great way to use formulas for grouped calculations.\n\n\ngroup_sample_sizes &lt;- aggregate(bwt ~ smoke, data = birthwt, FUN = length)\ngroup_means &lt;- aggregate(bwt ~ smoke, data = birthwt, FUN = mean)\ngroup_sds &lt;- aggregate(bwt ~ smoke, data = birthwt, FUN = sd)\npower.t.test(\n    # Use the average group sample size\n    n = mean(group_sample_sizes$bwt),\n    # d = TRUE difference in means / so we use our post-hoc observation\n    delta = diff(group_means$bwt),\n    # Pool the SD's\n    sd = sqrt(mean(group_sds$bwt ^ 2)),\n    # Alpha level of test\n    sig.level = 0.05,\n    # Details about the test\n    type = \"two.sample\",\n    alternative = \"two.sided\"\n)\n\n\n     Two-sample t test power calculation \n\n              n = 94.5\n          delta = 283.7767\n             sd = 707.6758\n      sig.level = 0.05\n          power = 0.7829694\n    alternative = two.sided\n\nNOTE: n is number in *each* group\n\n\n\nWe can an estimated power of about 78%. Of course this is post-hoc power so it’s basically useless.\n\n\n\n\nThe G Power calculation is actually a bit more flexible.\n\n\n\n\nFrom G Power where I typed the numbers in.\n\n\n\nThe estimate is a bit different because of how G Power deals with unequal sample sizes between groups.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#the-real-power-of-power",
     "href": "modules/power-sim.html#the-real-power-of-power",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "The real power of power",
     "text": "The real power of power\n\nPower is much more useful when it isn’t post-hoc. That is, we should use power to plan our studies, rather than calculate the power after we do a test.\nThe most common application of power is sample size estimation.\n\n\n\nIf we want to do a t-test between two groups, we can calculate the sample size we need to achieve a specific power and alpha level for a test, assuming some underlying effect size and variability.\nFor a study that requires an unpaired t-test, let’s calculate the required sample size to achieve typical targets of \\(\\alpha = 0.05\\) and \\(1 - \\beta = 0.8\\). For this example we’ll assume that our effect is standardized, so a clinically meaningful effect size is \\(0.1\\). We’ll assume for this example that the SD is \\(0.25\\).\n\n\n\n\nHint: you need to specify different arguments in power.t.test() this time.\n\n\npower.t.test(,\n    delta = ...,\n    sd = ...,\n    sig.level = ...,\n    power = ...,\n    # Details about the test\n    type = \"two.sample\",\n    alternative = \"two.sided\"\n)\n\n\n\n\nSolution: we need about 100 people in each group, so 200 total.\n\n\npower.t.test(,\n    delta = 0.1,\n    sd = 0.25,\n    sig.level = 0.05,\n    power = 0.80,\n    # Details about the test\n    type = \"two.sample\",\n    alternative = \"two.sided\"\n)\n\n\n     Two-sample t test power calculation \n\n              n = 99.08057\n          delta = 0.1\n             sd = 0.25\n      sig.level = 0.05\n          power = 0.8\n    alternative = two.sided\n\nNOTE: n is number in *each* group\n\n\n\n\n\nWhat if we don’t know the effect size or standard deviation?",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#power-curves",
     "href": "modules/power-sim.html#power-curves",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Power curves",
     "text": "Power curves\n\nWe can often get a good idea about the SD from the literature or from knowledge about how our assay/measurement works, so we’ll ignore that for now (it is harder for observational studies than for experiments).\nBut in general we have no idea what the effect size (difference in means) should be before we do the study. So how do we get the power or sample size?\n\n\n\nWe can calculate the required sample size to achieve multiple different effect sizes. For the birthwt example, let’s pretend we didn’t run our study yet, but we know that the pooled sd should be around 700. Let’s calculate the sample size needed to achieve 80% power at multiple effect sizes.\nIn real life, maybe we can get this magical 700 number from previous studies or preliminary data.\n\n\n\n\nWe can use the tools we’ve learned to get many different sample size calculations.\n\n\neffect_sizes &lt;- seq(10, 500, 10)\nsample_size_calc &lt;- lapply(\n    effect_sizes,\n    \\(d) power.t.test(delta = d, sd = 700, sig.level = 0.05, power = 0.80)\n)\nstr(sample_size_calc, 1)\n\nList of 50\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n $ :List of 8\n  ..- attr(*, \"class\")= chr \"power.htest\"\n\n\n\n\n\nBut how do we get the sample size out of each power object thing? Fortunately power.t.test() returns an S3 object of class power.htest, and the documentation tells us how to get the quantities we want.\nWe also want to round the estimate up to the nearest whole number and (optionally, but I prefer this) multiply by two for the total sample size.\n\n\nsample_size &lt;- sapply(sample_size_calc, \\(x) ceiling(x$n) * 2)\n\n\n\n\nWe can now generate a “power curve”, a plot of the (log) sample size needed vs. the effect size.\n\n\nplot(\n    effect_sizes,\n    log10(sample_size),\n    xlab = \"Effect size to detect at alpha = 0.05, power = 0.8\",\n    ylab = \"Log10 sample size needed\",\n    type = \"l\"\n)",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#you-try-it-power-contours",
     "href": "modules/power-sim.html#you-try-it-power-contours",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "You try it! Power contours",
     "text": "You try it! Power contours\n\nIf we’re willing to do a little bit more wrangling, we can also do this for multiple variances.\nHere’s some code to help you get started, and then you can try to calculate the sample sizes yourself. First, make a grid of all the effect size and variance combinations we want to try.\nNote that the more values of delta and SD you want to try, the grid can become huge really quickly which could take a long time to run.\n\n\npower_variables &lt;- expand.grid(\n    delta = effect_sizes,\n    sd = seq(100, 1000, 100)\n)\n\n\n\nNow because they are in a grid, you can do a 1-dimensional loop or lapply(), instead of having to do a nested one, just iterate over the number of rows in the grid.\n\n\npower_sim_sd &lt;-\n    lapply(\n        1:nrow(power_variables),\n        \\(i) power.t.test(\n            ...\n        )\n    )\n\n\n\n\nMy solution:\n\n\npower_sim_sd &lt;-\n    lapply(\n        1:nrow(power_variables),\n        \\(i) power.t.test(\n            delta = power_variables[i, \"delta\"],\n            sd = power_variables[i, \"sd\"],\n            sig.level = 0.05, power = 0.80\n        )\n    )\n\npower_variables$sample_size &lt;- sapply(power_sim_sd, \\(x) ceiling(x$n) * 2)\n\n\n\n\nThere are two main ways people will try to plot these curves. One is by plotting a different colored curve for each SD.\n\n\nplot(\n    NULL, NULL,\n    xlim = range(effect_sizes),\n    ylim = range(log10(power_variables$sample_size)),\n    xlab = \"Effect size to detect at alpha = 0.05, power = 0.8\",\n    ylab = \"Log10 sample size needed\",\n    type = \"l\"\n)\n\nvariance_levels &lt;- unique(power_variables$sd)\ncolors &lt;- colorRampPalette(c(\"lightblue\", \"darkblue\"))(length(variance_levels))\nfor (i in 1:length(variance_levels)) {\n    sub &lt;- subset(power_variables, sd == variance_levels[[i]])\n    lines(x = sub$delta, y = log10(sub$sample_size), col = colors[[i]])\n}\n\n\n\n\n\n\n\n\n\n\n\nIf you know ggplot2, this is way easier in ggplot2.\n\n\nlibrary(ggplot2)\nggplot(power_variables) +\n    aes(x = delta, y = log10(sample_size), color = sd, group = sd) +\n    geom_line() +\n    labs(\n    x = \"Effect size to detect at alpha = 0.05, power = 0.8\",\n    y = \"Log10 sample size needed\"\n    ) +\n    theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nMathematicians love to plot this as a “contour plot”. These are basically impossible to read but look impressive.\nThis is insanely annoying to do in base R, so I’ll only show it in ggplot2.\n\n\nggplot(power_variables) +\n    aes(x = delta, y = sd, z = log10(sample_size)) +\n    geom_contour_filled() +\n    coord_cartesian(expand = FALSE) +\n    labs(\n        x = \"Effect size to detect at alpha = 0.05, power = 0.8\",\n        y = \"Assumed pooled SD\",\n        fill = \"Log10 sample sized need\"\n    ) +\n    theme_minimal() +\n    theme(legend.position = \"bottom\")",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#power-simulations",
     "href": "modules/power-sim.html#power-simulations",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Power simulations",
-    "text": "Power simulations\n\nPower calculations are “non-analytic” for nearly all hypothesis tests, except for very simple ones.\nSimulation is a much more robust way to estimate power, because it works for any test.\nAs an example, we’ll first walk through simulating the power for the same t-test we just did.\nRemember that power is the chance that a false null hypothesis will be rejected.\n\n\n\nChoose the parameters for the simulation. These include all of the TRUE parameters for the data we hope to collect, the significance level, and the number of simulations.\n\n\nN_sims &lt;- 10000\nalpha &lt;- 0.05\n\n# T-test parameter\n# Number of samples\nn1 &lt;- 115\nn2 &lt;- 74\n# Group means\nmu1 &lt;- 2500\nmu2 &lt;- 2200\n# Group SD\nsd1 &lt;- 750\nsd2 &lt;- 650\n\n\nNow we generate N_sims number of datasets from a model described by the \\(t\\)-test: that is, we draw n1 observations from a normal distribution wiht mean mu1 and sd sd1, and likewise for group 2.\n\n\nsimulate_one_dataset &lt;- function(n1, n2, mu1, mu2, sd1, sd2) {\n    group1_y &lt;- rnorm(n1, mu1, sd1)\n    group2_y &lt;- rnorm(n2, mu2, sd2)\n    \n    out &lt;- list(group1 = group1_y, group2 = group2_y)\n    return(out)\n}\n\n# replicate() is just a fancy way to use lapply() when the function\n# you want to repeat doesn't depend on any iteration-specific argument\nsimulated_data &lt;- replicate(\n    N_sims,\n    simulate_one_dataset(n1, n2, mu1, mu2, sd1, sd2),\n    # Set simplify = FALSE or you get a weird array thats hard to understand\n    simplify = FALSE\n)\n\n\nNow we do a (Welch’s two-sample) t-test on each simulated dataset. Note that in our true data generating process, the null hypothesis is always false by design. (This is one of the times where it’s easier NOT to use a formula!)\n\n\nsimulated_t_tests &lt;- lapply(\n    simulated_data,\n    \\(d) t.test(d$group1, d$group2, conf.level = alpha)\n)\n\n\nNow we count the t-tests that correctly rejected the null hypothesis, i.e. \\(p \\leq \\alpha\\).\n\n\nsimulation_p_values &lt;- sapply(simulated_t_tests, \\(x) x$p.value)\nrejected_h0 &lt;- simulation_p_values &lt;= alpha\n\n\nNow we calculate the power of our test as the probability that a simulated test rejected H0. Note that we even compute a confidence interval for our power here, although its interpretation is a bit tricky it can tell us a range of powers that are consistent with our simulation.\n\n\n# We can use this function to get the exact CI (Clopper-Pearson) for us\n# Just ignore the p-value, it doesn't make sense!!\nbinom.test(sum(rejected_h0), N_sims)\n\n\n    Exact binomial test\n\ndata:  sum(rejected_h0) and N_sims\nnumber of successes = 8235, number of trials = 10000, p-value &lt; 2.2e-16\nalternative hypothesis: true probability of success is not equal to 0.5\n95 percent confidence interval:\n 0.8158839 0.8309272\nsample estimates:\nprobability of success \n                0.8235 \n\n\n\nInterpretation: the power of our test after 10,000 replicates was about 83%, and our CI is pretty tight around this number. If this wasn’t post-hoc, we would say that the planned sample sizes achieve our goal of \\(80\\%\\) power at \\(\\alpha = 0.05\\).",
+    "text": "Power simulations\n\nPower calculations are “non-analytic” for nearly all hypothesis tests, except for very simple ones.\nSimulation is a much more robust way to estimate power, because it works for any test.\nAs an example, we’ll first walk through simulating the power for the same t-test we just did.\nRemember that power is the chance that a false null hypothesis will be rejected.\n\n\n\nChoose the parameters for the simulation. These include all of the TRUE parameters for the data we hope to collect, the significance level, and the number of simulations.\n\n\nN_sims &lt;- 10000\nalpha &lt;- 0.05\n\n# T-test parameter\n# Number of samples\nn1 &lt;- 115\nn2 &lt;- 74\n# Group means\nmu1 &lt;- 2500\nmu2 &lt;- 2200\n# Group SD\nsd1 &lt;- 750\nsd2 &lt;- 650\n\n\nNow we generate N_sims number of datasets from a model described by the \\(t\\)-test: that is, we draw n1 observations from a normal distribution wiht mean mu1 and sd sd1, and likewise for group 2.\n\n\nsimulate_one_dataset &lt;- function(n1, n2, mu1, mu2, sd1, sd2) {\n    group1_y &lt;- rnorm(n1, mu1, sd1)\n    group2_y &lt;- rnorm(n2, mu2, sd2)\n    \n    out &lt;- list(group1 = group1_y, group2 = group2_y)\n    return(out)\n}\n\n# replicate() is just a fancy way to use lapply() when the function\n# you want to repeat doesn't depend on any iteration-specific argument\nsimulated_data &lt;- replicate(\n    N_sims,\n    simulate_one_dataset(n1, n2, mu1, mu2, sd1, sd2),\n    # Set simplify = FALSE or you get a weird array thats hard to understand\n    simplify = FALSE\n)\n\n\nNow we do a (Welch’s two-sample) t-test on each simulated dataset. Note that in our true data generating process, the null hypothesis is always false by design. (This is one of the times where it’s easier NOT to use a formula!)\n\n\nsimulated_t_tests &lt;- lapply(\n    simulated_data,\n    \\(d) t.test(d$group1, d$group2, conf.level = alpha)\n)\n\n\nNow we count the t-tests that correctly rejected the null hypothesis, i.e. \\(p \\leq \\alpha\\).\n\n\nsimulation_p_values &lt;- sapply(simulated_t_tests, \\(x) x$p.value)\nrejected_h0 &lt;- simulation_p_values &lt;= alpha\n\n\nNow we calculate the power of our test as the probability that a simulated test rejected H0. Note that we even compute a confidence interval for our power here, although its interpretation is a bit tricky it can tell us a range of powers that are consistent with our simulation.\n\n\n# We can use this function to get the exact CI (Clopper-Pearson) for us\n# Just ignore the p-value, it doesn't make sense!!\nbinom.test(sum(rejected_h0), N_sims)\n\n\n    Exact binomial test\n\ndata:  sum(rejected_h0) and N_sims\nnumber of successes = 8270, number of trials = 10000, p-value &lt; 2.2e-16\nalternative hypothesis: true probability of success is not equal to 0.5\n95 percent confidence interval:\n 0.8194416 0.8343675\nsample estimates:\nprobability of success \n                 0.827 \n\n\n\nInterpretation: the power of our test after 10,000 replicates was about 83%, and our CI is pretty tight around this number. If this wasn’t post-hoc, we would say that the planned sample sizes achieve our goal of \\(80\\%\\) power at \\(\\alpha = 0.05\\).",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#you-try-it",
     "href": "modules/power-sim.html#you-try-it",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "You try it!",
     "text": "You try it!\n\nMore often, we want to know what sample size it takes to get 80% power for a fixed leve\nThe only way to do this by simulation is to try many sample sizes and do a simulation for each one.\nFor the t-test example (this time you can assume the sample size for the two groups is the same to make life easier), make a plot of power vs. sample size, using the same group means and group SDs.\n\n\n\nHint: write a function that simulates the data, does the t-tests, and gets which tests are rejections. Then, lapply() this function over multiple values of n (this is easy if you assume n1 and n2 are equal).\n\n\n\n\nHint: here’s an outline for my function, and the code for how I used it.\nI returned the entire vector of TRUE/FALSE for rejections from the function, because I thought this was a convenient way to handle the data. You can do the sum() or mean() inside of the function and return a single number if you prefer that.\n\n\nsimulate_t_test_power &lt;- function(N_sim, n1, n2, mu1, mu2, sd1, sd2, alpha = 0.05) {\n    simulated_data &lt;-\n        replicate(\n            N_sims,\n            simulate_one_dataset(n1, n2, mu1, mu2, sd1, sd2),\n            simplify = FALSE\n        )\n    \n    simulated_t_tests &lt;- lapply(\n        simulated_data,\n        \\(d) ...\n    )\n    \n    simulation_p_values &lt;- sapply(simulated_t_tests, ...)\n    rejected_h0 &lt;- ...\n    \n    return(rejected_h0)\n}\n\nn_per_group &lt;- seq(...)\n\nt_test_n_simulations &lt;- sapply(\n    n_per_group,\n    \\(n) simulate_t_test_power(\n        1000,\n        n, n,\n        mu1, mu2, sd1, sd2\n    )\n)\n\n\n\n\nHint: after I ran this function, here’s how I got the power for each sample size.\n\n\ncolMeans(t_test_n_simulations)\n\n\n\n\nHere’s my solution.\n\n\nsimulate_t_test_power &lt;- function(N_sim, n1, n2, mu1, mu2, sd1, sd2, alpha = 0.05) {\n    simulated_data &lt;-\n        replicate(\n            N_sims,\n            simulate_one_dataset(n1, n2, mu1, mu2, sd1, sd2),\n            simplify = FALSE\n        )\n    \n    simulated_t_tests &lt;- lapply(\n        simulated_data,\n        \\(d) t.test(d$group1, d$group2, conf.level = alpha)\n    )\n    \n    simulation_p_values &lt;- sapply(simulated_t_tests, \\(x) x$p.value)\n    rejected_h0 &lt;- simulation_p_values &lt;= alpha\n    \n    return(rejected_h0)\n}\n\n# You can do less of these\n# and make N_sim lower\n# if this takes too long\nn_per_group &lt;- seq(25, 250, 25)\n\nset.seed(102)\nt_test_n_simulations &lt;- sapply(\n    n_per_group,\n    \\(n) simulate_t_test_power(\n        1000,\n        n, n,\n        mu1, mu2, sd1, sd2\n    )\n)\n\n# sapply() gives us a matrix that we can easily apply() on to get summaries\n# or use colMeans() cause its super fast and easy\nres &lt;- colMeans(t_test_n_simulations)\nres\n\n [1] 0.3197 0.5670 0.7407 0.8495 0.9164 0.9576 0.9769 0.9880 0.9942 0.9976\n\n\n\n\n\nBy looking at these results, it’s clear where we can do a second simulation to hone in on a better sample size – between the 3rd and 4th levement of n_per_group we get to our target.\n\n\n# Interpolate between those two numbers, but don't repeat them\n# cause we already did those sims!\nn_per_group2 &lt;- seq(n_per_group[3], n_per_group[4], 1)\nn_per_group2_trim &lt;- n_per_group2[2:(length(n_per_group2) - 1)]\n\nset.seed(103)\nt_test_n_simulations2 &lt;- sapply(\n    n_per_group2_trim,\n    \\(n) simulate_t_test_power(\n        1000,\n        n, n,\n        mu1, mu2, sd1, sd2\n    )\n)\n\n# sapply() gives us a matrix that we can easily apply() on to get summaries\n# or use colMeans() cause its super fast and easy\nres2 &lt;- colMeans(t_test_n_simulations2)\nres2\n\n [1] 0.7448 0.7449 0.7681 0.7615 0.7647 0.7690 0.7764 0.7819 0.7814 0.7889\n[11] 0.7952 0.8072 0.8007 0.8061 0.8180 0.8135 0.8149 0.8316 0.8313 0.8361\n[21] 0.8410 0.8420 0.8463 0.8508\n\n\n\n\n\nNow I’ll show you a neat trick to combine these simulations together and make a plot.\n\n\nall_n &lt;- c(n_per_group, n_per_group2_trim)\nall_res &lt;- c(res, res2)\nsort_order &lt;- order(all_n)\n\nplot(\n    all_n[sort_order], all_res[sort_order],\n    type = \"l\",\n    xlab = \"Sample size\", ylab = \"Power\"\n)\n# Find the smallest sample size with a power above 0.8\nbest_samp_size &lt;- min(all_n[all_res &gt; 0.8])\nbss_power &lt;- all_res[all_n == best_samp_size]\n\nabline(h = bss_power, col = \"red\", lty = 2)\nabline(v = best_samp_size, col = \"red\", lty = 2)",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#setting-up-a-power-simulation-for-logistic-regression",
     "href": "modules/power-sim.html#setting-up-a-power-simulation-for-logistic-regression",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Setting up a power simulation for logistic regression",
     "text": "Setting up a power simulation for logistic regression\n\nSimulating power is a MUST when we need to use a more complex model. For example, we have to do simulation to get the power of logistic regression.\nI’ll walk you through the data generating code and the correct p-value to check, but I’ll let you fill in the code details.\n\n\n\nRecall that the model we fit for logistic regression is something like this.\n\n\\[\ny_i \\sim \\text{Bernoulli}(p_i) \\\\\n\\text{logit}(p_i) = \\beta_0 + \\beta_1 x_i \\\\\n\\]\n\nSo the things we need to assume are values for \\(\\beta_0\\) and \\(\\beta_1\\) and the allowed values or distribution of \\(x_i\\). And of course we need a sample size \\(n\\) that we’ll vary to see how the power changes.\nWe can interpret \\(\\beta_0\\) as the log-odds of the event occurring for an individual at baseline. Let’s assume our outcome is somewhat rare, say \\(10\\%\\) of people get it. We can convert this to log-odds with some R code.\n\n\n# qlogis turns a probability into a log-odds\n# plogis turns a log-odds into a probability\nqlogis(0.1)\n\n[1] -2.197225\n\n\n\n\n\nSo we’ll say \\(\\beta_0 = -2.2\\).\nNow we need to assume values for \\(x\\) and an effect size \\(\\beta_1\\). For simplicity, let’s say \\(x\\) is dichotomous, and if an individual has the exposure \\(x=1\\), their log-odds are \\(1.5\\times\\) the log-odds of someone with \\(x=0\\), which means \\(\\beta_1 = 1.5\\).\n\n\n\n\nFinally, since \\(x\\) is dichotomous, we need a baseline prevalence of \\(x\\). Let’s say the prevalence of \\(x\\) is \\(40\\%\\), pretty common but not quite half and half.\nSo then we can sample from the model.\n\n\ngenerate_logistic_model_data &lt;- function(n, beta_0, beta_1, exposure_prevalence) {\n    x &lt;- rbinom(n, size = 1, prob = exposure_prevalence)\n    logit_p &lt;- beta_0 + beta_1 * x\n    p &lt;- plogis(logit_p)\n    y &lt;- rbinom(n, size = 1, prob = p)\n    \n    out &lt;- list(x = x, y = y)\n    return(out)\n}\n\nset.seed(100)\ntest_logistic_data &lt;- generate_logistic_model_data(100, -2.2, 1.5, 0.5)\n\n\n\n\nNow let’s walk through the test we need to do.\nFirst we fit a glm.\n\n\ntest_logistic_fit &lt;- glm(\n    test_logistic_data$y ~ test_logistic_data$x,\n    family = \"binomial\"\n)\n\nsummary(test_logistic_fit)\n\n\nCall:\nglm(formula = test_logistic_data$y ~ test_logistic_data$x, family = \"binomial\")\n\nCoefficients:\n                     Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)           -2.7515     0.5955  -4.621 3.83e-06 ***\ntest_logistic_data$x   2.3461     0.6618   3.545 0.000392 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 107.855  on 99  degrees of freedom\nResidual deviance:  89.998  on 98  degrees of freedom\nAIC: 93.998\n\nNumber of Fisher Scoring iterations: 5\n\n\n\nFrom the summary output, we see that the p-value for our test of interest is \\(0.000392\\). How do we get that out of the test?\n\n\n\n\nThe summary of the glm is an S3 object! But it’s a different class than the glm fit.\n\n\nglm_summary &lt;- summary(test_logistic_fit)\n\n# The coefficients are a matrix so we put in the indices that we want\nglm_summary$coefficients[2, 4]\n\n[1] 0.0003923781",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#you-try-it-finish-the-power-simulation",
     "href": "modules/power-sim.html#you-try-it-finish-the-power-simulation",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "You try it! Finish the power simulation",
     "text": "You try it! Finish the power simulation\n\nNow that we’ve walked through the building blocks, finish the power simulation. Find an \\(n\\) where the power under our assumptions about the data is between \\(0.75\\) and \\(0.85\\), that range is close enough.\n\n\n\nHint: this kind of power simulation is easier if you break it down into components, write a function for each component, and then put them all together.\nI think you need three components: a data simulation function that returns a data set, a test function that returns a p-value for the given dataset (or returns accept/reject), and a function that puts those two parts together so you can repeat the whole thing.\n\n\n\n\nHint: here’s the test function.\n\n\nget_exposure_slope_p_value &lt;- function(simulated_dataset) {\n    logistic_fit &lt;- glm(\n        simulated_dataset$y ~ simulated_dataset$x,\n        family = \"binomial\"\n    )\n    \n    glm_summary &lt;- summary(logistic_fit)\n    \n    p_value &lt;- glm_summary$coefficients[2, 4]\n    \n    return(p_value)\n}\n\n\n\n\nHint: now you can put the two parts together and then get the rejections.\n\n\nlogistic_power_simulation &lt;- function(\n        N_sims, n, beta_0, beta_1, exposure_prevalence, alpha\n) {\n    simulated_datasets &lt;- replicate(\n        ...\n    )\n    \n    simulated_p_values &lt;- sapply(\n        ...\n    )\n    \n    rejections &lt;- ...\n    \n    return(rejections)\n}\n\n\n\n\nHint: here’s my completed function.\nCan you repeat it for multiple n values now?\n\n\nlogistic_power_simulation &lt;- function(\n        N_sims, n, beta_0, beta_1, exposure_prevalence, alpha\n) {\n    simulated_datasets &lt;- replicate(\n        N_sims,\n        generate_logistic_model_data(n, beta_0, beta_1, exposure_prevalence),\n        simplify = FALSE\n    )\n    \n    simulated_p_values &lt;- sapply(\n        simulated_datasets,\n        get_exposure_slope_p_value\n    )\n    \n    rejections &lt;- simulated_p_values &lt;= alpha\n    \n    return(rejections)\n}\n\n\n\n\nn_values &lt;- seq(25, 250, 25)\n\nset.seed(110)\nlogistic_sim &lt;- sapply(\n    n_values,\n    \\(n) logistic_power_simulation(\n        1000,\n        n,\n        -2.2, 1.5, 0.4, 0.05\n    )\n)\n\nlogistic_sim_power &lt;- colMeans(logistic_sim)\n\nplot(\n    n_values, logistic_sim_power,\n    xlab = \"Sample size\", ylab = \"Power\",\n    type = \"l\"\n)\n\n\n\n\n\n\n\n\n\nIf we look at the values, we see that a sample size of 100 gives us a power of about \\(81\\%\\) under these assumptions.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#final-note-parametrizations",
     "href": "modules/power-sim.html#final-note-parametrizations",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Final note: parametrizations",
     "text": "Final note: parametrizations\n\nNotice that in the logistic regression simulation, we simulated our dataset using the exposure prevalence. If you know the exposure prevalence, that works fine.\nIf you don’t know the exposure prevalence, you can instead simulate a dataset with n_exposed and n_unexposed, or assume the sample size of the two groups has to be equal like we did for the t-test example.\nThese are basically the same, we just assumed that n_exposed / n_total = 0.4, but there’s lots of ways you can do the same thing.\nIn general, what matters the most for the power of a logistic regression is the number of events in each group, and you can write a simulation that takes that into account too.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
   {
     "objectID": "modules/power-sim.html#summary",
     "href": "modules/power-sim.html#summary",
-    "title": "Module XX: Power 2 (Unlimited Power)",
+    "title": "Optional: Power Simulation",
     "section": "Summary",
     "text": "Summary\n\nPower is kind of confusing, we have to make really strong assumptions to do an a priori power analysis. But post hoc power analysis doesn’t really tell us anything.\nCalculating the power of a test directly is impossible for most tests.\nFortunately we can use the tools we learned in this class to do a power simulation, which can help us estimate power under various assumptions for complicated models.",
     "crumbs": [
-      "Optional / take-home",
+      "Optional / advanced / take-home",
       "Power simulation"
     ]
   },
@@ -3125,6 +3125,435 @@
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#what-this-half-day-is-for",
+    "href": "modules/ODEs.html#what-this-half-day-is-for",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "What this half-day is for",
+    "text": "What this half-day is for\nBy the end of this block, you should be able to:\n\nRead a compartment diagram as a system of ordinary differential equations.\nTranslate the equations into the function shape required by deSolve.\nSolve the model with deSolve::ode().\nPlot and sanity-check simulated epidemic trajectories.\n\nThe goal is practical fluency: enough structure to read, modify, and run a basic infectious disease model in R.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#the-desolve-workflow",
+    "href": "modules/ODEs.html#the-desolve-workflow",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "The deSolve workflow",
+    "text": "The deSolve workflow\ndeSolve::ode() needs four things from you:\n\ny: the starting state of the system.\ntimes: the time points where you want results.\nfunc: a function that calculates the derivatives.\nparms: the model parameters.\n\ndeSolve::ode(\n  y = initial_state,\n  times = time_points,\n  func = derivative_function,\n  parms = parameters\n)",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#compartment-models",
+    "href": "modules/ODEs.html#compartment-models",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Compartment models",
+    "text": "Compartment models\nCompartment models divide a population into states.\n\nSource: DOI 10.3390/sym14122583For a simple SIR model:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= -\\beta S I \\\\\n\\frac{dI}{dt} &= \\beta S I - \\gamma I \\\\\n\\frac{dR}{dt} &= \\gamma I\n\\end{aligned}\n\\]\nThe equations say how quickly people move between compartments.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-1-parameters",
+    "href": "modules/ODEs.html#step-1-parameters",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 1: parameters",
+    "text": "Step 1: parameters\nFor this example:\n\nbeta: transmission rate.\ngamma: recovery rate.\n\n\nsir_parameters &lt;- c(\n  beta = 0.0015,\n  gamma = 0.20\n)",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-2-starting-state-and-time",
+    "href": "modules/ODEs.html#step-2-starting-state-and-time",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 2: starting state and time",
+    "text": "Step 2: starting state and time\nThe starting state is a named vector with one value per compartment.\n\nsir_initial_state &lt;- c(\n  S = 999,\n  I = 1,\n  R = 0\n)\n\nsir_times &lt;- seq(0, 80, by = 0.25)\n\nThe names matter. They become the column names in the solution.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-3-derivative-function",
+    "href": "modules/ODEs.html#step-3-derivative-function",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 3: derivative function",
+    "text": "Step 3: derivative function\nThe function signature is always:\nfunction(t, state, parameters) {\n  ...\n}\nInside the function, calculate one derivative per state variable.\n\nsir_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n\n  dS &lt;- -beta * S * I\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I\n\n  list(c(S = dS, I = dI, R = dR))\n}",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-4-solve",
+    "href": "modules/ODEs.html#step-4-solve",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 4: solve",
+    "text": "Step 4: solve\n\nsir_solution &lt;- deSolve::ode(\n  y = sir_initial_state,\n  times = sir_times,\n  func = sir_ode,\n  parms = sir_parameters\n)\n\nhead(sir_solution)\n\n     time        S        I          R\n[1,] 0.00 999.0000 1.000000 0.00000000\n[2,] 0.25 998.5575 1.383405 0.05906864\n[3,] 0.50 997.9458 1.913432 0.14077604\n[4,] 0.75 997.1004 2.645815 0.25377332\n[5,] 1.00 995.9329 3.657150 0.40999128\n[6,] 1.25 994.3217 5.052451 0.62586673\n\n\node() returns a matrix-like object. The first column is time; the remaining columns are your compartments.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-5-plot",
+    "href": "modules/ODEs.html#step-5-plot",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 5: plot",
+    "text": "Step 5: plot\n\nsir_df &lt;- as.data.frame(sir_solution)\nsir_colors &lt;- c(S = \"deepskyblue3\", I = \"darkorange2\", R = \"seagreen4\")\n\nmatplot(\n  x = sir_df$time,\n  y = sir_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\",\n  lty = 1,\n  lwd = 2,\n  col = sir_colors,\n  xlab = \"Time\",\n  ylab = \"Number of people\",\n  main = \"SIR model\"\n)\n\nlegend(\n  \"right\",\n  inset = 0.02,\n  legend = names(sir_colors),\n  col = sir_colors,\n  lty = 1,\n  lwd = 2,\n  bty = \"n\"\n)",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#sanity-checks",
+    "href": "modules/ODEs.html#sanity-checks",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Sanity checks",
+    "text": "Sanity checks\nBefore trusting a simulation, ask:\n\nAre all compartments non-negative?\nDoes the total population stay constant if the model has no births or deaths?\nDoes the direction of movement match the diagram?\nDoes changing one parameter move the curve in the direction you expect?\n\n\nrange(sir_df$S, sir_df$I, sir_df$R)\n\n[1]   0.0000 999.4448\n\nsir_total &lt;- sir_df$S + sir_df$I + sir_df$R\nrange(sir_total)\n\n[1] 1000 1000",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-sirs",
+    "href": "modules/ODEs.html#practice-checkpoint-sirs",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: SIRS",
+    "text": "Practice checkpoint: SIRS\nPrompt\nModify the SIR model so recovered people lose immunity and become susceptible again. Call the new parameter zeta.\n\nSource: DOI 10.3390/sym14122583 with course editUse:\nsirs_parameters &lt;- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)\nsirs_initial_state &lt;- c(S = 999, I = 1, R = 0)\nsirs_times &lt;- seq(0, 160, by = 0.25)\nPlot the result and compare it with the SIR curve.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-hint",
+    "href": "modules/ODEs.html#practice-checkpoint-hint",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: hint",
+    "text": "Practice checkpoint: hint\nThe SIRS equations are:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= -\\beta S I + \\zeta R \\\\\n\\frac{dI}{dt} &= \\beta S I - \\gamma I \\\\\n\\frac{dR}{dt} &= \\gamma I - \\zeta R\n\\end{aligned}\n\\]\nYou only need to change two things:\n\nAdd zeta &lt;- parameters[\"zeta\"].\nAdd the zeta * R flow into dS and out of dR.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-solution",
+    "href": "modules/ODEs.html#practice-checkpoint-solution",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: solution",
+    "text": "Practice checkpoint: solution\n\nsirs_parameters &lt;- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)\nsirs_initial_state &lt;- c(S = 999, I = 1, R = 0)\nsirs_times &lt;- seq(0, 160, by = 0.25)\n\nsirs_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n  zeta &lt;- parameters[\"zeta\"]\n\n  dS &lt;- -beta * S * I + zeta * R\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I - zeta * R\n\n  list(c(S = dS, I = dI, R = dR))\n}\n\nsirs_solution &lt;- deSolve::ode(\n  y = sirs_initial_state,\n  times = sirs_times,\n  func = sirs_ode,\n  parms = sirs_parameters\n)\n\nsirs_df &lt;- as.data.frame(sirs_solution)\nhead(sirs_df)\n\n  time        S        I          R\n1 0.00 999.0000 1.000000 0.00000000\n2 0.25 998.5577 1.383405 0.05892916\n3 0.50 997.9464 1.913432 0.14014973\n4 0.75 997.1020 2.645816 0.25218121\n5 1.00 995.9361 3.657155 0.40677265\n6 1.25 994.3274 5.052466 0.62010994",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-solution-plot",
+    "href": "modules/ODEs.html#practice-checkpoint-solution-plot",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: solution plot",
+    "text": "Practice checkpoint: solution plot\n\nmatplot(\n  x = sirs_df$time,\n  y = sirs_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\",\n  lty = 1,\n  lwd = 2,\n  col = sir_colors,\n  xlab = \"Time\",\n  ylab = \"Number of people\",\n  main = \"SIRS model\"\n)\n\nlegend(\n  \"right\",\n  inset = 0.02,\n  legend = names(sir_colors),\n  col = sir_colors,\n  lty = 1,\n  lwd = 2,\n  bty = \"n\"\n)\n\n\nWith waning immunity, infection can persist at a low level instead of dying out after a single epidemic wave.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#optional-stretch-environmental-pathogen",
+    "href": "modules/ODEs.html#optional-stretch-environmental-pathogen",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Optional stretch: environmental pathogen",
+    "text": "Optional stretch: environmental pathogen\nPrompt\nFor a faster student or take-home extension, add an environmental pathogen compartment P.\n\nSource: Andreas Handel’s DSAIDE packageUse these equations:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= n - b_I I S - b_P P S - mS \\\\\n\\frac{dI}{dt} &= b_I I S + b_P P S - gI - mI \\\\\n\\frac{dR}{dt} &= gI - mR \\\\\n\\frac{dP}{dt} &= qI - cP\n\\end{aligned}\n\\]\nHint\nAdd a fourth state named P. Your derivative function should return four values: dS, dI, dR, and dP.\nSolution outline\nStart from sirs_ode(), add P &lt;- state[\"P\"], add parameters named n, b_I, b_P, m, g, q, and c, then return:\nlist(c(S = dS, I = dI, R = dR, P = dP))\nSet n = 0 and m = 0 for the first run if you want to focus only on the environmental transmission path.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#what-to-keep",
+    "href": "modules/ODEs.html#what-to-keep",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "What to keep",
+    "text": "What to keep\nThe reusable pattern is:\n\nName every state variable.\nName every parameter.\nWrite one derivative per state variable.\nReturn the derivatives as list(c(...)).\nPlot first, then interpret.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#more-resources",
+    "href": "modules/ODEs.html#more-resources",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "More resources",
+    "text": "More resources\n\nAndreas Handel’s DSAIRM and DSAIDE packages contain many infectious disease model examples.\nMany other SISMID courses go much deeper into mathematical and statistical modeling of infectious disease systems.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#why-this-is-optional",
+    "href": "modules/optim-likelihood.html#why-this-is-optional",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Why this is optional",
+    "text": "Why this is optional\nThis deck preserves the maximum-likelihood material from the earlier combined ODE/optimization deck. It is useful take-home material for learners who want to fit custom likelihoods, but it is not part of the Day 3 ODE core.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#learning-goals",
+    "href": "modules/optim-likelihood.html#learning-goals",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Learning goals",
+    "text": "Learning goals\n\nWrite a small objective function.\nUse optim() with parameter bounds.\nEstimate a mosquito infection rate from pooled surveillance data.\nExtend the likelihood to a two-parameter mixture model.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#what-is-optim",
+    "href": "modules/optim-likelihood.html#what-is-optim",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "What is optim()?",
+    "text": "What is optim()?\noptim() is R’s general-purpose interface for numerical optimization.\nIt expects a function to minimize. If you want to maximize a likelihood, it is common to minimize the negative log likelihood.\noptim(\n  par = starting_values,\n  fn = objective_function,\n  method = \"L-BFGS-B\",\n  lower = lower_bounds,\n  upper = upper_bounds\n)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#warm-up",
+    "href": "modules/optim-likelihood.html#warm-up",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Warm-up",
+    "text": "Warm-up\nFind the maximum of:\n\\[\nf(x) = \\sin(x)e^{-x^2}\n\\]\n\ncurve(\n  sin(x) * exp(-x^2),\n  from = -2,\n  to = 2,\n  n = 1000,\n  xlab = \"x\",\n  ylab = \"f(x)\"\n)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#warm-up-solution",
+    "href": "modules/optim-likelihood.html#warm-up-solution",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Warm-up solution",
+    "text": "Warm-up solution\n\nwarmup_fit &lt;- optim(\n  par = 0,\n  fn = \\(x) sin(x) * exp(-x^2),\n  method = \"BFGS\",\n  control = list(fnscale = -1)\n)\n\nwarmup_fit\n\n$par\n[1] 0.6532841\n\n$value\n[1] 0.396653\n\n$counts\nfunction gradient \n       8        7 \n\n$convergence\n[1] 0\n\n$message\nNULL\n\n\n\ncurve(\n  sin(x) * exp(-x^2),\n  from = -2,\n  to = 2,\n  n = 1000,\n  xlab = \"x\",\n  ylab = \"f(x)\"\n)\nabline(v = warmup_fit$par, col = \"red\", lwd = 2)\nabline(h = warmup_fit$value, col = \"red\", lwd = 2)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#pooled-mosquito-surveillance",
+    "href": "modules/optim-likelihood.html#pooled-mosquito-surveillance",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Pooled mosquito surveillance",
+    "text": "Pooled mosquito surveillance\nSuppose a health department monitors West Nile virus in mosquito pools.\n\n20 pools were tested.\nEach pool contains 10 mosquitoes.\n7 pools were positive.\n\nIf the individual mosquito infection risk is p, the probability a pool tests positive is:\n\\[\nP(+) = 1 - (1 - p)^{10}\n\\]",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#write-the-likelihood",
+    "href": "modules/optim-likelihood.html#write-the-likelihood",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Write the likelihood",
+    "text": "Write the likelihood\nFor 7 positive pools out of 20:\n\\[\nY \\sim Binomial(20, 1 - (1 - p)^{10})\n\\]\nIn R, we can write the negative log likelihood directly.\n\npooled_nll &lt;- function(p) {\n  pool_positive_probability &lt;- 1 - (1 - p)^10\n\n  -dbinom(\n    x = 7,\n    size = 20,\n    prob = pool_positive_probability,\n    log = TRUE\n  )\n}",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#estimate-the-infection-risk",
+    "href": "modules/optim-likelihood.html#estimate-the-infection-risk",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Estimate the infection risk",
+    "text": "Estimate the infection risk\n\npooled_fit &lt;- optim(\n  par = 0.05,\n  fn = pooled_nll,\n  method = \"L-BFGS-B\",\n  lower = 0.00001,\n  upper = 0.99999,\n  hessian = TRUE\n)\n\npooled_fit\n\n$par\n[1] 0.04217128\n\n$value\n[1] 1.690642\n\n$counts\nfunction gradient \n       8        8 \n\n$convergence\n[1] 0\n\n$message\n[1] \"CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH\"\n\n$hessian\n         [,1]\n[1,] 4051.487\n\n\n\ninfection_risk &lt;- pooled_fit$par\ninfection_risk\n\n[1] 0.04217128",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#approximate-confidence-interval",
+    "href": "modules/optim-likelihood.html#approximate-confidence-interval",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Approximate confidence interval",
+    "text": "Approximate confidence interval\nFor a one-parameter likelihood, a quick Wald-style interval uses the Hessian.\n\npooled_se &lt;- sqrt(1 / pooled_fit$hessian[1, 1])\npooled_ci &lt;- infection_risk + c(-1.96, 1.96) * pooled_se\n\nc(\n  estimate = infection_risk,\n  lower = pooled_ci[1],\n  upper = pooled_ci[2]\n)\n\n  estimate      lower      upper \n0.04217128 0.01137851 0.07296406 \n\n\nThis approximation is convenient, but it is not magic. Check whether the parameter is near a boundary before trusting it.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#practice-checkpoint-zero-inflation",
+    "href": "modules/optim-likelihood.html#practice-checkpoint-zero-inflation",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Practice checkpoint: zero inflation",
+    "text": "Practice checkpoint: zero inflation\nPrompt\nSome trap regions may have no West Nile virus introduced yet. Let kappa be the probability that the region is exposed to the risk process at all.\nUse:\n\\[\nP(+) = \\kappa \\left(1 - (1 - p)^{10}\\right)\n\\]\nEstimate p and kappa from the same 7 positive pools out of 20.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#practice-checkpoint-hint",
+    "href": "modules/optim-likelihood.html#practice-checkpoint-hint",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Practice checkpoint: hint",
+    "text": "Practice checkpoint: hint\nYour function should take a length-two vector:\nzip_nll &lt;- function(par) {\n  p &lt;- par[1]\n  kappa &lt;- par[2]\n\n  ...\n}\nUse length-two par, lower, and upper values in optim().",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#practice-checkpoint-solution",
+    "href": "modules/optim-likelihood.html#practice-checkpoint-solution",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Practice checkpoint: solution",
+    "text": "Practice checkpoint: solution\n\nzip_nll &lt;- function(par) {\n  p &lt;- par[1]\n  kappa &lt;- par[2]\n\n  pool_positive_probability &lt;- kappa * (1 - (1 - p)^10)\n\n  -dbinom(\n    x = 7,\n    size = 20,\n    prob = pool_positive_probability,\n    log = TRUE\n  )\n}\n\nzip_fit &lt;- optim(\n  par = c(p = 0.05, kappa = 0.70),\n  fn = zip_nll,\n  method = \"L-BFGS-B\",\n  lower = c(0.00001, 0.00001),\n  upper = c(0.99999, 0.99999)\n)\n\nzip_fit$par\n\n         p      kappa \n0.06629598 0.70510949 \n\n\nWith only one aggregate count, many combinations of p and kappa can produce similar fits. The model is easy to code, but the data may not identify both parameters well.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/optim-likelihood.html#take-home-extension",
+    "href": "modules/optim-likelihood.html#take-home-extension",
+    "title": "Optional Advanced: Likelihoods with optim",
+    "section": "Take-home extension",
+    "text": "Take-home extension\nThe local file data/mos-nyc.csv contains county-level mosquito pool data.\n\nmosquito_pools &lt;- read.csv(\n  file.path(\"..\", \"data\", \"mos-nyc.csv\"),\n  check.names = FALSE\n)\n\nhead(mosquito_pools)\n\n\n\n\nCounty\nPCR Positive\nPools submitted\n\n\n\n\nAlbany\n0\n70\n\n\nBroome\n0\n5\n\n\nCattaraugus\n0\n39\n\n\nColumbia\n1\n52\n\n\nCortland\n0\n2\n\n\nDutchess\n0\n144\n\n\n\n\n\nPrompt\nAssume each submitted pool contains 50 mosquitoes. Estimate a single mosquito infection risk using all counties together.\nSolution outline\nSum PCR Positive and Pools submitted across counties, then reuse pooled_nll() with x, size, and pool size as arguments instead of fixed numbers.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Likelihoods with optim"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#why-this-is-optional",
+    "href": "modules/ODE-parameter-fitting.html#why-this-is-optional",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Why this is optional",
+    "text": "Why this is optional\nThis deck parks the old ODE-fitting extension from the combined ODE/optimization material. It is useful for learners who want to see how simulation code can be wrapped in an objective function, but it is not part of the Day 3 ODE core.\nThe point here is the programming pattern, not a recommended inference workflow.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#data",
+    "href": "modules/ODE-parameter-fitting.html#data",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Data",
+    "text": "Data\nThe observed epidemic curve is local to this repository.\n\nobserved_sir &lt;- read.csv(file.path(\"..\", \"data\", \"SIR-observed.csv\"))\nhead(observed_sir)\n\n\n\n\nday\ntotal_cases\n\n\n\n\n1\n1\n\n\n2\n5\n\n\n3\n22\n\n\n4\n44\n\n\n5\n109\n\n\n6\n271\n\n\n\n\n\n\nplot(\n  observed_sir$day,\n  observed_sir$total_cases,\n  pch = 16,\n  col = \"gray30\",\n  xlab = \"Day\",\n  ylab = \"Observed infected\",\n  main = \"Observed epidemic curve\"\n)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#reuse-the-sir-model",
+    "href": "modules/ODE-parameter-fitting.html#reuse-the-sir-model",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Reuse the SIR model",
+    "text": "Reuse the SIR model\n\nsir_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n\n  dS &lt;- -beta * S * I\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I\n\n  list(c(S = dS, I = dI, R = dR))\n}",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#write-a-simulation-helper",
+    "href": "modules/ODE-parameter-fitting.html#write-a-simulation-helper",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Write a simulation helper",
+    "text": "Write a simulation helper\n\nsimulate_sir &lt;- function(beta, gamma, times) {\n  deSolve::ode(\n    y = c(S = 999, I = 1, R = 0),\n    times = times,\n    func = sir_ode,\n    parms = c(beta = beta, gamma = gamma)\n  )\n}\n\nexample_simulation &lt;- simulate_sir(\n  beta = 0.001,\n  gamma = 0.05,\n  times = observed_sir$day\n)\n\nhead(example_simulation)\n\n\n\n\ntime\nS\nI\nR\n\n\n\n\n1\n999.0000\n1.000000\n0.0000000\n\n\n2\n997.3353\n2.581321\n0.0833883\n\n\n3\n993.0569\n6.644762\n0.2983410\n\n\n4\n982.1663\n16.983963\n0.8497058\n\n\n5\n955.1094\n42.644174\n2.2464489\n\n\n6\n891.7527\n102.569003\n5.6783062",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#compare-one-simulation-to-the-data",
+    "href": "modules/ODE-parameter-fitting.html#compare-one-simulation-to-the-data",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Compare one simulation to the data",
+    "text": "Compare one simulation to the data\n\nplot(\n  observed_sir$day,\n  observed_sir$total_cases,\n  pch = 16,\n  col = \"gray30\",\n  xlab = \"Day\",\n  ylab = \"Infected\",\n  main = \"Observed and simulated infected counts\"\n)\nlines(example_simulation[, \"time\"], example_simulation[, \"I\"], col = \"darkorange2\", lwd = 2)\nlegend(\n  \"topright\",\n  legend = c(\"Observed\", \"Simulated\"),\n  col = c(\"gray30\", \"darkorange2\"),\n  pch = c(16, NA),\n  lty = c(NA, 1),\n  lwd = c(NA, 2),\n  bty = \"n\"\n)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#objective-function",
+    "href": "modules/ODE-parameter-fitting.html#objective-function",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Objective function",
+    "text": "Objective function\nWe need one number that says how badly a parameter pair fits.\nHere we use the sum of squared residuals between observed infected counts and the simulated infected compartment:\n\\[\nSSR = \\sum_i \\left(I_i - \\hat{I}_i(\\beta, \\gamma)\\right)^2\n\\]\n\nsir_ssr &lt;- function(par) {\n  beta &lt;- par[1]\n  gamma &lt;- par[2]\n\n  if (beta &lt;= 0 || gamma &lt;= 0) {\n    return(1e12)\n  }\n\n  simulated &lt;- tryCatch(\n    simulate_sir(\n      beta = beta,\n      gamma = gamma,\n      times = observed_sir$day\n    ),\n    error = function(e) NULL\n  )\n\n  if (is.null(simulated)) {\n    return(1e12)\n  }\n\n  predicted_infected &lt;- simulated[, \"I\"]\n\n  if (any(!is.finite(predicted_infected))) {\n    return(1e12)\n  }\n\n  fit &lt;- sum((observed_sir$total_cases - predicted_infected)^2)\n\n  if (!is.finite(fit)) {\n    return(1e12)\n  }\n\n  fit\n}",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#fit-the-parameters",
+    "href": "modules/ODE-parameter-fitting.html#fit-the-parameters",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Fit the parameters",
+    "text": "Fit the parameters\n\nsir_fit &lt;- optim(\n  par = c(beta = 0.001, gamma = 0.05),\n  fn = sir_ssr,\n  method = \"L-BFGS-B\",\n  lower = c(beta = 0.000001, gamma = 0.000001),\n  upper = c(beta = 0.01, gamma = 1)\n)\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\n\n\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\nsir_fit$par\n\n beta gamma \n0.001 0.050",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#plot-the-fitted-trajectory",
+    "href": "modules/ODE-parameter-fitting.html#plot-the-fitted-trajectory",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Plot the fitted trajectory",
+    "text": "Plot the fitted trajectory\n\nfitted_simulation &lt;- simulate_sir(\n  beta = sir_fit$par[\"beta\"],\n  gamma = sir_fit$par[\"gamma\"],\n  times = observed_sir$day\n)\n\nDLSODA-  At T (=R1), too much accuracy requested  \n      for precision of machine..  See TOLSF (=R2) \nIn above message, R1 = 2, R2 = nan\n \n\n\nWarning in lsoda(y, times, func, parms, ...): Excessive precision requested.\nscale up `rtol' and `atol' e.g by the factor 10\n\n\nWarning in lsoda(y, times, func, parms, ...): Returning early. Results are\naccurate, as far as they go\n\nplot(\n  observed_sir$day,\n  observed_sir$total_cases,\n  pch = 16,\n  col = \"gray30\",\n  xlab = \"Day\",\n  ylab = \"Infected\",\n  main = \"Observed and fitted SIR trajectory\"\n)\nlines(fitted_simulation[, \"time\"], fitted_simulation[, \"I\"], col = \"darkorange2\", lwd = 2)\nlegend(\n  \"topright\",\n  legend = c(\"Observed\", \"Fitted SIR\"),\n  col = c(\"gray30\", \"darkorange2\"),\n  pch = c(16, NA),\n  lty = c(NA, 1),\n  lwd = c(NA, 2),\n  bty = \"n\"\n)",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#practice-checkpoint",
+    "href": "modules/ODE-parameter-fitting.html#practice-checkpoint",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Practice checkpoint",
+    "text": "Practice checkpoint\nPrompt\nChange the starting values in optim() to beta = 0.005 and gamma = 0.50. Do the fitted parameters return to approximately the same values?\nHint\nOnly change the par = ... line. Keep the same bounds.\nSolution outline\nRun the same call with:\npar = c(beta = 0.005, gamma = 0.50)\nFor this small example, the bounds and data are informative enough that the result should be very similar. For more complex ODE systems, starting values can matter a lot.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
+    ]
+  },
+  {
+    "objectID": "modules/ODE-parameter-fitting.html#take-home-cautions",
+    "href": "modules/ODE-parameter-fitting.html#take-home-cautions",
+    "title": "Optional Advanced: Fitting ODE Models",
+    "section": "Take-home cautions",
+    "text": "Take-home cautions\n\nReal case data are noisy, delayed, underreported, and often only partly observed.\nThe observation model matters as much as the ODE model.\nParameter uncertainty from this quick example is not reliable.\nUse this deck to learn how to connect simulation code to a fitting workflow, then reach for a more serious modeling framework for real inference.",
+    "crumbs": [
+      "Optional / advanced / take-home",
+      "Fitting ODE models"
     ]
   }
 ]

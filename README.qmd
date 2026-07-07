@@ -37,9 +37,10 @@ Hands-on use of R is a major component of this module. Participants should bring
 a laptop and expect to use R throughout the course. Examples and exercises use
 data drawn from biological, medical, and infectious disease applications.
 
-Optional or take-home materials are available for bootstrapping, Arrow/parquet
-workflows, and power simulation, but those topics are not part of the required
-2026 core schedule.
+Optional, advanced, or take-home materials are available for bootstrapping,
+Arrow/parquet workflows, power simulation, maximum likelihood with `optim()`,
+and ODE parameter fitting, but those topics are not part of the required 2026
+core schedule.
 
 ### Prerequisites
 
@@ -68,9 +69,12 @@ Quarto (1.6.0 or newer) on your computer.**
 - Bootstrapping for confidence intervals
 - Arrow and parquet workflows for large data
 - Power simulation
+- Maximum likelihood with `optim()`
+- ODE parameter fitting with `deSolve` and `optim()`
 
-General sample-size package demonstrations and the advanced linear models draft
-are archived for 2026 and are not part of the learner-facing core course.
+General sample-size package demonstrations, the advanced linear models draft,
+and the old combined ODE/optimization deck are archived for 2026 and are not
+part of the learner-facing core course.
 
 ## Repository File Structure
 

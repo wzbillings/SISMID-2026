@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Day 3: ODEs with deSolve</title>
+  <title>SISMID R for ID Materials (2026) – Optional Advanced: Likelihoods with optim</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -194,7 +194,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Day 3: ODEs with deSolve</h1>
+  <h1 class="title">Optional Advanced: Likelihoods with optim</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -210,309 +210,299 @@
 </div>
 
 </section>
-<section id="what-this-half-day-is-for" class="slide level2 scrollable">
-<h2>What this half-day is for</h2>
-<p>By the end of this block, you should be able to:</p>
-<ol type="1">
-<li>Read a compartment diagram as a system of ordinary differential equations.</li>
-<li>Translate the equations into the function shape required by <code>deSolve</code>.</li>
-<li>Solve the model with <code>deSolve::ode()</code>.</li>
-<li>Plot and sanity-check simulated epidemic trajectories.</li>
-</ol>
-<p>The goal is practical fluency: enough structure to read, modify, and run a basic infectious disease model in R.</p>
+<section id="why-this-is-optional" class="slide level2">
+<h2>Why this is optional</h2>
+<p>This deck preserves the maximum-likelihood material from the earlier combined ODE/optimization deck. It is useful take-home material for learners who want to fit custom likelihoods, but it is not part of the Day 3 ODE core.</p>
 </section>
-<section id="the-desolve-workflow" class="slide level2 scrollable">
-<h2>The <code>deSolve</code> workflow</h2>
-<p><code>deSolve::ode()</code> needs four things from you:</p>
+<section id="learning-goals" class="slide level2 scrollable">
+<h2>Learning goals</h2>
 <ol type="1">
-<li><code>y</code>: the starting state of the system.</li>
-<li><code>times</code>: the time points where you want results.</li>
-<li><code>func</code>: a function that calculates the derivatives.</li>
-<li><code>parms</code>: the model parameters.</li>
+<li>Write a small objective function.</li>
+<li>Use <code>optim()</code> with parameter bounds.</li>
+<li>Estimate a mosquito infection rate from pooled surveillance data.</li>
+<li>Extend the likelihood to a two-parameter mixture model.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>deSolve<span class="sc">::</span><span class="fu">ode</span>(</span>
-<span id="cb1-2"><a></a>  <span class="at">y =</span> initial_state,</span>
-<span id="cb1-3"><a></a>  <span class="at">times =</span> time_points,</span>
-<span id="cb1-4"><a></a>  <span class="at">func =</span> derivative_function,</span>
-<span id="cb1-5"><a></a>  <span class="at">parms =</span> parameters</span>
-<span id="cb1-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="compartment-models" class="slide level2">
-<h2>Compartment models</h2>
-<p>Compartment models divide a population into states.</p>
-
-<img data-src="../images/SIR-model.png" class="r-stretch quarto-figure-center"><p class="caption">Source: DOI 10.3390/sym14122583</p><p>For a simple SIR model:</p>
+<section id="what-is-optim" class="slide level2">
+<h2>What is <code>optim()</code>?</h2>
+<p><code>optim()</code> is R’s general-purpose interface for numerical optimization.</p>
+<p>It expects a function to minimize. If you want to maximize a likelihood, it is common to minimize the negative log likelihood.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">optim</span>(</span>
+<span id="cb1-2"><a></a>  <span class="at">par =</span> starting_values,</span>
+<span id="cb1-3"><a></a>  <span class="at">fn =</span> objective_function,</span>
+<span id="cb1-4"><a></a>  <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>,</span>
+<span id="cb1-5"><a></a>  <span class="at">lower =</span> lower_bounds,</span>
+<span id="cb1-6"><a></a>  <span class="at">upper =</span> upper_bounds</span>
+<span id="cb1-7"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="warm-up" class="slide level2">
+<h2>Warm-up</h2>
+<p>Find the maximum of:</p>
 <p><span class="math display">\[
-\begin{aligned}
-\frac{dS}{dt} &amp;= -\beta S I \\
-\frac{dI}{dt} &amp;= \beta S I - \gamma I \\
-\frac{dR}{dt} &amp;= \gamma I
-\end{aligned}
+f(x) = \sin(x)e^{-x^2}
 \]</span></p>
-<p>The equations say how quickly people move between compartments.</p>
-</section>
-<section id="step-1-parameters" class="slide level2">
-<h2>Step 1: parameters</h2>
-<p>For this example:</p>
-<ul>
-<li><code>beta</code>: transmission rate.</li>
-<li><code>gamma</code>: recovery rate.</li>
-</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>sir_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb2-2"><a></a>  <span class="at">beta =</span> <span class="fl">0.0015</span>,</span>
-<span id="cb2-3"><a></a>  <span class="at">gamma =</span> <span class="fl">0.20</span></span>
-<span id="cb2-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="step-2-starting-state-and-time" class="slide level2">
-<h2>Step 2: starting state and time</h2>
-<p>The starting state is a named vector with one value per compartment.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>sir_initial_state <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb3-2"><a></a>  <span class="at">S =</span> <span class="dv">999</span>,</span>
-<span id="cb3-3"><a></a>  <span class="at">I =</span> <span class="dv">1</span>,</span>
-<span id="cb3-4"><a></a>  <span class="at">R =</span> <span class="dv">0</span></span>
-<span id="cb3-5"><a></a>)</span>
-<span id="cb3-6"><a></a></span>
-<span id="cb3-7"><a></a>sir_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">80</span>, <span class="at">by =</span> <span class="fl">0.25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The names matter. They become the column names in the solution.</p>
-</section>
-<section id="step-3-derivative-function" class="slide level2">
-<h2>Step 3: derivative function</h2>
-<p>The function signature is always:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="cf">function</span>(t, state, parameters) {</span>
-<span id="cb4-2"><a></a>  ...</span>
-<span id="cb4-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Inside the function, calculate one derivative per state variable.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>sir_ode <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parameters) {</span>
-<span id="cb5-2"><a></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
-<span id="cb5-3"><a></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
-<span id="cb5-4"><a></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
-<span id="cb5-5"><a></a></span>
-<span id="cb5-6"><a></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
-<span id="cb5-7"><a></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
-<span id="cb5-8"><a></a></span>
-<span id="cb5-9"><a></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>beta <span class="sc">*</span> S <span class="sc">*</span> I</span>
-<span id="cb5-10"><a></a>  dI <span class="ot">&lt;-</span> beta <span class="sc">*</span> S <span class="sc">*</span> I <span class="sc">-</span> gamma <span class="sc">*</span> I</span>
-<span id="cb5-11"><a></a>  dR <span class="ot">&lt;-</span> gamma <span class="sc">*</span> I</span>
-<span id="cb5-12"><a></a></span>
-<span id="cb5-13"><a></a>  <span class="fu">list</span>(<span class="fu">c</span>(<span class="at">S =</span> dS, <span class="at">I =</span> dI, <span class="at">R =</span> dR))</span>
-<span id="cb5-14"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="step-4-solve" class="slide level2">
-<h2>Step 4: solve</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sir_solution <span class="ot">&lt;-</span> deSolve<span class="sc">::</span><span class="fu">ode</span>(</span>
-<span id="cb6-2"><a></a>  <span class="at">y =</span> sir_initial_state,</span>
-<span id="cb6-3"><a></a>  <span class="at">times =</span> sir_times,</span>
-<span id="cb6-4"><a></a>  <span class="at">func =</span> sir_ode,</span>
-<span id="cb6-5"><a></a>  <span class="at">parms =</span> sir_parameters</span>
-<span id="cb6-6"><a></a>)</span>
-<span id="cb6-7"><a></a></span>
-<span id="cb6-8"><a></a><span class="fu">head</span>(sir_solution)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     time        S        I          R
-[1,] 0.00 999.0000 1.000000 0.00000000
-[2,] 0.25 998.5575 1.383405 0.05906864
-[3,] 0.50 997.9458 1.913432 0.14077604
-[4,] 0.75 997.1004 2.645815 0.25377332
-[5,] 1.00 995.9329 3.657150 0.40999128
-[6,] 1.25 994.3217 5.052451 0.62586673</code></pre>
-</div>
-</div>
-<p><code>ode()</code> returns a matrix-like object. The first column is time; the remaining columns are your compartments.</p>
-</section>
-<section id="step-5-plot" class="slide level2">
-<h2>Step 5: plot</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>sir_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sir_solution)</span>
-<span id="cb8-2"><a></a>sir_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S =</span> <span class="st">"deepskyblue3"</span>, <span class="at">I =</span> <span class="st">"darkorange2"</span>, <span class="at">R =</span> <span class="st">"seagreen4"</span>)</span>
-<span id="cb8-3"><a></a></span>
-<span id="cb8-4"><a></a><span class="fu">matplot</span>(</span>
-<span id="cb8-5"><a></a>  <span class="at">x =</span> sir_df<span class="sc">$</span>time,</span>
-<span id="cb8-6"><a></a>  <span class="at">y =</span> sir_df[, <span class="fu">c</span>(<span class="st">"S"</span>, <span class="st">"I"</span>, <span class="st">"R"</span>)],</span>
-<span id="cb8-7"><a></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb8-8"><a></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
-<span id="cb8-9"><a></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb8-10"><a></a>  <span class="at">col =</span> sir_colors,</span>
-<span id="cb8-11"><a></a>  <span class="at">xlab =</span> <span class="st">"Time"</span>,</span>
-<span id="cb8-12"><a></a>  <span class="at">ylab =</span> <span class="st">"Number of people"</span>,</span>
-<span id="cb8-13"><a></a>  <span class="at">main =</span> <span class="st">"SIR model"</span></span>
-<span id="cb8-14"><a></a>)</span>
-<span id="cb8-15"><a></a></span>
-<span id="cb8-16"><a></a><span class="fu">legend</span>(</span>
-<span id="cb8-17"><a></a>  <span class="st">"right"</span>,</span>
-<span id="cb8-18"><a></a>  <span class="at">inset =</span> <span class="fl">0.02</span>,</span>
-<span id="cb8-19"><a></a>  <span class="at">legend =</span> <span class="fu">names</span>(sir_colors),</span>
-<span id="cb8-20"><a></a>  <span class="at">col =</span> sir_colors,</span>
-<span id="cb8-21"><a></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
-<span id="cb8-22"><a></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb8-23"><a></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
-<span id="cb8-24"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">curve</span>(</span>
+<span id="cb2-2"><a></a>  <span class="fu">sin</span>(x) <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb2-3"><a></a>  <span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>,</span>
+<span id="cb2-4"><a></a>  <span class="at">to =</span> <span class="dv">2</span>,</span>
+<span id="cb2-5"><a></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb2-6"><a></a>  <span class="at">xlab =</span> <span class="st">"x"</span>,</span>
+<span id="cb2-7"><a></a>  <span class="at">ylab =</span> <span class="st">"f(x)"</span></span>
+<span id="cb2-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ODEs_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
-<section id="sanity-checks" class="slide level2">
-<h2>Sanity checks</h2>
-<p>Before trusting a simulation, ask:</p>
-<ul>
-<li>Are all compartments non-negative?</li>
-<li>Does the total population stay constant if the model has no births or deaths?</li>
-<li>Does the direction of movement match the diagram?</li>
-<li>Does changing one parameter move the curve in the direction you expect?</li>
-</ul>
+<img data-src="optim-likelihood_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
+<section id="warm-up-solution" class="slide level2">
+<h2>Warm-up solution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">range</span>(sir_df<span class="sc">$</span>S, sir_df<span class="sc">$</span>I, sir_df<span class="sc">$</span>R)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>warmup_fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb3-2"><a></a>  <span class="at">par =</span> <span class="dv">0</span>,</span>
+<span id="cb3-3"><a></a>  <span class="at">fn =</span> \(x) <span class="fu">sin</span>(x) <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb3-4"><a></a>  <span class="at">method =</span> <span class="st">"BFGS"</span>,</span>
+<span id="cb3-5"><a></a>  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb3-6"><a></a>)</span>
+<span id="cb3-7"><a></a></span>
+<span id="cb3-8"><a></a>warmup_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]   0.0000 999.4448</code></pre>
+<pre><code>$par
+[1] 0.6532841
+
+$value
+[1] 0.396653
+
+$counts
+function gradient 
+       8        7 
+
+$convergence
+[1] 0
+
+$message
+NULL</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sir_total <span class="ot">&lt;-</span> sir_df<span class="sc">$</span>S <span class="sc">+</span> sir_df<span class="sc">$</span>I <span class="sc">+</span> sir_df<span class="sc">$</span>R</span>
-<span id="cb11-2"><a></a><span class="fu">range</span>(sir_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">curve</span>(</span>
+<span id="cb5-2"><a></a>  <span class="fu">sin</span>(x) <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb5-3"><a></a>  <span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>,</span>
+<span id="cb5-4"><a></a>  <span class="at">to =</span> <span class="dv">2</span>,</span>
+<span id="cb5-5"><a></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb5-6"><a></a>  <span class="at">xlab =</span> <span class="st">"x"</span>,</span>
+<span id="cb5-7"><a></a>  <span class="at">ylab =</span> <span class="st">"f(x)"</span></span>
+<span id="cb5-8"><a></a>)</span>
+<span id="cb5-9"><a></a><span class="fu">abline</span>(<span class="at">v =</span> warmup_fit<span class="sc">$</span>par, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb5-10"><a></a><span class="fu">abline</span>(<span class="at">h =</span> warmup_fit<span class="sc">$</span>value, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="optim-likelihood_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
+<section id="pooled-mosquito-surveillance" class="slide level2">
+<h2>Pooled mosquito surveillance</h2>
+<p>Suppose a health department monitors West Nile virus in mosquito pools.</p>
+<ul>
+<li>20 pools were tested.</li>
+<li>Each pool contains 10 mosquitoes.</li>
+<li>7 pools were positive.</li>
+</ul>
+<p>If the individual mosquito infection risk is <code>p</code>, the probability a pool tests positive is:</p>
+<p><span class="math display">\[
+P(+) = 1 - (1 - p)^{10}
+\]</span></p>
+</section>
+<section id="write-the-likelihood" class="slide level2">
+<h2>Write the likelihood</h2>
+<p>For 7 positive pools out of 20:</p>
+<p><span class="math display">\[
+Y \sim Binomial(20, 1 - (1 - p)^{10})
+\]</span></p>
+<p>In R, we can write the negative log likelihood directly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>pooled_nll <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="cb6-2"><a></a>  pool_positive_probability <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> p)<span class="sc">^</span><span class="dv">10</span></span>
+<span id="cb6-3"><a></a></span>
+<span id="cb6-4"><a></a>  <span class="sc">-</span><span class="fu">dbinom</span>(</span>
+<span id="cb6-5"><a></a>    <span class="at">x =</span> <span class="dv">7</span>,</span>
+<span id="cb6-6"><a></a>    <span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb6-7"><a></a>    <span class="at">prob =</span> pool_positive_probability,</span>
+<span id="cb6-8"><a></a>    <span class="at">log =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-9"><a></a>  )</span>
+<span id="cb6-10"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimate-the-infection-risk" class="slide level2">
+<h2>Estimate the infection risk</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>pooled_fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb7-2"><a></a>  <span class="at">par =</span> <span class="fl">0.05</span>,</span>
+<span id="cb7-3"><a></a>  <span class="at">fn =</span> pooled_nll,</span>
+<span id="cb7-4"><a></a>  <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>,</span>
+<span id="cb7-5"><a></a>  <span class="at">lower =</span> <span class="fl">0.00001</span>,</span>
+<span id="cb7-6"><a></a>  <span class="at">upper =</span> <span class="fl">0.99999</span>,</span>
+<span id="cb7-7"><a></a>  <span class="at">hessian =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-8"><a></a>)</span>
+<span id="cb7-9"><a></a></span>
+<span id="cb7-10"><a></a>pooled_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1000 1000</code></pre>
+<pre><code>$par
+[1] 0.04217128
+
+$value
+[1] 1.690642
+
+$counts
+function gradient 
+       8        8 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH"
+
+$hessian
+         [,1]
+[1,] 4051.487</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>infection_risk <span class="ot">&lt;-</span> pooled_fit<span class="sc">$</span>par</span>
+<span id="cb9-2"><a></a>infection_risk</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04217128</code></pre>
 </div>
 </div>
 </section>
-<section id="practice-checkpoint-sirs" class="slide level2">
-<h2>Practice checkpoint: SIRS</h2>
+<section id="approximate-confidence-interval" class="slide level2">
+<h2>Approximate confidence interval</h2>
+<p>For a one-parameter likelihood, a quick Wald-style interval uses the Hessian.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>pooled_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> pooled_fit<span class="sc">$</span>hessian[<span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb11-2"><a></a>pooled_ci <span class="ot">&lt;-</span> infection_risk <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>) <span class="sc">*</span> pooled_se</span>
+<span id="cb11-3"><a></a></span>
+<span id="cb11-4"><a></a><span class="fu">c</span>(</span>
+<span id="cb11-5"><a></a>  <span class="at">estimate =</span> infection_risk,</span>
+<span id="cb11-6"><a></a>  <span class="at">lower =</span> pooled_ci[<span class="dv">1</span>],</span>
+<span id="cb11-7"><a></a>  <span class="at">upper =</span> pooled_ci[<span class="dv">2</span>]</span>
+<span id="cb11-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  estimate      lower      upper 
+0.04217128 0.01137851 0.07296406 </code></pre>
+</div>
+</div>
+<p>This approximation is convenient, but it is not magic. Check whether the parameter is near a boundary before trusting it.</p>
+</section>
+<section id="practice-checkpoint-zero-inflation" class="slide level2">
+<h2>Practice checkpoint: zero inflation</h2>
 <p><strong>Prompt</strong></p>
-<p>Modify the SIR model so recovered people lose immunity and become susceptible again. Call the new parameter <code>zeta</code>.</p>
-
-<img data-src="../images/SIRS.PNG" class="r-stretch quarto-figure-center"><p class="caption">Source: DOI 10.3390/sym14122583 with course edit</p><p>Use:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sirs_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta =</span> <span class="fl">0.0015</span>, <span class="at">gamma =</span> <span class="fl">0.20</span>, <span class="at">zeta =</span> <span class="fl">0.02</span>)</span>
-<span id="cb13-2"><a></a>sirs_initial_state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S =</span> <span class="dv">999</span>, <span class="at">I =</span> <span class="dv">1</span>, <span class="at">R =</span> <span class="dv">0</span>)</span>
-<span id="cb13-3"><a></a>sirs_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">160</span>, <span class="at">by =</span> <span class="fl">0.25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Plot the result and compare it with the SIR curve.</p>
-</section>
-<section id="practice-checkpoint-hint" class="slide level2 scrollable">
-<h2>Practice checkpoint: hint</h2>
-<p>The SIRS equations are:</p>
+<p>Some trap regions may have no West Nile virus introduced yet. Let <code>kappa</code> be the probability that the region is exposed to the risk process at all.</p>
+<p>Use:</p>
 <p><span class="math display">\[
-\begin{aligned}
-\frac{dS}{dt} &amp;= -\beta S I + \zeta R \\
-\frac{dI}{dt} &amp;= \beta S I - \gamma I \\
-\frac{dR}{dt} &amp;= \gamma I - \zeta R
-\end{aligned}
+P(+) = \kappa \left(1 - (1 - p)^{10}\right)
 \]</span></p>
-<p>You only need to change two things:</p>
-<ol type="1">
-<li>Add <code>zeta &lt;- parameters["zeta"]</code>.</li>
-<li>Add the <code>zeta * R</code> flow into <code>dS</code> and out of <code>dR</code>.</li>
-</ol>
+<p>Estimate <code>p</code> and <code>kappa</code> from the same 7 positive pools out of 20.</p>
+</section>
+<section id="practice-checkpoint-hint" class="slide level2">
+<h2>Practice checkpoint: hint</h2>
+<p>Your function should take a length-two vector:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>zip_nll <span class="ot">&lt;-</span> <span class="cf">function</span>(par) {</span>
+<span id="cb13-2"><a></a>  p <span class="ot">&lt;-</span> par[<span class="dv">1</span>]</span>
+<span id="cb13-3"><a></a>  kappa <span class="ot">&lt;-</span> par[<span class="dv">2</span>]</span>
+<span id="cb13-4"><a></a></span>
+<span id="cb13-5"><a></a>  ...</span>
+<span id="cb13-6"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use length-two <code>par</code>, <code>lower</code>, and <code>upper</code> values in <code>optim()</code>.</p>
 </section>
 <section id="practice-checkpoint-solution" class="slide level2">
 <h2>Practice checkpoint: solution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>sirs_parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">beta =</span> <span class="fl">0.0015</span>, <span class="at">gamma =</span> <span class="fl">0.20</span>, <span class="at">zeta =</span> <span class="fl">0.02</span>)</span>
-<span id="cb14-2"><a></a>sirs_initial_state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">S =</span> <span class="dv">999</span>, <span class="at">I =</span> <span class="dv">1</span>, <span class="at">R =</span> <span class="dv">0</span>)</span>
-<span id="cb14-3"><a></a>sirs_times <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">160</span>, <span class="at">by =</span> <span class="fl">0.25</span>)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>zip_nll <span class="ot">&lt;-</span> <span class="cf">function</span>(par) {</span>
+<span id="cb14-2"><a></a>  p <span class="ot">&lt;-</span> par[<span class="dv">1</span>]</span>
+<span id="cb14-3"><a></a>  kappa <span class="ot">&lt;-</span> par[<span class="dv">2</span>]</span>
 <span id="cb14-4"><a></a></span>
-<span id="cb14-5"><a></a>sirs_ode <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parameters) {</span>
-<span id="cb14-6"><a></a>  S <span class="ot">&lt;-</span> state[<span class="st">"S"</span>]</span>
-<span id="cb14-7"><a></a>  I <span class="ot">&lt;-</span> state[<span class="st">"I"</span>]</span>
-<span id="cb14-8"><a></a>  R <span class="ot">&lt;-</span> state[<span class="st">"R"</span>]</span>
-<span id="cb14-9"><a></a></span>
-<span id="cb14-10"><a></a>  beta <span class="ot">&lt;-</span> parameters[<span class="st">"beta"</span>]</span>
-<span id="cb14-11"><a></a>  gamma <span class="ot">&lt;-</span> parameters[<span class="st">"gamma"</span>]</span>
-<span id="cb14-12"><a></a>  zeta <span class="ot">&lt;-</span> parameters[<span class="st">"zeta"</span>]</span>
-<span id="cb14-13"><a></a></span>
-<span id="cb14-14"><a></a>  dS <span class="ot">&lt;-</span> <span class="sc">-</span>beta <span class="sc">*</span> S <span class="sc">*</span> I <span class="sc">+</span> zeta <span class="sc">*</span> R</span>
-<span id="cb14-15"><a></a>  dI <span class="ot">&lt;-</span> beta <span class="sc">*</span> S <span class="sc">*</span> I <span class="sc">-</span> gamma <span class="sc">*</span> I</span>
-<span id="cb14-16"><a></a>  dR <span class="ot">&lt;-</span> gamma <span class="sc">*</span> I <span class="sc">-</span> zeta <span class="sc">*</span> R</span>
-<span id="cb14-17"><a></a></span>
-<span id="cb14-18"><a></a>  <span class="fu">list</span>(<span class="fu">c</span>(<span class="at">S =</span> dS, <span class="at">I =</span> dI, <span class="at">R =</span> dR))</span>
-<span id="cb14-19"><a></a>}</span>
-<span id="cb14-20"><a></a></span>
-<span id="cb14-21"><a></a>sirs_solution <span class="ot">&lt;-</span> deSolve<span class="sc">::</span><span class="fu">ode</span>(</span>
-<span id="cb14-22"><a></a>  <span class="at">y =</span> sirs_initial_state,</span>
-<span id="cb14-23"><a></a>  <span class="at">times =</span> sirs_times,</span>
-<span id="cb14-24"><a></a>  <span class="at">func =</span> sirs_ode,</span>
-<span id="cb14-25"><a></a>  <span class="at">parms =</span> sirs_parameters</span>
-<span id="cb14-26"><a></a>)</span>
-<span id="cb14-27"><a></a></span>
-<span id="cb14-28"><a></a>sirs_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sirs_solution)</span>
-<span id="cb14-29"><a></a><span class="fu">head</span>(sirs_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a></a>  pool_positive_probability <span class="ot">&lt;-</span> kappa <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> p)<span class="sc">^</span><span class="dv">10</span>)</span>
+<span id="cb14-6"><a></a></span>
+<span id="cb14-7"><a></a>  <span class="sc">-</span><span class="fu">dbinom</span>(</span>
+<span id="cb14-8"><a></a>    <span class="at">x =</span> <span class="dv">7</span>,</span>
+<span id="cb14-9"><a></a>    <span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb14-10"><a></a>    <span class="at">prob =</span> pool_positive_probability,</span>
+<span id="cb14-11"><a></a>    <span class="at">log =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-12"><a></a>  )</span>
+<span id="cb14-13"><a></a>}</span>
+<span id="cb14-14"><a></a></span>
+<span id="cb14-15"><a></a>zip_fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb14-16"><a></a>  <span class="at">par =</span> <span class="fu">c</span>(<span class="at">p =</span> <span class="fl">0.05</span>, <span class="at">kappa =</span> <span class="fl">0.70</span>),</span>
+<span id="cb14-17"><a></a>  <span class="at">fn =</span> zip_nll,</span>
+<span id="cb14-18"><a></a>  <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>,</span>
+<span id="cb14-19"><a></a>  <span class="at">lower =</span> <span class="fu">c</span>(<span class="fl">0.00001</span>, <span class="fl">0.00001</span>),</span>
+<span id="cb14-20"><a></a>  <span class="at">upper =</span> <span class="fu">c</span>(<span class="fl">0.99999</span>, <span class="fl">0.99999</span>)</span>
+<span id="cb14-21"><a></a>)</span>
+<span id="cb14-22"><a></a></span>
+<span id="cb14-23"><a></a>zip_fit<span class="sc">$</span>par</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  time        S        I          R
-1 0.00 999.0000 1.000000 0.00000000
-2 0.25 998.5577 1.383405 0.05892916
-3 0.50 997.9464 1.913432 0.14014973
-4 0.75 997.1020 2.645816 0.25218121
-5 1.00 995.9361 3.657155 0.40677265
-6 1.25 994.3274 5.052466 0.62010994</code></pre>
+<pre><code>         p      kappa 
+0.06629598 0.70510949 </code></pre>
 </div>
 </div>
+<p>With only one aggregate count, many combinations of <code>p</code> and <code>kappa</code> can produce similar fits. The model is easy to code, but the data may not identify both parameters well.</p>
 </section>
-<section id="practice-checkpoint-solution-plot" class="slide level2">
-<h2>Practice checkpoint: solution plot</h2>
+<section id="take-home-extension" class="slide level2">
+<h2>Take-home extension</h2>
+<p>The local file <code>data/mos-nyc.csv</code> contains county-level mosquito pool data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">matplot</span>(</span>
-<span id="cb16-2"><a></a>  <span class="at">x =</span> sirs_df<span class="sc">$</span>time,</span>
-<span id="cb16-3"><a></a>  <span class="at">y =</span> sirs_df[, <span class="fu">c</span>(<span class="st">"S"</span>, <span class="st">"I"</span>, <span class="st">"R"</span>)],</span>
-<span id="cb16-4"><a></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb16-5"><a></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
-<span id="cb16-6"><a></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb16-7"><a></a>  <span class="at">col =</span> sir_colors,</span>
-<span id="cb16-8"><a></a>  <span class="at">xlab =</span> <span class="st">"Time"</span>,</span>
-<span id="cb16-9"><a></a>  <span class="at">ylab =</span> <span class="st">"Number of people"</span>,</span>
-<span id="cb16-10"><a></a>  <span class="at">main =</span> <span class="st">"SIRS model"</span></span>
-<span id="cb16-11"><a></a>)</span>
-<span id="cb16-12"><a></a></span>
-<span id="cb16-13"><a></a><span class="fu">legend</span>(</span>
-<span id="cb16-14"><a></a>  <span class="st">"right"</span>,</span>
-<span id="cb16-15"><a></a>  <span class="at">inset =</span> <span class="fl">0.02</span>,</span>
-<span id="cb16-16"><a></a>  <span class="at">legend =</span> <span class="fu">names</span>(sir_colors),</span>
-<span id="cb16-17"><a></a>  <span class="at">col =</span> sir_colors,</span>
-<span id="cb16-18"><a></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
-<span id="cb16-19"><a></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb16-20"><a></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
-<span id="cb16-21"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>mosquito_pools <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb16-2"><a></a>  <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"mos-nyc.csv"</span>),</span>
+<span id="cb16-3"><a></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb16-4"><a></a>)</span>
+<span id="cb16-5"><a></a></span>
+<span id="cb16-6"><a></a><span class="fu">head</span>(mosquito_pools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">County</th>
+<th style="text-align: right;">PCR Positive</th>
+<th style="text-align: right;">Pools submitted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Albany</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Broome</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cattaraugus</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Columbia</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">52</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cortland</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dutchess</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">144</td>
+</tr>
+</tbody>
+</table>
 </div>
-<img data-src="ODEs_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><p>With waning immunity, infection can persist at a low level instead of dying out after a single epidemic wave.</p>
-</section>
-<section id="optional-stretch-environmental-pathogen" class="slide level2">
-<h2>Optional stretch: environmental pathogen</h2>
+</div>
 <p><strong>Prompt</strong></p>
-<p>For a faster student or take-home extension, add an environmental pathogen compartment <code>P</code>.</p>
-
-<img data-src="../images/sirp.png" class="r-stretch quarto-figure-center"><p class="caption">Source: Andreas Handel’s DSAIDE package</p><p>Use these equations:</p>
-<p><span class="math display">\[
-\begin{aligned}
-\frac{dS}{dt} &amp;= n - b_I I S - b_P P S - mS \\
-\frac{dI}{dt} &amp;= b_I I S + b_P P S - gI - mI \\
-\frac{dR}{dt} &amp;= gI - mR \\
-\frac{dP}{dt} &amp;= qI - cP
-\end{aligned}
-\]</span></p>
-<p><strong>Hint</strong></p>
-<p>Add a fourth state named <code>P</code>. Your derivative function should return four values: <code>dS</code>, <code>dI</code>, <code>dR</code>, and <code>dP</code>.</p>
+<p>Assume each submitted pool contains 50 mosquitoes. Estimate a single mosquito infection risk using all counties together.</p>
 <p><strong>Solution outline</strong></p>
-<p>Start from <code>sirs_ode()</code>, add <code>P &lt;- state["P"]</code>, add parameters named <code>n</code>, <code>b_I</code>, <code>b_P</code>, <code>m</code>, <code>g</code>, <code>q</code>, and <code>c</code>, then return:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">list</span>(<span class="fu">c</span>(<span class="at">S =</span> dS, <span class="at">I =</span> dI, <span class="at">R =</span> dR, <span class="at">P =</span> dP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Set <code>n = 0</code> and <code>m = 0</code> for the first run if you want to focus only on the environmental transmission path.</p>
-</section>
-<section id="what-to-keep" class="slide level2 scrollable">
-<h2>What to keep</h2>
-<p>The reusable pattern is:</p>
-<ol type="1">
-<li>Name every state variable.</li>
-<li>Name every parameter.</li>
-<li>Write one derivative per state variable.</li>
-<li>Return the derivatives as <code>list(c(...))</code>.</li>
-<li>Plot first, then interpret.</li>
-</ol>
-</section>
-<section id="more-resources" class="slide level2">
-<h2>More resources</h2>
-<ul>
-<li>Andreas Handel’s <a href="https://cran.r-project.org/package=DSAIRM">DSAIRM</a> and <a href="https://cran.r-project.org/package=DSAIDE">DSAIDE</a> packages contain many infectious disease model examples.</li>
-<li>Many other SISMID courses go much deeper into mathematical and statistical modeling of infectious disease systems.</li>
-</ul>
+<p>Sum <code>PCR Positive</code> and <code>Pools submitted</code> across counties, then reuse <code>pooled_nll()</code> with <code>x</code>, <code>size</code>, and pool size as arguments instead of fixed numbers.</p>
 
 
 </section>

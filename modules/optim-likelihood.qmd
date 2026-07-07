@@ -1,0 +1,252 @@
+---
+title: "Optional Advanced: Likelihoods with optim"
+format:
+  revealjs:
+    toc: false
+    smaller: true
+    scrollable: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(printr)
+```
+
+## Why this is optional
+
+This deck preserves the maximum-likelihood material from the earlier combined
+ODE/optimization deck. It is useful take-home material for learners who want to
+fit custom likelihoods, but it is not part of the Day 3 ODE core.
+
+## Learning goals
+
+1. Write a small objective function.
+1. Use `optim()` with parameter bounds.
+1. Estimate a mosquito infection rate from pooled surveillance data.
+1. Extend the likelihood to a two-parameter mixture model.
+
+## What is `optim()`?
+
+`optim()` is R's general-purpose interface for numerical optimization.
+
+It expects a function to minimize. If you want to maximize a likelihood, it is
+common to minimize the negative log likelihood.
+
+```r
+optim(
+  par = starting_values,
+  fn = objective_function,
+  method = "L-BFGS-B",
+  lower = lower_bounds,
+  upper = upper_bounds
+)
+```
+
+## Warm-up
+
+Find the maximum of:
+
+$$
+f(x) = \sin(x)e^{-x^2}
+$$
+
+```{r}
+curve(
+  sin(x) * exp(-x^2),
+  from = -2,
+  to = 2,
+  n = 1000,
+  xlab = "x",
+  ylab = "f(x)"
+)
+```
+
+## Warm-up solution
+
+```{r}
+warmup_fit <- optim(
+  par = 0,
+  fn = \(x) sin(x) * exp(-x^2),
+  method = "BFGS",
+  control = list(fnscale = -1)
+)
+
+warmup_fit
+```
+
+```{r}
+curve(
+  sin(x) * exp(-x^2),
+  from = -2,
+  to = 2,
+  n = 1000,
+  xlab = "x",
+  ylab = "f(x)"
+)
+abline(v = warmup_fit$par, col = "red", lwd = 2)
+abline(h = warmup_fit$value, col = "red", lwd = 2)
+```
+
+## Pooled mosquito surveillance
+
+Suppose a health department monitors West Nile virus in mosquito pools.
+
+- 20 pools were tested.
+- Each pool contains 10 mosquitoes.
+- 7 pools were positive.
+
+If the individual mosquito infection risk is `p`, the probability a pool tests
+positive is:
+
+$$
+P(+) = 1 - (1 - p)^{10}
+$$
+
+## Write the likelihood
+
+For 7 positive pools out of 20:
+
+$$
+Y \sim Binomial(20, 1 - (1 - p)^{10})
+$$
+
+In R, we can write the negative log likelihood directly.
+
+```{r}
+pooled_nll <- function(p) {
+  pool_positive_probability <- 1 - (1 - p)^10
+
+  -dbinom(
+    x = 7,
+    size = 20,
+    prob = pool_positive_probability,
+    log = TRUE
+  )
+}
+```
+
+## Estimate the infection risk
+
+```{r}
+pooled_fit <- optim(
+  par = 0.05,
+  fn = pooled_nll,
+  method = "L-BFGS-B",
+  lower = 0.00001,
+  upper = 0.99999,
+  hessian = TRUE
+)
+
+pooled_fit
+```
+
+```{r}
+infection_risk <- pooled_fit$par
+infection_risk
+```
+
+## Approximate confidence interval
+
+For a one-parameter likelihood, a quick Wald-style interval uses the Hessian.
+
+```{r}
+pooled_se <- sqrt(1 / pooled_fit$hessian[1, 1])
+pooled_ci <- infection_risk + c(-1.96, 1.96) * pooled_se
+
+c(
+  estimate = infection_risk,
+  lower = pooled_ci[1],
+  upper = pooled_ci[2]
+)
+```
+
+This approximation is convenient, but it is not magic. Check whether the
+parameter is near a boundary before trusting it.
+
+## Practice checkpoint: zero inflation
+
+**Prompt**
+
+Some trap regions may have no West Nile virus introduced yet. Let `kappa` be
+the probability that the region is exposed to the risk process at all.
+
+Use:
+
+$$
+P(+) = \kappa \left(1 - (1 - p)^{10}\right)
+$$
+
+Estimate `p` and `kappa` from the same 7 positive pools out of 20.
+
+## Practice checkpoint: hint
+
+Your function should take a length-two vector:
+
+```r
+zip_nll <- function(par) {
+  p <- par[1]
+  kappa <- par[2]
+
+  ...
+}
+```
+
+Use length-two `par`, `lower`, and `upper` values in `optim()`.
+
+## Practice checkpoint: solution
+
+```{r}
+zip_nll <- function(par) {
+  p <- par[1]
+  kappa <- par[2]
+
+  pool_positive_probability <- kappa * (1 - (1 - p)^10)
+
+  -dbinom(
+    x = 7,
+    size = 20,
+    prob = pool_positive_probability,
+    log = TRUE
+  )
+}
+
+zip_fit <- optim(
+  par = c(p = 0.05, kappa = 0.70),
+  fn = zip_nll,
+  method = "L-BFGS-B",
+  lower = c(0.00001, 0.00001),
+  upper = c(0.99999, 0.99999)
+)
+
+zip_fit$par
+```
+
+With only one aggregate count, many combinations of `p` and `kappa` can produce
+similar fits. The model is easy to code, but the data may not identify both
+parameters well.
+
+## Take-home extension
+
+The local file `data/mos-nyc.csv` contains county-level mosquito pool data.
+
+```{r}
+mosquito_pools <- read.csv(
+  file.path("..", "data", "mos-nyc.csv"),
+  check.names = FALSE
+)
+
+head(mosquito_pools)
+```
+
+**Prompt**
+
+Assume each submitted pool contains 50 mosquitoes. Estimate a single mosquito
+infection risk using all counties together.
+
+**Solution outline**
+
+Sum `PCR Positive` and `Pools submitted` across counties, then reuse
+`pooled_nll()` with `x`, `size`, and pool size as arguments instead of fixed
+numbers.

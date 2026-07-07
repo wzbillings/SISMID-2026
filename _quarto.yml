@@ -83,7 +83,7 @@ website:
           - text: "Exercise 2"
             href: exercises/Exercise2.qmd
             target: _blank
-      - section: "Optional / take-home"
+      - section: "Optional / advanced / take-home"
         contents:
           - text: "Bootstrapping"
             href: modules/bootstrapping.qmd
@@ -93,6 +93,12 @@ website:
             target: _blank
           - text: "Power simulation"
             href: modules/power-sim.qmd
+            target: _blank
+          - text: "Likelihoods with optim"
+            href: modules/optim-likelihood.qmd
+            target: _blank
+          - text: "Fitting ODE models"
+            href: modules/ODE-parameter-fitting.qmd
             target: _blank
   repo-url: https://github.com/wzbillings/SISMID-2026
   reader-mode: true
