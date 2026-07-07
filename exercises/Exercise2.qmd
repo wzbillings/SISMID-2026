@@ -1,30 +1,238 @@
 ---
-title: "Exercise 2: Exercises for Tuesday"
+title: "Exercise 2: Polish the QCRC Report"
 format: html
+editor: visual
 ---
 
-In this exercise, you'll build a short report about a dataset you've seen
-before. This is a practical example for putting together the core skills from
-the course: Quarto, useful reporting packages, formulas and model objects,
-interpretation, and the programming habits you've been developing. Optional
-bonus questions let you try bootstrapping or power simulation after the main
-report is working.
+# Purpose
 
-# Exercise guidelines
+Exercise 2 picks up where Exercise 1 ended. You will turn yesterday's
+renderable draft into a polished Quarto deliverable: a short manuscript-style
+report with reproducible data loading, a table or figure, a model, clear
+interpretation, and a limitations paragraph.
 
-1. Write a report about an epidemiological question you think you can answer from the QCRC dataset. It's ok if you only use the "Main_Dataset" sheet but if you're comfortable with joins, feel free to combine information from other sheets. Your report should be a neatly formatted Quarto document with standard introduction, methods, results, and discussion sections (but each section can be short, and you don't need references). We recommend that you use the "pdf", "typst", or "docx" output formats, because these are more useful than HTML in real life and can be a bit more challenging to work with.
-1. Select an outcome variable, and then choose an exposure of interest. Select other covariates that you think could be effect modifiers or confounders, and justify your choices. State a research question and your hypothesis.
-1. Include a "table one" of descriptive statistics.
-1. Fit an appropriate GLM for your outcome. Report appropriate crude and adjusted measures of effect for each of the covariates you chose to analyze.
-1. Perform any other analyses you think are necessary to get your point across -- this could be correlations, plots, quantiles, other methods you like to use, anything.
-1. Report and interpret your findings in the context of your research question.
+QCRC remains the recommended dataset. If you chose another course dataset in
+Exercise 1, you may continue with it, but your report still needs the same
+structure and should explain why the alternate dataset supports your question.
+See the [course data README](../data-readme.qmd) if you are still deciding.
 
-**Bonus questions**
+# Starting point
 
-If you finish the main questions, you can try any of these bonus problems that interest you to make your report better. You'll need to use the course resources and/or google and/or AI (RESPONSIBLY!!!) to work on these.
+Begin with your Exercise 1 file, usually `qcrc-mini-manuscript.qmd`.
 
-1. Try to compare multiple models using AIC or analysis of deviance (you can google how to do these). Interpret the model comparisons, but remember that model selection *is not causal*.
-1. Calculate bootstrap confidence intervals for your model using the BCa method, and compare them to the profile confidence intervals. How different are they? If you really want to get your hands dirty, also calculate approximate Wald-type confidence intervals (±1.96 times the estimated standard error for a coefficient).
-1. Pretend that the sample size you observed was a true constraint based on budget, and do a power analysis for the effect of your main exposure in your model. Since this is post-hoc, it doesn't give you a lot of information, but how would you interpret this if you ran it before collecting the data?
-1. Get meaningful predictions/estimates from your model and interpret those -- for example, if you chose a binary outcome, you could calculate risk differences for specific strata, or for a continuous/count outcome you could get predicted outcomes in specific strata.
-1. Add a bibliography to your document and cite some references.
+Save a Day 2 copy as `qcrc-report-final.qmd` before making major changes. Keep
+the old draft so you can recover quickly if something breaks.
+
+Use these support files:
+
+- [Starter Quarto template](qcrc-mini-manuscript-starter.qmd)
+- [Minimum viable report checklist and rubric](qcrc-report-checklist-rubric.qmd)
+
+# Task 1: Re-render and triage your draft
+
+**Student prompt**
+
+Open your Exercise 1 report and render it once. Make a short to-do list in the
+Appendix with the three highest-priority fixes for today.
+
+Your fixes should usually include:
+
+- one reproducibility fix
+- one analysis or interpretation fix
+- one formatting or reader-experience fix
+
+**Hint**
+
+If the report does not render, make rendering your first fix. Temporarily set
+unfinished chunks to `eval: false` only when you are sure they are not needed
+for the required deliverable.
+
+**Deliverable**
+
+A Day 2 report file that renders and includes a short triage list.
+
+# Task 2: Make data loading reusable
+
+**Student prompt**
+
+Move your QCRC loading and cleaning code into a small reusable function inside
+your report. Then use that function to create the analysis dataset.
+
+Your function should:
+
+- read the `Main_Dataset` sheet by default
+- clean names
+- convert numeric-looking character variables that you use
+- create readable factors for your main binary variables
+
+**Hint**
+
+Functions from Day 1 and functional programming from Day 2 are useful here
+because reports often need the same cleaning logic more than once.
+
+```{r}
+#| eval: false
+
+read_qcrc_main <- function(path = here::here("data", "QCRC_FINAL_Deidentified.xlsx")) {
+  # read, clean, convert, return
+}
+
+qcrc <- read_qcrc_main()
+```
+
+**Deliverable**
+
+A named data-loading function and a short Methods sentence explaining what it
+does.
+
+# Task 3: Add a workbook inventory
+
+**Student prompt**
+
+Use `readxl::excel_sheets()` and `lapply()` to read or inspect the QCRC workbook
+sheets. Add a small appendix table with one row per sheet and columns for sheet
+name, number of rows, and number of columns.
+
+**Hint**
+
+You do not need to analyze every sheet. The purpose is to practice functional
+programming and document what data are available.
+
+```{r}
+#| eval: false
+
+data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
+sheet_names <- readxl::excel_sheets(data_file)
+sheet_list <- lapply(sheet_names, \(s) readxl::read_xlsx(data_file, sheet = s))
+```
+
+**Deliverable**
+
+An appendix table describing the workbook.
+
+# Task 4: Build the analysis table and figure
+
+**Student prompt**
+
+Create at least one polished descriptive table and one figure that support your
+research question.
+
+At minimum:
+
+- table: summarize core variables overall and by 30-day mortality status
+- figure: show a distribution or relationship relevant to your outcome,
+  exposure, or model
+
+**Hint**
+
+Use the simplest table tool that produces a readable result. `knitr::kable()`
+is enough. If you already know `gtsummary`, `gt`, or another table package, you
+may use it.
+
+**Deliverable**
+
+One table and one figure with captions and one-sentence interpretations.
+
+# Task 5: Fit crude and adjusted models
+
+**Student prompt**
+
+Fit one crude model and one adjusted model for your main question. For the
+recommended QCRC report, use logistic regression with 30-day mortality as the
+outcome.
+
+Your report should include:
+
+- the model formula written in the Methods section
+- crude and adjusted estimates for the main exposure
+- confidence intervals or a clear note if you could not compute them
+- a plain-language interpretation
+
+**Hint**
+
+Formula syntax and S3 methods are the bridge from the Day 2 module to your
+report.
+
+```{r}
+#| eval: false
+
+crude_model <- glm(
+  x30d_mortality ~ main_exposure,
+  data = qcrc,
+  family = binomial
+)
+
+adjusted_model <- glm(
+  x30d_mortality ~ main_exposure + age + bmi,
+  data = qcrc,
+  family = binomial
+)
+
+summary(adjusted_model)
+exp(coef(adjusted_model))
+exp(confint.default(adjusted_model))
+```
+
+**Deliverable**
+
+A compact model-results table and a Results paragraph.
+
+# Task 6: Polish the Quarto deliverable
+
+**Student prompt**
+
+Revise the report so a busy colleague can understand it without reading your
+code.
+
+Your final report should have:
+
+- a specific title
+- short Introduction, Methods, Results, and Discussion sections
+- code chunk labels and useful chunk options
+- captions for tables and figures
+- an Appendix for checks, exploratory output, or workbook inventory
+- a final render to HTML, Word, PDF, or Typst
+
+**Hint**
+
+You do not need a long report. A strong two-to-four page report is better than a
+messy long report. Prioritize the question, data, methods, main result, and
+limitations.
+
+**Deliverable**
+
+A polished Quarto report that renders without errors.
+
+# Optional advanced tasks
+
+Choose any that are useful for your report.
+
+1. Compare two adjusted models using AIC or analysis of deviance. Explain why
+   model selection is not the same as causal variable selection.
+1. Use predictions from the adjusted model to report an absolute risk
+   difference for two clinically meaningful profiles.
+1. Add a sensitivity analysis using `Died`, `x60d_mortality`, or a complete-case
+   dataset.
+1. Use a non-main QCRC sheet, such as long labs or oxygen delivery, to create an
+   additional exploratory variable. Keep the join conservative and document it.
+1. Add a bibliography and cite one clinical or epidemiologic reference that
+   helps interpret your report.
+1. Bootstrap one model estimate and compare it with the model-based confidence
+   interval.
+
+# Exercise 2 checklist
+
+Core requirements:
+
+- starts from the Exercise 1 report
+- uses QCRC by default, or clearly justifies another course dataset
+- includes reusable data-loading or cleaning code
+- includes a workbook inventory using `lapply()` or similar repeated logic
+- includes a descriptive table and figure
+- fits and interprets crude and adjusted models
+- uses formula syntax and at least one S3 generic such as `summary()`, `coef()`,
+  `confint.default()`, `anova()`, or `predict()`
+- renders as a polished Quarto deliverable
+
+Optional stretch goals are listed in the
+[rubric/checklist](qcrc-report-checklist-rubric.qmd).

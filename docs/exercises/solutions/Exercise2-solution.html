@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Alex Edwards">
+<meta name="author" content="Zane Billings">
+<title>Exercise 2 Solutions: Polish the QCRC Report – SISMID R for ID Materials (2026)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9902f6a23aa44ed4860ee9a7510a0e9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-612648ffb7005cd00a7619ba85bc11c7.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+</head>
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      SISMID R for ID Materials (2026)
+      </li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">SISMID R for ID Materials (2026)</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/wzbillings/SISMID-2026" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Schedule</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Resources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../data-readme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Data README</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 1 core</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module00-Welcome.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 0: Welcome</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module01-Quarto.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 1: Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module02-StatReview.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 2: Stats in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module03-Iteration.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 3: Iteration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module04-Functions.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 4: Writing functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Walkthrough1.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Data science walkthrough 1</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 2 core</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module05-FunctionalProgramming.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 5: Functional programming</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/UsefulPackages.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Useful R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Module06-S3-lm-formulas.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Module 6: S3 and formulas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Walkthrough2.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Data science walkthrough 2</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 3 core</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/ODEs.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">ODEs with deSolve</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/DiseaseMapping.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Disease mapping and GIS</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../exercises/qcrc-report-checklist-rubric.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">QCRC report checklist/rubric</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../exercises/qcrc-mini-manuscript-starter.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">QCRC starter template</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../exercises/Exercise1.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Exercise 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../exercises/Exercise2.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Exercise 2</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Optional / take-home</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/bootstrapping.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Bootstrapping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/Arrow.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Arrow</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../modules/power-sim.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Power simulation</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Page Items</h2>
+   
+  <ul>
+<li><a href="#instructor-note" id="toc-instructor-note" class="nav-link active" data-scroll-target="#instructor-note">Instructor note</a></li>
+  <li><a href="#task-1-solution-re-render-and-triage" id="toc-task-1-solution-re-render-and-triage" class="nav-link" data-scroll-target="#task-1-solution-re-render-and-triage">Task 1 solution: Re-render and triage</a></li>
+  <li><a href="#task-2-solution-reusable-data-loading" id="toc-task-2-solution-reusable-data-loading" class="nav-link" data-scroll-target="#task-2-solution-reusable-data-loading">Task 2 solution: Reusable data loading</a></li>
+  <li><a href="#task-3-solution-workbook-inventory" id="toc-task-3-solution-workbook-inventory" class="nav-link" data-scroll-target="#task-3-solution-workbook-inventory">Task 3 solution: Workbook inventory</a></li>
+  <li><a href="#task-4-solution-analysis-table-and-figure" id="toc-task-4-solution-analysis-table-and-figure" class="nav-link" data-scroll-target="#task-4-solution-analysis-table-and-figure">Task 4 solution: Analysis table and figure</a></li>
+  <li><a href="#task-5-solution-crude-and-adjusted-models" id="toc-task-5-solution-crude-and-adjusted-models" class="nav-link" data-scroll-target="#task-5-solution-crude-and-adjusted-models">Task 5 solution: Crude and adjusted models</a></li>
+  <li><a href="#task-6-solution-polished-deliverable" id="toc-task-6-solution-polished-deliverable" class="nav-link" data-scroll-target="#task-6-solution-polished-deliverable">Task 6 solution: Polished deliverable</a></li>
+  <li><a href="#advanced-task-solution-outlines" id="toc-advanced-task-solution-outlines" class="nav-link" data-scroll-target="#advanced-task-solution-outlines">Advanced task solution outlines</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Exercise 2 Solutions: Polish the QCRC Report</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p><a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> </p>
+             <p><a href="https://wzbillings.com/">Zane Billings</a> </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="instructor-note" class="level1"><h1>Instructor note</h1>
+<p>This solution continues the Exercise 1 QCRC report. It is an exemplar structure, not the only valid student answer.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="task-1-solution-re-render-and-triage" class="level1"><h1>Task 1 solution: Re-render and triage</h1>
+<p>Example Day 2 triage list:</p>
+<ul>
+<li>Reproducibility fix: move data loading and recoding into a named function.</li>
+<li>Analysis fix: report both crude and adjusted logistic models for 30-day mortality.</li>
+<li>Formatting fix: replace raw model output with a compact odds-ratio table and add captions.</li>
+</ul></section><section id="task-2-solution-reusable-data-loading" class="level1"><h1>Task 2 solution: Reusable data loading</h1>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>to_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">as.numeric</span>(dplyr<span class="sc">::</span><span class="fu">na_if</span>(<span class="fu">as.character</span>(x), <span class="st">"."</span>))</span>
+<span id="cb2-3"><a href="#cb2-3"></a>}</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>read_qcrc_main <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)) {</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(path, <span class="at">sheet =</span> <span class="st">"Main_Dataset"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb2-9"><a href="#cb2-9"></a>      <span class="at">bmi =</span> <span class="fu">to_numeric</span>(bmi),</span>
+<span id="cb2-10"><a href="#cb2-10"></a>      <span class="at">crp =</span> <span class="fu">to_numeric</span>(crp),</span>
+<span id="cb2-11"><a href="#cb2-11"></a>      <span class="at">d_dimer =</span> <span class="fu">to_numeric</span>(d_dimer),</span>
+<span id="cb2-12"><a href="#cb2-12"></a>      <span class="at">vent_los =</span> <span class="fu">to_numeric</span>(vent_los),</span>
+<span id="cb2-13"><a href="#cb2-13"></a>      <span class="at">x30d_mortality =</span> <span class="fu">factor</span>(</span>
+<span id="cb2-14"><a href="#cb2-14"></a>        x30d_mortality,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb2-16"><a href="#cb2-16"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No 30-day mortality"</span>, <span class="st">"30-day mortality"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17"></a>      ),</span>
+<span id="cb2-18"><a href="#cb2-18"></a>      <span class="at">died =</span> <span class="fu">factor</span>(died, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Survived"</span>, <span class="st">"Died"</span>)),</span>
+<span id="cb2-19"><a href="#cb2-19"></a>      <span class="at">intubated =</span> <span class="fu">factor</span>(intubated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)),</span>
+<span id="cb2-20"><a href="#cb2-20"></a>      <span class="at">remdesivir_or_placebo =</span> <span class="fu">factor</span>(</span>
+<span id="cb2-21"><a href="#cb2-21"></a>        remdesivir_or_placebo,</span>
+<span id="cb2-22"><a href="#cb2-22"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb2-23"><a href="#cb2-23"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Placebo"</span>, <span class="st">"Remdesivir"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24"></a>      ),</span>
+<span id="cb2-25"><a href="#cb2-25"></a>      <span class="at">female =</span> <span class="fu">factor</span>(female),</span>
+<span id="cb2-26"><a href="#cb2-26"></a>      <span class="at">race =</span> <span class="fu">factor</span>(race)</span>
+<span id="cb2-27"><a href="#cb2-27"></a>    )</span>
+<span id="cb2-28"><a href="#cb2-28"></a>}</span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a>qcrc <span class="ot">&lt;-</span> <span class="fu">read_qcrc_main</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Example Methods sentence:</p>
+<blockquote class="blockquote">
+<p>We used a report-local helper function to read the QCRC main sheet, clean variable names, convert selected character variables to numeric values, and recode binary variables for analysis and reporting.</p>
+</blockquote>
+</section><section id="task-3-solution-workbook-inventory" class="level1"><h1>Task 3 solution: Workbook inventory</h1>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>sheet_names <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">excel_sheets</span>(data_file)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>sheet_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(sheet_names, \(s) readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(data_file, <span class="at">sheet =</span> s))</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>workbook_inventory <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">sheet =</span> sheet_names,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">rows =</span> <span class="fu">sapply</span>(sheet_list, nrow),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="at">columns =</span> <span class="fu">sapply</span>(sheet_list, ncol)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a></span>
+<span id="cb3-11"><a href="#cb3-11"></a>workbook_inventory <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"QCRC workbook inventory."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>QCRC workbook inventory.</caption>
+<thead><tr class="header">
+<th style="text-align: left;">sheet</th>
+<th style="text-align: right;">rows</th>
+<th style="text-align: right;">columns</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Main_Dataset</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oxygen_Delivery</td>
+<td style="text-align: right;">42606</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SOFA</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Long_Labs</td>
+<td style="text-align: right;">15919</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Long_Vitals</td>
+<td style="text-align: right;">143220</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Static_Compliance</td>
+<td style="text-align: right;">18281</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PAO2_FIO2</td>
+<td style="text-align: right;">5252</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICU_Meds</td>
+<td style="text-align: right;">869554</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intake_Form</td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">71</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Daily_Form</td>
+<td style="text-align: right;">3612</td>
+<td style="text-align: right;">36</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><section id="task-4-solution-analysis-table-and-figure" class="level1"><h1>Task 4 solution: Analysis table and figure</h1>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>qcrc <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(x30d_mortality) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="at">mean_age =</span> <span class="fu">round</span>(<span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="at">median_icu_los =</span> <span class="fu">round</span>(<span class="fu">median</span>(icu_los, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="at">mean_bmi =</span> <span class="fu">round</span>(<span class="fu">mean</span>(bmi, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="at">intubated_percent =</span> <span class="fu">round</span>(<span class="fu">mean</span>(intubated <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="at">remdesivir_percent =</span> <span class="fu">round</span>(</span>
+<span id="cb4-10"><a href="#cb4-10"></a>      <span class="fu">mean</span>(remdesivir_or_placebo <span class="sc">==</span> <span class="st">"Remdesivir"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>      <span class="dv">1</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>    ),</span>
+<span id="cb4-13"><a href="#cb4-13"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Selected characteristics by 30-day mortality status."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Selected characteristics by 30-day mortality status.</caption>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 4%">
+<col style="width: 9%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 20%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">x30d_mortality</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">mean_age</th>
+<th style="text-align: right;">median_icu_los</th>
+<th style="text-align: right;">mean_bmi</th>
+<th style="text-align: right;">intubated_percent</th>
+<th style="text-align: right;">remdesivir_percent</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No 30-day mortality</td>
+<td style="text-align: right;">194</td>
+<td style="text-align: right;">60.1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">68.6</td>
+<td style="text-align: right;">20.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">30-day mortality</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">70.4</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">28.5</td>
+<td style="text-align: right;">84.0</td>
+<td style="text-align: right;">10.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">ggplot</span>(qcrc, <span class="fu">aes</span>(<span class="at">x =</span> x30d_mortality, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">geom_boxplot</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Age"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="Exercise2-solution_files/figure-html/age-mortality-figure-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Age distribution by 30-day mortality status.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Example interpretation:</p>
+<blockquote class="blockquote">
+<p>The descriptive table and age figure help establish the sample context before adjusted modeling. Differences in descriptive summaries should not be treated as adjusted effects.</p>
+</blockquote>
+</section><section id="task-5-solution-crude-and-adjusted-models" class="level1"><h1>Task 5 solution: Crude and adjusted models</h1>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>crude_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  x30d_mortality <span class="sc">~</span> intubated,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">data =</span> qcrc,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">family =</span> binomial</span>
+<span id="cb6-5"><a href="#cb6-5"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a>adjusted_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb6-8"><a href="#cb6-8"></a>  x30d_mortality <span class="sc">~</span> intubated <span class="sc">+</span> age <span class="sc">+</span> bmi <span class="sc">+</span> remdesivir_or_placebo,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>  <span class="at">data =</span> qcrc,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>  <span class="at">family =</span> binomial</span>
+<span id="cb6-11"><a href="#cb6-11"></a>)</span>
+<span id="cb6-12"><a href="#cb6-12"></a></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="fu">summary</span>(adjusted_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre data-code-line-numbers=""><code>
+Call:
+glm(formula = x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo, 
+    family = binomial, data = qcrc)
+
+Coefficients:
+                                Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                     -2.31314    1.19892  -1.929  0.05369 .  
+intubatedYes                     1.46234    0.37355   3.915 9.05e-05 ***
+age                              0.04436    0.01114   3.983 6.81e-05 ***
+bmi                             -0.07458    0.02301  -3.242  0.00119 ** 
+remdesivir_or_placeboRemdesivir -1.04033    0.41672  -2.496  0.01254 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 361.41  on 284  degrees of freedom
+Residual deviance: 300.08  on 280  degrees of freedom
+  (3 observations deleted due to missingness)
+AIC: 310.08
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>tidy_or <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="at">term =</span> <span class="fu">names</span>(<span class="fu">coef</span>(model)),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="at">odds_ratio =</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model)),</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="fu">exp</span>(<span class="fu">confint.default</span>(model)),</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>  )</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="fu">names</span>(out) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"conf_low"</span>, <span class="st">"conf_high"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10"></a></span>
+<span id="cb8-11"><a href="#cb8-11"></a>  out <span class="sc">|&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">2</span>)))</span>
+<span id="cb8-13"><a href="#cb8-13"></a>}</span>
+<span id="cb8-14"><a href="#cb8-14"></a></span>
+<span id="cb8-15"><a href="#cb8-15"></a>dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(</span>
+<span id="cb8-16"><a href="#cb8-16"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">tidy_or</span>(crude_model), <span class="at">model =</span> <span class="st">"Crude"</span>),</span>
+<span id="cb8-17"><a href="#cb8-17"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">tidy_or</span>(adjusted_model), <span class="at">model =</span> <span class="st">"Adjusted"</span>)</span>
+<span id="cb8-18"><a href="#cb8-18"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(model, term, odds_ratio, conf_low, conf_high) <span class="sc">|&gt;</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Crude and adjusted odds ratios for 30-day mortality."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Crude and adjusted odds ratios for 30-day mortality.</caption>
+<colgroup>
+<col style="width: 31%">
+<col style="width: 8%">
+<col style="width: 31%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 9%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">model</th>
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">odds_ratio</th>
+<th style="text-align: right;">conf_low</th>
+<th style="text-align: right;">conf_high</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)…1</td>
+<td style="text-align: left;">Crude</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">intubatedYes…2</td>
+<td style="text-align: left;">Crude</td>
+<td style="text-align: left;">intubatedYes</td>
+<td style="text-align: right;">2.42</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">4.53</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)…3</td>
+<td style="text-align: left;">Adjusted</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">intubatedYes…4</td>
+<td style="text-align: left;">Adjusted</td>
+<td style="text-align: left;">intubatedYes</td>
+<td style="text-align: right;">4.32</td>
+<td style="text-align: right;">2.08</td>
+<td style="text-align: right;">8.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Adjusted</td>
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">Adjusted</td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: right;">0.93</td>
+<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">0.97</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">remdesivir_or_placeboRemdesivir</td>
+<td style="text-align: left;">Adjusted</td>
+<td style="text-align: left;">remdesivir_or_placeboRemdesivir</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.80</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Example Results paragraph:</p>
+<blockquote class="blockquote">
+<p>In the crude model, intubation was associated with higher odds of 30-day mortality. After adjustment for age, BMI, and treatment group, the association remained positive, although the exact estimate and confidence interval should be interpreted in light of missingness, variable coding, and the limited scope of this course exercise.</p>
+</blockquote>
+</section><section id="task-6-solution-polished-deliverable" class="level1"><h1>Task 6 solution: Polished deliverable</h1>
+<p>Expected final report structure:</p>
+<ul>
+<li>Title: specific and outcome-oriented.</li>
+<li>Introduction: question, rationale, and hypothesis.</li>
+<li>Methods: data source, cleaning, descriptive analysis, model formula, and uncertainty approach.</li>
+<li>Results: table, figure, model table, and short interpretation.</li>
+<li>Discussion: main finding, practical meaning, limitation, and next step.</li>
+<li>Appendix: workbook inventory and exploratory checks.</li>
+</ul></section><section id="advanced-task-solution-outlines" class="level1"><h1>Advanced task solution outlines</h1>
+<ol type="1">
+<li>Model comparison: fit two nested models, then compare with <code>AIC(model1,    model2)</code> or <code>anova(model1, model2, test = "Chisq")</code>; remind students this does not choose confounders causally.</li>
+<li>Predictions: create a small <code>newdata</code> grid and call <code>predict(model, newdata,    type = "response", se.fit = TRUE)</code>; report predicted probabilities.</li>
+<li>Sensitivity analysis: repeat crude and adjusted models with <code>died</code> or recoded <code>x60d_mortality</code>; compare direction and rough magnitude.</li>
+<li>Non-main sheet: inspect row level, identify a stable patient identifier, summarize to one row per patient before joining, and document any exclusions.</li>
+<li>Bibliography: add a <code>bibliography:</code> field in YAML and cite at least one source in the Introduction or Discussion.</li>
+<li>Bootstrap: resample rows with replacement, refit the same model many times, collect the coefficient of interest, and summarize percentile intervals.</li>
+</ol>
+
+
+<!-- -->
+
+</section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb9" data-shortcodes="false" data-code-line-numbers=""><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">---</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="an">title:</span><span class="co"> "Exercise 2 Solutions: Polish the QCRC Report"</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="an">execute:</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">  warning: false</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">  message: false</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">---</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="fu"># Instructor note</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>This solution continues the Exercise 1 QCRC report. It is an exemplar structure,</span>
+<span id="cb9-13"><a href="#cb9-13"></a>not the only valid student answer.</span>
+<span id="cb9-14"><a href="#cb9-14"></a></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="in">```{r}</span></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="co">#| label: setup</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a></span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="fu">library</span>(here)</span>
+<span id="cb9-23"><a href="#cb9-23"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="in">```</span></span>
+<span id="cb9-27"><a href="#cb9-27"></a></span>
+<span id="cb9-28"><a href="#cb9-28"></a><span class="fu"># Task 1 solution: Re-render and triage</span></span>
+<span id="cb9-29"><a href="#cb9-29"></a></span>
+<span id="cb9-30"><a href="#cb9-30"></a>Example Day 2 triage list:</span>
+<span id="cb9-31"><a href="#cb9-31"></a></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="ss">- </span>Reproducibility fix: move data loading and recoding into a named function.</span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="ss">- </span>Analysis fix: report both crude and adjusted logistic models for 30-day</span>
+<span id="cb9-34"><a href="#cb9-34"></a>  mortality.</span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="ss">- </span>Formatting fix: replace raw model output with a compact odds-ratio table and</span>
+<span id="cb9-36"><a href="#cb9-36"></a>  add captions.</span>
+<span id="cb9-37"><a href="#cb9-37"></a></span>
+<span id="cb9-38"><a href="#cb9-38"></a><span class="fu"># Task 2 solution: Reusable data loading</span></span>
+<span id="cb9-39"><a href="#cb9-39"></a></span>
+<span id="cb9-42"><a href="#cb9-42"></a><span class="in">```{r}</span></span>
+<span id="cb9-43"><a href="#cb9-43"></a><span class="co">#| label: reusable-loader</span></span>
+<span id="cb9-44"><a href="#cb9-44"></a></span>
+<span id="cb9-45"><a href="#cb9-45"></a>to_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb9-46"><a href="#cb9-46"></a>  <span class="fu">as.numeric</span>(dplyr<span class="sc">::</span><span class="fu">na_if</span>(<span class="fu">as.character</span>(x), <span class="st">"."</span>))</span>
+<span id="cb9-47"><a href="#cb9-47"></a>}</span>
+<span id="cb9-48"><a href="#cb9-48"></a></span>
+<span id="cb9-49"><a href="#cb9-49"></a>read_qcrc_main <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)) {</span>
+<span id="cb9-50"><a href="#cb9-50"></a>  readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(path, <span class="at">sheet =</span> <span class="st">"Main_Dataset"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-51"><a href="#cb9-51"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-52"><a href="#cb9-52"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb9-53"><a href="#cb9-53"></a>      <span class="at">bmi =</span> <span class="fu">to_numeric</span>(bmi),</span>
+<span id="cb9-54"><a href="#cb9-54"></a>      <span class="at">crp =</span> <span class="fu">to_numeric</span>(crp),</span>
+<span id="cb9-55"><a href="#cb9-55"></a>      <span class="at">d_dimer =</span> <span class="fu">to_numeric</span>(d_dimer),</span>
+<span id="cb9-56"><a href="#cb9-56"></a>      <span class="at">vent_los =</span> <span class="fu">to_numeric</span>(vent_los),</span>
+<span id="cb9-57"><a href="#cb9-57"></a>      <span class="at">x30d_mortality =</span> <span class="fu">factor</span>(</span>
+<span id="cb9-58"><a href="#cb9-58"></a>        x30d_mortality,</span>
+<span id="cb9-59"><a href="#cb9-59"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb9-60"><a href="#cb9-60"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No 30-day mortality"</span>, <span class="st">"30-day mortality"</span>)</span>
+<span id="cb9-61"><a href="#cb9-61"></a>      ),</span>
+<span id="cb9-62"><a href="#cb9-62"></a>      <span class="at">died =</span> <span class="fu">factor</span>(died, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Survived"</span>, <span class="st">"Died"</span>)),</span>
+<span id="cb9-63"><a href="#cb9-63"></a>      <span class="at">intubated =</span> <span class="fu">factor</span>(intubated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)),</span>
+<span id="cb9-64"><a href="#cb9-64"></a>      <span class="at">remdesivir_or_placebo =</span> <span class="fu">factor</span>(</span>
+<span id="cb9-65"><a href="#cb9-65"></a>        remdesivir_or_placebo,</span>
+<span id="cb9-66"><a href="#cb9-66"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb9-67"><a href="#cb9-67"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Placebo"</span>, <span class="st">"Remdesivir"</span>)</span>
+<span id="cb9-68"><a href="#cb9-68"></a>      ),</span>
+<span id="cb9-69"><a href="#cb9-69"></a>      <span class="at">female =</span> <span class="fu">factor</span>(female),</span>
+<span id="cb9-70"><a href="#cb9-70"></a>      <span class="at">race =</span> <span class="fu">factor</span>(race)</span>
+<span id="cb9-71"><a href="#cb9-71"></a>    )</span>
+<span id="cb9-72"><a href="#cb9-72"></a>}</span>
+<span id="cb9-73"><a href="#cb9-73"></a></span>
+<span id="cb9-74"><a href="#cb9-74"></a>qcrc <span class="ot">&lt;-</span> <span class="fu">read_qcrc_main</span>()</span>
+<span id="cb9-75"><a href="#cb9-75"></a><span class="in">```</span></span>
+<span id="cb9-76"><a href="#cb9-76"></a></span>
+<span id="cb9-77"><a href="#cb9-77"></a>Example Methods sentence:</span>
+<span id="cb9-78"><a href="#cb9-78"></a></span>
+<span id="cb9-79"><a href="#cb9-79"></a><span class="at">&gt; We used a report-local helper function to read the QCRC main sheet, clean</span></span>
+<span id="cb9-80"><a href="#cb9-80"></a><span class="at">&gt; variable names, convert selected character variables to numeric values, and</span></span>
+<span id="cb9-81"><a href="#cb9-81"></a><span class="at">&gt; recode binary variables for analysis and reporting.</span></span>
+<span id="cb9-82"><a href="#cb9-82"></a></span>
+<span id="cb9-83"><a href="#cb9-83"></a><span class="fu"># Task 3 solution: Workbook inventory</span></span>
+<span id="cb9-84"><a href="#cb9-84"></a></span>
+<span id="cb9-87"><a href="#cb9-87"></a><span class="in">```{r}</span></span>
+<span id="cb9-88"><a href="#cb9-88"></a><span class="co">#| label: workbook-inventory</span></span>
+<span id="cb9-89"><a href="#cb9-89"></a></span>
+<span id="cb9-90"><a href="#cb9-90"></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)</span>
+<span id="cb9-91"><a href="#cb9-91"></a>sheet_names <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">excel_sheets</span>(data_file)</span>
+<span id="cb9-92"><a href="#cb9-92"></a>sheet_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(sheet_names, \(s) readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(data_file, <span class="at">sheet =</span> s))</span>
+<span id="cb9-93"><a href="#cb9-93"></a></span>
+<span id="cb9-94"><a href="#cb9-94"></a>workbook_inventory <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-95"><a href="#cb9-95"></a>  <span class="at">sheet =</span> sheet_names,</span>
+<span id="cb9-96"><a href="#cb9-96"></a>  <span class="at">rows =</span> <span class="fu">sapply</span>(sheet_list, nrow),</span>
+<span id="cb9-97"><a href="#cb9-97"></a>  <span class="at">columns =</span> <span class="fu">sapply</span>(sheet_list, ncol)</span>
+<span id="cb9-98"><a href="#cb9-98"></a>)</span>
+<span id="cb9-99"><a href="#cb9-99"></a></span>
+<span id="cb9-100"><a href="#cb9-100"></a>workbook_inventory <span class="sc">|&gt;</span></span>
+<span id="cb9-101"><a href="#cb9-101"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"QCRC workbook inventory."</span>)</span>
+<span id="cb9-102"><a href="#cb9-102"></a><span class="in">```</span></span>
+<span id="cb9-103"><a href="#cb9-103"></a></span>
+<span id="cb9-104"><a href="#cb9-104"></a><span class="fu"># Task 4 solution: Analysis table and figure</span></span>
+<span id="cb9-105"><a href="#cb9-105"></a></span>
+<span id="cb9-108"><a href="#cb9-108"></a><span class="in">```{r}</span></span>
+<span id="cb9-109"><a href="#cb9-109"></a><span class="co">#| label: final-descriptive-table</span></span>
+<span id="cb9-110"><a href="#cb9-110"></a></span>
+<span id="cb9-111"><a href="#cb9-111"></a>qcrc <span class="sc">|&gt;</span></span>
+<span id="cb9-112"><a href="#cb9-112"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(x30d_mortality) <span class="sc">|&gt;</span></span>
+<span id="cb9-113"><a href="#cb9-113"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb9-114"><a href="#cb9-114"></a>    <span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb9-115"><a href="#cb9-115"></a>    <span class="at">mean_age =</span> <span class="fu">round</span>(<span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb9-116"><a href="#cb9-116"></a>    <span class="at">median_icu_los =</span> <span class="fu">round</span>(<span class="fu">median</span>(icu_los, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb9-117"><a href="#cb9-117"></a>    <span class="at">mean_bmi =</span> <span class="fu">round</span>(<span class="fu">mean</span>(bmi, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>),</span>
+<span id="cb9-118"><a href="#cb9-118"></a>    <span class="at">intubated_percent =</span> <span class="fu">round</span>(<span class="fu">mean</span>(intubated <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb9-119"><a href="#cb9-119"></a>    <span class="at">remdesivir_percent =</span> <span class="fu">round</span>(</span>
+<span id="cb9-120"><a href="#cb9-120"></a>      <span class="fu">mean</span>(remdesivir_or_placebo <span class="sc">==</span> <span class="st">"Remdesivir"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb9-121"><a href="#cb9-121"></a>      <span class="dv">1</span></span>
+<span id="cb9-122"><a href="#cb9-122"></a>    ),</span>
+<span id="cb9-123"><a href="#cb9-123"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb9-124"><a href="#cb9-124"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb9-125"><a href="#cb9-125"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Selected characteristics by 30-day mortality status."</span>)</span>
+<span id="cb9-126"><a href="#cb9-126"></a><span class="in">```</span></span>
+<span id="cb9-127"><a href="#cb9-127"></a></span>
+<span id="cb9-130"><a href="#cb9-130"></a><span class="in">```{r}</span></span>
+<span id="cb9-131"><a href="#cb9-131"></a><span class="co">#| label: age-mortality-figure</span></span>
+<span id="cb9-132"><a href="#cb9-132"></a><span class="co">#| fig-cap: "Age distribution by 30-day mortality status."</span></span>
+<span id="cb9-133"><a href="#cb9-133"></a></span>
+<span id="cb9-134"><a href="#cb9-134"></a><span class="fu">ggplot</span>(qcrc, <span class="fu">aes</span>(<span class="at">x =</span> x30d_mortality, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb9-135"><a href="#cb9-135"></a>  <span class="fu">geom_boxplot</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb9-136"><a href="#cb9-136"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Age"</span>)</span>
+<span id="cb9-137"><a href="#cb9-137"></a><span class="in">```</span></span>
+<span id="cb9-138"><a href="#cb9-138"></a></span>
+<span id="cb9-139"><a href="#cb9-139"></a>Example interpretation:</span>
+<span id="cb9-140"><a href="#cb9-140"></a></span>
+<span id="cb9-141"><a href="#cb9-141"></a><span class="at">&gt; The descriptive table and age figure help establish the sample context before</span></span>
+<span id="cb9-142"><a href="#cb9-142"></a><span class="at">&gt; adjusted modeling. Differences in descriptive summaries should not be treated</span></span>
+<span id="cb9-143"><a href="#cb9-143"></a><span class="at">&gt; as adjusted effects.</span></span>
+<span id="cb9-144"><a href="#cb9-144"></a></span>
+<span id="cb9-145"><a href="#cb9-145"></a><span class="fu"># Task 5 solution: Crude and adjusted models</span></span>
+<span id="cb9-146"><a href="#cb9-146"></a></span>
+<span id="cb9-149"><a href="#cb9-149"></a><span class="in">```{r}</span></span>
+<span id="cb9-150"><a href="#cb9-150"></a><span class="co">#| label: crude-adjusted-models</span></span>
+<span id="cb9-151"><a href="#cb9-151"></a></span>
+<span id="cb9-152"><a href="#cb9-152"></a>crude_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb9-153"><a href="#cb9-153"></a>  x30d_mortality <span class="sc">~</span> intubated,</span>
+<span id="cb9-154"><a href="#cb9-154"></a>  <span class="at">data =</span> qcrc,</span>
+<span id="cb9-155"><a href="#cb9-155"></a>  <span class="at">family =</span> binomial</span>
+<span id="cb9-156"><a href="#cb9-156"></a>)</span>
+<span id="cb9-157"><a href="#cb9-157"></a></span>
+<span id="cb9-158"><a href="#cb9-158"></a>adjusted_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb9-159"><a href="#cb9-159"></a>  x30d_mortality <span class="sc">~</span> intubated <span class="sc">+</span> age <span class="sc">+</span> bmi <span class="sc">+</span> remdesivir_or_placebo,</span>
+<span id="cb9-160"><a href="#cb9-160"></a>  <span class="at">data =</span> qcrc,</span>
+<span id="cb9-161"><a href="#cb9-161"></a>  <span class="at">family =</span> binomial</span>
+<span id="cb9-162"><a href="#cb9-162"></a>)</span>
+<span id="cb9-163"><a href="#cb9-163"></a></span>
+<span id="cb9-164"><a href="#cb9-164"></a><span class="fu">summary</span>(adjusted_model)</span>
+<span id="cb9-165"><a href="#cb9-165"></a><span class="in">```</span></span>
+<span id="cb9-166"><a href="#cb9-166"></a></span>
+<span id="cb9-169"><a href="#cb9-169"></a><span class="in">```{r}</span></span>
+<span id="cb9-170"><a href="#cb9-170"></a><span class="co">#| label: model-table-function</span></span>
+<span id="cb9-171"><a href="#cb9-171"></a></span>
+<span id="cb9-172"><a href="#cb9-172"></a>tidy_or <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb9-173"><a href="#cb9-173"></a>  out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-174"><a href="#cb9-174"></a>    <span class="at">term =</span> <span class="fu">names</span>(<span class="fu">coef</span>(model)),</span>
+<span id="cb9-175"><a href="#cb9-175"></a>    <span class="at">odds_ratio =</span> <span class="fu">exp</span>(<span class="fu">coef</span>(model)),</span>
+<span id="cb9-176"><a href="#cb9-176"></a>    <span class="fu">exp</span>(<span class="fu">confint.default</span>(model)),</span>
+<span id="cb9-177"><a href="#cb9-177"></a>    <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-178"><a href="#cb9-178"></a>  )</span>
+<span id="cb9-179"><a href="#cb9-179"></a></span>
+<span id="cb9-180"><a href="#cb9-180"></a>  <span class="fu">names</span>(out) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"conf_low"</span>, <span class="st">"conf_high"</span>)</span>
+<span id="cb9-181"><a href="#cb9-181"></a></span>
+<span id="cb9-182"><a href="#cb9-182"></a>  out <span class="sc">|&gt;</span></span>
+<span id="cb9-183"><a href="#cb9-183"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">where</span>(is.numeric), \(x) <span class="fu">round</span>(x, <span class="dv">2</span>)))</span>
+<span id="cb9-184"><a href="#cb9-184"></a>}</span>
+<span id="cb9-185"><a href="#cb9-185"></a></span>
+<span id="cb9-186"><a href="#cb9-186"></a>dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(</span>
+<span id="cb9-187"><a href="#cb9-187"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">tidy_or</span>(crude_model), <span class="at">model =</span> <span class="st">"Crude"</span>),</span>
+<span id="cb9-188"><a href="#cb9-188"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">tidy_or</span>(adjusted_model), <span class="at">model =</span> <span class="st">"Adjusted"</span>)</span>
+<span id="cb9-189"><a href="#cb9-189"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb9-190"><a href="#cb9-190"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(model, term, odds_ratio, conf_low, conf_high) <span class="sc">|&gt;</span></span>
+<span id="cb9-191"><a href="#cb9-191"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Crude and adjusted odds ratios for 30-day mortality."</span>)</span>
+<span id="cb9-192"><a href="#cb9-192"></a><span class="in">```</span></span>
+<span id="cb9-193"><a href="#cb9-193"></a></span>
+<span id="cb9-194"><a href="#cb9-194"></a>Example Results paragraph:</span>
+<span id="cb9-195"><a href="#cb9-195"></a></span>
+<span id="cb9-196"><a href="#cb9-196"></a><span class="at">&gt; In the crude model, intubation was associated with higher odds of 30-day</span></span>
+<span id="cb9-197"><a href="#cb9-197"></a><span class="at">&gt; mortality. After adjustment for age, BMI, and treatment group, the association</span></span>
+<span id="cb9-198"><a href="#cb9-198"></a><span class="at">&gt; remained positive, although the exact estimate and confidence interval should</span></span>
+<span id="cb9-199"><a href="#cb9-199"></a><span class="at">&gt; be interpreted in light of missingness, variable coding, and the limited</span></span>
+<span id="cb9-200"><a href="#cb9-200"></a><span class="at">&gt; scope of this course exercise.</span></span>
+<span id="cb9-201"><a href="#cb9-201"></a></span>
+<span id="cb9-202"><a href="#cb9-202"></a><span class="fu"># Task 6 solution: Polished deliverable</span></span>
+<span id="cb9-203"><a href="#cb9-203"></a></span>
+<span id="cb9-204"><a href="#cb9-204"></a>Expected final report structure:</span>
+<span id="cb9-205"><a href="#cb9-205"></a></span>
+<span id="cb9-206"><a href="#cb9-206"></a><span class="ss">- </span>Title: specific and outcome-oriented.</span>
+<span id="cb9-207"><a href="#cb9-207"></a><span class="ss">- </span>Introduction: question, rationale, and hypothesis.</span>
+<span id="cb9-208"><a href="#cb9-208"></a><span class="ss">- </span>Methods: data source, cleaning, descriptive analysis, model formula, and</span>
+<span id="cb9-209"><a href="#cb9-209"></a>  uncertainty approach.</span>
+<span id="cb9-210"><a href="#cb9-210"></a><span class="ss">- </span>Results: table, figure, model table, and short interpretation.</span>
+<span id="cb9-211"><a href="#cb9-211"></a><span class="ss">- </span>Discussion: main finding, practical meaning, limitation, and next step.</span>
+<span id="cb9-212"><a href="#cb9-212"></a><span class="ss">- </span>Appendix: workbook inventory and exploratory checks.</span>
+<span id="cb9-213"><a href="#cb9-213"></a></span>
+<span id="cb9-214"><a href="#cb9-214"></a><span class="fu"># Advanced task solution outlines</span></span>
+<span id="cb9-215"><a href="#cb9-215"></a></span>
+<span id="cb9-216"><a href="#cb9-216"></a><span class="ss">1. </span>Model comparison: fit two nested models, then compare with `AIC(model1,</span>
+<span id="cb9-217"><a href="#cb9-217"></a>   model2)<span class="in">` or `</span>anova(model1, model2, test = "Chisq")`; remind students this</span>
+<span id="cb9-218"><a href="#cb9-218"></a>   does not choose confounders causally.</span>
+<span id="cb9-219"><a href="#cb9-219"></a><span class="ss">1. </span>Predictions: create a small <span class="in">`newdata`</span> grid and call `predict(model, newdata,</span>
+<span id="cb9-220"><a href="#cb9-220"></a>   type = "response", se.fit = TRUE)`; report predicted probabilities.</span>
+<span id="cb9-221"><a href="#cb9-221"></a><span class="ss">1. </span>Sensitivity analysis: repeat crude and adjusted models with <span class="in">`died`</span> or</span>
+<span id="cb9-222"><a href="#cb9-222"></a>   recoded <span class="in">`x60d_mortality`</span>; compare direction and rough magnitude.</span>
+<span id="cb9-223"><a href="#cb9-223"></a><span class="ss">1. </span>Non-main sheet: inspect row level, identify a stable patient identifier,</span>
+<span id="cb9-224"><a href="#cb9-224"></a>   summarize to one row per patient before joining, and document any exclusions.</span>
+<span id="cb9-225"><a href="#cb9-225"></a><span class="ss">1. </span>Bibliography: add a <span class="in">`bibliography:`</span> field in YAML and cite at least one</span>
+<span id="cb9-226"><a href="#cb9-226"></a>   source in the Introduction or Discussion.</span>
+<span id="cb9-227"><a href="#cb9-227"></a><span class="ss">1. </span>Bootstrap: resample rows with replacement, refit the same model many times,</span>
+<span id="cb9-228"><a href="#cb9-228"></a>   collect the coefficient of interest, and summarize percentile intervals.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+<script src="../../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.js" defer="true"></script>
+</body></html>

@@ -1,0 +1,74 @@
+---
+title: "QCRC Report Checklist and Rubric"
+format: html
+editor: visual
+---
+
+# Minimum viable report checklist
+
+A minimum viable report is short, reproducible, and interpretable. It does not
+need to be fancy.
+
+Core requirements:
+
+- The report renders without errors.
+- The title names the dataset or topic and the main outcome.
+- The Introduction states a research question and hypothesis.
+- The Methods identify the dataset, sheet or file, variables, cleaning steps,
+  and statistical analysis.
+- The Results include at least one descriptive table or figure.
+- The Results include at least one model or formal test aligned with the
+  question.
+- The Discussion gives the main interpretation, one limitation, and one next
+  step.
+- Code chunks have useful labels and avoid dumping unnecessary output.
+- Claims use cautious language when the analysis is associational.
+
+# Exercise 1 rubric
+
+Use Exercise 1 to create a solid draft. "Meets expectations" is enough for the
+end of Day 1.
+
+| Area | Core learning goal | Meets expectations | Stretch goal |
+|---|---|---|---|
+| Quarto structure | Start a manuscript-style document | Report has title, sections, runnable chunks, and a successful render | Uses captions, cross-references, or alternate output formats |
+| Data loading | Load and inspect QCRC or justified alternate data | Reads QCRC `Main_Dataset`, cleans names, checks rows/columns and missingness | Reads all QCRC sheets and summarizes workbook structure |
+| Statistics | Connect a question to an appropriate first-pass analysis | Includes one descriptive table/figure and one test or model | Adds a sensitivity analysis or better variable coding |
+| Iteration/functions | Use Day 1 programming habits | Avoids repeated copy-paste where a simple object or function would help | Writes a helper function for repeated summaries |
+| Interpretation | Draft realistic prose for adult professional readers | States a cautious interpretation and at least one limitation | Clearly separates clinical, public health, and statistical significance |
+
+# Exercise 2 rubric
+
+Use Exercise 2 to turn the draft into a polished deliverable.
+
+| Area | Core learning goal | Meets expectations | Stretch goal |
+|---|---|---|---|
+| Continuity | Continue the Exercise 1 manuscript arc | Starts from the Exercise 1 draft and improves it | Shows a short change log from draft to final |
+| Reusable data workflow | Make loading and cleaning reproducible | Defines and uses a data-loading function | Separates helper functions into a sourced script |
+| Functional programming | Use repeated logic intentionally | Uses `lapply()` or similar logic for a workbook inventory | Reads selected non-main sheets and documents a conservative join |
+| Formulas and S3 | Fit and inspect model objects | Fits crude and adjusted models with formula syntax and uses `summary()`, `coef()`, or `confint.default()` | Uses `predict()`, `anova()`, model comparison, or marginal predictions |
+| Reporting | Produce a professional Quarto deliverable | Includes polished sections, captions, model table, figure, and limitation | Adds bibliography, appendix diagnostics, or non-HTML output |
+
+# Optional advanced goals
+
+Advanced work should deepen the same report instead of creating a second
+unrelated analysis.
+
+- Compare models with AIC or likelihood ratio tests.
+- Estimate absolute risks or risk differences from model predictions.
+- Add a sensitivity analysis for a different mortality endpoint.
+- Use a non-main QCRC sheet, with careful documentation of row level and join
+  assumptions.
+- Add a bibliography and cite relevant clinical or epidemiologic literature.
+- Bootstrap a coefficient or predicted estimate and compare uncertainty
+  intervals.
+
+# Instructor review notes
+
+Review this rubric before teaching:
+
+- Confirm whether QCRC variable coding documentation should be added.
+- Confirm whether the treatment variable labels are correct for the current
+  workbook.
+- Decide whether solution documents should be distributed before, during, or
+  after class.

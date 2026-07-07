@@ -25,6 +25,8 @@ website:
         href: schedule.qmd
       - text: "Course Resources"
         href: references.qmd
+      - text: "Course Data README"
+        href: data-readme.qmd
       - section: "Day 1 core"
         contents:
           - text: "Module 0: Welcome"
@@ -69,6 +71,12 @@ website:
             target: _blank
       - section: "Exercises"
         contents:
+          - text: "QCRC report checklist/rubric"
+            href: exercises/qcrc-report-checklist-rubric.qmd
+            target: _blank
+          - text: "QCRC starter template"
+            href: exercises/qcrc-mini-manuscript-starter.qmd
+            target: _blank
           - text: "Exercise 1"
             href: exercises/Exercise1.qmd
             target: _blank

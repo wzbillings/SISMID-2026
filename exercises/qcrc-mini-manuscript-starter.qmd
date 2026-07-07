@@ -1,0 +1,205 @@
+---
+title: "QCRC Mini-Manuscript Starter"
+subtitle: "Replace this subtitle with your research question"
+author: "Your name"
+date: today
+format:
+  html:
+    toc: true
+    code-fold: show
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+
+library(dplyr)
+library(ggplot2)
+library(here)
+library(janitor)
+library(knitr)
+library(readxl)
+```
+
+# Introduction
+
+Replace this paragraph with a short introduction. State your research question,
+your outcome, your main exposure, and why a busy public health or clinical
+reader should care.
+
+Default question:
+
+> Among patients in the QCRC COVID-19 ICU dataset, what patient characteristics
+> and clinical factors are associated with 30-day mortality?
+
+# Methods
+
+## Data source
+
+The analysis used the `Main_Dataset` sheet from the deidentified QCRC COVID-19
+ICU workbook included with the course materials.
+
+```{r}
+#| label: load-qcrc
+
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
+}
+
+read_qcrc_main <- function(path = here::here("data", "QCRC_FINAL_Deidentified.xlsx")) {
+  readxl::read_xlsx(path, sheet = "Main_Dataset") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      bmi = to_numeric(bmi),
+      crp = to_numeric(crp),
+      d_dimer = to_numeric(d_dimer),
+      vent_los = to_numeric(vent_los),
+      x30d_mortality = factor(
+        x30d_mortality,
+        levels = c(0, 1),
+        labels = c("No 30-day mortality", "30-day mortality")
+      ),
+      died = factor(died, levels = c(0, 1), labels = c("Survived", "Died")),
+      intubated = factor(intubated, levels = c(0, 1), labels = c("No", "Yes")),
+      remdesivir_or_placebo = factor(
+        remdesivir_or_placebo,
+        levels = c(0, 1),
+        labels = c("Placebo", "Remdesivir")
+      ),
+      female = factor(female),
+      race = factor(race)
+    )
+}
+
+qcrc <- read_qcrc_main()
+```
+
+```{r}
+#| label: data-check
+
+data.frame(
+  rows = nrow(qcrc),
+  columns = ncol(qcrc)
+) |>
+  knitr::kable(caption = "Basic dimensions of the QCRC analysis dataset.")
+
+names(qcrc)[1:10]
+```
+
+## Variables
+
+Replace this paragraph with your outcome, exposure, and adjustment variables.
+For the default report, the outcome is 30-day mortality. Candidate exposures
+include age, BMI, treatment group, intubation, CRP, or D dimer.
+
+```{r}
+#| label: missingness-check
+
+analysis_vars <- c(
+  "x30d_mortality",
+  "age",
+  "bmi",
+  "female",
+  "intubated",
+  "remdesivir_or_placebo"
+)
+
+missing_counts <- sapply(qcrc[analysis_vars], \(x) sum(is.na(x)))
+
+data.frame(
+  variable = names(missing_counts),
+  missing = as.integer(missing_counts)
+) |>
+  knitr::kable(caption = "Missing values for the planned analysis variables.")
+```
+
+## Statistical analysis
+
+Replace this paragraph with your analysis plan. Use cautious language such as
+"we estimated associations" unless your design supports causal claims.
+
+# Results
+
+## Descriptive results
+
+```{r}
+#| label: descriptive-table
+
+qcrc |>
+  dplyr::group_by(x30d_mortality) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    mean_age = round(mean(age, na.rm = TRUE), 1),
+    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),
+    intubated_percent = round(mean(intubated == "Yes", na.rm = TRUE) * 100, 1),
+    .groups = "drop"
+  ) |>
+  knitr::kable(caption = "Selected QCRC characteristics by 30-day mortality status.")
+```
+
+```{r}
+#| label: bmi-by-mortality
+#| fig-cap: "BMI distribution by 30-day mortality status in the QCRC dataset."
+
+ggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +
+  geom_boxplot(na.rm = TRUE) +
+  labs(
+    x = NULL,
+    y = "BMI"
+  )
+```
+
+## First-pass model
+
+```{r}
+#| label: first-pass-model
+
+model_30d <- glm(
+  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,
+  data = qcrc,
+  family = binomial
+)
+
+summary(model_30d)
+```
+
+```{r}
+#| label: first-pass-odds-ratios
+
+or_table <- data.frame(
+  term = names(coef(model_30d)),
+  odds_ratio = exp(coef(model_30d)),
+  exp(confint.default(model_30d)),
+  check.names = FALSE
+)
+
+names(or_table) <- c("term", "odds_ratio", "conf_low", "conf_high")
+
+or_table |>
+  dplyr::mutate(
+    dplyr::across(where(is.numeric), \(x) round(x, 2))
+  ) |>
+  knitr::kable(caption = "Adjusted odds ratios from a first-pass logistic regression.")
+```
+
+Replace this paragraph with a plain-language interpretation of the table. State
+which estimate matters most for your question, give its direction and rough
+magnitude, and say whether the uncertainty changes your confidence.
+
+# Discussion
+
+Replace this paragraph with the main takeaway, one limitation, and one next
+step. A good limitation for this starter report might mention missingness,
+variable coding, confounding, small subgroup sizes, or the fact that association
+does not prove causation.
+
+# Appendix
+
+## Day 2 to-do list
+
+- Recheck variable coding for the main exposure and outcome.
+- Decide whether to add or remove adjustment variables.
+- Polish captions, prose, and model interpretation.

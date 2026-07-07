@@ -1,0 +1,214 @@
+---
+title: "Exercise 2 Solutions: Polish the QCRC Report"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+# Instructor note
+
+This solution continues the Exercise 1 QCRC report. It is an exemplar structure,
+not the only valid student answer.
+
+```{r}
+#| label: setup
+
+library(dplyr)
+library(ggplot2)
+library(here)
+library(janitor)
+library(knitr)
+library(readxl)
+```
+
+# Task 1 solution: Re-render and triage
+
+Example Day 2 triage list:
+
+- Reproducibility fix: move data loading and recoding into a named function.
+- Analysis fix: report both crude and adjusted logistic models for 30-day
+  mortality.
+- Formatting fix: replace raw model output with a compact odds-ratio table and
+  add captions.
+
+# Task 2 solution: Reusable data loading
+
+```{r}
+#| label: reusable-loader
+
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
+}
+
+read_qcrc_main <- function(path = here::here("data", "QCRC_FINAL_Deidentified.xlsx")) {
+  readxl::read_xlsx(path, sheet = "Main_Dataset") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      bmi = to_numeric(bmi),
+      crp = to_numeric(crp),
+      d_dimer = to_numeric(d_dimer),
+      vent_los = to_numeric(vent_los),
+      x30d_mortality = factor(
+        x30d_mortality,
+        levels = c(0, 1),
+        labels = c("No 30-day mortality", "30-day mortality")
+      ),
+      died = factor(died, levels = c(0, 1), labels = c("Survived", "Died")),
+      intubated = factor(intubated, levels = c(0, 1), labels = c("No", "Yes")),
+      remdesivir_or_placebo = factor(
+        remdesivir_or_placebo,
+        levels = c(0, 1),
+        labels = c("Placebo", "Remdesivir")
+      ),
+      female = factor(female),
+      race = factor(race)
+    )
+}
+
+qcrc <- read_qcrc_main()
+```
+
+Example Methods sentence:
+
+> We used a report-local helper function to read the QCRC main sheet, clean
+> variable names, convert selected character variables to numeric values, and
+> recode binary variables for analysis and reporting.
+
+# Task 3 solution: Workbook inventory
+
+```{r}
+#| label: workbook-inventory
+
+data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
+sheet_names <- readxl::excel_sheets(data_file)
+sheet_list <- lapply(sheet_names, \(s) readxl::read_xlsx(data_file, sheet = s))
+
+workbook_inventory <- data.frame(
+  sheet = sheet_names,
+  rows = sapply(sheet_list, nrow),
+  columns = sapply(sheet_list, ncol)
+)
+
+workbook_inventory |>
+  knitr::kable(caption = "QCRC workbook inventory.")
+```
+
+# Task 4 solution: Analysis table and figure
+
+```{r}
+#| label: final-descriptive-table
+
+qcrc |>
+  dplyr::group_by(x30d_mortality) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    mean_age = round(mean(age, na.rm = TRUE), 1),
+    median_icu_los = round(median(icu_los, na.rm = TRUE), 1),
+    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),
+    intubated_percent = round(mean(intubated == "Yes", na.rm = TRUE) * 100, 1),
+    remdesivir_percent = round(
+      mean(remdesivir_or_placebo == "Remdesivir", na.rm = TRUE) * 100,
+      1
+    ),
+    .groups = "drop"
+  ) |>
+  knitr::kable(caption = "Selected characteristics by 30-day mortality status.")
+```
+
+```{r}
+#| label: age-mortality-figure
+#| fig-cap: "Age distribution by 30-day mortality status."
+
+ggplot(qcrc, aes(x = x30d_mortality, y = age)) +
+  geom_boxplot(na.rm = TRUE) +
+  labs(x = NULL, y = "Age")
+```
+
+Example interpretation:
+
+> The descriptive table and age figure help establish the sample context before
+> adjusted modeling. Differences in descriptive summaries should not be treated
+> as adjusted effects.
+
+# Task 5 solution: Crude and adjusted models
+
+```{r}
+#| label: crude-adjusted-models
+
+crude_model <- glm(
+  x30d_mortality ~ intubated,
+  data = qcrc,
+  family = binomial
+)
+
+adjusted_model <- glm(
+  x30d_mortality ~ intubated + age + bmi + remdesivir_or_placebo,
+  data = qcrc,
+  family = binomial
+)
+
+summary(adjusted_model)
+```
+
+```{r}
+#| label: model-table-function
+
+tidy_or <- function(model) {
+  out <- data.frame(
+    term = names(coef(model)),
+    odds_ratio = exp(coef(model)),
+    exp(confint.default(model)),
+    check.names = FALSE
+  )
+
+  names(out) <- c("term", "odds_ratio", "conf_low", "conf_high")
+
+  out |>
+    dplyr::mutate(dplyr::across(where(is.numeric), \(x) round(x, 2)))
+}
+
+dplyr::bind_rows(
+  dplyr::mutate(tidy_or(crude_model), model = "Crude"),
+  dplyr::mutate(tidy_or(adjusted_model), model = "Adjusted")
+) |>
+  dplyr::select(model, term, odds_ratio, conf_low, conf_high) |>
+  knitr::kable(caption = "Crude and adjusted odds ratios for 30-day mortality.")
+```
+
+Example Results paragraph:
+
+> In the crude model, intubation was associated with higher odds of 30-day
+> mortality. After adjustment for age, BMI, and treatment group, the association
+> remained positive, although the exact estimate and confidence interval should
+> be interpreted in light of missingness, variable coding, and the limited
+> scope of this course exercise.
+
+# Task 6 solution: Polished deliverable
+
+Expected final report structure:
+
+- Title: specific and outcome-oriented.
+- Introduction: question, rationale, and hypothesis.
+- Methods: data source, cleaning, descriptive analysis, model formula, and
+  uncertainty approach.
+- Results: table, figure, model table, and short interpretation.
+- Discussion: main finding, practical meaning, limitation, and next step.
+- Appendix: workbook inventory and exploratory checks.
+
+# Advanced task solution outlines
+
+1. Model comparison: fit two nested models, then compare with `AIC(model1,
+   model2)` or `anova(model1, model2, test = "Chisq")`; remind students this
+   does not choose confounders causally.
+1. Predictions: create a small `newdata` grid and call `predict(model, newdata,
+   type = "response", se.fit = TRUE)`; report predicted probabilities.
+1. Sensitivity analysis: repeat crude and adjusted models with `died` or
+   recoded `x60d_mortality`; compare direction and rough magnitude.
+1. Non-main sheet: inspect row level, identify a stable patient identifier,
+   summarize to one row per patient before joining, and document any exclusions.
+1. Bibliography: add a `bibliography:` field in YAML and cite at least one
+   source in the Introduction or Discussion.
+1. Bootstrap: resample rows with replacement, refit the same model many times,
+   collect the coefficient of interest, and summarize percentile intervals.

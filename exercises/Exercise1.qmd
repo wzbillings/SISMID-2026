@@ -1,186 +1,249 @@
 ---
-title: "Intermediate R Lab using QCRC Data"
+title: "Exercise 1: Start a QCRC Mini-Manuscript"
 format: html
 editor: visual
 ---
 
-# Introduction
+# Purpose
 
-In this lab, we’ll analyze the **QCRC_FINAL_Deidentified.xlsx** dataset to practice:
+Today you will start a short manuscript-style report using the same dataset you
+will continue using in Exercise 2. The default dataset is the QCRC COVID-19 ICU
+workbook because it connects directly to the Quarto, statistics, iteration, and
+functions material from Day 1 and the modeling/formula material from Day 2.
 
--   Two-sample t-test
--   Chi-square test
--   Linear regression
--   Logistic regression
--   Writing `if` statements
--   Iteration using `for` loops and `apply`
+Advanced students may choose another course dataset if it is more useful for
+their own work. If you switch, keep the same deliverables and explain why the
+alternate dataset better supports your question. See the
+[course data README](../data-readme.qmd) before switching.
 
-Let’s get started!
+::: {.callout-note}
+The realistic goal is not a finished paper today. The goal is a renderable
+Quarto draft with a clear question, reproducible data setup, one descriptive
+table or figure, one first-pass analysis, and notes about what still needs work.
+:::
 
-------------------------------------------------------------------------
+# Files you will use
 
-# Part 1 - Loading Data
+- [Starter Quarto template](qcrc-mini-manuscript-starter.qmd)
+- [Minimum viable report checklist and rubric](qcrc-report-checklist-rubric.qmd)
+- QCRC workbook: `data/QCRC_FINAL_Deidentified.xlsx`
 
-First, load the required packages and read the Excel file.
+Suggested output file for your own work: `qcrc-mini-manuscript.qmd`.
 
-```{r}
-# Install if not already installed \# install.packages("readxl")
+# Recommended manuscript question
 
-library(readxl)
+Use this default question unless you have a better one:
 
-# Adjust the path if needed
+> Among patients in the QCRC COVID-19 ICU dataset, what patient characteristics
+> and clinical factors are associated with 30-day mortality?
 
-data <- read_excel(here::here("data/QCRC_FINAL_Deidentified.xlsx"))
+This question is intentionally broad enough for Day 1. In Exercise 2 you will
+make it sharper and turn the draft into a polished report.
 
-# View first few rows
+# Task 1: Create your report draft
 
-head(data)
+**Student prompt**
 
-# View variable names
+Open the starter template and save a working copy as
+`qcrc-mini-manuscript.qmd`. Render it once before changing anything.
 
-names(data)
+Your draft should keep these manuscript sections:
 
-# Quick summary
+- Introduction
+- Methods
+- Results
+- Discussion
+- Appendix
 
-summary(data)
-```
+**Hint**
 
-# Part 2 - Two-Sample t-test
+Rendering early helps you separate Quarto problems from analysis problems. If
+the template does not render, fix that before editing the analysis.
 
-Suppose we want to compare the mean Age of patients who were Intubated vs. those who were not.
+**Deliverable**
 
-```{r}
-# Convert Intubated to a factor for clarity
-data$Intubated <- factor(data$Intubated, labels = c("No", "Yes"))
+A renderable Quarto file with the starter structure in place.
 
-# Check group means
-tapply(data$Age, data$Intubated, mean, na.rm = TRUE)
+# Task 2: Load and inspect the QCRC data
 
-# Run t-test
-t.test(Age ~ Intubated, data = data)
-```
+**Student prompt**
 
-# Exercise
+In your draft, load the `Main_Dataset` sheet from the QCRC workbook. Clean the
+names, convert at least `bmi`, `crp`, or `d_dimer` from character values to
+numeric values if you use them, and print a compact data check.
 
--   Run the above code.
+At minimum, your data check should show:
 
--   Now insert a new code chunk below and write the code to test whether BMI differs between patients who were Intubated vs. those who were not.
+- the number of rows and columns
+- the first few cleaned variable names
+- a count of missing values for the variables you plan to analyze
 
-# Part 3 - Chi-square Test
+**Hint**
 
-Let’s check if `CRRT` use is associated with mortality (`Died`).
-
-```{r}
-# Convert to factors
-data$CRRT <- factor(data$CRRT, labels = c("No", "Yes"))
-data$Died <- factor(data$Died, labels = c("No", "Yes"))
-
-# Create a contingency table
-tab <- table(data$CRRT, data$Died)
-tab
-
-# Perform chi-square test
-chisq.test(tab)
-```
-
-## Exercise
-
--   Run the test above.
-
--   Now insert a new code chunk below and write the code to repeat the chi-square test for `Intubated` vs. `Died`.
-
-# Part 4 - Linear Regression
-
-We’ll model `ICU_LOS` as a function of `Age`.
+Some numeric-looking values in the workbook are stored as text, and missing
+values are sometimes written as `"."`.
 
 ```{r}
-# Fit linear model
-lm_model <- lm(ICU_LOS ~ Age, data = data)
+#| eval: false
 
-# View results
-summary(lm_model)
-```
-
-## Exercise
-
--   Run the code above.
-
--   Now, add a chuck and write the code to fit a model predicting `Vent LOS` using `BMI` adjust the analysis to account for `Age` by adding in an additional covariate.
-
-# Part 5 - Logistic Regression
-
-Let’s predict the odds of dying (`Died`) based on `Age` and `ICU_LOS`.
-
-```{r}
-# Fit logistic regression (notice the family)
-log_model <- glm(Died ~ Age + ICU_LOS, data = data, family = binomial)
-
-# View summary
-summary(log_model)
-
-# View odss ratios
-exp(coef(log_model))
-
-```
-
-## Exercise
-
--   Run the model above.
-
--   Now, insert a new chunk ande try predicting `Intubated` using `BMI` and `Age`.
-
-# Part 6 - If Statements
-
-`if` lets you run code when a condition is true.
-
-Example:
-
-```{r}
-# Example using the first patient
-patient_age <- data$Age[1]
-
-if (patient_age > 45) {
-  print("Patient is older than 45.")
-} else {
-  print("Patient is 45 or younger.")
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
 }
+
+qcrc <- readxl::read_xlsx(
+  here::here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "Main_Dataset"
+) |>
+  janitor::clean_names() |>
+  dplyr::mutate(
+    bmi = to_numeric(bmi),
+    crp = to_numeric(crp),
+    d_dimer = to_numeric(d_dimer)
+  )
 ```
 
-You can also use `else if`:
+**Deliverable**
+
+A short "Data source and preparation" paragraph plus a data-check chunk in your
+Quarto draft.
+
+# Task 3: Define the manuscript variables
+
+**Student prompt**
+
+Write a one-paragraph introduction that states your research question,
+outcome, main exposure, and at least two adjustment or stratification variables.
+
+For the default QCRC question, use:
+
+- outcome: `x30d_mortality`
+- candidate exposure: `remdesivir_or_placebo`, `intubated`, `bmi`, or `age`
+- adjustment variables: choose two from `age`, `bmi`, `female`, `race`,
+  `intubated`, `crp`, or `d_dimer`
+
+**Hint**
+
+Do not claim causality unless you can defend the design. For today, language
+like "associated with" is safer than "caused by".
+
+**Deliverable**
+
+A short Introduction section with a question and a plain-language hypothesis.
+
+# Task 4: Build one descriptive table or figure
+
+**Student prompt**
+
+Create one table or figure that helps the reader understand the people in the
+QCRC dataset before you model anything.
+
+Choose one:
+
+- a table with counts, percentages, means, or medians for your variables
+- a histogram or boxplot for a continuous variable such as age, BMI, ICU length
+  of stay, CRP, or D dimer
+- a bar chart for a binary/categorical variable such as 30-day mortality,
+  intubation, sex, race, or treatment group
+
+**Hint**
+
+For a fast table, start with `aggregate()`, `tapply()`, `table()`, or
+`dplyr::summarise()`. For a fast figure, start with `ggplot2::ggplot()`.
 
 ```{r}
-# Example with more categories
-if (patient_age > 65) {
-  print("Patient is elderly.")
-} else if (patient_age > 45) {
-  print("Patient is middle-aged.")
-} else {
-  print("Patient is young.")
-}
+#| eval: false
+
+table(qcrc$x30d_mortality, qcrc$intubated)
+
+aggregate(
+  bmi ~ x30d_mortality,
+  data = qcrc,
+  FUN = \(x) round(mean(x, na.rm = TRUE), 1)
+)
 ```
 
-## Exercise
+**Deliverable**
 
--   Write an if-else statement that tests if a patient’s age is greater than 45 and prints:
+One numbered table or figure with one sentence interpreting it.
 
-    -   “Patient is older than 45.” if true
+# Task 5: Run one first-pass analysis
 
-    -   Otherwise prints “Patient is 45 or younger.”
+**Student prompt**
+
+Run one first-pass statistical analysis that connects to your manuscript
+question. Choose one:
+
+- a two-sample t-test for a continuous variable by 30-day mortality group
+- a chi-square or Fisher exact test for two categorical variables
+- a simple logistic regression for 30-day mortality
+- a simple linear regression for a continuous outcome such as ICU length of stay
+
+**Hint**
+
+Use formula syntax whenever possible. Put the outcome on the left of `~` and
+the predictor on the right.
 
 ```{r}
-age_value <- 72
+#| eval: false
 
-if (age_value > 65) {
-  print("Patient is elderly")
-} else {
-  print("Patient is not elderly")
-}
+t.test(bmi ~ x30d_mortality, data = qcrc)
+
+chisq.test(table(qcrc$intubated, qcrc$x30d_mortality))
+
+glm(x30d_mortality ~ age + bmi, data = qcrc, family = binomial)
 ```
 
-# Great work! You have practiced:
+**Deliverable**
 
--   Hypothesis testing
+One model or test output plus two to three sentences explaining the result in
+plain language.
 
--   Regression models
+# Task 6: Write the mini-manuscript draft
 
--   Conditional logic
+**Student prompt**
+
+Turn the pieces above into a rough manuscript draft. Each section can be short:
+
+- Introduction: one paragraph
+- Methods: one paragraph about the data and analysis
+- Results: one paragraph plus your table or figure
+- Discussion: one paragraph with the practical interpretation, one limitation,
+  and one next step for Exercise 2
+
+**Hint**
+
+A useful fast-moving professional draft often has bracketed notes where you
+need later polish. For example: `[Need to check coding of treatment variable]`.
+That is better than pretending the draft is finished.
+
+**Deliverable**
+
+A renderable mini-manuscript draft that Exercise 2 can continue.
+
+# Optional advanced tasks
+
+Try these only after the core draft renders.
+
+1. Read all QCRC workbook sheets using `readxl::excel_sheets()` and `lapply()`.
+   Add an appendix table with the sheet names and dimensions.
+1. Write a small helper function that returns a mean, SD, and missing count for
+   any numeric column.
+1. Try a sensitivity analysis using `Died` or `x60d_mortality` instead of
+   `x30d_mortality`.
+1. If you chose a non-QCRC dataset, add a paragraph explaining what the dataset
+   can and cannot answer better than QCRC.
+
+# Exercise 1 checklist
+
+Before you leave today, make sure your draft has:
+
+- a clear question and hypothesis
+- QCRC loaded and cleaned, or a documented reason for using another dataset
+- one table or figure
+- one first-pass test or model
+- a short interpretation that uses cautious association language
+- a renderable Quarto output
+- at least one note about what you will improve in Exercise 2
+
+Use the [rubric/checklist](qcrc-report-checklist-rubric.qmd) to decide what is
+"good enough" for today.

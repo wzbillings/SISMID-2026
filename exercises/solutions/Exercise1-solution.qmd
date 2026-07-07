@@ -1,0 +1,208 @@
+---
+title: "Exercise 1 Solutions: Start a QCRC Mini-Manuscript"
+format: html
+editor: visual
+execute:
+  warning: false
+  message: false
+---
+
+# Instructor note
+
+This is one acceptable solution path for Exercise 1. It uses the recommended
+QCRC 30-day mortality question. Student reports may choose different exposures
+or a different course dataset if they preserve the required deliverables.
+
+```{r}
+#| label: setup
+
+library(dplyr)
+library(ggplot2)
+library(here)
+library(janitor)
+library(knitr)
+library(readxl)
+```
+
+# Task 1 solution: Create a report draft
+
+Students should start from `exercises/qcrc-mini-manuscript-starter.qmd`, save a
+working copy, and render it. The starter file is already a valid solution
+skeleton because it contains Introduction, Methods, Results, Discussion, and
+Appendix sections.
+
+# Task 2 solution: Load and inspect QCRC
+
+```{r}
+#| label: load-clean-data
+
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
+}
+
+qcrc <- readxl::read_xlsx(
+  here::here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "Main_Dataset"
+) |>
+  janitor::clean_names() |>
+  dplyr::mutate(
+    bmi = to_numeric(bmi),
+    crp = to_numeric(crp),
+    d_dimer = to_numeric(d_dimer),
+    x30d_mortality = factor(
+      x30d_mortality,
+      levels = c(0, 1),
+      labels = c("No 30-day mortality", "30-day mortality")
+    ),
+    intubated = factor(intubated, levels = c(0, 1), labels = c("No", "Yes")),
+    remdesivir_or_placebo = factor(
+      remdesivir_or_placebo,
+      levels = c(0, 1),
+      labels = c("Placebo", "Remdesivir")
+    ),
+    female = factor(female),
+    race = factor(race)
+  )
+
+data.frame(rows = nrow(qcrc), columns = ncol(qcrc)) |>
+  knitr::kable(caption = "QCRC main dataset dimensions.")
+
+names(qcrc)[1:10]
+```
+
+```{r}
+#| label: missingness
+
+analysis_vars <- c(
+  "x30d_mortality",
+  "age",
+  "bmi",
+  "female",
+  "intubated",
+  "remdesivir_or_placebo"
+)
+
+missing_counts <- sapply(qcrc[analysis_vars], \(x) sum(is.na(x)))
+
+data.frame(
+  variable = names(missing_counts),
+  missing = as.integer(missing_counts)
+) |>
+  knitr::kable(caption = "Missingness check for Exercise 1 variables.")
+```
+
+Example Methods sentence:
+
+> We analyzed the `Main_Dataset` sheet from the deidentified QCRC COVID-19 ICU
+> workbook. We cleaned variable names, converted selected lab and BMI variables
+> from text to numeric values, and recoded binary variables as factors for
+> reporting.
+
+# Task 3 solution: Define the manuscript variables
+
+Example introduction:
+
+> Severe COVID-19 outcomes vary across patient characteristics and clinical
+> factors. In this report, we ask whether age, BMI, intubation, and treatment
+> group are associated with 30-day mortality among patients in the QCRC ICU
+> dataset. We hypothesize that older age and intubation will be associated with
+> higher odds of 30-day mortality. This analysis is descriptive and
+> associational; it should not be interpreted as proving causality.
+
+# Task 4 solution: Descriptive table or figure
+
+```{r}
+#| label: descriptive-table
+
+qcrc |>
+  dplyr::group_by(x30d_mortality) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    mean_age = round(mean(age, na.rm = TRUE), 1),
+    mean_bmi = round(mean(bmi, na.rm = TRUE), 1),
+    intubated_percent = round(mean(intubated == "Yes", na.rm = TRUE) * 100, 1),
+    .groups = "drop"
+  ) |>
+  knitr::kable(caption = "Selected characteristics by 30-day mortality status.")
+```
+
+```{r}
+#| label: bmi-figure
+#| fig-cap: "BMI distribution by 30-day mortality status in the QCRC dataset."
+
+ggplot(qcrc, aes(x = x30d_mortality, y = bmi)) +
+  geom_boxplot(na.rm = TRUE) +
+  labs(x = NULL, y = "BMI")
+```
+
+Example interpretation:
+
+> Patients with and without 30-day mortality can be compared on age, BMI, and
+> intubation status before fitting a model. The descriptive table is not an
+> adjusted analysis, but it helps identify patterns and missingness that should
+> be considered in Exercise 2.
+
+# Task 5 solution: First-pass analysis
+
+```{r}
+#| label: first-pass-test
+
+t.test(bmi ~ x30d_mortality, data = qcrc)
+```
+
+```{r}
+#| label: first-pass-model
+
+model_30d <- glm(
+  x30d_mortality ~ age + bmi + intubated + remdesivir_or_placebo,
+  data = qcrc,
+  family = binomial
+)
+
+summary(model_30d)
+```
+
+```{r}
+#| label: odds-ratio-table
+
+or_table <- data.frame(
+  term = names(coef(model_30d)),
+  odds_ratio = exp(coef(model_30d)),
+  exp(confint.default(model_30d)),
+  check.names = FALSE
+)
+
+names(or_table) <- c("term", "odds_ratio", "conf_low", "conf_high")
+
+or_table |>
+  dplyr::mutate(dplyr::across(where(is.numeric), \(x) round(x, 2))) |>
+  knitr::kable(caption = "First-pass adjusted odds ratios.")
+```
+
+Example interpretation:
+
+> The logistic regression estimates adjusted associations with 30-day
+> mortality. Because this is an observational-style course exercise with limited
+> cleaning and variable review, the estimates should be treated as a first-pass
+> signal rather than a definitive clinical conclusion.
+
+# Task 6 solution: Mini-manuscript draft
+
+Expected draft structure:
+
+- Introduction: one paragraph with question and hypothesis.
+- Methods: data source, variable cleaning, and analysis choices.
+- Results: one descriptive table or figure, one test or model, and a short
+  interpretation.
+- Discussion: main takeaway, limitation, and next step for Exercise 2.
+
+# Advanced task solution outlines
+
+1. Workbook inventory: use `readxl::excel_sheets()`, `lapply()`, `nrow()`, and
+   `ncol()` to build a sheet-level table.
+1. Helper summary function: write `summarize_numeric <- function(data, var)` or
+   use a vector input such as `summarize_numeric <- function(x)`.
+1. Sensitivity endpoint: refit the same code with `died` or `x60d_mortality`
+   after recoding that endpoint as a factor.
+1. Alternate dataset: require the same question, data, descriptive result,
+   analysis, interpretation, and limitation structure.
