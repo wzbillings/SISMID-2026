@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Data science walkthrough 1</title>
+  <title>SISMID R for ID Materials (2026) – Data science walkthrough 1: Data analysis walkthrough</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -29,6 +29,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -128,7 +193,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Data science walkthrough 1</h1>
+  <h1 class="title">Data science walkthrough 1: Data analysis walkthrough</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -144,29 +209,171 @@
 </div>
 
 </section>
-<section id="purpose" class="slide level2">
-<h2>Purpose</h2>
-<p>This instructor-led walkthrough connects the first day of the course to the exercises. We will take a small analysis from raw data to a rendered Quarto output and point out where the Day 1 modules appear in real work.</p>
+<section id="draft-note" class="slide level2">
+<h2>Draft note</h2>
+<p>This walkthrough is preserved from an earlier draft. Code chunks are shown where helpful, but execution is disabled until the diphtheria serosample data are added to the 2026 course repository.</p>
 </section>
-<section id="walkthrough-goals" class="slide level2">
-<h2>Walkthrough goals</h2>
+<section id="learning-goals" class="slide level2">
+<h2>Learning goals</h2>
 <ul>
-<li>Read and inspect a course dataset.</li>
-<li>Make one statistical summary or model output.</li>
-<li>Use iteration or a function to remove copied code.</li>
-<li>Render a small Quarto document with results that update from code.</li>
+<li>Use logical operators, subsetting functions, and math calculations in R</li>
+<li>Translate human-understandable problem descriptions into instructions that R can understand.</li>
 </ul>
 </section>
-<section id="discussion-prompts" class="slide level2">
-<h2>Discussion prompts</h2>
+<section>
+<section id="remember-r-always-does-exactly-what-you-tell-it-to-do" class="title-slide slide level1 center">
+<h1>Remember, R always does EXACTLY what you tell it to do!</h1>
+
+</section>
+<section id="instructions" class="slide level2">
+<h2>Instructions</h2>
 <ul>
-<li>Which part of the analysis would be easiest to break by hand-editing results?</li>
-<li>Where would a function make the code easier to trust?</li>
-<li>What would you need to add before sending this to a collaborator?</li>
+<li>Make a new R script for this case study, and save it to your code folder.</li>
+<li>We’ll use the diphtheria serosample data from Exercise 1 for this case study. Load it into R and use the functions we’ve learned to look at it.</li>
+</ul>
+</section>
+<section id="instructions-1" class="slide level2">
+<h2>Instructions</h2>
+<ul>
+<li>Make a new R script for this case study, and save it to your code folder.</li>
+<li>We’ll use the diphtheria serosample data from Exercise 1 for this case study. Load it into R and use the functions we’ve learned to look at it.</li>
+<li>The <code>str()</code> of your dataset should look like this.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">str</span>(diph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="q1-was-the-overall-prevalence-higher-in-urban-or-rural-areas" class="slide level2">
+<h2>Q1: Was the overall prevalence higher in urban or rural areas?</h2>
+<div>
+<ol type="1">
+<li class="fragment">How do we calculate the prevalence from the data?</li>
+<li class="fragment">How do we calculate the prevalence separately for urban and rural areas?</li>
+<li class="fragment">How do we determine which prevalence is higher and if the difference is meaningful?</li>
+</ol>
+</div>
+</section>
+<section id="q1-how-do-we-calculate-the-prevalence-from-the-data" class="slide level2">
+<h2>Q1: How do we calculate the prevalence from the data?</h2>
+<div>
+<ul>
+<li class="fragment">The variable <code>DP_infection</code> in our dataset is binary / dichotomous.</li>
+<li class="fragment">The prevalence is the number or percent of people who had the disease over some duration.</li>
+<li class="fragment">The average of a binary variable gives the prevalence!</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">mean</span>(diph<span class="sc">$</span>DP_infection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas" class="slide level2">
+<h2>Q1: How do we calculate the prevalence separately for urban and rural areas?</h2>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">mean</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"urban"</span>, ]<span class="sc">$</span>DP_infection)</span>
+<span id="cb3-2"><a></a><span class="fu">mean</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"rural"</span>, ]<span class="sc">$</span>DP_infection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>There are many ways you could write this code! You can use <code>subset()</code> or you can write the indices many ways.</li>
+<li>Using <code>tbl_df</code> objects from <code>haven</code> uses different <code>[[</code> rules than a base R data frame.</li>
+</ul>
+</div>
+</section>
+<section id="q1-how-do-we-calculate-the-prevalence-separately-for-urban-and-rural-areas-1" class="slide level2">
+<h2>Q1: How do we calculate the prevalence separately for urban and rural areas?</h2>
+<ul>
+<li>One easy way is to use the <code>aggregate()</code> function.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">aggregate</span>(DP_infection <span class="sc">~</span> group, <span class="at">data =</span> diph, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="q1-how-do-we-determine-which-prevalence-is-higher-and-if-the-difference-is-meaningful" class="slide level2">
+<h2>Q1: How do we determine which prevalence is higher and if the difference is meaningful?</h2>
+<div>
+<ul>
+<li class="fragment">We probably need to include a confidence interval in our calculation.</li>
+<li class="fragment">This is actually not so easy without more advanced tools that we will learn in upcoming modules.</li>
+<li class="fragment">Right now the best options are to do it by hand or google a function.</li>
+</ul>
+</div>
+</section>
+<section id="q1-by-hand" class="slide level2">
+<h2>Q1: By hand</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>p_urban <span class="ot">&lt;-</span> <span class="fu">mean</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"urban"</span>, ]<span class="sc">$</span>DP_infection)</span>
+<span id="cb5-2"><a></a>p_rural <span class="ot">&lt;-</span> <span class="fu">mean</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"rural"</span>, ]<span class="sc">$</span>DP_infection)</span>
+<span id="cb5-3"><a></a>se_urban <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(p_urban <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_urban) <span class="sc">/</span> <span class="fu">nrow</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"urban"</span>, ]))</span>
+<span id="cb5-4"><a></a>se_rural <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(p_rural <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p_rural) <span class="sc">/</span> <span class="fu">nrow</span>(diph[diph<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"rural"</span>, ]))</span>
+<span id="cb5-5"><a></a></span>
+<span id="cb5-6"><a></a>result_urban <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb5-7"><a></a>    <span class="st">"Urban: "</span>, <span class="fu">round</span>(p_urban, <span class="dv">2</span>), <span class="st">"; 95% CI: ("</span>,</span>
+<span id="cb5-8"><a></a>    <span class="fu">round</span>(p_urban <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_urban, <span class="dv">2</span>), <span class="st">", "</span>,</span>
+<span id="cb5-9"><a></a>    <span class="fu">round</span>(p_urban <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_urban, <span class="dv">2</span>), <span class="st">")"</span></span>
+<span id="cb5-10"><a></a>)</span>
+<span id="cb5-11"><a></a></span>
+<span id="cb5-12"><a></a>result_rural <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb5-13"><a></a>    <span class="st">"Rural: "</span>, <span class="fu">round</span>(p_rural, <span class="dv">2</span>), <span class="st">"; 95% CI: ("</span>,</span>
+<span id="cb5-14"><a></a>    <span class="fu">round</span>(p_rural <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_rural, <span class="dv">2</span>), <span class="st">", "</span>,</span>
+<span id="cb5-15"><a></a>    <span class="fu">round</span>(p_rural <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_rural, <span class="dv">2</span>), <span class="st">")"</span></span>
+<span id="cb5-16"><a></a>)</span>
+<span id="cb5-17"><a></a></span>
+<span id="cb5-18"><a></a><span class="fu">cat</span>(result_urban, result_rural, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="q1-by-hand-1" class="slide level2">
+<h2>Q1: By hand</h2>
+<ul>
+<li>We can see that the 95% CI’s overlap, so the groups are probably not that different. <strong>To be sure, we need to do a 2-sample test! But this is not a statistics class.</strong></li>
+<li>Some people will tell you that coding like this is “bad”. <strong>But ‘bad’ code that gives you answers is better than broken code!</strong> We will learn techniques for writing this with less work and less repetition in upcoming modules.</li>
+</ul>
+</section>
+<section id="q1-googling-a-package" class="slide level2">
+<h2>Q1: Googling a package</h2>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># install.packages("DescTools")</span></span>
+<span id="cb6-2"><a></a><span class="fu">library</span>(DescTools)</span>
+<span id="cb6-3"><a></a></span>
+<span id="cb6-4"><a></a><span class="fu">aggregate</span>(DP_infection <span class="sc">~</span> group, <span class="at">data =</span> diph, <span class="at">FUN =</span> DescTools<span class="sc">::</span>MeanCI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="you-try-it" class="slide level2">
+<h2>You try it!</h2>
+<ul>
+<li>Using any of the approaches you can think of, answer this question!</li>
+<li><strong>How many children under 5 were vaccinated? In children under 5, did vaccination lower the prevalence of infection?</strong></li>
+</ul>
+</section>
+<section id="you-try-it-1" class="slide level2">
+<h2>You try it!</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># How many children under 5 were vaccinated</span></span>
+<span id="cb7-2"><a></a><span class="fu">sum</span>(diph<span class="sc">$</span>DP_vacc[diph<span class="sc">$</span>age_months <span class="sc">&lt;</span> <span class="dv">60</span>])</span>
+<span id="cb7-3"><a></a></span>
+<span id="cb7-4"><a></a><span class="co"># Prevalence in both vaccine groups for children under 5</span></span>
+<span id="cb7-5"><a></a><span class="fu">aggregate</span>(</span>
+<span id="cb7-6"><a></a>    DP_infection <span class="sc">~</span> DP_vacc,</span>
+<span id="cb7-7"><a></a>    <span class="at">data =</span> <span class="fu">subset</span>(diph, age_months <span class="sc">&lt;</span> <span class="dv">60</span>),</span>
+<span id="cb7-8"><a></a>    <span class="at">FUN =</span> DescTools<span class="sc">::</span>MeanCI</span>
+<span id="cb7-9"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It appears that prevalence was HIGHER in the vaccine group? That is counterintuitive, but the sample size for the unvaccinated group is too small to be sure.</p>
+</section>
+<section id="congratulations-for-finishing-the-first-case-study" class="slide level2">
+<h2>Congratulations for finishing the first case study!</h2>
+<ul>
+<li>What R functions and skills did you practice?</li>
+<li>What other questions could you answer about the same dataset with the skills you know now?</li>
 </ul>
 
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -382,6 +589,82 @@
         ]
       });
     </script>
+
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+
+
+      })();
+
+    </script>
+
+
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
