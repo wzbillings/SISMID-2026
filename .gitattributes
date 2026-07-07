@@ -1,0 +1,75 @@
+# Normalize text files while keeping binary assets untouched.
+* text=auto
+
+# Source and content files should stay LF-normalized across platforms.
+*.R text eol=lf
+*.qmd text eol=lf
+*.Rmd text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.bib text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.js text eol=lf
+*.lua text eol=lf
+*.html text eol=lf
+*.xml text eol=lf
+*.svg text eol=lf
+*.csv text eol=lf
+*.tsv text eol=lf
+*.Rproj text eol=lf
+*.toml text eol=lf
+
+# Generated Quarto outputs and execution caches.
+docs/** linguist-generated
+_freeze/** linguist-generated
+*_files/** linguist-generated
+**/*_files/** linguist-generated
+*_cache/** linguist-generated
+**/*_cache/** linguist-generated
+**/execute-results/** linguist-generated
+**/figure-html/** linguist-generated
+**/figure-revealjs/** linguist-generated
+*.utf8.md linguist-generated
+*.knit.md linguist-generated
+
+# Package- or tool-managed dependencies should not affect language stats.
+renv/** linguist-vendored
+renv.lock text eol=lf linguist-vendored
+_extensions/** linguist-vendored
+site_libs/** linguist-vendored
+
+# Bundled/minified web assets are generated or vendored, not project source.
+*.min.js linguist-generated
+*.min.css linguist-generated
+*.js.map linguist-generated
+*.css.map linguist-generated
+
+# Binary assets and data formats.
+*.png binary
+*.PNG binary
+*.jpg binary
+*.JPG binary
+*.jpeg binary
+*.JPEG binary
+*.gif binary
+*.svgz binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.xls binary
+*.Rds binary
+*.rds binary
+*.shp binary
+*.shx binary
+*.dbf binary
+*.sbn binary
+*.sbx binary
+*.img binary
+*.rrd binary
+*.eot binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
