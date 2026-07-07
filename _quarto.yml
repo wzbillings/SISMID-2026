@@ -25,8 +25,18 @@ website:
         href: schedule.qmd
       - text: "Course Resources"
         href: references.qmd
-      - text: "Course Data README"
-        href: data-readme.qmd
+      - section: "Learner support"
+        contents:
+          - text: "Setup check"
+            href: support/setup-check.qmd
+          - text: "Dataset catalog"
+            href: support/dataset-catalog.qmd
+          - text: "Troubleshooting checklist"
+            href: support/troubleshooting.qmd
+          - text: "Model-reporting cheat sheet"
+            href: support/model-reporting.qmd
+          - text: "Loops/functions/apply guide"
+            href: support/loops-functions-apply.qmd
       - section: "Day 1 core"
         contents:
           - text: "Module 0: Welcome"

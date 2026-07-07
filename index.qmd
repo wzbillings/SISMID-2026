@@ -41,6 +41,10 @@ by clicking on the correct download link for your OS.
 [Quarto website](https://quarto.org/), but if you have a relatively up-to-date
 version of RStudio, it will also come with Quarto.
 
+After installing, run the [setup check](support/setup-check.qmd). It confirms
+that R, Quarto, the main packages, and the QCRC data are ready before the first
+exercise.
+
 ## About the instructors {.unnumbered}
 
 <div class="container">

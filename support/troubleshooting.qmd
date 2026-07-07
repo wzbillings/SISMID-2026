@@ -1,0 +1,158 @@
+---
+title: "Troubleshooting Checklist"
+format: html
+---
+
+# Use this first
+
+When code fails, do not rewrite everything. Work down this checklist.
+
+1. Read the first error message, not only the last line of output.
+1. Identify the object, function, file, or package named in the error.
+1. Run the smallest line of code that reproduces the problem.
+1. Fix one thing, then rerun.
+1. If you ask for help, share the error message and the smallest failing code.
+
+# Fast triage
+
+| Symptom | Likely cause | First check |
+|---|---|---|
+| `could not find function` | Package not loaded or not installed | Run `library(package)` or use `package::function()` |
+| `object not found` | Object was not created, name changed, or chunk ran out of order | Run the chunk that creates it; check spelling with `ls()` |
+| `cannot open file` or `No such file` | Wrong working directory or missing data | Run `getwd()` and `file.exists()` |
+| Quarto render fails but console code works | A chunk depends on an object created only in the console | Restart R, then render again |
+| Package install fails | Internet, permissions, or system dependency issue | Copy the full install error and ask for help |
+| Model drops rows | Missing values in outcome or predictors | Run `sapply(data[vars], \(x) sum(is.na(x)))` |
+| `glm.fit: fitted probabilities numerically 0 or 1 occurred` | Separation or sparse categories | Check cross-tabs; simplify the model |
+| A plot is blank | Missing data, wrong variable, or filtered data has zero rows | Run `nrow(data)` and `summary(variable)` |
+
+# Working directory and files
+
+Start here for file errors.
+
+```r
+getwd()
+list.files()
+file.exists("data/QCRC_FINAL_Deidentified.xlsx")
+here::here()
+here::here("data", "QCRC_FINAL_Deidentified.xlsx")
+```
+
+If `file.exists("data/QCRC_FINAL_Deidentified.xlsx")` is `FALSE`, open
+`SISMID-2026.Rproj` and try again. You should be in the folder that contains
+`_quarto.yml`.
+
+# Packages
+
+If R cannot find a function, ask two questions:
+
+1. Which package provides the function?
+1. Did I load that package in this R session or this Quarto document?
+
+Examples:
+
+```r
+library(readxl)
+readxl::read_xlsx("data/QCRC_FINAL_Deidentified.xlsx")
+
+library(janitor)
+janitor::clean_names(qcrc)
+```
+
+Using `package::function()` is useful in reports because it makes the source of
+the function explicit.
+
+# Quarto render problems
+
+Rendering starts a clean session. That is good for reproducibility, but it means
+objects created only in your console do not exist during render.
+
+Before asking for help, try this:
+
+1. Save the file.
+1. Restart R.
+1. Render again.
+1. If it fails, find the first failing chunk.
+1. Run only that chunk and the setup chunks it depends on.
+
+Common fixes:
+
+- Put all `library()` calls in the first chunk.
+- Put data-loading code in the document, not only in the console.
+- Make file paths relative to the project root.
+- Use `eval: false` only for unfinished optional chunks, not required analysis.
+
+# Data import problems
+
+For the QCRC workbook:
+
+```r
+readxl::excel_sheets("data/QCRC_FINAL_Deidentified.xlsx")
+
+qcrc <- readxl::read_xlsx(
+  "data/QCRC_FINAL_Deidentified.xlsx",
+  sheet = "Main_Dataset"
+)
+```
+
+If a numeric variable behaves like text, convert it deliberately.
+
+```r
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
+}
+
+qcrc$bmi <- to_numeric(qcrc$bmi)
+```
+
+If conversion creates `NA`s, check the original values.
+
+```r
+unique(qcrc$bmi)
+```
+
+# Model problems
+
+Start with the smallest model that answers part of your question.
+
+```r
+fit1 <- glm(x30d_mortality ~ age, data = qcrc, family = binomial)
+fit2 <- glm(x30d_mortality ~ age + bmi, data = qcrc, family = binomial)
+```
+
+If the adjusted model fails, check:
+
+- Are the outcome and predictors present?
+- Are missing values removing most of the data?
+- Are there categorical levels with very few observations?
+- Did you accidentally model a character variable that should be a factor or
+  numeric variable?
+
+Useful checks:
+
+```r
+table(qcrc$x30d_mortality, useNA = "ifany")
+table(qcrc$x30d_mortality, qcrc$intubated, useNA = "ifany")
+sapply(qcrc[c("x30d_mortality", "age", "bmi", "intubated")], \(x) sum(is.na(x)))
+```
+
+# Asking for help efficiently
+
+Send or show:
+
+- the exact error message,
+- the chunk or line that failed,
+- what you expected to happen,
+- what you already checked.
+
+This is enough:
+
+```text
+I am rendering Exercise 2. The data-loading chunk fails with:
+"Error: path does not exist: data/QCRC_FINAL_Deidentified.xlsx"
+
+getwd() returns C:/Users/me/Downloads.
+file.exists("data/QCRC_FINAL_Deidentified.xlsx") returns FALSE.
+```
+
+That tells us the problem is the project location, not your statistical code.

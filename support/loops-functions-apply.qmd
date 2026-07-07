@@ -1,0 +1,213 @@
+---
+title: "Loops, Functions, and Apply Decision Guide"
+format: html
+---
+
+# Main rule
+
+Choose the tool that matches the shape of the repeated task.
+
+1. If one vectorized expression works, use it.
+1. If you copy and paste code twice, consider a function.
+1. If you need to repeat a task over many inputs, use a loop or an apply-family
+   function.
+1. If each repetition returns a different-sized object, keep a list until the
+   final combining step.
+
+# Decision table
+
+| Situation | Good tool | Why |
+|---|---|---|
+| One calculation over a full vector | Vectorized R code | Short, fast, readable |
+| Same calculation for many columns or groups | `lapply()`, `sapply()`, `tapply()`, or `dplyr::summarise()` | Makes the repetition explicit |
+| Same multi-step analysis used more than once | A function | Gives the analysis a name and clear inputs |
+| Need to save one result per iteration | `for` loop with preallocated output | Easy to debug one step at a time |
+| Need one model per group | `split()` plus `lapply()` | Natural list workflow |
+| Need a table or data frame at the end | `do.call(rbind, results)` or `dplyr::bind_rows()` | Combines repeated outputs after they are checked |
+| Need side effects such as writing files | `for` loop | Side effects are clearer in loops |
+
+# Start with the simplest version
+
+Before writing a loop or `lapply()`, write the code for one case.
+
+```r
+india <- subset(meas, iso3c == "IND")
+
+data.frame(
+  country = unique(india$country),
+  min = min(india$measles_cases, na.rm = TRUE),
+  median = median(india$measles_cases, na.rm = TRUE),
+  max = max(india$measles_cases, na.rm = TRUE)
+)
+```
+
+Then turn the changing part into an argument.
+
+```r
+get_country_stats <- function(df, iso3_code) {
+  country_data <- subset(df, iso3c == iso3_code)
+
+  data.frame(
+    country = unique(country_data$country),
+    min = min(country_data$measles_cases, na.rm = TRUE),
+    median = median(country_data$measles_cases, na.rm = TRUE),
+    max = max(country_data$measles_cases, na.rm = TRUE)
+  )
+}
+```
+
+Then repeat it.
+
+```r
+country_codes <- c("IND", "PAK", "BGD", "NPL")
+
+country_results <- lapply(
+  country_codes,
+  \(code) get_country_stats(meas, code)
+)
+
+do.call(rbind, country_results)
+```
+
+# When to use a loop
+
+Use a loop when you want every step to be obvious.
+
+```r
+country_codes <- c("IND", "PAK", "BGD", "NPL")
+country_results <- vector("list", length(country_codes))
+
+for (i in seq_along(country_codes)) {
+  country_results[[i]] <- get_country_stats(meas, country_codes[[i]])
+}
+
+do.call(rbind, country_results)
+```
+
+Loops are especially useful when:
+
+- you are learning or debugging,
+- each iteration has several steps,
+- you need progress messages,
+- you are writing files or plots,
+- you need to inspect `i = 1` before running everything.
+
+# When to use `lapply()`
+
+Use `lapply()` when you have a vector or list of inputs and want one output per
+input.
+
+```r
+country_results <- lapply(
+  country_codes,
+  \(code) get_country_stats(meas, code)
+)
+```
+
+`lapply()` always returns a list. That is a feature, not a problem. Lists are
+good temporary containers for data frames, models, plots, and other objects that
+do not fit neatly into one vector.
+
+# When to use `sapply()`
+
+Use `sapply()` when each repetition returns one simple value.
+
+```r
+sheet_names <- readxl::excel_sheets("data/QCRC_FINAL_Deidentified.xlsx")
+
+sheet_rows <- sapply(
+  sheet_names,
+  \(sheet) nrow(readxl::read_xlsx("data/QCRC_FINAL_Deidentified.xlsx", sheet = sheet))
+)
+```
+
+If `sapply()` returns a shape you did not expect, switch back to `lapply()` and
+combine the results yourself.
+
+# When to use `tapply()`
+
+Use `tapply()` for one summary by one or more grouping variables.
+
+```r
+tapply(
+  meas$MCV1_coverage,
+  meas$region,
+  \(x) mean(x, na.rm = TRUE)
+)
+```
+
+This is a good fit for quick grouped means, medians, counts, or ranges.
+
+# When to use `split()` plus `lapply()`
+
+Use this pattern when each group needs a multi-step analysis or a model.
+
+```r
+meas_regions <- split(meas_2005, meas_2005$region)
+
+region_models <- lapply(
+  meas_regions,
+  \(d) glm(
+    measles_cases ~ MCV1_coverage + MCV2_coverage,
+    data = d,
+    family = poisson
+  )
+)
+
+region_coefs <- lapply(region_models, coef)
+do.call(rbind, region_coefs)
+```
+
+# Function checklist
+
+A useful function has:
+
+- a name that says what it returns,
+- arguments for the parts that change,
+- no hidden dependence on a global object unless that is deliberate,
+- a return value you can inspect,
+- one small example call that proves it works.
+
+Bad sign:
+
+```r
+my_function <- function() {
+  # uses qcrc, x, y, and model_formula from the global environment
+}
+```
+
+Better:
+
+```r
+fit_mortality_model <- function(data, formula) {
+  glm(formula, data = data, family = binomial)
+}
+
+fit_mortality_model(qcrc, x30d_mortality ~ age + bmi)
+```
+
+# Debugging repeated code
+
+When repeated code fails:
+
+1. Run the function or loop body for one input.
+1. Print or inspect that input.
+1. Check the class and missing values.
+1. Fix the one-input version.
+1. Repeat over all inputs only after the one-input version works.
+
+Example:
+
+```r
+code <- country_codes[[1]]
+one_result <- get_country_stats(meas, code)
+one_result
+```
+
+# Choosing between loop and apply
+
+Both are normal R. The better choice is the one your future self can read.
+
+Use a loop when clarity and debugging matter most. Use `lapply()` when the task
+is already packaged as "apply this function to each input." In professional
+work, readability beats cleverness.

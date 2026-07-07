@@ -39,8 +39,11 @@ Email: wzbillings\@proton.me
     https://wzbillings.github.io/SISMID-2026/.
 -   This contains the schedule, course resources, and online versions of
     all of our slide decks.
--   The **Course Resources** page contains download links for all of the
-    data, exercises, and slides for this class.
+-   The **Course Resources** page explains how to download the full
+    repository, individual data files, and editable exercise files.
+-   The **Learner support** pages include a setup check, dataset catalog,
+    troubleshooting checklist, model-reporting cheat sheet, and
+    loops/functions/apply guide.
 -   Please feel free to download these resources and share them -- all
     of the course content is under the [Creative Commons BY-NC 4.0
     license](https://creativecommons.org/licenses/by-nc/4.0/).
@@ -80,7 +83,7 @@ The 2026 core schedule is set, and we also keep a few optional or take-home topi
 
 **Want more?**
 
--   R for Data Science: http://r4ds.had.co.nz/\
+-   R for Data Science: https://r4ds.hadley.nz/\
     (great general information)
 
 -   Fundamentals of Data Visualization: https://clauswilke.com/dataviz/
@@ -107,9 +110,6 @@ The 2026 core schedule is set, and we also keep a few optional or take-home topi
     http://cran.r-project.org/doc/contrib/Short-refcard.pdf
 
 -   R jargon:
-    https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf
-
--   R vs Stata:
     https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf
 
 -   R terminology:

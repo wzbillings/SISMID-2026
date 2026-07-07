@@ -4,13 +4,91 @@ bibliography: SISMID-Module.bib
 nocite: "@*"
 ---
 
-# Data and Exercise downloads
+# Course materials and downloads
 
-* Download the zip file from [the GitHub page](https://github.com/wzbillings/SISMID-2026).
+The most reliable option is to download the full course repository. That gives
+you the data, exercises, source files, slides, and project file in one folder.
+
+1. Go to the [SISMID-2026 GitHub repository](https://github.com/wzbillings/SISMID-2026).
+1. Click **Code**.
+1. Click **Download ZIP**.
+1. Unzip the folder.
+1. Open `SISMID-2026.Rproj`.
+
+Direct full-repository download:
+[SISMID-2026 main branch ZIP](https://github.com/wzbillings/SISMID-2026/archive/refs/heads/main.zip)
+
+If you use Git:
+
+```bash
+git clone https://github.com/wzbillings/SISMID-2026.git
+```
+
+## Individual data files
+
+Use the full repository ZIP if you can. If you only need one data file, use
+these direct links:
+
+| Data file | Download |
+|---|---|
+| QCRC COVID-19 ICU workbook | [QCRC_FINAL_Deidentified.xlsx](https://github.com/wzbillings/SISMID-2026/raw/main/data/QCRC_FINAL_Deidentified.xlsx) |
+| Measles vaccination and case data | [measles_final.Rds](https://github.com/wzbillings/SISMID-2026/raw/main/data/measles_final.Rds) |
+| Simulated city cases | [city-cases.csv](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/data/city-cases.csv) |
+| SIR observed data | [SIR-observed.csv](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/data/SIR-observed.csv) |
+| Mosquito surveillance data | [mos-nyc.csv](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/data/mos-nyc.csv) |
+
+Save downloaded data files inside the repository's `data/` folder unless an
+exercise tells you otherwise.
+
+For dataset descriptions and recommended uses, see the
+[Dataset Catalog](support/dataset-catalog.qmd).
+
+## Exercises and report files
+
+You can view exercises from the site navigation. To edit them locally, download
+the full repository ZIP or use these source-file links:
+
+| File | Download source |
+|---|---|
+| Exercise 1 | [Exercise1.qmd](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/exercises/Exercise1.qmd) |
+| Exercise 2 | [Exercise2.qmd](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/exercises/Exercise2.qmd) |
+| QCRC starter template | [qcrc-mini-manuscript-starter.qmd](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/exercises/qcrc-mini-manuscript-starter.qmd) |
+| QCRC checklist and rubric | [qcrc-report-checklist-rubric.qmd](https://raw.githubusercontent.com/wzbillings/SISMID-2026/main/exercises/qcrc-report-checklist-rubric.qmd) |
+
+If a raw `.qmd` file opens in your browser, use **Save As** to save it into the
+repository's `exercises/` folder.
+
+## Slides and module files
+
+The online slide decks are linked in the site navigation. There is not a
+separate PDF bundle in this repository right now.
+
+For offline use:
+
+- download the full repository ZIP,
+- open `SISMID-2026.Rproj`,
+- use the `.qmd` files in `modules/`,
+- render locally if you need a fresh HTML copy.
+
+If you want a PDF copy of a deck during class, use the browser print dialog or
+ask an instructor which output format is best for that deck.
+
+# Learner support pages
+
+- [Setup check](support/setup-check.qmd): confirm R, Quarto, packages, and data
+  access.
+- [Dataset catalog](support/dataset-catalog.qmd): choose and document course
+  datasets.
+- [Troubleshooting checklist](support/troubleshooting.qmd): work through common
+  R, Quarto, data, and model errors.
+- [Model-reporting cheat sheet](support/model-reporting.qmd): report `lm()`,
+  `glm()`, confidence intervals, odds ratios, and predictions clearly.
+- [Loops/functions/apply guide](support/loops-functions-apply.qmd): decide when
+  to use vectorized code, a function, a loop, or an apply-family tool.
 
 # Useful (+ Free) Resources
 
-- R for Data Science: http://r4ds.had.co.nz/  
+- R for Data Science: https://r4ds.hadley.nz/  
 (great general information)
 - Fundamentals of Data Visualization: https://clauswilke.com/dataviz/ 
 - R for Epidemiology: https://www.r4epi.com/
@@ -32,7 +110,6 @@ https://andreashandel.github.io/IDEMAbook/
 - Various "Cheat Sheets": [https://github.com/rstudio/cheatsheets/](https://github.com/rstudio/cheatsheets/)
 - R reference card: [http://cran.r-project.org/doc/contrib/Short-refcard.pdf](http://cran.r-project.org/doc/contrib/Short-refcard.pdf)  
 - R jargon: [https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf](https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf)
-- R vs Stata: [https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf](https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf)
 - R terminology: [https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf](https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf)
 
 

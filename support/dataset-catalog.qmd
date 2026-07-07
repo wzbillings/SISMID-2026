@@ -1,0 +1,122 @@
+---
+title: "Dataset Catalog"
+format: html
+---
+
+# How to use this catalog
+
+The default data source for Exercises 1 and 2 is the QCRC COVID-19 ICU workbook.
+Use it unless another course dataset clearly fits your professional question
+better.
+
+If you switch datasets, keep the same report structure and add two sentences:
+
+1. Why the alternate dataset fits your question better.
+1. What limitation you accept by not using QCRC.
+
+For download links, see [Course Resources](../references.qmd).
+
+# Default dataset for Exercises 1 and 2
+
+## QCRC COVID-19 ICU workbook
+
+- File: `data/QCRC_FINAL_Deidentified.xlsx`
+- Main sheet: `Main_Dataset`
+- Best use: Exercise 1, Exercise 2, formula syntax, logistic regression,
+  descriptive tables, data-cleaning functions, and polished Quarto reporting.
+- Unit of analysis for the main sheet: one ICU patient.
+- Useful variables: age, sex, race, mortality endpoints, ICU length of stay,
+  BMI, treatment indicator, intubation, CRRT, labs, and oxygenation measures.
+- Common cleaning issue: some numeric-looking variables are stored as text, and
+  missing values may appear as `"."`.
+
+Other sheets in the workbook include `Oxygen_Delivery`, `SOFA`, `Long_Labs`,
+`Long_Vitals`, `Static_Compliance`, `PAO2_FIO2`, `ICU_Meds`, `Intake_Form`, and
+`Daily_Form`.
+
+Use this import pattern for the main sheet:
+
+```r
+to_numeric <- function(x) {
+  as.numeric(dplyr::na_if(as.character(x), "."))
+}
+
+qcrc <- readxl::read_xlsx(
+  here::here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "Main_Dataset"
+) |>
+  janitor::clean_names() |>
+  dplyr::mutate(
+    bmi = to_numeric(bmi),
+    crp = to_numeric(crp),
+    d_dimer = to_numeric(d_dimer)
+  )
+```
+
+# Course datasets
+
+| Dataset | File or source | Used for | Good questions | Watch for |
+|---|---|---|---|---|
+| QCRC COVID-19 ICU workbook | `data/QCRC_FINAL_Deidentified.xlsx` | Exercises 1 and 2, formulas, model reporting, functional programming over workbook sheets | Patient-level factors associated with mortality, intubation, length of stay, or clinical markers | Numeric values stored as text, `"."` missing values, many sheets with different row levels |
+| Measles vaccination and case data | `data/measles_final.Rds` | Iteration, functions, functional programming, repeated summaries, repeated models | Country or region trends in measles cases, vaccine coverage, or rates | Missing vaccine coverage, ecological interpretation, denominator choices |
+| Simulated city cases | `data/city-cases.csv` | Aggregation, rates, time series summaries, disease-mapping-adjacent practice | City-month changes in cases by region, industry, exposure-like values, or temperature | Simulated data need clear framing; dates and rates require careful denominators |
+| SIR observed data | `data/SIR-observed.csv` | ODE examples and optional ODE fitting | Comparing observed epidemic curves to simple simulated trajectories | Small and intentionally simplified; not a covariate-rich report dataset |
+| Mosquito surveillance data | `data/mos-nyc.csv` | Optional likelihood, proportions, surveillance summaries, mapping-style examples | County-level mosquito pool positivity or infection risk | Aggregate pool data; assumptions about pool size matter |
+| Birthweight data | `MASS::birthwt` package dataset | Bootstrapping examples | Risk ratios, resampling, confidence intervals | Not stored in `data/`; load from the `MASS` package |
+| GIS data | `GIS/data/` | Disease mapping and GIS material | Spatial joins, mapping, and spatial public health examples | Best accessed from the full repository ZIP; not all GIS files are linked individually from the site |
+
+# Which dataset should I choose?
+
+Use QCRC when:
+
+- you want the default Exercise 1 and 2 path,
+- you need patient-level variables,
+- you want to practice logistic regression and model reporting,
+- you want a report that looks like a small manuscript.
+
+Use measles when:
+
+- your question is about repeated summaries over countries or regions,
+- you want to practice loops, functions, or `lapply()`,
+- you are comfortable with ecological interpretation.
+
+Use city cases when:
+
+- your question is about rates over time or places,
+- you want a simulated but tidy public health example,
+- you are practicing grouping, plotting, or mapping-adjacent logic.
+
+Use SIR or mosquito data when:
+
+- you are working through the ODE or optional likelihood material,
+- you want a small focused modeling example rather than a full report dataset.
+
+# Quick data checks
+
+After loading any dataset, run a short check before analysis.
+
+```r
+dim(my_data)
+names(my_data)
+head(my_data)
+summary(my_data)
+```
+
+For report work, also check missingness in the variables you plan to use.
+
+```r
+analysis_vars <- c("x30d_mortality", "age", "bmi", "intubated")
+
+sapply(qcrc[analysis_vars], \(x) sum(is.na(x)))
+```
+
+# Reporting data limitations
+
+Every report should include one plain limitation about the data. Good examples:
+
+- "Some lab values were stored as text and required conversion before analysis."
+- "This analysis estimates associations and does not establish causality."
+- "The complete-case analysis may exclude patients with different clinical
+  profiles."
+- "The measles analysis is ecological; country-level associations may not
+  describe individual risk."

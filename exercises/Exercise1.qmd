@@ -14,7 +14,7 @@ functions material from Day 1 and the modeling/formula material from Day 2.
 Advanced students may choose another course dataset if it is more useful for
 their own work. If you switch, keep the same deliverables and explain why the
 alternate dataset better supports your question. See the
-[course data README](../data-readme.qmd) before switching.
+[dataset catalog](../support/dataset-catalog.qmd) before switching.
 
 ::: {.callout-note}
 The realistic goal is not a finished paper today. The goal is a renderable

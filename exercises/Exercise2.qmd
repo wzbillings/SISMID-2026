@@ -14,7 +14,8 @@ interpretation, and a limitations paragraph.
 QCRC remains the recommended dataset. If you chose another course dataset in
 Exercise 1, you may continue with it, but your report still needs the same
 structure and should explain why the alternate dataset supports your question.
-See the [course data README](../data-readme.qmd) if you are still deciding.
+See the [dataset catalog](../support/dataset-catalog.qmd) if you are still
+deciding.
 
 # Starting point
 

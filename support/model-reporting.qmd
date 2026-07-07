@@ -1,0 +1,201 @@
+---
+title: "Model-Reporting Cheat Sheet"
+format: html
+---
+
+# Reporting goal
+
+A model result is not finished when R prints output. A report should tell a
+reader:
+
+- what outcome you modeled,
+- what predictors were included,
+- what scale the estimate uses,
+- the estimate and uncertainty,
+- the plain-language interpretation,
+- one limitation or assumption that matters.
+
+# Common model helpers
+
+| Task | Function | Use it for |
+|---|---|---|
+| Inspect the full model output | `summary(fit)` | Checking coefficients, standard errors, tests, residual summaries |
+| Get coefficients only | `coef(fit)` | Building a small table or extracting one estimate |
+| Get confidence intervals | `confint.default(fit)` | Fast Wald-style intervals for `lm()` or `glm()` objects |
+| Exponentiate log-scale estimates | `exp()` | Odds ratios from logistic regression; rate ratios from Poisson regression |
+| Make predictions | `predict()` | Expected values, probabilities, fitted values, or scenario comparisons |
+| Compare nested models | `anova()` | Likelihood ratio or analysis-of-variance style comparisons |
+
+# Linear regression
+
+Example:
+
+```r
+fit_lm <- lm(icu_los ~ age + bmi + intubated, data = qcrc)
+
+summary(fit_lm)
+coef(fit_lm)
+confint.default(fit_lm)
+```
+
+Report on the original outcome scale:
+
+```text
+In a linear regression adjusted for BMI and intubation, each 10-year increase in
+age was associated with an estimated X-day difference in ICU length of stay
+(95% CI: L to U days).
+```
+
+Useful habit: rescale predictors when one unit is too small.
+
+```r
+qcrc$age_10 <- qcrc$age / 10
+fit_lm <- lm(icu_los ~ age_10 + bmi + intubated, data = qcrc)
+```
+
+# Logistic regression
+
+Example:
+
+```r
+fit_logit <- glm(
+  x30d_mortality ~ age + bmi + intubated,
+  data = qcrc,
+  family = binomial
+)
+
+summary(fit_logit)
+coef(fit_logit)
+exp(coef(fit_logit))
+exp(confint.default(fit_logit))
+```
+
+`coef(fit_logit)` gives log-odds coefficients. `exp(coef(fit_logit))` gives
+odds ratios.
+
+Report odds ratios carefully:
+
+```text
+In an adjusted logistic regression, intubation was associated with X times the
+odds of 30-day mortality compared with no intubation (95% CI: L to U), adjusting
+for age and BMI.
+```
+
+Do not write "X times the risk" unless you estimated a risk ratio. Odds and risk
+are different.
+
+# Predicted probabilities
+
+Odds ratios are compact, but predicted probabilities are often easier for
+collaborators to understand.
+
+```r
+new_patients <- data.frame(
+  age = c(50, 70),
+  bmi = c(28, 28),
+  intubated = factor(c("No", "Yes"), levels = levels(qcrc$intubated))
+)
+
+predict(
+  fit_logit,
+  newdata = new_patients,
+  type = "response"
+)
+```
+
+For logistic regression:
+
+- `type = "link"` returns log odds.
+- `type = "response"` returns predicted probabilities.
+
+# Poisson or count models
+
+Example:
+
+```r
+fit_pois <- glm(
+  measles_cases ~ MCV1_coverage + MCV2_coverage,
+  data = meas_2005,
+  family = poisson
+)
+
+exp(coef(fit_pois))
+exp(confint.default(fit_pois))
+```
+
+Exponentiated Poisson coefficients are rate ratios when the model is specified
+as a rate model, often with an offset for population or time.
+
+```r
+fit_rate <- glm(
+  measles_cases ~ MCV1_coverage + offset(log(population)),
+  data = meas_2005,
+  family = poisson
+)
+```
+
+Report the offset if you use one.
+
+# Minimum model table
+
+A simple table is enough for Exercise 2.
+
+```r
+or_table <- data.frame(
+  term = names(coef(fit_logit)),
+  odds_ratio = exp(coef(fit_logit)),
+  exp(confint.default(fit_logit)),
+  check.names = FALSE
+)
+
+names(or_table) <- c("term", "estimate", "conf_low", "conf_high")
+
+or_table |>
+  dplyr::mutate(
+    dplyr::across(where(is.numeric), \(x) round(x, 2))
+  ) |>
+  knitr::kable(caption = "Adjusted odds ratios for 30-day mortality.")
+```
+
+# Interpretation checklist
+
+Before you write the Results paragraph, check:
+
+- Is the outcome clear?
+- Is the reference group clear for categorical predictors?
+- Are you reporting the right scale: difference, odds ratio, rate ratio, or
+  probability?
+- Did you include the confidence interval?
+- Did you say what variables were adjusted for?
+- Did you avoid causal language unless the design supports it?
+
+# Words that usually work
+
+For associational analyses:
+
+```text
+was associated with
+had higher/lower estimated odds of
+after adjusting for
+the confidence interval was wide
+this estimate is imprecise
+```
+
+For limitations:
+
+```text
+This analysis is descriptive and should not be interpreted causally.
+Missing data may affect the estimate.
+The model does not adjust for all clinically relevant confounders.
+Sparse categories make this estimate unstable.
+```
+
+# Words to avoid unless justified
+
+Avoid:
+
+- "caused"
+- "proved"
+- "risk" when you estimated odds
+- "significant" without saying statistically, clinically, or practically
+- "no effect" when the interval is wide

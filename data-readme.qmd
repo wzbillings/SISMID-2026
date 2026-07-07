@@ -1,80 +1,13 @@
 ---
-title: "Course Data README"
+title: "Dataset Catalog"
 format: html
 editor: visual
 ---
 
-::: {.callout-warning}
-This README is a draft for instructor review and updates before teaching. It is
-based on repository inspection on 2026-07-07. Confirm source, permissions,
-provenance, and any sensitive-data language before release.
+::: {.callout-note}
+The learner-facing dataset catalog now lives at
+[support/dataset-catalog.qmd](support/dataset-catalog.qmd). This page remains
+as a compatibility link for older bookmarks.
 :::
 
-# Recommended default for Exercises 1 and 2
-
-## QCRC COVID-19 ICU workbook
-
-- File: `data/QCRC_FINAL_Deidentified.xlsx`
-- Recommended use: Exercises 1 and 2 mini-manuscript/report arc.
-- Why use it: It is rich enough for descriptive statistics, tests, logistic
-  regression, repeated sheet inspection, formula syntax, and polished Quarto
-  reporting.
-- Main sheet for most students: `Main_Dataset`.
-- Other sheets available for advanced students: `Oxygen_Delivery`, `SOFA`,
-  `Long_Labs`, `Long_Vitals`, `Static_Compliance`, `PAO2_FIO2`, `ICU_Meds`,
-  `Intake_Form`, and `Daily_Form`.
-- Useful main-sheet variables include age, sex, race, mortality endpoints,
-  ICU length of stay, BMI, treatment indicator, intubation, CRRT, labs, and
-  oxygenation measures.
-- Important caution: Some numeric variables are stored as text, and missing
-  values may be written as `"."`. Clean and document variables before modeling.
-
-# Other course datasets
-
-Students may use another dataset if they have a question that genuinely fits it
-better than QCRC. They should still produce the same report deliverables.
-
-## Measles vaccination and case data
-
-- File: `data/measles_final.Rds`
-- Structure: country-year records with measles cases, population, MCV1/MCV2
-  coverage, country, region, and sub-region.
-- Good for: iteration, functions, functional programming, trend summaries,
-  regional comparisons, and Poisson-style modeling.
-- Less ideal for Exercises 1 and 2: It can become a larger ecological analysis
-  quickly, and students may spend more time defining denominators than polishing
-  a compact manuscript.
-
-## Simulated city cases
-
-- File: `data/city-cases.csv`
-- Structure: monthly city-level records with region, industry, date, sex,
-  exposure-like values, population, temperature, and cases.
-- Good for: aggregation, plotting, rates, and disease-mapping-adjacent practice.
-- Less ideal for the default report: It is simulated and needs more framing
-  before it feels like a manuscript.
-
-## SIR observed data
-
-- File: `data/SIR-observed.csv`
-- Structure: daily total cases.
-- Good for: ODE and epidemic-curve exercises.
-- Less ideal for Exercises 1 and 2: It is intentionally small and does not
-  support many covariate or manuscript-style choices.
-
-## Mosquito surveillance data
-
-- File: `data/mos-nyc.csv`
-- Structure: county-level PCR-positive and pool-submission counts.
-- Good for: binomial proportions, mapping, surveillance summaries, and public
-  health communication.
-- Less ideal for the default report: It is narrower than QCRC and may require
-  spatial context that belongs more naturally with the Day 3 GIS module.
-
-# Recommendation for students
-
-Use QCRC unless one of the other datasets clearly matches your professional
-interests. If you switch datasets, add two sentences to your report:
-
-1. Why this dataset is better for your question.
-1. What limitation you accept by not using QCRC.
+Go to the [Dataset Catalog](support/dataset-catalog.qmd).

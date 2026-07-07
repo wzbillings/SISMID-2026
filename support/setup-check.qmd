@@ -1,0 +1,173 @@
+---
+title: "Setup Check"
+format: html
+---
+
+# Goal
+
+Use this page before class, or at the start of Module 1, to confirm that your
+laptop can render Quarto documents and read the course data.
+
+Do not spend more than 10 minutes stuck alone. If one check fails, copy the
+error message, note which step failed, and ask an instructor or neighbor.
+
+# What you need installed
+
+| Tool | Minimum for this course | How to check |
+|---|---:|---|
+| R | 4.4.1 or newer | Run `R.version.string` in the R console |
+| RStudio or Positron | Recent desktop version | Open a `.qmd` file and find the Render button |
+| Quarto | 1.6.0 or newer | In a terminal, run `quarto --version` |
+| Course files | Current repository ZIP or Git checkout | You can see `SISMID-2026.Rproj`, `data/`, `modules/`, and `exercises/` |
+
+# Install course packages
+
+Run this in the R console. It is safe to run again if some packages are already
+installed.
+
+```r
+install.packages(c(
+  "tidyverse",
+  "here",
+  "janitor",
+  "readxl",
+  "rio",
+  "ggpubr",
+  "printr",
+  "knitr",
+  "boot",
+  "deSolve"
+))
+```
+
+Optional or take-home modules may use additional packages such as `arrow`.
+Install those only if you plan to work through that material.
+
+# Open the project
+
+Recommended:
+
+1. Download or clone the repository.
+1. Unzip it if needed.
+1. Open `SISMID-2026.Rproj`.
+1. Work from the project root, the folder that contains `_quarto.yml`.
+
+If you open an individual file without opening the project, relative paths such
+as `data/QCRC_FINAL_Deidentified.xlsx` may fail.
+
+# Run the package check
+
+Paste this into the R console.
+
+```r
+course_packages <- c(
+  "tidyverse",
+  "here",
+  "janitor",
+  "readxl",
+  "rio",
+  "ggpubr",
+  "printr",
+  "knitr",
+  "boot",
+  "deSolve"
+)
+
+missing_packages <- course_packages[
+  !vapply(course_packages, requireNamespace, logical(1), quietly = TRUE)
+]
+
+missing_packages
+```
+
+What you want to see:
+
+- `character(0)`: all checked packages are installed.
+- A package name: install that package with `install.packages("package_name")`.
+
+# Run the data check
+
+Paste this into the R console from the project root.
+
+```r
+data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
+
+file.exists(data_file)
+
+qcrc <- readxl::read_xlsx(data_file, sheet = "Main_Dataset")
+
+dim(qcrc)
+names(qcrc)[1:10]
+```
+
+What you want to see:
+
+- `file.exists(data_file)` returns `TRUE`.
+- `dim(qcrc)` returns a two-number result.
+- `names(qcrc)[1:10]` prints variable names.
+
+If `file.exists(data_file)` returns `FALSE`, you are probably in the wrong
+working directory or you do not have the course data. Open `SISMID-2026.Rproj`
+and try again.
+
+# Render a tiny Quarto document
+
+Create a new file named `setup-check-local.qmd` in the project root. Start it
+with this YAML header:
+
+```yaml
+---
+title: "Local Setup Check"
+format: html
+---
+```
+
+Then add three R chunks. In RStudio, use **Insert > Code Chunk** or press
+Ctrl+Alt+I, then paste the code for each chunk.
+
+Setup chunk:
+
+```r
+library(here)
+library(readxl)
+library(janitor)
+library(dplyr)
+library(ggplot2)
+```
+
+Data check chunk:
+
+```r
+qcrc <- readxl::read_xlsx(
+  here::here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "Main_Dataset"
+) |>
+  janitor::clean_names()
+
+data.frame(
+  rows = nrow(qcrc),
+  columns = ncol(qcrc)
+)
+```
+
+Plot check chunk:
+
+```r
+ggplot(qcrc, aes(x = age)) +
+  geom_histogram(bins = 20, na.rm = TRUE) +
+  labs(x = "Age", y = "Number of patients")
+```
+
+Click Render.
+
+Success means:
+
+- an HTML file opens,
+- the table shows rows and columns,
+- the age histogram appears.
+
+# If the check fails
+
+Use the [troubleshooting checklist](troubleshooting.qmd). The most common fixes
+are opening the project file, installing a missing package, checking that the
+data folder exists, and restarting R.
