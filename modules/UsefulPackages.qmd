@@ -10,6 +10,8 @@ format:
 Alex will lead this Day 2 core module. The final deck will be added here when it
 is ready.
 
+For now, this placeholder keeps the public schedule and navigation path stable.
+
 ## Planned scope
 
 - Packages that make common analysis and reporting tasks easier.
