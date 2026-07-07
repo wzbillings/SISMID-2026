@@ -48,3 +48,6 @@ rsconnect/
 
 # Temporary excel files
 *$*
+
+# Local planning notes and private decision logs
+.local/
