@@ -3,8 +3,6 @@ title: "Day 3: ODEs with deSolve"
 format:
   revealjs:
     toc: false
-    smaller: true
-    scrollable: true
 ---
 
 ```{r}
@@ -49,6 +47,8 @@ deSolve::ode(
 Compartment models divide a population into states.
 
 ![Source: DOI 10.3390/sym14122583](../images/SIR-model.png)
+
+## Compartment models: equations
 
 For a simple SIR model:
 
@@ -104,6 +104,8 @@ function(t, state, parameters) {
 
 Inside the function, calculate one derivative per state variable.
 
+## Step 3: derivative function, continued
+
 ```{r}
 sir_ode <- function(t, state, parameters) {
   S <- state["S"]
@@ -144,25 +146,14 @@ sir_df <- as.data.frame(sir_solution)
 sir_colors <- c(S = "deepskyblue3", I = "darkorange2", R = "seagreen4")
 
 matplot(
-  x = sir_df$time,
-  y = sir_df[, c("S", "I", "R")],
-  type = "l",
-  lty = 1,
-  lwd = 2,
-  col = sir_colors,
-  xlab = "Time",
-  ylab = "Number of people",
-  main = "SIR model"
+  sir_df$time, sir_df[, c("S", "I", "R")],
+  type = "l", lty = 1, lwd = 2, col = sir_colors,
+  xlab = "Time", ylab = "Number of people", main = "SIR model"
 )
 
 legend(
-  "right",
-  inset = 0.02,
-  legend = names(sir_colors),
-  col = sir_colors,
-  lty = 1,
-  lwd = 2,
-  bty = "n"
+  "right", inset = 0.02, legend = names(sir_colors),
+  col = sir_colors, lty = 1, lwd = 2, bty = "n"
 )
 ```
 
@@ -174,6 +165,8 @@ Before trusting a simulation, ask:
 - Does the total population stay constant if the model has no births or deaths?
 - Does the direction of movement match the diagram?
 - Does changing one parameter move the curve in the direction you expect?
+
+## Sanity checks: code
 
 ```{r}
 range(sir_df$S, sir_df$I, sir_df$R)
@@ -190,6 +183,8 @@ Modify the SIR model so recovered people lose immunity and become susceptible
 again. Call the new parameter `zeta`.
 
 ![Source: DOI 10.3390/sym14122583 with course edit](../images/SIRS.PNG)
+
+## Practice checkpoint: SIRS setup
 
 Use:
 
@@ -218,13 +213,17 @@ You only need to change two things:
 1. Add `zeta <- parameters["zeta"]`.
 1. Add the `zeta * R` flow into `dS` and out of `dR`.
 
-## Practice checkpoint: solution
+## Practice checkpoint: solution setup
 
 ```{r}
 sirs_parameters <- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)
 sirs_initial_state <- c(S = 999, I = 1, R = 0)
 sirs_times <- seq(0, 160, by = 0.25)
+```
 
+## Practice checkpoint: solution derivative
+
+```{r}
 sirs_ode <- function(t, state, parameters) {
   S <- state["S"]
   I <- state["I"]
@@ -240,7 +239,11 @@ sirs_ode <- function(t, state, parameters) {
 
   list(c(S = dS, I = dI, R = dR))
 }
+```
 
+## Practice checkpoint: solution solve
+
+```{r}
 sirs_solution <- deSolve::ode(
   y = sirs_initial_state,
   times = sirs_times,
@@ -256,25 +259,14 @@ head(sirs_df)
 
 ```{r}
 matplot(
-  x = sirs_df$time,
-  y = sirs_df[, c("S", "I", "R")],
-  type = "l",
-  lty = 1,
-  lwd = 2,
-  col = sir_colors,
-  xlab = "Time",
-  ylab = "Number of people",
-  main = "SIRS model"
+  sirs_df$time, sirs_df[, c("S", "I", "R")],
+  type = "l", lty = 1, lwd = 2, col = sir_colors,
+  xlab = "Time", ylab = "Number of people", main = "SIRS model"
 )
 
 legend(
-  "right",
-  inset = 0.02,
-  legend = names(sir_colors),
-  col = sir_colors,
-  lty = 1,
-  lwd = 2,
-  bty = "n"
+  "right", inset = 0.02, legend = names(sir_colors),
+  col = sir_colors, lty = 1, lwd = 2, bty = "n"
 )
 ```
 
@@ -290,6 +282,8 @@ compartment `P`.
 
 ![Source: Andreas Handel's DSAIDE package](../images/sirp.png)
 
+## Optional stretch: equations
+
 Use these equations:
 
 $$
@@ -300,6 +294,8 @@ $$
 \frac{dP}{dt} &= qI - cP
 \end{aligned}
 $$
+
+## Optional stretch: implementation hints
 
 **Hint**
 

@@ -28,7 +28,7 @@ library(printr)
 - S3 is a "functional OOP" system, which is different from OOP you might have dealt with in Python or C++.
 - The main property of S3 is **polymorphism**: one **generic function** can act differently on different **classes** of objects, but symbolically represents the same thing and has a consistent interface.
 
-## An S3 example {.scrollable}
+## An S3 example
 
 ```{r}
 #| include: false
@@ -44,41 +44,47 @@ a_glmm <- lme4::glmer(
 )
 ```
 
+- We'll use three different model objects to see how one generic function behaves.
 - `summary()` is an example of an S3 **generic**. And the documentation tells us this.
 
-```{r}
+```r
 ?summary
 ```
 
-## Polymorphism of summary {.scrollable}
+## Polymorphism of `summary()`
 
 - When we call `summary(an_object)` it determines what it should do based on the class of `an_object`.
 - Each of the following summaries shows us different statistics.
 
+## `summary()` for an `lm`
+
 ```{r}
 class(an_lm)
-summary(an_lm)
+coef(summary(an_lm))
 ```
 
-. . .
+## `summary()` for a `glm`
 
 ```{r}
 class(a_glm)
-summary(a_glm)
+coef(summary(a_glm))
 ```
 
-. . .
+## `summary()` for a mixed model
 
 ```{r}
 class(a_glmm)
-summary(a_glmm)
+coef(summary(a_glmm))
 ```
 
-## Some OOP definitions {.smaller}
+## Some OOP definitions
 
 - A **class** is a category of object. Objects of the same class have the same **fields** or attributes.
 - A **generic** is a function that has different behavior for multiple classes of inputs.
 - The **methods** for a function are the function implementations for specific classes.
+
+## Some OOP definitions, continued
+
 - **Method dispatch** is the process where you call a generic function, the generic function checks the class of the input, and the generic function calls the method for that class.
 - A **default method** is dispatched by a generic function when there is no specific method for the class of the input. Not every generic has a default method.
 
@@ -111,19 +117,24 @@ class(an_lm)
 attr(an_lm, "class")
 ```
 
-## S3 classes (and types) {.scrollable}
+## S3 classes (and types): model objects
 
 - Many S3 objects you will meet in modeling, including `lm` and `glm` objects, are lists with a class attribute.
 - Some S3 objects are built on other types, like factors and dates, so do not use "is it a list?" as the definition of S3.
 - Complicated model objects are usually lists where the elements have specific names.
 
+## S3 classes (and types): model object names
+
 ```{r}
-str(an_lm)
+class(an_lm)
+cat(head(names(an_lm), 8), sep = "\n")
 ```
 
-. . .
+## S3 classes (and types): help page
 
-```{r}
+- Help pages for modeling functions often document those list elements.
+
+```r
 ?lm
 ```
 
@@ -131,19 +142,21 @@ str(an_lm)
 
 - Now you know enough to understand the help pages for S3 objects.
 
-```{r}
+```r
 ?summary
 ```
 
-## Finding classes and finding methods
+## Finding methods for a generic
 
 - Use the `methods()` function to find all methods that are available for a specific generic function.
 
 ```{r}
-methods(summary)
+summary_methods <- methods(summary)
+length(summary_methods)
+cat(head(summary_methods, 8), sep = "\n")
 ```
 
-. . .
+## Finding methods for a class
 
 - Also use the `methods(class = ...)` function to find all methods that are available for a specific class.
 
@@ -151,44 +164,59 @@ methods(summary)
 methods(class = "lm")
 ```
 
-. . .
+## Opening a specific method
 
 - You can use a dot (`.`) to reference specific methods, not just generics.
 
-```{r}
+```r
 ?summary.lm
 ```
 
 
 # Part 2: Formulas / Formulae
 
-## Utility of S3 methods {.scrollable}
+## Utility of S3 methods
 
 - Hopefully you can now see why understanding S3 methods is important.
 - But if you aren't convinced, maybe `formula` objects can convince you. Look how many methods there are!
 
 ```{r}
-methods(class = "formula")
+formula_methods <- methods(class = "formula")
+length(formula_methods)
 ```
 
-. . .
+## Utility of S3 methods: examples
+
+```{r}
+cat(head(formula_methods, 4), sep = "\n")
+```
 
 - And that doesn't include functions like `lm()` which ONLY have methods for formulas, not generics.
 
-## Formula example {.scrollable}
+## Formula example
 
 - Say you want to get the correlation between MCV1 coverage rate and measles cases in Pakistan. You can call the `cor.test()` function by passing two vectors.
 
 ```{r}
 meas <- readr::read_rds(here::here("data", "measles_final.Rds"))
 
-cor.test(
+vector_cor <- cor.test(
 	x = meas$MCV1_coverage[meas$iso3c == "PAK"],
 	y = meas$measles_cases[meas$iso3c == "PAK"]
 )
 ```
 
-. . .
+## Formula example: vector result
+
+```{r}
+cat(sprintf(
+	"estimate: %.3f\np-value: %.3g\n",
+	unname(vector_cor$estimate),
+	vector_cor$p.value
+))
+```
+
+## Formula example: methods
 
 - But if we inspect the methods for `cor.test`, we see it is an S3 generic with a method for `formula` class objects.
 
@@ -196,18 +224,22 @@ cor.test(
 methods(cor.test)
 ```
 
-. . .
+## Formula example: formula method
 
 - Typing in the code is easier, and reading the output is easier.
 
 ```{r}
-cor.test(
+formula_cor <- cor.test(
 	~ measles_cases + MCV1_coverage,
 	data = subset(meas, iso3c == "PAK")
 )
-```
 
-. . .
+cat(sprintf(
+	"estimate: %.3f\np-value: %.3g\n",
+	unname(formula_cor$estimate),
+	formula_cor$p.value
+))
+```
 
 - But it pays to understand S3, because in certain circumstances, using the default method is easier!
 
@@ -218,13 +250,13 @@ cor.test(
 - The basic syntax is `dv ~ iv1 + iv2 + ...`.
 - Recall that in `cor.test()` our formula didn't have a LHS -- there is no dependent variable in correlation.
 
-## You try it! {.scrollable}
+## You try it!
 
 **Student prompt**
 
 - Before, we saw that `boxplot` had a formula method. Use `boxplot()` with a formula to make boxplots of measles cases in 2002 for each `region` in the dataset.
 
-. . .
+## You try it: hint
 
 **Hint**
 
@@ -234,7 +266,7 @@ Your code should look like this for the correct DV and IV.
 boxplot(dv ~ iv, data = subset(meas, year == 2002))
 ```
 
-. . .
+## You try it: solution
 
 **Solution**
 
@@ -242,16 +274,19 @@ boxplot(dv ~ iv, data = subset(meas, year == 2002))
 boxplot(measles_cases ~ region, data = subset(meas, year == 2002))
 ```
 
-## You try it (more advanced) {.scrollable}
+## You try it (more advanced)
 
 **Student prompt**
 
 - Load the QCRC dataset, you only need the sheet "Main_Dataset" for this.
 - Fit a logistic regression model with 30 day mortality (`30D_Mortality` in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.
 - Use appropriate S3 generic functions to get statistics about your model that you would want to report.
+
+## You try it (more advanced): report pattern
+
 - This is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.
 
-. . .
+## You try it (more advanced): read the data
 
 **Hint**
 
@@ -264,7 +299,7 @@ qcrc <- readxl::read_xlsx(
 )
 ```
 
-. . .
+## You try it (more advanced): model hint
 
 **Hint**
 
@@ -278,13 +313,13 @@ model_30dm <- glm(
 )
 ```
 
-. . .
+## You try it (more advanced): method hint
 
 **Hint**
 
 Some useful functions with methods for `glm`-class objects are `summary`, `coef`, and `confint`. (You probably also need the function `exp`!)
 
-. . .
+## You try it (more advanced): solution setup
 
 **Solution**
 
@@ -299,7 +334,11 @@ qcrc$d_dimer <- log(qcrc$d_dimer)
 # Impute missing values with the median -- there are much better ways to do this
 med_d_dimer <- median(qcrc$d_dimer, na.rm = TRUE)
 qcrc$d_dimer <- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)
+```
 
+## You try it (more advanced): solution setup, continued
+
+```{r}
 # A little cleaning for Race
 qcrc$Race <- factor(qcrc$Race) |>
 	# Make White the reference level
@@ -308,7 +347,11 @@ qcrc$Race <- factor(qcrc$Race) |>
 	# really small and heterogeneous so put them together
 	# Not ideal but sometimes the best we can do
 	forcats::fct_lump_n(n = 2)
+```
 
+## You try it (more advanced): solution model
+
+```{r}
 # Fit a model that controls for treatment, d_dimer, and race/ethnicity
 model_30dm <- glm(
 	`30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + Race,
@@ -317,15 +360,22 @@ model_30dm <- glm(
 )
 ```
 
-. . .
+## You try it (more advanced): model summary
 
 - Look at a lot of useful information with `summary()`.
 
 ```{r}
-summary(model_30dm)
+model_summary <- round(coef(summary(model_30dm)), 3)
 ```
 
-. . .
+## You try it (more advanced): model summary table
+
+```{r}
+#| echo: false
+knitr::kable(model_summary)
+```
+
+## You try it (more advanced): odds ratios
 
 - Get the OR's with `coef()`.
 
@@ -335,17 +385,24 @@ coef(model_30dm) |>
 	round(2)
 ```
 
-. . .
+## You try it (more advanced): confidence intervals
 
 - Get the profile CI's with `confint()`.
 
 ```{r}
-confint(model_30dm) |>
+model_ci <- suppressMessages(confint(model_30dm)) |>
 	exp() |>
 	round(2)
 ```
 
-. . .
+## You try it (more advanced): confidence interval table
+
+```{r}
+#| echo: false
+knitr::kable(model_ci)
+```
+
+## You try it (more advanced): interpretation
 
 - A basic interpretation of the coefficient for `Remdesivir_or_placebo` (coded as 1 for remdesivir and 0 for placebo) might be "Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the $\alpha = 0.05$ significance level, but is suggestive that at least some patients benefitted from remdesivir treatment."
 

@@ -16,6 +16,8 @@ We are going to answer one concrete question with the measles data:
 
 > In Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?
 
+## A small manuscript problem: manuscript arc
+
 This is a miniature version of the Exercise 1 manuscript arc:
 
 1. State a question.
@@ -50,7 +52,13 @@ measles <- readRDS(data_file)
 ## Look at the data
 
 ```{r}
-str(measles)
+str(measles[, c(
+  "country",
+  "year",
+  "measles_cases",
+  "population",
+  "MCV1_coverage"
+)])
 ```
 
 ## What do we need?
@@ -76,8 +84,20 @@ pakistan <- pakistan[order(pakistan$year), ]
 ## Check the subset
 
 ```{r}
-head(pakistan)
-tail(pakistan)
+pakistan_check_rows <- pakistan[, c(
+  "country",
+  "year",
+  "measles_cases",
+  "MCV1_coverage"
+)]
+
+head(pakistan_check_rows)
+```
+
+## Check the subset, continued
+
+```{r}
+tail(pakistan_check_rows)
 ```
 
 ## Step 2: calculate incidence
@@ -197,8 +217,12 @@ pakistan_result <- pakistan[, c(
 )]
 
 pakistan_result$cases_per_100k <- round(pakistan_result$cases_per_100k, 2)
+```
 
-tail(pakistan_result, 12)
+## Step 5: inspect recent years
+
+```{r}
+tail(pakistan_result, 8)
 ```
 
 ## Step 6: summarize the answer
@@ -292,7 +316,11 @@ afghanistan <- measles[
 
 afghanistan <- afghanistan[order(afghanistan$year), ]
 afghanistan$cases_per_100k <- afghanistan$measles_cases / afghanistan$population * 100000
+```
 
+## Active checkpoint: solution rule
+
+```{r}
 afghanistan$priority_year <- ifelse(
   (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage < 80) |
     (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k >= 5),
@@ -303,7 +331,11 @@ afghanistan$priority_year <- ifelse(
     "not priority"
   )
 )
+```
 
+## Active checkpoint: solution table
+
+```{r}
 afghanistan_result <- afghanistan[, c(
   "year",
   "measles_cases",
@@ -314,7 +346,14 @@ afghanistan_result <- afghanistan[, c(
 
 afghanistan_result$cases_per_100k <- round(afghanistan_result$cases_per_100k, 2)
 
-afghanistan_result
+afghanistan_labels <- afghanistan_result[, c("year", "priority_year")]
+head(afghanistan_labels, 7)
+```
+
+## Active checkpoint: solution table, continued
+
+```{r}
+tail(afghanistan_labels, 7)
 ```
 
 ## Active checkpoint: summarize it

@@ -232,127 +232,151 @@
 <li>The main property of S3 is <strong>polymorphism</strong>: one <strong>generic function</strong> can act differently on different <strong>classes</strong> of objects, but symbolically represents the same thing and has a consistent interface.</li>
 </ul>
 </section>
-<section id="an-s3-example" class="slide level2 scrollable">
+<section id="an-s3-example" class="slide level2">
 <h2>An S3 example</h2>
 <ul>
+<li>We’ll use three different model objects to see how one generic function behaves.</li>
 <li><code>summary()</code> is an example of an S3 <strong>generic</strong>. And the documentation tells us this.</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>?summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Help on topic 'summary' was found in the following packages:
-
-  * lme4
-  * base</code></pre>
-</div>
-</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>?summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="polymorphism-of-summary" class="slide level2 scrollable">
-<h2>Polymorphism of summary</h2>
+<section id="polymorphism-of-summary" class="slide level2">
+<h2>Polymorphism of <code>summary()</code></h2>
 <ul>
 <li>When we call <code>summary(an_object)</code> it determines what it should do based on the class of <code>an_object</code>.</li>
 <li>Each of the following summaries shows us different statistics.</li>
 </ul>
+</section>
+<section id="summary-for-an-lm" class="slide level2">
+<h2><code>summary()</code> for an <code>lm</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">class</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">class</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "lm"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">summary</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = bwt ~ age, data = birthwt)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--2294.78  -517.63    10.51   530.80  1774.92 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  2655.74     238.86   11.12   &lt;2e-16 ***
-age            12.43      10.02    1.24    0.216    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 728.2 on 187 degrees of freedom
-Multiple R-squared:  0.008157,  Adjusted R-squared:  0.002853 
-F-statistic: 1.538 on 1 and 187 DF,  p-value: 0.2165</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">coef</span>(<span class="fu">summary</span>(an_lm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. Error</th>
+<th style="text-align: right;">t value</th>
+<th style="text-align: right;">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">2655.74447</td>
+<td style="text-align: right;">238.85709</td>
+<td style="text-align: right;">11.118550</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">12.42971</td>
+<td style="text-align: right;">10.02278</td>
+<td style="text-align: right;">1.240146</td>
+<td style="text-align: right;">0.2164752</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div class="fragment">
+</section>
+<section id="summary-for-a-glm" class="slide level2">
+<h2><code>summary()</code> for a <code>glm</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">class</span>(a_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">class</span>(a_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "glm" "lm" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">summary</span>(a_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm(formula = low ~ age, family = "binomial", data = birthwt)
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)  0.38458    0.73212   0.525    0.599
-age         -0.05115    0.03151  -1.623    0.105
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 234.67  on 188  degrees of freedom
-Residual deviance: 231.91  on 187  degrees of freedom
-AIC: 235.91
-
-Number of Fisher Scoring iterations: 4</code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">coef</span>(<span class="fu">summary</span>(a_glm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. Error</th>
+<th style="text-align: right;">z value</th>
+<th style="text-align: right;">Pr(&gt;|z|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.3845819</td>
+<td style="text-align: right;">0.7321248</td>
+<td style="text-align: right;">0.5252956</td>
+<td style="text-align: right;">0.5993777</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">-0.0511529</td>
+<td style="text-align: right;">0.0315138</td>
+<td style="text-align: right;">-1.6231937</td>
+<td style="text-align: right;">0.1045480</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="summary-for-a-mixed-model" class="slide level2">
+<h2><code>summary()</code> for a mixed model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">class</span>(a_glmm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">class</span>(a_glmm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "glmerMod"
 attr(,"package")
 [1] "lme4"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">summary</span>(a_glmm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
-  Approximation) [glmerMod]
- Family: binomial  ( logit )
-Formula: low ~ age + (1 | id)
-   Data: birthwt
-
-      AIC       BIC    logLik -2*log(L)  df.resid 
-    237.9     247.6    -116.0     231.9       186 
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--0.8451 -0.7066 -0.5908  1.3042  1.9639 
-
-Random effects:
- Groups Name        Variance Std.Dev.
- id     (Intercept) 0.009912 0.09956 
-Number of obs: 189, groups:  id, 189
-
-Fixed effects:
-            Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)  0.38540    0.73534   0.524    0.600
-age         -0.05127    0.03234  -1.585    0.113
-
-Correlation of Fixed Effects:
-    (Intr)
-age -0.966</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">coef</span>(<span class="fu">summary</span>(a_glmm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. Error</th>
+<th style="text-align: right;">z value</th>
+<th style="text-align: right;">Pr(&gt;|z|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.3854014</td>
+<td style="text-align: right;">0.7353431</td>
+<td style="text-align: right;">0.524111</td>
+<td style="text-align: right;">0.6002013</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">-0.0512689</td>
+<td style="text-align: right;">0.0323364</td>
+<td style="text-align: right;">-1.585484</td>
+<td style="text-align: right;">0.1128564</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
-<section id="some-oop-definitions" class="slide level2 smaller">
+<section id="some-oop-definitions" class="slide level2">
 <h2>Some OOP definitions</h2>
 <ul>
 <li>A <strong>class</strong> is a category of object. Objects of the same class have the same <strong>fields</strong> or attributes.</li>
 <li>A <strong>generic</strong> is a function that has different behavior for multiple classes of inputs.</li>
 <li>The <strong>methods</strong> for a function are the function implementations for specific classes.</li>
+</ul>
+</section>
+<section id="some-oop-definitions-continued" class="slide level2">
+<h2>Some OOP definitions, continued</h2>
+<ul>
 <li><strong>Method dispatch</strong> is the process where you call a generic function, the generic function checks the class of the input, and the generic function calls the method for that class.</li>
 <li>A <strong>default method</strong> is dispatched by a generic function when there is no specific method for the class of the input. Not every generic has a default method.</li>
 </ul>
@@ -376,16 +400,16 @@ age -0.966</code></pre>
 <section id="s3-classes-and-types-1" class="slide level2">
 <h2>S3 classes (and types)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>an_object <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
-<span id="cb15-2"><a></a><span class="fu">typeof</span>(an_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>an_object <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb11-2"><a></a><span class="fu">typeof</span>(an_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "integer"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">class</span>(an_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">class</span>(an_object)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "integer"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">attr</span>(an_object, <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">attr</span>(an_object, <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>NULL</code></pre>
 </div>
@@ -394,435 +418,93 @@ age -0.966</code></pre>
 <section id="s3-classes-and-types-2" class="slide level2">
 <h2>S3 classes (and types)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">typeof</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">typeof</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "list"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">class</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">class</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "lm"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">attr</span>(an_lm, <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">attr</span>(an_lm, <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "lm"</code></pre>
 </div>
 </div>
 </section>
-<section id="s3-classes-and-types-3" class="slide level2 scrollable">
-<h2>S3 classes (and types)</h2>
+<section id="s3-classes-and-types-model-objects" class="slide level2">
+<h2>S3 classes (and types): model objects</h2>
 <ul>
 <li>Many S3 objects you will meet in modeling, including <code>lm</code> and <code>glm</code> objects, are lists with a class attribute.</li>
 <li>Some S3 objects are built on other types, like factors and dates, so do not use “is it a list?” as the definition of S3.</li>
 <li>Complicated model objects are usually lists where the elements have specific names.</li>
 </ul>
+</section>
+<section id="s3-classes-and-types-model-object-names" class="slide level2">
+<h2>S3 classes (and types): model object names</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">str</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">class</span>(an_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>List of 12
- $ coefficients : Named num [1:2] 2655.7 12.4
-  ..- attr(*, "names")= chr [1:2] "(Intercept)" "age"
- $ residuals    : Named num [1:189] -369 -515 -347 -323 -279 ...
-  ..- attr(*, "names")= chr [1:189] "85" "86" "87" "88" ...
- $ effects      : Named num [1:189] -40481 -903 -340 -309 -284 ...
-  ..- attr(*, "names")= chr [1:189] "(Intercept)" "age" "" "" ...
- $ rank         : int 2
- $ fitted.values: Named num [1:189] 2892 3066 2904 2917 2879 ...
-  ..- attr(*, "names")= chr [1:189] "85" "86" "87" "88" ...
- $ assign       : int [1:2] 0 1
- $ qr           :List of 5
-  ..$ qr   : num [1:189, 1:2] -13.7477 0.0727 0.0727 0.0727 0.0727 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : chr [1:189] "85" "86" "87" "88" ...
-  .. .. ..$ : chr [1:2] "(Intercept)" "age"
-  .. ..- attr(*, "assign")= int [1:2] 0 1
-  ..$ qraux: num [1:2] 1.07 1.14
-  ..$ pivot: int [1:2] 1 2
-  ..$ tol  : num 1e-07
-  ..$ rank : int 2
-  ..- attr(*, "class")= chr "qr"
- $ df.residual  : int 187
- $ xlevels      : Named list()
- $ call         : language lm(formula = bwt ~ age, data = birthwt)
- $ terms        :Classes 'terms', 'formula'  language bwt ~ age
-  .. ..- attr(*, "variables")= language list(bwt, age)
-  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. ..$ : chr [1:2] "bwt" "age"
-  .. .. .. ..$ : chr "age"
-  .. ..- attr(*, "term.labels")= chr "age"
-  .. ..- attr(*, "order")= int 1
-  .. ..- attr(*, "intercept")= int 1
-  .. ..- attr(*, "response")= int 1
-  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. ..- attr(*, "predvars")= language list(bwt, age)
-  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "numeric"
-  .. .. ..- attr(*, "names")= chr [1:2] "bwt" "age"
- $ model        :'data.frame':  189 obs. of  2 variables:
-  ..$ bwt: int [1:189] 2523 2551 2557 2594 2600 2622 2637 2637 2663 2665 ...
-  ..$ age: int [1:189] 19 33 20 21 18 21 22 17 29 26 ...
-  ..- attr(*, "terms")=Classes 'terms', 'formula'  language bwt ~ age
-  .. .. ..- attr(*, "variables")= language list(bwt, age)
-  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. .. .. ..$ : chr [1:2] "bwt" "age"
-  .. .. .. .. ..$ : chr "age"
-  .. .. ..- attr(*, "term.labels")= chr "age"
-  .. .. ..- attr(*, "order")= int 1
-  .. .. ..- attr(*, "intercept")= int 1
-  .. .. ..- attr(*, "response")= int 1
-  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. .. ..- attr(*, "predvars")= language list(bwt, age)
-  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "numeric"
-  .. .. .. ..- attr(*, "names")= chr [1:2] "bwt" "age"
- - attr(*, "class")= chr "lm"</code></pre>
+<pre><code>[1] "lm"</code></pre>
 </div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>?lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">cat</span>(<span class="fu">head</span>(<span class="fu">names</span>(an_lm), <span class="dv">8</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fitting Linear Models
-
-Description:
-
-     'lm' is used to fit linear models, including multivariate ones.
-     It can be used to carry out regression, single stratum analysis of
-     variance and analysis of covariance (although 'aov' may provide a
-     more convenient interface for these).
-
-Usage:
-
-     lm(formula, data, subset, weights, na.action,
-        method = "qr", model = TRUE, x = FALSE, y = FALSE, qr = TRUE,
-        singular.ok = TRUE, contrasts = NULL, offset, ...)
-     
-     ## S3 method for class 'lm'
-     print(x, digits = max(3L, getOption("digits") - 3L), ...)
-     
-Arguments:
-
- formula: an object of class '"formula"' (or one that can be coerced to
-          that class): a symbolic description of the model to be
-          fitted.  The details of model specification are given under
-          'Details'.
-
-    data: an optional data frame, list or environment (or object
-          coercible by 'as.data.frame' to a data frame) containing the
-          variables in the model.  If not found in 'data', the
-          variables are taken from 'environment(formula)', typically
-          the environment from which 'lm' is called.
-
-  subset: an optional vector specifying a subset of observations to be
-          used in the fitting process.  (See additional details about
-          how this argument interacts with data-dependent bases in the
-          'Details' below.)
-
- weights: an optional vector of weights to be used in the fitting
-          process.  Should be 'NULL' or a numeric vector.  If non-NULL,
-          weighted least squares is used with weights 'weights' (that
-          is, minimizing 'sum(w*e^2)'); otherwise ordinary least
-          squares is used.  See also 'Details',
-
-na.action: a function which indicates what should happen when the data
-          contain 'NA's.  The default is set by the 'na.action' setting
-          of 'options', and is 'na.fail' if that is unset.  The
-          'factory-fresh' default is 'na.omit'.  Another possible value
-          is 'NULL', no action.  Value 'na.exclude' can be useful.
-
-  method: the method to be used; for fitting, currently only 'method =
-          "qr"' is supported; 'method = "model.frame"' returns the
-          model frame (the same as with 'model = TRUE', see below).
-
-model, x, y, qr: logicals.  If 'TRUE' the corresponding components of
-          the fit (the model frame, the model matrix, the response, the
-          QR decomposition) are returned.
-
-singular.ok: logical. If 'FALSE' (the default in S but not in R) a
-          singular fit is an error.
-
-contrasts: an optional list. See the 'contrasts.arg' of
-          'model.matrix.default'.
-
-  offset: this can be used to specify an _a priori_ known component to
-          be included in the linear predictor during fitting.  This
-          should be 'NULL' or a numeric vector or matrix of extents
-          matching those of the response.  One or more 'offset' terms
-          can be included in the formula instead or as well, and if
-          more than one are specified their sum is used.  See
-          'model.offset'.
-
-     ...: For 'lm()': additional arguments to be passed to the low
-          level regression fitting functions (see below).
-
-  digits: the number of _significant_ digits to be passed to
-          'format(coef(x), .)' when 'print()'ing.
-
-Details:
-
-     Models for 'lm' are specified symbolically.  A typical model has
-     the form 'response ~ terms' where 'response' is the (numeric)
-     response vector and 'terms' is a series of terms which specifies a
-     linear predictor for 'response'.  A terms specification of the
-     form 'first + second' indicates all the terms in 'first' together
-     with all the terms in 'second' with duplicates removed.  A
-     specification of the form 'first:second' indicates the set of
-     terms obtained by taking the interactions of all terms in 'first'
-     with all terms in 'second'.  The specification 'first*second'
-     indicates the _cross_ of 'first' and 'second'.  This is the same
-     as 'first + second + first:second'.
-
-     If the formula includes an 'offset', this is evaluated and
-     subtracted from the response.
-
-     If 'response' is a matrix a linear model is fitted separately by
-     least-squares to each column of the matrix and the result inherits
-     from '"mlm"' ("multivariate linear model").
-
-     See 'model.matrix' for some further details.  The terms in the
-     formula will be re-ordered so that main effects come first,
-     followed by the interactions, all second-order, all third-order
-     and so on: to avoid this pass a 'terms' object as the formula (see
-     'aov' and 'demo(glm.vr)' for an example).
-
-     A formula has an implied intercept term.  To remove this use
-     either 'y ~ x - 1' or 'y ~ 0 + x'.  See 'formula' for more details
-     of allowed formulae.
-
-     Non-'NULL' 'weights' can be used to indicate that different
-     observations have different variances (with the values in
-     'weights' being inversely proportional to the variances); or
-     equivalently, when the elements of 'weights' are positive integers
-     w_i, that each response y_i is the mean of w_i unit-weight
-     observations (including the case that there are w_i observations
-     equal to y_i and the data have been summarized). However, in the
-     latter case, notice that within-group variation is not used.
-     Therefore, the sigma estimate and residual degrees of freedom may
-     be suboptimal; in the case of replication weights, even wrong.
-     Hence, standard errors and analysis of variance tables should be
-     treated with care.
-
-     'lm' calls the lower level functions 'lm.fit', etc, see below, for
-     the actual numerical computations.  For programming only, you may
-     consider doing likewise.
-
-     All of 'weights', 'subset' and 'offset' are evaluated in the same
-     way as variables in 'formula', that is first in 'data' and then in
-     the environment of 'formula'.  Note that values calculated inside
-     the formula, such as 'mean(x)', are evaluated before subsetting -
-     which may lead to unexpected results if used with 'subset'.  For
-     more information see the 'Details' section of the 'model.frame'.
-
-Value:
-
-     'lm' returns an object of 'class' '"lm"' or for multivariate
-     ('multiple') responses of class 'c("mlm", "lm")'.
-
-     The functions 'summary' and 'anova' are used to obtain and print a
-     summary and analysis of variance table of the results.  The
-     generic accessor functions 'coefficients', 'effects',
-     'fitted.values' and 'residuals' extract various useful features of
-     the value returned by 'lm'.
-
-     An object of class '"lm"' is a list containing at least the
-     following components:
-
-coefficients: a named vector of coefficients
-
-residuals: the residuals, that is response minus fitted values.
-
-fitted.values: the fitted mean values.
-
-    rank: the numeric rank of the fitted linear model.
-
- weights: (only for weighted fits) the specified weights.
-
-df.residual: the residual degrees of freedom.
-
-    call: the matched call.
-
-   terms: the 'terms' object used.
-
-contrasts: (only where relevant) the contrasts used.
-
- xlevels: (only where relevant) a record of the levels of the factors
-          used in fitting.
-
-  offset: the offset used (missing if none were used).
-
-       y: if requested, the response used.
-
-       x: if requested, the model matrix used.
-
-   model: if requested (the default), the model frame used.
-
-na.action: (where relevant) information returned by 'model.frame' on
-          the special handling of 'NA's.
-
-     In addition, non-null fits will have components 'assign',
-     'effects' and (unless not requested) 'qr' relating to the linear
-     fit, for use by extractor functions such as 'summary' and
-     'effects'.
-
-Using time series:
-
-     Considerable care is needed when using 'lm' with time series.
-
-     Unless 'na.action = NULL', the time series attributes are stripped
-     from the variables before the regression is done.  (This is
-     necessary as omitting 'NA's would invalidate the time series
-     attributes, and if 'NA's are omitted in the middle of the series
-     the result would no longer be a regular time series.)
-
-     Even if the time series attributes are retained, they are not used
-     to line up series, so that the time shift of a lagged or
-     differenced regressor would be ignored.  It is good practice to
-     prepare a 'data' argument by 'ts.intersect(..., dframe = TRUE)',
-     then apply a suitable 'na.action' to that data frame and call 'lm'
-     with 'na.action = NULL' so that residuals and fitted values are
-     time series.
-
-Author(s):
-
-     The design was inspired by the S function of the same name
-     described in Chambers (1992).  The implementation of model formula
-     by Ross Ihaka was based on Wilkinson and Rogers (1973).
-
-References:
-
-     Chambers JM (1992). "Linear Models." In Chambers JM, Hastie TJ
-     (eds.), _Statistical Models in S_, chapter 4. Wadsworth &amp;
-     Brooks/Cole.
-
-     Wilkinson GN, Rogers CE (1973). "Symbolic Description of Factorial
-     Models for Analysis of Variance." _Applied Statistics_, *22*(3),
-     392. doi:10.2307/2346786 &lt;https://doi.org/10.2307/2346786&gt;.
-
-See Also:
-
-     'summary.lm' for more detailed summaries and 'anova.lm' for the
-     ANOVA table; 'aov' for a different interface.
-
-     The generic functions 'coef', 'effects', 'residuals', 'fitted',
-     'vcov'.
-
-     'predict.lm' (via 'predict') for prediction, including confidence
-     and prediction intervals; 'confint' for confidence intervals of
-     _parameters_.
-
-     'lm.influence' for regression diagnostics, and 'glm' for
-     *generalized* linear models.
-
-     The underlying low level functions, 'lm.fit' for plain, and
-     'lm.wfit' for weighted regression fitting.
-
-     More 'lm()' examples are available e.g., in 'anscombe',
-     'attitude', 'freeny', 'LifeCycleSavings', 'longley', 'stackloss',
-     'swiss'.
-
-     'biglm' in package 'biglm' for an alternative way to fit linear
-     models to large datasets (especially those with many cases).
-
-Examples:
-
-     require(graphics)
-     
-     ## Annette Dobson (1990) "An Introduction to Generalized Linear Models".
-     ## Page 9: Plant Weight Data.
-     ctl &lt;- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
-     trt &lt;- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
-     group &lt;- gl(2, 10, 20, labels = c("Ctl","Trt"))
-     weight &lt;- c(ctl, trt)
-     lm.D9 &lt;- lm(weight ~ group)
-     lm.D90 &lt;- lm(weight ~ group - 1) # omitting intercept
-     
-     anova(lm.D9)
-     summary(lm.D90)
-     
-     opar &lt;- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
-     plot(lm.D9, las = 1)      # Residuals, Fitted, ...
-     par(opar)
-     
-     ### less simple examples in "See Also" above</code></pre>
+<pre><code>coefficients
+residuals
+effects
+rank
+fitted.values
+assign
+qr
+df.residual</code></pre>
 </div>
 </div>
-</div>
+</section>
+<section id="s3-classes-and-types-help-page" class="slide level2">
+<h2>S3 classes (and types): help page</h2>
+<ul>
+<li>Help pages for modeling functions often document those list elements.</li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>?lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="s3-help-pages" class="slide level2">
 <h2>S3 help pages</h2>
 <ul>
 <li>Now you know enough to understand the help pages for S3 objects.</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>?summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Help on topic 'summary' was found in the following packages:
-
-  * lme4
-  * base</code></pre>
-</div>
-</div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>?summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="finding-classes-and-finding-methods" class="slide level2">
-<h2>Finding classes and finding methods</h2>
+<section id="finding-methods-for-a-generic" class="slide level2">
+<h2>Finding methods for a generic</h2>
 <ul>
 <li>Use the <code>methods()</code> function to find all methods that are available for a specific generic function.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">methods</span>(summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>summary_methods <span class="ot">&lt;-</span> <span class="fu">methods</span>(summary)</span>
+<span id="cb29-2"><a></a><span class="fu">length</span>(summary_methods)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] summary,ANY-method                  summary,diagonalMatrix-method      
- [3] summary,sparseMatrix-method         summary.allFit*                    
- [5] summary.aov                         summary.aovlist*                   
- [7] summary.aspell*                     summary.check_packages_in_dir*     
- [9] summary.connection                  summary.corAR1*                    
-[11] summary.corARMA*                    summary.corCAR1*                   
-[13] summary.corCompSymm*                summary.corExp*                    
-[15] summary.corGaus*                    summary.corIdent*                  
-[17] summary.corLin*                     summary.corNatural*                
-[19] summary.corRatio*                   summary.corSpher*                  
-[21] summary.corStruct*                  summary.corSymm*                   
-[23] summary.data.frame                  summary.Date                       
-[25] summary.default                     summary.difftime                   
-[27] summary.ecdf*                       summary.factor                     
-[29] summary.free1way*                   summary.glm                        
-[31] summary.gls*                        summary.infl*                      
-[33] summary.lm                          summary.lme*                       
-[35] summary.lmList*                     summary.lmList4*                   
-[37] summary.loess*                      summary.loglm*                     
-[39] summary.manova                      summary.matrix                     
-[41] summary.merMod*                     summary.mlm*                       
-[43] summary.modelStruct*                summary.negbin*                    
-[45] summary.nls*                        summary.nlsList*                   
-[47] summary.packageStatus*              summary.pdBlocked*                 
-[49] summary.pdCompSymm*                 summary.pdDiag*                    
-[51] summary.pdIdent*                    summary.pdLogChol*                 
-[53] summary.pdMat*                      summary.pdNatural*                 
-[55] summary.pdSymm*                     summary.polr*                      
-[57] summary.POSIXct                     summary.POSIXlt                    
-[59] summary.ppr*                        summary.prcomp*                    
-[61] summary.prcomplist*                 summary.princomp*                  
-[63] summary.proc_time                   summary.reStruct*                  
-[65] summary.rlang:::list_of_conditions* summary.rlang_error*               
-[67] summary.rlang_message*              summary.rlang_trace*               
-[69] summary.rlang_warning*              summary.rlm*                       
-[71] summary.shingle*                    summary.srcfile                    
-[73] summary.srcref                      summary.stepfun                    
-[75] summary.stl*                        summary.summary.merMod*            
-[77] summary.table                       summary.trellis*                   
-[79] summary.tukeysmooth*                summary.varComb*                   
-[81] summary.varConstPower*              summary.varConstProp*              
-[83] summary.varExp*                     summary.varFixed*                  
-[85] summary.varFunc*                    summary.varIdent*                  
-[87] summary.varPower*                   summary.warnings                   
-see '?methods' for accessing help and source code</code></pre>
+<pre><code>[1] 88</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">cat</span>(<span class="fu">head</span>(summary_methods, <span class="dv">8</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>summary,ANY-method
+summary,diagonalMatrix-method
+summary,sparseMatrix-method
+summary.allFit
+summary.aov
+summary.aovlist
+summary.aspell
+summary.check_packages_in_dir</code></pre>
 </div>
 </div>
-<div class="fragment">
+</section>
+<section id="finding-methods-for-a-class" class="slide level2">
+<h2>Finding methods for a class</h2>
 <ul>
 <li>Also use the <code>methods(class = ...)</code> function to find all methods that are available for a specific class.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] add1           alias          anova          case.names     coerce        
  [6] confint        cooks.distance deviance       dfbeta         dfbetas       
@@ -836,202 +518,78 @@ see '?methods' for accessing help and source code</code></pre>
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="opening-a-specific-method" class="slide level2">
+<h2>Opening a specific method</h2>
 <ul>
 <li>You can use a dot (<code>.</code>) to reference specific methods, not just generics.</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>?summary.lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Summarizing Linear Model Fits
-
-Description:
-
-     'summary' method for class '"lm"'.
-
-Usage:
-
-     ## S3 method for class 'lm'
-     summary(object, correlation = FALSE, symbolic.cor = FALSE, ...)
-     
-     ## S3 method for class 'summary.lm'
-     print(x, digits = max(3, getOption("digits") - 3),
-           symbolic.cor = x$symbolic.cor,
-           signif.stars = getOption("show.signif.stars"), ...)
-     
-Arguments:
-
-  object: an object of class '"lm"', usually, a result of a call to
-          'lm'.
-
-       x: an object of class '"summary.lm"', usually, a result of a
-          call to 'summary.lm'.
-
-correlation: logical; if 'TRUE', the correlation matrix of the
-          estimated parameters is returned and printed.
-
-  digits: the number of significant digits to use when printing.
-
-symbolic.cor: logical. If 'TRUE', print the correlations in a symbolic
-          form (see 'symnum') rather than as numbers.
-
-signif.stars: logical. If 'TRUE', 'significance stars' are printed for
-          each coefficient.
-
-     ...: further arguments passed to or from other methods.
-
-Details:
-
-     'print.summary.lm' tries to be smart about formatting the
-     coefficients, standard errors, etc. and additionally gives
-     'significance stars' if 'signif.stars' is 'TRUE'.
-
-     Aliased coefficients are omitted in the returned object but
-     restored by the 'print' method.
-
-     Correlations are printed to two decimal places (or symbolically):
-     to see the actual correlations print 'summary(object)$correlation'
-     directly.
-
-Value:
-
-     The function 'summary.lm' computes and returns a list of summary
-     statistics of the fitted linear model given in 'object', using the
-     components (list elements) '"call"' and '"terms"' from its
-     argument, plus
-
-residuals: the _weighted_ residuals, the usual residuals rescaled by
-          the square root of the weights specified in the call to 'lm'.
-
-coefficients: a p x 4 matrix with columns for the estimated
-          coefficient, its standard error, t-statistic and
-          corresponding (two-sided) p-value.  Aliased coefficients are
-          omitted.
-
- aliased: named logical vector showing if the original coefficients are
-          aliased.
-
-   sigma: the square root of the estimated variance of the random error
-
-                       sigma^2 = 1/(n-p) Sum(w[i] R[i]^2),              
-          
-          where R[i] is the i-th residual, 'residuals[i]'.
-
-      df: degrees of freedom, a 3-vector (p, n-p, p*), the first being
-          the number of non-aliased coefficients, the last being the
-          total number of coefficients.
-
-fstatistic: (for models including non-intercept terms) a 3-vector with
-          the value of the F-statistic with its numerator and
-          denominator degrees of freedom.
-
-r.squared: R^2, the 'fraction of variance explained by the model',
-
-                    R^2 = 1 - Sum(R[i]^2) / Sum((y[i]- y*)^2),          
-          
-          where y* is the mean of y[i] if there is an intercept and
-          zero otherwise.
-
-adj.r.squared: the above R^2 statistic '_adjusted_', penalizing for
-          higher p.
-
-cov.unscaled: a p x p matrix of (unscaled) covariances of the coef[j],
-          j=1, ..., p.
-
-correlation: the correlation matrix corresponding to the above
-          'cov.unscaled', if 'correlation = TRUE' is specified.
-
-symbolic.cor: (only if 'correlation' is true.)  The value of the
-          argument 'symbolic.cor'.
-
-na.action: from 'object', if present there.
-
-See Also:
-
-     The model fitting function 'lm', 'summary'.
-
-     Function 'coef' will extract the matrix of coefficients with
-     standard errors, t-statistics and p-values.
-
-Examples:
-
-     ##-- Continuing the  lm(.) example:
-     coef(lm.D90)  # the bare coefficients
-     sld90 &lt;- summary(lm.D90 &lt;- lm(weight ~ group -1))  # omitting intercept
-     sld90
-     coef(sld90)  # much more
-     
-     ## model with *aliased* coefficient:
-     lm.D9. &lt;- lm(weight ~ group + I(group != "Ctl"))
-     Sm.D9. &lt;- summary(lm.D9.)
-     Sm.D9. #  shows the NA NA NA NA  line
-     stopifnot(length(cc &lt;- coef(lm.D9.)) == 3, is.na(cc[3]),
-               dim(coef(Sm.D9.)) == c(2,4), Sm.D9.$df == c(2, 18, 3))</code></pre>
-</div>
-</div>
-</div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>?summary.lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section></section>
 <section>
 <section id="part-2-formulas-formulae" class="title-slide slide level1 center">
 <h1>Part 2: Formulas / Formulae</h1>
 
 </section>
-<section id="utility-of-s3-methods" class="slide level2 scrollable">
+<section id="utility-of-s3-methods" class="slide level2">
 <h2>Utility of S3 methods</h2>
 <ul>
 <li>Hopefully you can now see why understanding S3 methods is important.</li>
 <li>But if you aren’t convinced, maybe <code>formula</code> objects can convince you. Look how many methods there are!</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"formula"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>formula_methods <span class="ot">&lt;-</span> <span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"formula"</span>)</span>
+<span id="cb36-2"><a></a><span class="fu">length</span>(formula_methods)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] [             aggregate     alias         all.equal     ansari.test  
- [6] barplot       bartlett.test boxplot       cdplot        coerce       
-[11] cor.test      deriv         deriv3        fligner.test  formula      
-[16] free1way      friedman.test ftable        getInitial    initialize   
-[21] kruskal.test  ks.test       lines         mood.test     mosaicplot   
-[26] pairs         plot          points        ppr           prcomp       
-[31] princomp      print         quade.test    selfStart     show         
-[36] simulate      slotsFromS3   spineplot     stripchart    sunflowerplot
-[41] t.test        terms         text          update        var.test     
-[46] wilcox.test  
-see '?methods' for accessing help and source code</code></pre>
+<pre><code>[1] 46</code></pre>
 </div>
 </div>
-<div class="fragment">
+</section>
+<section id="utility-of-s3-methods-examples" class="slide level2">
+<h2>Utility of S3 methods: examples</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">cat</span>(<span class="fu">head</span>(formula_methods, <span class="dv">4</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[.formula
+aggregate.formula
+alias.formula
+all.equal.formula</code></pre>
+</div>
+</div>
 <ul>
 <li>And that doesn’t include functions like <code>lm()</code> which ONLY have methods for formulas, not generics.</li>
 </ul>
-</div>
 </section>
-<section id="formula-example" class="slide level2 scrollable">
+<section id="formula-example" class="slide level2">
 <h2>Formula example</h2>
 <ul>
 <li>Say you want to get the correlation between MCV1 coverage rate and measles cases in Pakistan. You can call the <code>cor.test()</code> function by passing two vectors.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>meas <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>))</span>
-<span id="cb41-2"><a></a></span>
-<span id="cb41-3"><a></a><span class="fu">cor.test</span>(</span>
-<span id="cb41-4"><a></a>    <span class="at">x =</span> meas<span class="sc">$</span>MCV1_coverage[meas<span class="sc">$</span>iso3c <span class="sc">==</span> <span class="st">"PAK"</span>],</span>
-<span id="cb41-5"><a></a>    <span class="at">y =</span> meas<span class="sc">$</span>measles_cases[meas<span class="sc">$</span>iso3c <span class="sc">==</span> <span class="st">"PAK"</span>]</span>
-<span id="cb41-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>meas <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>))</span>
+<span id="cb40-2"><a></a></span>
+<span id="cb40-3"><a></a>vector_cor <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
+<span id="cb40-4"><a></a>    <span class="at">x =</span> meas<span class="sc">$</span>MCV1_coverage[meas<span class="sc">$</span>iso3c <span class="sc">==</span> <span class="st">"PAK"</span>],</span>
+<span id="cb40-5"><a></a>    <span class="at">y =</span> meas<span class="sc">$</span>measles_cases[meas<span class="sc">$</span>iso3c <span class="sc">==</span> <span class="st">"PAK"</span>]</span>
+<span id="cb40-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="formula-example-vector-result" class="slide level2">
+<h2>Formula example: vector result</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(</span>
+<span id="cb41-2"><a></a>    <span class="st">"estimate: %.3f</span><span class="sc">\n</span><span class="st">p-value: %.3g</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb41-3"><a></a>    <span class="fu">unname</span>(vector_cor<span class="sc">$</span>estimate),</span>
+<span id="cb41-4"><a></a>    vector_cor<span class="sc">$</span>p.value</span>
+<span id="cb41-5"><a></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-    Pearson's product-moment correlation
-
-data:  meas$MCV1_coverage[meas$iso3c == "PAK"] and meas$measles_cases[meas$iso3c == "PAK"]
-t = -3.2036, df = 41, p-value = 0.002627
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- -0.6591955 -0.1699300
-sample estimates:
-       cor 
--0.4474377 </code></pre>
+<pre><code>estimate: -0.447
+p-value: 0.00263</code></pre>
 </div>
 </div>
-<div class="fragment">
+</section>
+<section id="formula-example-methods" class="slide level2">
+<h2>Formula example: methods</h2>
 <ul>
 <li>But if we inspect the methods for <code>cor.test</code>, we see it is an S3 generic with a method for <code>formula</code> class objects.</li>
 </ul>
@@ -1042,36 +600,31 @@ sample estimates:
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="formula-example-formula-method" class="slide level2">
+<h2>Formula example: formula method</h2>
 <ul>
 <li>Typing in the code is easier, and reading the output is easier.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">cor.test</span>(</span>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>formula_cor <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
 <span id="cb45-2"><a></a>    <span class="sc">~</span> measles_cases <span class="sc">+</span> MCV1_coverage,</span>
 <span id="cb45-3"><a></a>    <span class="at">data =</span> <span class="fu">subset</span>(meas, iso3c <span class="sc">==</span> <span class="st">"PAK"</span>)</span>
-<span id="cb45-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-4"><a></a>)</span>
+<span id="cb45-5"><a></a></span>
+<span id="cb45-6"><a></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(</span>
+<span id="cb45-7"><a></a>    <span class="st">"estimate: %.3f</span><span class="sc">\n</span><span class="st">p-value: %.3g</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb45-8"><a></a>    <span class="fu">unname</span>(formula_cor<span class="sc">$</span>estimate),</span>
+<span id="cb45-9"><a></a>    formula_cor<span class="sc">$</span>p.value</span>
+<span id="cb45-10"><a></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-    Pearson's product-moment correlation
-
-data:  measles_cases and MCV1_coverage
-t = -3.2036, df = 41, p-value = 0.002627
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- -0.6591955 -0.1699300
-sample estimates:
-       cor 
--0.4474377 </code></pre>
+<pre><code>estimate: -0.447
+p-value: 0.00263</code></pre>
 </div>
 </div>
-</div>
-<div class="fragment">
 <ul>
 <li>But it pays to understand S3, because in certain circumstances, using the default method is easier!</li>
 </ul>
-</div>
 </section>
 <section id="writing-formulas" class="slide level2 incremental">
 <h2>Writing formulas</h2>
@@ -1082,43 +635,46 @@ sample estimates:
 <li>Recall that in <code>cor.test()</code> our formula didn’t have a LHS – there is no dependent variable in correlation.</li>
 </ul>
 </section>
-<section id="you-try-it" class="slide level2 scrollable">
+<section id="you-try-it" class="slide level2">
 <h2>You try it!</h2>
 <p><strong>Student prompt</strong></p>
 <ul>
 <li>Before, we saw that <code>boxplot</code> had a formula method. Use <code>boxplot()</code> with a formula to make boxplots of measles cases in 2002 for each <code>region</code> in the dataset.</li>
 </ul>
-<div class="fragment">
+</section>
+<section id="you-try-it-hint" class="slide level2">
+<h2>You try it: hint</h2>
 <p><strong>Hint</strong></p>
 <p>Your code should look like this for the correct DV and IV.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">boxplot</span>(dv <span class="sc">~</span> iv, <span class="at">data =</span> <span class="fu">subset</span>(meas, year <span class="sc">==</span> <span class="dv">2002</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-solution" class="slide level2">
+<h2>You try it: solution</h2>
 <p><strong>Solution</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">boxplot</span>(measles_cases <span class="sc">~</span> region, <span class="at">data =</span> <span class="fu">subset</span>(meas, year <span class="sc">==</span> <span class="dv">2002</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="Module06-S3-lm-formulas_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
-</figure>
+
 </div>
-</div>
-</div>
-</div>
-</section>
-<section id="you-try-it-more-advanced" class="slide level2 scrollable">
+<img data-src="Module06-S3-lm-formulas_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="you-try-it-more-advanced" class="slide level2">
 <h2>You try it (more advanced)</h2>
 <p><strong>Student prompt</strong></p>
 <ul>
 <li>Load the QCRC dataset, you only need the sheet “Main_Dataset” for this.</li>
 <li>Fit a logistic regression model with 30 day mortality (<code>30D_Mortality</code> in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.</li>
 <li>Use appropriate S3 generic functions to get statistics about your model that you would want to report.</li>
+</ul>
+</section>
+<section id="you-try-it-more-advanced-report-pattern" class="slide level2">
+<h2>You try it (more advanced): report pattern</h2>
+<ul>
 <li>This is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.</li>
 </ul>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-read-the-data" class="slide level2">
+<h2>You try it (more advanced): read the data</h2>
 <p><strong>Hint</strong></p>
 <p>To read in the data, do this. You might need to do some data cleaning, because missing data are written as a period in the spreadsheet.</p>
 <div class="cell">
@@ -1127,8 +683,9 @@ sample estimates:
 <span id="cb49-3"><a></a>    <span class="at">sheet =</span> <span class="st">"Main_Dataset"</span></span>
 <span id="cb49-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-model-hint" class="slide level2">
+<h2>You try it (more advanced): model hint</h2>
 <p><strong>Hint</strong></p>
 <p>Your logistic regression code should look like this. You need to put backticks (this thing: `, NOT an apostrophe. It’s made by the ~ key on American keyboards.) around the name of the variable `30D_Mortality`.</p>
 <div class="cell">
@@ -1138,12 +695,14 @@ sample estimates:
 <span id="cb50-4"><a></a>    <span class="at">family =</span> <span class="st">"binomial"</span></span>
 <span id="cb50-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-method-hint" class="slide level2">
+<h2>You try it (more advanced): method hint</h2>
 <p><strong>Hint</strong></p>
 <p>Some useful functions with methods for <code>glm</code>-class objects are <code>summary</code>, <code>coef</code>, and <code>confint</code>. (You probably also need the function <code>exp</code>!)</p>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-solution-setup" class="slide level2">
+<h2>You try it (more advanced): solution setup</h2>
 <p><strong>Solution</strong></p>
 <p>One solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 day mortality.</p>
 <div class="cell">
@@ -1154,65 +713,113 @@ sample estimates:
 <span id="cb51-5"><a></a>qcrc<span class="sc">$</span>d_dimer <span class="ot">&lt;-</span> <span class="fu">log</span>(qcrc<span class="sc">$</span>d_dimer)</span>
 <span id="cb51-6"><a></a><span class="co"># Impute missing values with the median -- there are much better ways to do this</span></span>
 <span id="cb51-7"><a></a>med_d_dimer <span class="ot">&lt;-</span> <span class="fu">median</span>(qcrc<span class="sc">$</span>d_dimer, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb51-8"><a></a>qcrc<span class="sc">$</span>d_dimer <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(qcrc<span class="sc">$</span>d_dimer), med_d_dimer, qcrc<span class="sc">$</span>d_dimer)</span>
-<span id="cb51-9"><a></a></span>
-<span id="cb51-10"><a></a><span class="co"># A little cleaning for Race</span></span>
-<span id="cb51-11"><a></a>qcrc<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">factor</span>(qcrc<span class="sc">$</span>Race) <span class="sc">|&gt;</span></span>
-<span id="cb51-12"><a></a>    <span class="co"># Make White the reference level</span></span>
-<span id="cb51-13"><a></a>    <span class="fu">relevel</span>(<span class="at">ref =</span> <span class="st">"Caucasian or White"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb51-14"><a></a>    <span class="co"># Groups other than "Caucasian or White" and "Black or African American" are</span></span>
-<span id="cb51-15"><a></a>    <span class="co"># really small and heterogeneous so put them together</span></span>
-<span id="cb51-16"><a></a>    <span class="co"># Not ideal but sometimes the best we can do</span></span>
-<span id="cb51-17"><a></a>    forcats<span class="sc">::</span><span class="fu">fct_lump_n</span>(<span class="at">n =</span> <span class="dv">2</span>)</span>
-<span id="cb51-18"><a></a></span>
-<span id="cb51-19"><a></a><span class="co"># Fit a model that controls for treatment, d_dimer, and race/ethnicity</span></span>
-<span id="cb51-20"><a></a>model_30dm <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb51-21"><a></a>    <span class="st">`</span><span class="at">30D_Mortality</span><span class="st">`</span> <span class="sc">~</span> Remdesivir_or_placebo <span class="sc">+</span> d_dimer <span class="sc">+</span> Race,</span>
-<span id="cb51-22"><a></a>    <span class="at">data =</span> qcrc,</span>
-<span id="cb51-23"><a></a>    <span class="at">family =</span> <span class="st">"binomial"</span></span>
-<span id="cb51-24"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-8"><a></a>qcrc<span class="sc">$</span>d_dimer <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(qcrc<span class="sc">$</span>d_dimer), med_d_dimer, qcrc<span class="sc">$</span>d_dimer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="you-try-it-more-advanced-solution-setup-continued" class="slide level2">
+<h2>You try it (more advanced): solution setup, continued</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="co"># A little cleaning for Race</span></span>
+<span id="cb52-2"><a></a>qcrc<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">factor</span>(qcrc<span class="sc">$</span>Race) <span class="sc">|&gt;</span></span>
+<span id="cb52-3"><a></a>    <span class="co"># Make White the reference level</span></span>
+<span id="cb52-4"><a></a>    <span class="fu">relevel</span>(<span class="at">ref =</span> <span class="st">"Caucasian or White"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb52-5"><a></a>    <span class="co"># Groups other than "Caucasian or White" and "Black or African American" are</span></span>
+<span id="cb52-6"><a></a>    <span class="co"># really small and heterogeneous so put them together</span></span>
+<span id="cb52-7"><a></a>    <span class="co"># Not ideal but sometimes the best we can do</span></span>
+<span id="cb52-8"><a></a>    forcats<span class="sc">::</span><span class="fu">fct_lump_n</span>(<span class="at">n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-solution-model" class="slide level2">
+<h2>You try it (more advanced): solution model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="co"># Fit a model that controls for treatment, d_dimer, and race/ethnicity</span></span>
+<span id="cb53-2"><a></a>model_30dm <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb53-3"><a></a>    <span class="st">`</span><span class="at">30D_Mortality</span><span class="st">`</span> <span class="sc">~</span> Remdesivir_or_placebo <span class="sc">+</span> d_dimer <span class="sc">+</span> Race,</span>
+<span id="cb53-4"><a></a>    <span class="at">data =</span> qcrc,</span>
+<span id="cb53-5"><a></a>    <span class="at">family =</span> <span class="st">"binomial"</span></span>
+<span id="cb53-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="you-try-it-more-advanced-model-summary" class="slide level2">
+<h2>You try it (more advanced): model summary</h2>
 <ul>
 <li>Look at a lot of useful information with <code>summary()</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">summary</span>(model_30dm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm(formula = `30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + 
-    Race, family = "binomial", data = qcrc)
-
-Coefficients:
-                               Estimate Std. Error z value Pr(&gt;|z|)   
-(Intercept)                    -2.03215    0.78762  -2.580  0.00988 **
-Remdesivir_or_placebo          -0.81056    0.38659  -2.097  0.03602 * 
-d_dimer                         0.16538    0.09948   1.662  0.09642 . 
-RaceAfrican American  or Black  0.11798    0.34799   0.339  0.73460   
-RaceOther                       0.57667    0.46526   1.239  0.21518   
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 363.80  on 287  degrees of freedom
-Residual deviance: 355.17  on 283  degrees of freedom
-AIC: 365.17
-
-Number of Fisher Scoring iterations: 4</code></pre>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>model_summary <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(model_30dm)), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="you-try-it-more-advanced-model-summary-table" class="slide level2">
+<h2>You try it (more advanced): model summary table</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 10%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. Error</th>
+<th style="text-align: right;">z value</th>
+<th style="text-align: right;">Pr(&gt;|z|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-2.032</td>
+<td style="text-align: right;">0.788</td>
+<td style="text-align: right;">-2.580</td>
+<td style="text-align: right;">0.010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remdesivir_or_placebo</td>
+<td style="text-align: right;">-0.811</td>
+<td style="text-align: right;">0.387</td>
+<td style="text-align: right;">-2.097</td>
+<td style="text-align: right;">0.036</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">d_dimer</td>
+<td style="text-align: right;">0.165</td>
+<td style="text-align: right;">0.099</td>
+<td style="text-align: right;">1.662</td>
+<td style="text-align: right;">0.096</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RaceAfrican American or Black</td>
+<td style="text-align: right;">0.118</td>
+<td style="text-align: right;">0.348</td>
+<td style="text-align: right;">0.339</td>
+<td style="text-align: right;">0.735</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RaceOther</td>
+<td style="text-align: right;">0.577</td>
+<td style="text-align: right;">0.465</td>
+<td style="text-align: right;">1.239</td>
+<td style="text-align: right;">0.215</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-odds-ratios" class="slide level2">
+<h2>You try it (more advanced): odds ratios</h2>
 <ul>
 <li>Get the OR’s with <code>coef()</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">coef</span>(model_30dm) <span class="sc">|&gt;</span></span>
-<span id="cb54-2"><a></a>    <span class="fu">exp</span>() <span class="sc">|&gt;</span></span>
-<span id="cb54-3"><a></a>    <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">coef</span>(model_30dm) <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a></a>    <span class="fu">exp</span>() <span class="sc">|&gt;</span></span>
+<span id="cb55-3"><a></a>    <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   (Intercept)          Remdesivir_or_placebo 
                           0.13                           0.44 
@@ -1222,18 +829,21 @@ Number of Fisher Scoring iterations: 4</code></pre>
                           1.78 </code></pre>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-confidence-intervals" class="slide level2">
+<h2>You try it (more advanced): confidence intervals</h2>
 <ul>
 <li>Get the profile CI’s with <code>confint()</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="fu">confint</span>(model_30dm) <span class="sc">|&gt;</span></span>
-<span id="cb56-2"><a></a>    <span class="fu">exp</span>() <span class="sc">|&gt;</span></span>
-<span id="cb56-3"><a></a>    <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Waiting for profiling to be done...</code></pre>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>model_ci <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(<span class="fu">confint</span>(model_30dm)) <span class="sc">|&gt;</span></span>
+<span id="cb57-2"><a></a>    <span class="fu">exp</span>() <span class="sc">|&gt;</span></span>
+<span id="cb57-3"><a></a>    <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="you-try-it-more-advanced-confidence-interval-table" class="slide level2">
+<h2>You try it (more advanced): confidence interval table</h2>
+<div class="cell">
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1273,12 +883,12 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </table>
 </div>
 </div>
-</div>
-<div class="fragment">
+</section>
+<section id="you-try-it-more-advanced-interpretation" class="slide level2">
+<h2>You try it (more advanced): interpretation</h2>
 <ul>
 <li>A basic interpretation of the coefficient for <code>Remdesivir_or_placebo</code> (coded as 1 for remdesivir and 0 for placebo) might be “Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the <span class="math inline">\(\alpha = 0.05\)</span> significance level, but is suggestive that at least some patients benefitted from remdesivir treatment.”</li>
 </ul>
-</div>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>

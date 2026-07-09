@@ -113,26 +113,12 @@ summarize_priority_years <- function(country_name,
   ]
 
   country_data <- add_priority_rule(
-    country_data,
-    coverage_cutoff = coverage_cutoff,
-    incidence_cutoff = incidence_cutoff
+    country_data, coverage_cutoff, incidence_cutoff
   )
 
   priority_years <- country_data$year[
     country_data$priority_year == "priority year"
   ]
-
-  most_recent_priority_year <- if (length(priority_years) == 0) {
-    NA_integer_
-  } else {
-    max(priority_years)
-  }
-
-  max_cases_per_100k <- if (all(is.na(country_data$cases_per_100k))) {
-    NA_real_
-  } else {
-    round(max(country_data$cases_per_100k, na.rm = TRUE), 2)
-  }
 
   data.frame(
     country = country_name,
@@ -141,8 +127,16 @@ summarize_priority_years <- function(country_name,
     years = nrow(country_data),
     priority_years = length(priority_years),
     missing_information_years = sum(country_data$priority_year == "missing information"),
-    most_recent_priority_year = most_recent_priority_year,
-    max_cases_per_100k = max_cases_per_100k
+    most_recent_priority_year = if (length(priority_years) == 0) {
+      NA_integer_
+    } else {
+      max(priority_years)
+    },
+    max_cases_per_100k = if (all(is.na(country_data$cases_per_100k))) {
+      NA_real_
+    } else {
+      round(max(country_data$cases_per_100k, na.rm = TRUE), 2)
+    }
   )
 }
 ```
@@ -176,8 +170,17 @@ for (country_name in countries) {
   one_summary <- summarize_priority_years(country_name, data = measles)
   country_summaries <- rbind(country_summaries, one_summary)
 }
+```
 
-country_summaries
+## Repeat with a `for` loop: result
+
+```{r}
+country_summaries[, c(
+  "country",
+  "priority_years",
+  "most_recent_priority_year",
+  "max_cases_per_100k"
+)]
 ```
 
 ## What did the loop do?
@@ -201,7 +204,8 @@ summary_list <- lapply(
   data = measles
 )
 
-summary_list
+length(summary_list)
+summary_list[[1]]
 ```
 
 ## Combine the list
@@ -248,8 +252,25 @@ asia_summaries <- do.call(rbind, asia_summary_list)
 asia_summaries <- asia_summaries[
   order(-asia_summaries$priority_years, asia_summaries$country),
 ]
+```
 
-head(asia_summaries, 10)
+## Sort the results: top countries
+
+```{r}
+asia_top_columns <- asia_summaries[, c(
+  "country",
+  "priority_years",
+  "most_recent_priority_year",
+  "max_cases_per_100k"
+)]
+
+head(asia_top_columns, 5)
+```
+
+## Sort the results: top countries, continued
+
+```{r}
+head(asia_top_columns, 10)[6:10, ]
 ```
 
 ## Make a manuscript-style table
@@ -257,7 +278,7 @@ head(asia_summaries, 10)
 ```{r}
 top_asia <- head(asia_summaries, 10)
 
-top_asia[, c(
+top_asia_table <- top_asia[, c(
   "country",
   "sub_region",
   "priority_years",
@@ -265,6 +286,43 @@ top_asia[, c(
   "most_recent_priority_year",
   "max_cases_per_100k"
 )]
+
+top_asia_counts <- top_asia_table[, c(
+  "country",
+  "sub_region",
+  "priority_years"
+)]
+
+top_asia_details <- top_asia_table[, c(
+  "country",
+  "missing_information_years",
+  "most_recent_priority_year",
+  "max_cases_per_100k"
+)]
+```
+
+## Make a manuscript-style table: counts
+
+```{r}
+head(top_asia_counts, 5)
+```
+
+## Make a manuscript-style table: counts, continued
+
+```{r}
+tail(top_asia_counts, 5)
+```
+
+## Make a manuscript-style table: details
+
+```{r}
+head(top_asia_details, 5)
+```
+
+## Make a manuscript-style table: details, continued
+
+```{r}
+tail(top_asia_details, 5)
 ```
 
 ## Make a quick figure
@@ -325,12 +383,31 @@ africa_summary_list <- lapply(
 )
 
 africa_summaries <- do.call(rbind, africa_summary_list)
+```
 
+## Active checkpoint: solution sort
+
+```{r}
 africa_summaries <- africa_summaries[
   order(-africa_summaries$priority_years, africa_summaries$country),
 ]
+```
 
-head(africa_summaries, 10)
+## Active checkpoint: solution table
+
+```{r}
+africa_top_columns <- africa_summaries[, c(
+  "country",
+  "priority_years"
+)]
+
+head(africa_top_columns, 5)
+```
+
+## Active checkpoint: solution table, continued
+
+```{r}
+head(africa_top_columns, 10)[6:10, ]
 ```
 
 ## Active checkpoint: one more change
@@ -354,12 +431,31 @@ africa_summary_list_strict <- lapply(
 )
 
 africa_summaries_strict <- do.call(rbind, africa_summary_list_strict)
+```
 
+## Active checkpoint: strict solution sort
+
+```{r}
 africa_summaries_strict <- africa_summaries_strict[
   order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),
 ]
+```
 
-head(africa_summaries_strict, 10)
+## Active checkpoint: strict solution table
+
+```{r}
+africa_strict_top_columns <- africa_summaries_strict[, c(
+  "country",
+  "priority_years"
+)]
+
+head(africa_strict_top_columns, 5)
+```
+
+## Active checkpoint: strict solution table, continued
+
+```{r}
+head(africa_strict_top_columns, 10)[6:10, ]
 ```
 
 ## What did we practice?

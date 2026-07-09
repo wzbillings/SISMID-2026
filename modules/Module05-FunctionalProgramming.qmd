@@ -30,7 +30,7 @@ library(printr)
 
 - Yes, but we are using the technical definition of functional programming: programming that is based on functions.
 
-. . .
+## What is functional programming?: functionals
 
 - Specifically, we want to be able to compose functions, which you might remember hating in precalculus.
 
@@ -38,19 +38,22 @@ $$g \circ f = g(f(x))$$
 
 - In computer science, a **functional** is a function that accepts a function as an argument.
 
-## Functional vs. imperative programming
+## Functional vs. imperative programming: imperative
 
 - So far, we've been using **imperative** programming: we save variables, and we update them with new commands. Our code is structured as a list of instructions.
 
-- In **functional** programming, we write everything as a function, and we get the results we want by composing many functions.
+## Functional vs. imperative programming: functional
 
-. . .
+- In **functional** programming, we write everything as a function, and we get the results we want by composing many functions.
 
 - But we're just going to show you some useful parts of functional programming that you can include in your regular code.
 
 ## Ok, but why?
 
 - Recall our function from the previous Module.
+- It takes one country code and returns one row of summary statistics.
+
+## Ok, but why?: one-country function
 
 ```{r eval=TRUE, echo=TRUE}
 get_country_stats <- function(df, iso3_code){
@@ -79,7 +82,7 @@ get_country_stats <- function(df, iso3_code){
 }
 ```
 
-. . .
+## Ok, but why?: repeat with a loop
 
 - We could write a loop to get stats for many countries.
 
@@ -92,17 +95,26 @@ out <- vector(mode = "list", length = length(country_codes))
 for (i in seq_along(country_codes)) {
 	out[[i]] <- get_country_stats(meas, country_codes[[i]])	
 }
-
-out
 ```
 
-. . .
+## Ok, but why?: loop result
+
+```{r}
+do.call(rbind, out)
+```
+
+## Ok, but why?: repeat with `lapply()`
 
 - But if we use a functional programming tool called `lapply`, look how easy it is!
 
 ```{r}
 out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
-out2
+```
+
+## Ok, but why?: `lapply()` result
+
+```{r}
+do.call(rbind, out2)
 ```
 
 - Functional programming techniques can help us avoid writing messy loops and clean up our code.
@@ -128,7 +140,7 @@ out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
 - It's anonymous because it has no name assigned -- this is just a shortcut for when you only need a function once.
 - In R, you can also write `\(code) ...` as a shortcut for writing `function(code) ...` as an anonymous function.
 
-. . .
+## Anonymous functions: named equivalent
 
 - This code works just as well, but can be a bit of a hassle.
 
@@ -140,18 +152,21 @@ out3 <- lapply(country_codes, get_country_stats_from_meas)
 ## `*apply()` and friends {.incremental}
 
 - R includes many functional programming tools collectively called `*apply()`. Here are the specific ones that are most useful:
+
+## `*apply()` and friends: common tools
+
 - `lapply()`: repeat the function on a list of things.
 - `sapply()`: same as `lapply()` but try to simplify the output to a matrix or vector.
 - `apply()`: repeat the function over the rows (`margin = 1`) or columns (`margin = 2`) of a matrix.
 - `tapply()`: repeat the function over combinations of grouping factors.
 
-## A `tapply()` example {.scrollable}
+## A `tapply()` example
 
 - `tapply()`: repeat the function over combinations of grouping factors.
 - We want to get the average vaccine coverage for each country in the measles dataset -- we need to separate this by the two vaccines as well.
-- This is pretty easy to do with `tapply()`.
+- First reshape the vaccine columns into one long coverage column.
 
-. . .
+## A `tapply()` example: reshape data
 
 ```{r}
 meas <- readRDS(here::here("data", "measles_final.Rds"))
@@ -161,20 +176,29 @@ meas_long <- meas |>
 		names_to = "vaccine_antigen",
 		values_to = "vaccine_coverage"
 	)
+```
+
+## A `tapply()` example: grouped means
+
+- Once the data are long, `tapply()` can average coverage by country and vaccine.
+
+```{r}
 out <- tapply(
 	meas_long$vaccine_coverage,
 	list(meas_long$iso3c, meas_long$vaccine_antigen),
 	FUN = mean
 )
-head(out)
 ```
 
-. . .
+## A `tapply()` example: grouped means result
+
+```{r}
+head(out, 4)
+```
+
+## A `tapply()` example: missing values
 
 - Uh oh.
-
-. . .
-
 - If we want to handle the missing values, we can use an anonymous function.
 
 ```{r}
@@ -183,10 +207,15 @@ out <- tapply(
 	list(meas_long$iso3c, meas_long$vaccine_antigen),
 	FUN = \(x) mean(x, na.rm = TRUE)
 )
-head(out)
 ```
 
-## You try it with `lapply()`! {.scrollable}
+## A `tapply()` example: missing values result
+
+```{r}
+head(out, 4)
+```
+
+## You try it with `lapply()`!
 
 **Student prompt**
 
@@ -195,7 +224,7 @@ head(out)
 - Make a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.
 - This is the same repeated-data task you will use in the Exercise 2 report appendix.
 
-. . .
+## You try it with `lapply()`: hint
 
 **Hint**
 
@@ -215,11 +244,13 @@ sheet_inventory <- data.frame(
 )
 ```
 
-. . .
+## You try it with `lapply()`: solution
 
 **Solution**
 
 ```{r}
+#| warning: false
+#| message: false
 data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
 sheet_names <- readxl::excel_sheets(data_file)
 sheet_list <- lapply(
@@ -227,36 +258,48 @@ sheet_list <- lapply(
 	\(name) readxl::read_xlsx(data_file, sheet = name)
 )
 names(sheet_list) <- sheet_names
+```
 
+## You try it with `lapply()`: solution inventory
+
+```{r}
 sheet_inventory <- data.frame(
 	sheet = names(sheet_list),
 	rows = sapply(sheet_list, nrow),
 	columns = sapply(sheet_list, ncol)
 )
+```
 
-sheet_inventory
+## You try it with `lapply()`: inventory
+
+```{r}
+#| echo: false
+nrow(sheet_inventory)
+knitr::kable(head(sheet_inventory, 5))
 ```
 
 
 
-## You try it with `apply()`! {.scrollable}
+## You try it with `apply()`!
 
 **Student prompt**
 
 - You'll use `apply()` less often because it's specifically for matrices, where all data types have to be the same.
 - First, make a matrix from the QCRC main dataset that only has the columns `Died`, `30D_Mortality`, and `60D_Mortality`.
 
+## You try it with `apply()`: matrix setup
+
 ```{r}
 d_matrix <- sheet_list[["Main_Dataset"]] |>
 	dplyr::select(Died, `30D_Mortality`, `60D_Mortality`) |>
 	as.matrix()
 
-head(d_matrix)
+head(d_matrix, 4)
 ```
 
-- Next use `apply` with the correct choice of `MARGIN` and `FUN` to get the proportion of cases that resulted in death at all three time points in one function call.
+## You try it with `apply()`: hint
 
-. . .
+- Next use `apply` with the correct choice of `MARGIN` and `FUN` to get the proportion of cases that resulted in death at all three time points in one function call.
 
 **Hint**
 
@@ -268,9 +311,12 @@ apply(
 )
 ```
 
-- Another hint: you can tell if you chose the correct `MARGIN` argument by counting the number of elements in the output. There should be 3, one for each column.
+## You try it with `apply()`: hint, continued
 
-. . .
+- You can tell if you chose the correct `MARGIN` argument by counting the number of elements in the output.
+- There should be 3, one for each column.
+
+## You try it with `apply()`: solution
 
 **Solution**
 
@@ -282,17 +328,20 @@ apply(
 )
 ```
 
-## You try it with `split()` + `lapply()`! {.scrollable}
+## You try it with `split()` + `lapply()`!
 
 **Student prompt**
 
 - Load the measles dataset. Filter the dataset so you only have records from 2005, and keep complete cases for the variables used in the model.
 - Then, use `split` to split the dataframe into a list by `region`.
 - Now, use `lapply()` to fit a Poisson `glm` for each region separately that includes effects of MCV1 and MCV2 coverage.
+
+## You try it with `split()` + `lapply()`: output goal
+
 - Find a way, using `lapply()` or `sapply()`, `coef()`, and `do.call()` to make a nice matrix of the coefficients.
 - This is a more advanced version of the same pattern you will use for repeated checks and model summaries in Exercise 2.
 
-. . .
+## You try it with `split()` + `lapply()`: hint
 
 **Hint**
 
@@ -312,7 +361,7 @@ model_coefs_mat <- do.call(...)
 ```
 
 
-. . .
+## You try it with `split()` + `lapply()`: solution setup
 
 **Solution**
 
@@ -323,7 +372,11 @@ meas_2005 <- meas |>
 	tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)
 
 meas_regions <- split(meas_2005, meas_2005$region)
+```
 
+## You try it with `split()` + `lapply()`: solution model
+
+```{r}
 model_list <- lapply(
 	meas_regions,
 	\(d) glm(
@@ -331,10 +384,20 @@ model_list <- lapply(
 		data = d, family = "poisson"
 	)
 )
+```
+
+## You try it with `split()` + `lapply()`: solution coefficients
+
+```{r}
 model_coefs_list <- lapply(model_list, coef)
 model_coefs_mat <- do.call(rbind, model_coefs_list)
+```
 
-model_coefs_mat
+## You try it with `split()` + `lapply()`: coefficient table
+
+```{r}
+#| echo: false
+round(model_coefs_mat, 3)
 ```
 
 ## Summary
@@ -342,7 +405,7 @@ model_coefs_mat
 - Functional programming tools like `*apply()` take a function as an input and use the same function multiple times.
 - In R, functions are objects like everything else and manipulating them like objects can help us write readable, fast code.
 
-. . .
+## Summary: next steps
 
 - Side note: `purrr` is a modern version of `*apply()` with a more consistent interface. It's worth learning and covered in the [Advanced R book](https://adv-r.hadley.nz/fp.html), but most people still use `*apply()`.
 - This book also covers more standard FP tools like reduction and filtering that we didn't have time to talk about.

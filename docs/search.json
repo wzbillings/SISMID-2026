@@ -214,7 +214,7 @@
     "href": "modules/Walkthrough1.html#a-small-manuscript-problem",
     "title": "Data science walkthrough 1: Conditionals",
     "section": "A small manuscript problem",
-    "text": "A small manuscript problem\nWe are going to answer one concrete question with the measles data:\n\nIn Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?\n\nThis is a miniature version of the Exercise 1 manuscript arc:\n\nState a question.\nTranslate the question into a data rule.\nRun the rule.\nWrite a cautious result.",
+    "text": "A small manuscript problem\nWe are going to answer one concrete question with the measles data:\n\nIn Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?",
     "crumbs": [
       "Day 1 core",
       "Data science walkthrough 1: conditionals"
@@ -247,7 +247,7 @@
     "href": "modules/Walkthrough1.html#look-at-the-data",
     "title": "Data science walkthrough 1: Conditionals",
     "section": "Look at the data",
-    "text": "Look at the data\n\nstr(measles)\n\nClasses 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':    9416 obs. of  9 variables:\n $ iso3c        : chr  \"AFG\" \"AFG\" \"AFG\" \"AFG\" ...\n $ year         : num  2023 2022 2021 2020 2019 ...\n $ measles_cases: num  2792 5166 2900 640 353 ...\n $ population   : num  42239854 41128771 40099462 38972230 37769499 ...\n $ MCV1_coverage: num  NA 68 63 66 64 71 67 64 62 60 ...\n $ MCV2_coverage: num  NA 49 44 43 41 49 40 40 42 44 ...\n $ country      : chr  \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" ...\n $ region       : chr  \"Asia\" \"Asia\" \"Asia\" \"Asia\" ...\n $ sub_region   : chr  \"Southern Asia\" \"Southern Asia\" \"Southern Asia\" \"Southern Asia\" ...\n - attr(*, \"spec\")=List of 3\n  ..$ cols   :List of 6\n  .. ..$ iso3c        : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_character\" \"collector\"\n  .. ..$ year         : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ measles_cases: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ population   : list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ MCV1_coverage: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  .. ..$ MCV2_coverage: list()\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"collector_double\" \"collector\"\n  ..$ default: list()\n  .. ..- attr(*, \"class\")= chr [1:2] \"collector_guess\" \"collector\"\n  ..$ delim  : chr \",\"\n  ..- attr(*, \"class\")= chr \"col_spec\"\n - attr(*, \"problems\")=&lt;pointer: (nil)&gt;",
+    "text": "Look at the data\n\nstr(measles[, c(\n  \"country\",\n  \"year\",\n  \"measles_cases\",\n  \"population\",\n  \"MCV1_coverage\"\n)])\n\nClasses 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':    9416 obs. of  5 variables:\n $ country      : chr  \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" \"Afghanistan\" ...\n $ year         : num  2023 2022 2021 2020 2019 ...\n $ measles_cases: num  2792 5166 2900 640 353 ...\n $ population   : num  42239854 41128771 40099462 38972230 37769499 ...\n $ MCV1_coverage: num  NA 68 63 66 64 71 67 64 62 60 ...",
     "crumbs": [
       "Day 1 core",
       "Data science walkthrough 1: conditionals"
@@ -280,7 +280,7 @@
     "href": "modules/Walkthrough1.html#check-the-subset",
     "title": "Data science walkthrough 1: Conditionals",
     "section": "Check the subset",
-    "text": "Check the subset\n\nhead(pakistan)\n\n     iso3c year measles_cases population MCV1_coverage MCV2_coverage  country\n6448   PAK 2000          2064  154369924            57            NA Pakistan\n6447   PAK 2001          3849  159217727            59            NA Pakistan\n6446   PAK 2002          3903  163262807            60            NA Pakistan\n6445   PAK 2003          4740  166876680            62            NA Pakistan\n6444   PAK 2004          4248  170648620            63            NA Pakistan\n6443   PAK 2005          2981  174372098            61            NA Pakistan\n     region    sub_region\n6448   Asia Southern Asia\n6447   Asia Southern Asia\n6446   Asia Southern Asia\n6445   Asia Southern Asia\n6444   Asia Southern Asia\n6443   Asia Southern Asia\n\ntail(pakistan)\n\n      iso3c year measles_cases population MCV1_coverage MCV2_coverage country\nNA.18  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.19  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.20  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.21  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.22  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\nNA.23  &lt;NA&gt;   NA            NA         NA            NA            NA    &lt;NA&gt;\n      region sub_region\nNA.18   &lt;NA&gt;       &lt;NA&gt;\nNA.19   &lt;NA&gt;       &lt;NA&gt;\nNA.20   &lt;NA&gt;       &lt;NA&gt;\nNA.21   &lt;NA&gt;       &lt;NA&gt;\nNA.22   &lt;NA&gt;       &lt;NA&gt;\nNA.23   &lt;NA&gt;       &lt;NA&gt;",
+    "text": "Check the subset\n\npakistan_check_rows &lt;- pakistan[, c(\n  \"country\",\n  \"year\",\n  \"measles_cases\",\n  \"MCV1_coverage\"\n)]\n\nhead(pakistan_check_rows)\n\n      country year measles_cases MCV1_coverage\n6448 Pakistan 2000          2064            57\n6447 Pakistan 2001          3849            59\n6446 Pakistan 2002          3903            60\n6445 Pakistan 2003          4740            62\n6444 Pakistan 2004          4248            63\n6443 Pakistan 2005          2981            61",
     "crumbs": [
       "Day 1 core",
       "Data science walkthrough 1: conditionals"
@@ -379,7 +379,7 @@
     "href": "modules/Walkthrough1.html#step-5-inspect-the-answer",
     "title": "Data science walkthrough 1: Conditionals",
     "section": "Step 5: inspect the answer",
-    "text": "Step 5: inspect the answer\n\npakistan_result &lt;- pakistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV1_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\npakistan_result$cases_per_100k &lt;- round(pakistan_result$cases_per_100k, 2)\n\ntail(pakistan_result, 12)\n\n      year measles_cases MCV1_coverage cases_per_100k       priority_year\nNA.12   NA            NA            NA             NA missing information\nNA.13   NA            NA            NA             NA missing information\nNA.14   NA            NA            NA             NA missing information\nNA.15   NA            NA            NA             NA missing information\nNA.16   NA            NA            NA             NA missing information\nNA.17   NA            NA            NA             NA missing information\nNA.18   NA            NA            NA             NA missing information\nNA.19   NA            NA            NA             NA missing information\nNA.20   NA            NA            NA             NA missing information\nNA.21   NA            NA            NA             NA missing information\nNA.22   NA            NA            NA             NA missing information\nNA.23   NA            NA            NA             NA missing information",
+    "text": "Step 5: inspect the answer\n\npakistan_result &lt;- pakistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV1_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\npakistan_result$cases_per_100k &lt;- round(pakistan_result$cases_per_100k, 2)",
     "crumbs": [
       "Day 1 core",
       "Data science walkthrough 1: conditionals"
@@ -456,7 +456,7 @@
     "href": "modules/Walkthrough1.html#active-checkpoint-solution",
     "title": "Data science walkthrough 1: Conditionals",
     "section": "Active checkpoint: solution",
-    "text": "Active checkpoint: solution\n\nafghanistan &lt;- measles[\n  measles$country == \"Afghanistan\" & measles$year &gt;= 2010,\n]\n\nafghanistan &lt;- afghanistan[order(afghanistan$year), ]\nafghanistan$cases_per_100k &lt;- afghanistan$measles_cases / afghanistan$population * 100000\n\nafghanistan$priority_year &lt;- ifelse(\n  (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage &lt; 80) |\n    (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k &gt;= 5),\n  \"priority year\",\n  ifelse(\n    is.na(afghanistan$MCV2_coverage) | is.na(afghanistan$cases_per_100k),\n    \"missing information\",\n    \"not priority\"\n  )\n)\n\nafghanistan_result &lt;- afghanistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV2_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\nafghanistan_result$cases_per_100k &lt;- round(afghanistan_result$cases_per_100k, 2)\n\nafghanistan_result\n\n      year measles_cases MCV2_coverage cases_per_100k       priority_year\n14    2010          1989            29           7.06       priority year\n13    2011          3013            31          10.30       priority year\n12    2012          2787            33           9.15       priority year\n11    2013           430            38           1.36       priority year\n10    2014           492            44           1.50       priority year\n9     2015          1154            42           3.42       priority year\n8     2016           638            40           1.84       priority year\n7     2017          1511            40           4.24       priority year\n6     2018          2012            49           5.48       priority year\n5     2019           353            41           0.93       priority year\n4     2020           640            43           1.64       priority year\n3     2021          2900            44           7.23       priority year\n2     2022          5166            49          12.56       priority year\n1     2023          2792            NA           6.61       priority year\nNA      NA            NA            NA             NA missing information\nNA.1    NA            NA            NA             NA missing information\nNA.2    NA            NA            NA             NA missing information\nNA.3    NA            NA            NA             NA missing information\nNA.4    NA            NA            NA             NA missing information\nNA.5    NA            NA            NA             NA missing information\nNA.6    NA            NA            NA             NA missing information\nNA.7    NA            NA            NA             NA missing information\nNA.8    NA            NA            NA             NA missing information\nNA.9    NA            NA            NA             NA missing information\nNA.10   NA            NA            NA             NA missing information\nNA.11   NA            NA            NA             NA missing information\nNA.12   NA            NA            NA             NA missing information\nNA.13   NA            NA            NA             NA missing information",
+    "text": "Active checkpoint: solution\n\nafghanistan &lt;- measles[\n  measles$country == \"Afghanistan\" & measles$year &gt;= 2010,\n]\n\nafghanistan &lt;- afghanistan[order(afghanistan$year), ]\nafghanistan$cases_per_100k &lt;- afghanistan$measles_cases / afghanistan$population * 100000",
     "crumbs": [
       "Day 1 core",
       "Data science walkthrough 1: conditionals"
@@ -533,7 +533,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#what-is-functional-programming",
     "title": "Module 5: Functional Programming",
     "section": "What is functional programming?",
-    "text": "What is functional programming?\n\n\nAll of our code is functional if it does its job?\n\n\n\n\nYes, but we are using the technical definition of functional programming: programming that is based on functions.\n\n\n\n\nSpecifically, we want to be able to compose functions, which you might remember hating in precalculus.\n\n\\[g \\circ f = g(f(x))\\]\n\nIn computer science, a functional is a function that accepts a function as an argument.",
+    "text": "What is functional programming?\n\n\nAll of our code is functional if it does its job?\n\n\n\n\nYes, but we are using the technical definition of functional programming: programming that is based on functions.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -555,7 +555,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#ok-but-why",
     "title": "Module 5: Functional Programming",
     "section": "Ok, but why?",
-    "text": "Ok, but why?\n\nRecall our function from the previous Module.\n\n\nget_country_stats &lt;- function(df, iso3_code){\n    \n    country_data &lt;- subset(df, iso3c == iso3_code)\n    \n    # Get the summary statistics for this country\n    country_cases &lt;- country_data$measles_cases\n    country_quart &lt;- quantile(\n        country_cases, na.rm = TRUE, probs = c(0.25, 0.5, 0.75)\n    )\n    country_range &lt;- range(country_cases, na.rm = TRUE)\n    \n    country_name &lt;- unique(country_data$country)\n    \n    country_summary &lt;- data.frame(\n        country = country_name,\n        min = country_range[[1]],\n        Q1 = country_quart[[1]],\n        median = country_quart[[2]],\n        Q3 = country_quart[[3]],\n        max = country_range[[2]]\n    )\n    \n    return(country_summary)\n}\n\n\n\nWe could write a loop to get stats for many countries.\n\n\nmeas &lt;- readRDS(here::here(\"data\", \"measles_final.Rds\"))\ncountry_codes &lt;- c(\"IND\", \"PAK\", \"BGD\", \"NPL\")\n\n# Loop setup\nout &lt;- vector(mode = \"list\", length = length(country_codes))\nfor (i in seq_along(country_codes)) {\n    out[[i]] &lt;- get_country_stats(meas, country_codes[[i]]) \n}\n\nout\n\n[[1]]\n  country  min      Q1  median       Q3    max\n1   India 3305 31135.5 47109.5 80797.25 252940\n\n[[2]]\n   country min     Q1 median    Q3   max\n1 Pakistan 386 2065.5 4075.5 17422 55543\n\n[[3]]\n     country min      Q1 median     Q3   max\n1 Bangladesh 203 2193.75 5270.5 9889.5 27327\n\n[[4]]\n  country min  Q1 median   Q3   max\n1   Nepal  59 190   1268 3100 13344\n\n\n\n\n\nBut if we use a functional programming tool called lapply, look how easy it is!\n\n\nout2 &lt;- lapply(country_codes, function(code) get_country_stats(meas, code))\nout2\n\n[[1]]\n  country  min      Q1  median       Q3    max\n1   India 3305 31135.5 47109.5 80797.25 252940\n\n[[2]]\n   country min     Q1 median    Q3   max\n1 Pakistan 386 2065.5 4075.5 17422 55543\n\n[[3]]\n     country min      Q1 median     Q3   max\n1 Bangladesh 203 2193.75 5270.5 9889.5 27327\n\n[[4]]\n  country min  Q1 median   Q3   max\n1   Nepal  59 190   1268 3100 13344\n\n\n\nFunctional programming techniques can help us avoid writing messy loops and clean up our code.",
+    "text": "Ok, but why?\n\nRecall our function from the previous Module.\nIt takes one country code and returns one row of summary statistics.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -577,7 +577,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#anonymous-functions",
     "title": "Module 5: Functional Programming",
     "section": "Anonymous functions",
-    "text": "Anonymous functions\n\nIn this code, you can see the keyword function.\n\n\nout2 &lt;- lapply(country_codes, function(code) get_country_stats(meas, code))\n\n\n\nThe function function(code) get_country_stats(meas, code) is called an anonymous function (or sometimes a lambda).\nIt’s anonymous because it has no name assigned – this is just a shortcut for when you only need a function once.\nIn R, you can also write \\(code) ... as a shortcut for writing function(code) ... as an anonymous function.\n\n\n\n\nThis code works just as well, but can be a bit of a hassle.\n\n\nget_country_stats_from_meas &lt;- function(code) get_country_stats(meas, code)\nout3 &lt;- lapply(country_codes, get_country_stats_from_meas)",
+    "text": "Anonymous functions\n\nIn this code, you can see the keyword function.\n\n\nout2 &lt;- lapply(country_codes, function(code) get_country_stats(meas, code))\n\n\n\nThe function function(code) get_country_stats(meas, code) is called an anonymous function (or sometimes a lambda).\nIt’s anonymous because it has no name assigned – this is just a shortcut for when you only need a function once.\nIn R, you can also write \\(code) ... as a shortcut for writing function(code) ... as an anonymous function.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -588,7 +588,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#apply-and-friends",
     "title": "Module 5: Functional Programming",
     "section": "*apply() and friends",
-    "text": "*apply() and friends\n\nR includes many functional programming tools collectively called *apply(). Here are the specific ones that are most useful:\nlapply(): repeat the function on a list of things.\nsapply(): same as lapply() but try to simplify the output to a matrix or vector.\napply(): repeat the function over the rows (margin = 1) or columns (margin = 2) of a matrix.\ntapply(): repeat the function over combinations of grouping factors.",
+    "text": "*apply() and friends\n\nR includes many functional programming tools collectively called *apply(). Here are the specific ones that are most useful:",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -599,7 +599,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example",
     "title": "Module 5: Functional Programming",
     "section": "A tapply() example",
-    "text": "A tapply() example\n\ntapply(): repeat the function over combinations of grouping factors.\nWe want to get the average vaccine coverage for each country in the measles dataset – we need to separate this by the two vaccines as well.\nThis is pretty easy to do with tapply().\n\n\n\nmeas &lt;- readRDS(here::here(\"data\", \"measles_final.Rds\"))\nmeas_long &lt;- meas |&gt;\n    tidyr::pivot_longer(\n        dplyr::starts_with(\"MCV\"),\n        names_to = \"vaccine_antigen\",\n        values_to = \"vaccine_coverage\"\n    )\nout &lt;- tapply(\n    meas_long$vaccine_coverage,\n    list(meas_long$iso3c, meas_long$vaccine_antigen),\n    FUN = mean\n)\nhead(out)\n\n\n\n\n\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nABW\nNA\nNA\n\n\nAFG\nNA\nNA\n\n\nAGO\nNA\nNA\n\n\nAIA\nNA\nNA\n\n\nALB\nNA\nNA\n\n\nAND\nNA\nNA\n\n\n\n\n\n\n\n\nUh oh.\n\n\n\n\nIf we want to handle the missing values, we can use an anonymous function.\n\n\nout &lt;- tapply(\n    meas_long$vaccine_coverage,\n    list(meas_long$iso3c, meas_long$vaccine_antigen),\n    FUN = \\(x) mean(x, na.rm = TRUE)\n)\nhead(out)\n\n\n\n\n\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nABW\nNaN\nNaN\n\n\nAFG\n41.80952\n31.73684\n\n\nAGO\n47.17500\n22.75000\n\n\nAIA\nNaN\nNaN\n\n\nALB\n93.30233\n96.00000\n\n\nAND\n96.53846\n89.56250",
+    "text": "A tapply() example\n\ntapply(): repeat the function over combinations of grouping factors.\nWe want to get the average vaccine coverage for each country in the measles dataset – we need to separate this by the two vaccines as well.\nFirst reshape the vaccine columns into one long coverage column.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -610,7 +610,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply",
     "title": "Module 5: Functional Programming",
     "section": "You try it with lapply()!",
-    "text": "You try it with lapply()!\nStudent prompt\n\nRead all sheets of the QCRC_FINAL_Deidentified.xlsx workbook using a vector of sheet names and lapply().\nName the resulting list with the sheet names.\nMake a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.\nThis is the same repeated-data task you will use in the Exercise 2 report appendix.\n\n\nHint\n\ndata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(\n    sheet_names,\n    \\(name) readxl::read_xlsx(data_file, sheet = name)\n)\nnames(sheet_list) &lt;- ...\n\nsheet_inventory &lt;- data.frame(\n    sheet = ...,\n    rows = ...,\n    columns = ...\n)\n\n\n\nSolution\n\ndata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(\n    sheet_names,\n    \\(name) readxl::read_xlsx(data_file, sheet = name)\n)\n\nWarning: Expecting numeric in D6716 / R6716C4: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in G7843 / R7843C7: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in D7844 / R7844C4: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in E7845 / R7845C5: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in G10671 / R10671C7: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in D10672 / R10672C4: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in E10673 / R10673C5: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in G11539 / R11539C7: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in D11540 / R11540C4: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in G17408 / R17408C7: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in D17409 / R17409C4: got 'Date\\Time Correction'\n\n\nWarning: Expecting numeric in E17410 / R17410C5: got 'Date\\Time Correction'\n\nnames(sheet_list) &lt;- sheet_names\n\nsheet_inventory &lt;- data.frame(\n    sheet = names(sheet_list),\n    rows = sapply(sheet_list, nrow),\n    columns = sapply(sheet_list, ncol)\n)\n\nsheet_inventory\n\n\n\n\n\nsheet\nrows\ncolumns\n\n\n\n\nMain_Dataset\nMain_Dataset\n288\n37\n\n\nOxygen_Delivery\nOxygen_Delivery\n42606\n6\n\n\nSOFA\nSOFA\n288\n8\n\n\nLong_Labs\nLong_Labs\n15919\n29\n\n\nLong_Vitals\nLong_Vitals\n143220\n11\n\n\nStatic_Compliance\nStatic_Compliance\n18281\n11\n\n\nPAO2_FIO2\nPAO2_FIO2\n5252\n5\n\n\nICU_Meds\nICU_Meds\n869554\n7\n\n\nIntake_Form\nIntake_Form\n288\n71\n\n\nDaily_Form\nDaily_Form\n3612\n36",
+    "text": "You try it with lapply()!\nStudent prompt\n\nRead all sheets of the QCRC_FINAL_Deidentified.xlsx workbook using a vector of sheet names and lapply().\nName the resulting list with the sheet names.\nMake a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.\nThis is the same repeated-data task you will use in the Exercise 2 report appendix.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -643,7 +643,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#summary",
     "title": "Module 5: Functional Programming",
     "section": "Summary",
-    "text": "Summary\n\nFunctional programming tools like *apply() take a function as an input and use the same function multiple times.\nIn R, functions are objects like everything else and manipulating them like objects can help us write readable, fast code.\n\n\n\nSide note: purrr is a modern version of *apply() with a more consistent interface. It’s worth learning and covered in the Advanced R book, but most people still use *apply().\nThis book also covers more standard FP tools like reduction and filtering that we didn’t have time to talk about.",
+    "text": "Summary\n\nFunctional programming tools like *apply() take a function as an input and use the same function multiple times.\nIn R, functions are objects like everything else and manipulating them like objects can help us write readable, fast code.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -2481,7 +2481,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#an-s3-example",
     "title": "Module 6: S3 and R Formulas",
     "section": "An S3 example",
-    "text": "An S3 example\n\nsummary() is an example of an S3 generic. And the documentation tells us this.\n\n\n?summary\n\nHelp on topic 'summary' was found in the following packages:\n\n  * lme4\n  * base",
+    "text": "An S3 example\n\nWe’ll use three different model objects to see how one generic function behaves.\nsummary() is an example of an S3 generic. And the documentation tells us this.\n\n?summary",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2491,8 +2491,8 @@
     "objectID": "modules/Module06-S3-lm-formulas.html#polymorphism-of-summary",
     "href": "modules/Module06-S3-lm-formulas.html#polymorphism-of-summary",
     "title": "Module 6: S3 and R Formulas",
-    "section": "Polymorphism of summary",
-    "text": "Polymorphism of summary\n\nWhen we call summary(an_object) it determines what it should do based on the class of an_object.\nEach of the following summaries shows us different statistics.\n\n\nclass(an_lm)\n\n[1] \"lm\"\n\nsummary(an_lm)\n\n\nCall:\nlm(formula = bwt ~ age, data = birthwt)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-2294.78  -517.63    10.51   530.80  1774.92 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  2655.74     238.86   11.12   &lt;2e-16 ***\nage            12.43      10.02    1.24    0.216    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 728.2 on 187 degrees of freedom\nMultiple R-squared:  0.008157,  Adjusted R-squared:  0.002853 \nF-statistic: 1.538 on 1 and 187 DF,  p-value: 0.2165\n\n\n\n\nclass(a_glm)\n\n[1] \"glm\" \"lm\" \n\nsummary(a_glm)\n\n\nCall:\nglm(formula = low ~ age, family = \"binomial\", data = birthwt)\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)\n(Intercept)  0.38458    0.73212   0.525    0.599\nage         -0.05115    0.03151  -1.623    0.105\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 234.67  on 188  degrees of freedom\nResidual deviance: 231.91  on 187  degrees of freedom\nAIC: 235.91\n\nNumber of Fisher Scoring iterations: 4\n\n\n\n\n\nclass(a_glmm)\n\n[1] \"glmerMod\"\nattr(,\"package\")\n[1] \"lme4\"\n\nsummary(a_glmm)\n\nGeneralized linear mixed model fit by maximum likelihood (Laplace\n  Approximation) [glmerMod]\n Family: binomial  ( logit )\nFormula: low ~ age + (1 | id)\n   Data: birthwt\n\n      AIC       BIC    logLik -2*log(L)  df.resid \n    237.9     247.6    -116.0     231.9       186 \n\nScaled residuals: \n    Min      1Q  Median      3Q     Max \n-0.8451 -0.7066 -0.5908  1.3042  1.9639 \n\nRandom effects:\n Groups Name        Variance Std.Dev.\n id     (Intercept) 0.009912 0.09956 \nNumber of obs: 189, groups:  id, 189\n\nFixed effects:\n            Estimate Std. Error z value Pr(&gt;|z|)\n(Intercept)  0.38540    0.73534   0.524    0.600\nage         -0.05127    0.03234  -1.585    0.113\n\nCorrelation of Fixed Effects:\n    (Intr)\nage -0.966",
+    "section": "Polymorphism of summary()",
+    "text": "Polymorphism of summary()\n\nWhen we call summary(an_object) it determines what it should do based on the class of an_object.\nEach of the following summaries shows us different statistics.",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2503,7 +2503,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#some-oop-definitions",
     "title": "Module 6: S3 and R Formulas",
     "section": "Some OOP definitions",
-    "text": "Some OOP definitions\n\nA class is a category of object. Objects of the same class have the same fields or attributes.\nA generic is a function that has different behavior for multiple classes of inputs.\nThe methods for a function are the function implementations for specific classes.\nMethod dispatch is the process where you call a generic function, the generic function checks the class of the input, and the generic function calls the method for that class.\nA default method is dispatched by a generic function when there is no specific method for the class of the input. Not every generic has a default method.",
+    "text": "Some OOP definitions\n\nA class is a category of object. Objects of the same class have the same fields or attributes.\nA generic is a function that has different behavior for multiple classes of inputs.\nThe methods for a function are the function implementations for specific classes.",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2569,7 +2569,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#s3-help-pages",
     "title": "Module 6: S3 and R Formulas",
     "section": "S3 help pages",
-    "text": "S3 help pages\n\nNow you know enough to understand the help pages for S3 objects.\n\n\n?summary\n\nHelp on topic 'summary' was found in the following packages:\n\n  * lme4\n  * base",
+    "text": "S3 help pages\n\nNow you know enough to understand the help pages for S3 objects.\n\n?summary",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2591,7 +2591,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#utility-of-s3-methods",
     "title": "Module 6: S3 and R Formulas",
     "section": "Utility of S3 methods",
-    "text": "Utility of S3 methods\n\nHopefully you can now see why understanding S3 methods is important.\nBut if you aren’t convinced, maybe formula objects can convince you. Look how many methods there are!\n\n\nmethods(class = \"formula\")\n\n [1] [             aggregate     alias         all.equal     ansari.test  \n [6] barplot       bartlett.test boxplot       cdplot        coerce       \n[11] cor.test      deriv         deriv3        fligner.test  formula      \n[16] free1way      friedman.test ftable        getInitial    initialize   \n[21] kruskal.test  ks.test       lines         mood.test     mosaicplot   \n[26] pairs         plot          points        ppr           prcomp       \n[31] princomp      print         quade.test    selfStart     show         \n[36] simulate      slotsFromS3   spineplot     stripchart    sunflowerplot\n[41] t.test        terms         text          update        var.test     \n[46] wilcox.test  \nsee '?methods' for accessing help and source code\n\n\n\n\nAnd that doesn’t include functions like lm() which ONLY have methods for formulas, not generics.",
+    "text": "Utility of S3 methods\n\nHopefully you can now see why understanding S3 methods is important.\nBut if you aren’t convinced, maybe formula objects can convince you. Look how many methods there are!\n\n\nformula_methods &lt;- methods(class = \"formula\")\nlength(formula_methods)\n\n[1] 46",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2602,7 +2602,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#formula-example",
     "title": "Module 6: S3 and R Formulas",
     "section": "Formula example",
-    "text": "Formula example\n\nSay you want to get the correlation between MCV1 coverage rate and measles cases in Pakistan. You can call the cor.test() function by passing two vectors.\n\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\n\ncor.test(\n    x = meas$MCV1_coverage[meas$iso3c == \"PAK\"],\n    y = meas$measles_cases[meas$iso3c == \"PAK\"]\n)\n\n\n    Pearson's product-moment correlation\n\ndata:  meas$MCV1_coverage[meas$iso3c == \"PAK\"] and meas$measles_cases[meas$iso3c == \"PAK\"]\nt = -3.2036, df = 41, p-value = 0.002627\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n -0.6591955 -0.1699300\nsample estimates:\n       cor \n-0.4474377 \n\n\n\n\nBut if we inspect the methods for cor.test, we see it is an S3 generic with a method for formula class objects.\n\n\nmethods(cor.test)\n\n[1] cor.test.default* cor.test.formula*\nsee '?methods' for accessing help and source code\n\n\n\n\n\nTyping in the code is easier, and reading the output is easier.\n\n\ncor.test(\n    ~ measles_cases + MCV1_coverage,\n    data = subset(meas, iso3c == \"PAK\")\n)\n\n\n    Pearson's product-moment correlation\n\ndata:  measles_cases and MCV1_coverage\nt = -3.2036, df = 41, p-value = 0.002627\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n -0.6591955 -0.1699300\nsample estimates:\n       cor \n-0.4474377 \n\n\n\n\n\nBut it pays to understand S3, because in certain circumstances, using the default method is easier!",
+    "text": "Formula example\n\nSay you want to get the correlation between MCV1 coverage rate and measles cases in Pakistan. You can call the cor.test() function by passing two vectors.\n\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\n\nvector_cor &lt;- cor.test(\n    x = meas$MCV1_coverage[meas$iso3c == \"PAK\"],\n    y = meas$measles_cases[meas$iso3c == \"PAK\"]\n)",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2624,7 +2624,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#you-try-it",
     "title": "Module 6: S3 and R Formulas",
     "section": "You try it!",
-    "text": "You try it!\nStudent prompt\n\nBefore, we saw that boxplot had a formula method. Use boxplot() with a formula to make boxplots of measles cases in 2002 for each region in the dataset.\n\n\nHint\nYour code should look like this for the correct DV and IV.\n\nboxplot(dv ~ iv, data = subset(meas, year == 2002))\n\n\n\nSolution\n\nboxplot(measles_cases ~ region, data = subset(meas, year == 2002))",
+    "text": "You try it!\nStudent prompt\n\nBefore, we saw that boxplot had a formula method. Use boxplot() with a formula to make boxplots of measles cases in 2002 for each region in the dataset.",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2635,7 +2635,7 @@
     "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced",
     "title": "Module 6: S3 and R Formulas",
     "section": "You try it (more advanced)",
-    "text": "You try it (more advanced)\nStudent prompt\n\nLoad the QCRC dataset, you only need the sheet “Main_Dataset” for this.\nFit a logistic regression model with 30 day mortality (30D_Mortality in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.\nUse appropriate S3 generic functions to get statistics about your model that you would want to report.\nThis is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.\n\n\nHint\nTo read in the data, do this. You might need to do some data cleaning, because missing data are written as a period in the spreadsheet.\n\nqcrc &lt;- readxl::read_xlsx(\n    here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n    sheet = \"Main_Dataset\"\n)\n\n\n\nHint\nYour logistic regression code should look like this. You need to put backticks (this thing: `, NOT an apostrophe. It’s made by the ~ key on American keyboards.) around the name of the variable `30D_Mortality`.\n\nmodel_30dm &lt;- glm(\n    something ~ something + something + ...,\n    data = qcrc,\n    family = \"binomial\"\n)\n\n\n\nHint\nSome useful functions with methods for glm-class objects are summary, coef, and confint. (You probably also need the function exp!)\n\n\nSolution\nOne solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 day mortality.\n\n# A little cleaning for D Dimer\n# First turn the \".\" into actual NA's and make it a real number\nqcrc$d_dimer &lt;- as.numeric(dplyr::na_if(qcrc$`D dimer`, \".\"))\n# Take the log cause it's skewed and positive\nqcrc$d_dimer &lt;- log(qcrc$d_dimer)\n# Impute missing values with the median -- there are much better ways to do this\nmed_d_dimer &lt;- median(qcrc$d_dimer, na.rm = TRUE)\nqcrc$d_dimer &lt;- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)\n\n# A little cleaning for Race\nqcrc$Race &lt;- factor(qcrc$Race) |&gt;\n    # Make White the reference level\n    relevel(ref = \"Caucasian or White\") |&gt;\n    # Groups other than \"Caucasian or White\" and \"Black or African American\" are\n    # really small and heterogeneous so put them together\n    # Not ideal but sometimes the best we can do\n    forcats::fct_lump_n(n = 2)\n\n# Fit a model that controls for treatment, d_dimer, and race/ethnicity\nmodel_30dm &lt;- glm(\n    `30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + Race,\n    data = qcrc,\n    family = \"binomial\"\n)\n\n\n\n\nLook at a lot of useful information with summary().\n\n\nsummary(model_30dm)\n\n\nCall:\nglm(formula = `30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + \n    Race, family = \"binomial\", data = qcrc)\n\nCoefficients:\n                               Estimate Std. Error z value Pr(&gt;|z|)   \n(Intercept)                    -2.03215    0.78762  -2.580  0.00988 **\nRemdesivir_or_placebo          -0.81056    0.38659  -2.097  0.03602 * \nd_dimer                         0.16538    0.09948   1.662  0.09642 . \nRaceAfrican American  or Black  0.11798    0.34799   0.339  0.73460   \nRaceOther                       0.57667    0.46526   1.239  0.21518   \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 363.80  on 287  degrees of freedom\nResidual deviance: 355.17  on 283  degrees of freedom\nAIC: 365.17\n\nNumber of Fisher Scoring iterations: 4\n\n\n\n\n\nGet the OR’s with coef().\n\n\ncoef(model_30dm) |&gt;\n    exp() |&gt;\n    round(2)\n\n                   (Intercept)          Remdesivir_or_placebo \n                          0.13                           0.44 \n                       d_dimer RaceAfrican American  or Black \n                          1.18                           1.13 \n                     RaceOther \n                          1.78 \n\n\n\n\n\nGet the profile CI’s with confint().\n\n\nconfint(model_30dm) |&gt;\n    exp() |&gt;\n    round(2)\n\nWaiting for profiling to be done...\n\n\n\n\n\n\n2.5 %\n97.5 %\n\n\n\n\n(Intercept)\n0.03\n0.61\n\n\nRemdesivir_or_placebo\n0.20\n0.92\n\n\nd_dimer\n0.97\n1.44\n\n\nRaceAfrican American or Black\n0.58\n2.28\n\n\nRaceOther\n0.71\n4.47\n\n\n\n\n\n\n\n\nA basic interpretation of the coefficient for Remdesivir_or_placebo (coded as 1 for remdesivir and 0 for placebo) might be “Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the \\(\\alpha = 0.05\\) significance level, but is suggestive that at least some patients benefitted from remdesivir treatment.”",
+    "text": "You try it (more advanced)\nStudent prompt\n\nLoad the QCRC dataset, you only need the sheet “Main_Dataset” for this.\nFit a logistic regression model with 30 day mortality (30D_Mortality in the spreadsheet) as the outcome. Include any continuous or categorical predictors you want, we recommend avoiding variables that are (supposed to be) date/times.\nUse appropriate S3 generic functions to get statistics about your model that you would want to report.",
     "crumbs": [
       "Day 2 core",
       "Module 6: S3 and formulas"
@@ -2756,7 +2756,7 @@
     "href": "modules/Walkthrough2.html#function-2-summarize-one-country",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Function 2: summarize one country",
-    "text": "Function 2: summarize one country\n\nsummarize_priority_years &lt;- function(country_name,\n                                     data,\n                                     min_year = 2000,\n                                     coverage_cutoff = 90,\n                                     incidence_cutoff = 1) {\n  country_data &lt;- data[\n    data$country == country_name & data$year &gt;= min_year,\n  ]\n\n  country_data &lt;- add_priority_rule(\n    country_data,\n    coverage_cutoff = coverage_cutoff,\n    incidence_cutoff = incidence_cutoff\n  )\n\n  priority_years &lt;- country_data$year[\n    country_data$priority_year == \"priority year\"\n  ]\n\n  most_recent_priority_year &lt;- if (length(priority_years) == 0) {\n    NA_integer_\n  } else {\n    max(priority_years)\n  }\n\n  max_cases_per_100k &lt;- if (all(is.na(country_data$cases_per_100k))) {\n    NA_real_\n  } else {\n    round(max(country_data$cases_per_100k, na.rm = TRUE), 2)\n  }\n\n  data.frame(\n    country = country_name,\n    region = country_data$region[1],\n    sub_region = country_data$sub_region[1],\n    years = nrow(country_data),\n    priority_years = length(priority_years),\n    missing_information_years = sum(country_data$priority_year == \"missing information\"),\n    most_recent_priority_year = most_recent_priority_year,\n    max_cases_per_100k = max_cases_per_100k\n  )\n}",
+    "text": "Function 2: summarize one country\n\nsummarize_priority_years &lt;- function(country_name,\n                                     data,\n                                     min_year = 2000,\n                                     coverage_cutoff = 90,\n                                     incidence_cutoff = 1) {\n  country_data &lt;- data[\n    data$country == country_name & data$year &gt;= min_year,\n  ]\n\n  country_data &lt;- add_priority_rule(\n    country_data, coverage_cutoff, incidence_cutoff\n  )\n\n  priority_years &lt;- country_data$year[\n    country_data$priority_year == \"priority year\"\n  ]\n\n  data.frame(\n    country = country_name,\n    region = country_data$region[1],\n    sub_region = country_data$sub_region[1],\n    years = nrow(country_data),\n    priority_years = length(priority_years),\n    missing_information_years = sum(country_data$priority_year == \"missing information\"),\n    most_recent_priority_year = if (length(priority_years) == 0) {\n      NA_integer_\n    } else {\n      max(priority_years)\n    },\n    max_cases_per_100k = if (all(is.na(country_data$cases_per_100k))) {\n      NA_real_\n    } else {\n      round(max(country_data$cases_per_100k, na.rm = TRUE), 2)\n    }\n  )\n}",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2789,7 +2789,7 @@
     "href": "modules/Walkthrough2.html#repeat-with-a-for-loop",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Repeat with a for loop",
-    "text": "Repeat with a for loop\n\ncountries &lt;- c(\"Afghanistan\", \"Bangladesh\", \"India\", \"Nepal\", \"Pakistan\")\n\ncountry_summaries &lt;- data.frame()\n\nfor (country_name in countries) {\n  one_summary &lt;- summarize_priority_years(country_name, data = measles)\n  country_summaries &lt;- rbind(country_summaries, one_summary)\n}\n\ncountry_summaries\n\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n2  Bangladesh   Asia Southern Asia    48              9\n3       India   Asia Southern Asia    48             15\n4       Nepal   &lt;NA&gt;          &lt;NA&gt;    48             16\n5    Pakistan   &lt;NA&gt;          &lt;NA&gt;    48             18\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022              44.50\n2                        25                      2012              18.40\n3                        25                      2016               5.47\n4                        25                      2020              51.96\n5                        25                      2022              15.02",
+    "text": "Repeat with a for loop\n\ncountries &lt;- c(\"Afghanistan\", \"Bangladesh\", \"India\", \"Nepal\", \"Pakistan\")\n\ncountry_summaries &lt;- data.frame()\n\nfor (country_name in countries) {\n  one_summary &lt;- summarize_priority_years(country_name, data = measles)\n  country_summaries &lt;- rbind(country_summaries, one_summary)\n}",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2811,7 +2811,7 @@
     "href": "modules/Walkthrough2.html#repeat-with-lapply",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Repeat with lapply()",
-    "text": "Repeat with lapply()\nThe same idea can be written in a more functional style.\n\nsummary_list &lt;- lapply(\n  countries,\n  summarize_priority_years,\n  data = measles\n)\n\nsummary_list\n\n[[1]]\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022               44.5\n\n[[2]]\n     country region    sub_region years priority_years\n1 Bangladesh   Asia Southern Asia    48              9\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2012               18.4\n\n[[3]]\n  country region    sub_region years priority_years missing_information_years\n1   India   Asia Southern Asia    48             15                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2016               5.47\n\n[[4]]\n  country region sub_region years priority_years missing_information_years\n1   Nepal   &lt;NA&gt;       &lt;NA&gt;    48             16                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2020              51.96\n\n[[5]]\n   country region sub_region years priority_years missing_information_years\n1 Pakistan   &lt;NA&gt;       &lt;NA&gt;    48             18                        25\n  most_recent_priority_year max_cases_per_100k\n1                      2022              15.02",
+    "text": "Repeat with lapply()\nThe same idea can be written in a more functional style.\n\nsummary_list &lt;- lapply(\n  countries,\n  summarize_priority_years,\n  data = measles\n)\n\nlength(summary_list)\n\n[1] 5\n\nsummary_list[[1]]\n\n      country region    sub_region years priority_years\n1 Afghanistan   Asia Southern Asia    48             22\n  missing_information_years most_recent_priority_year max_cases_per_100k\n1                        25                      2022               44.5",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2866,7 +2866,7 @@
     "href": "modules/Walkthrough2.html#sort-the-results",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Sort the results",
-    "text": "Sort the results\n\nasia_summaries &lt;- asia_summaries[\n  order(-asia_summaries$priority_years, asia_summaries$country),\n]\n\nhead(asia_summaries, 10)\n\n                            country region         sub_region years\n1                       Afghanistan   Asia      Southern Asia    68\n14                        Indonesia   Asia South-eastern Asia    68\n34                         Pakistan   &lt;NA&gt;               &lt;NA&gt;    68\n50                            Yemen   &lt;NA&gt;               &lt;NA&gt;    68\n32                            Nepal   &lt;NA&gt;               &lt;NA&gt;    68\n13                            India   Asia      Southern Asia    68\n25 Lao People's Democratic Republic   &lt;NA&gt;               &lt;NA&gt;    68\n36                      Philippines   &lt;NA&gt;               &lt;NA&gt;    68\n16                             Iraq   Asia       Western Asia    68\n8                          Cambodia   Asia South-eastern Asia    68\n   priority_years missing_information_years most_recent_priority_year\n1              22                        45                      2022\n14             19                        45                      2022\n34             18                        45                      2022\n50             17                        46                      2022\n32             16                        45                      2020\n13             15                        45                      2016\n25             15                        45                      2020\n36             14                        45                      2020\n16             13                        48                      2019\n8              12                        45                      2020\n   max_cases_per_100k\n1               44.50\n14              12.91\n34              15.02\n50             144.43\n32              51.96\n13               5.47\n25              36.92\n36              58.08\n16             100.13\n8              100.98",
+    "text": "Sort the results\n\nasia_summaries &lt;- asia_summaries[\n  order(-asia_summaries$priority_years, asia_summaries$country),\n]",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2877,7 +2877,7 @@
     "href": "modules/Walkthrough2.html#make-a-manuscript-style-table",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Make a manuscript-style table",
-    "text": "Make a manuscript-style table\n\ntop_asia &lt;- head(asia_summaries, 10)\n\ntop_asia[, c(\n  \"country\",\n  \"sub_region\",\n  \"priority_years\",\n  \"missing_information_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]\n\n                            country         sub_region priority_years\n1                       Afghanistan      Southern Asia             22\n14                        Indonesia South-eastern Asia             19\n34                         Pakistan               &lt;NA&gt;             18\n50                            Yemen               &lt;NA&gt;             17\n32                            Nepal               &lt;NA&gt;             16\n13                            India      Southern Asia             15\n25 Lao People's Democratic Republic               &lt;NA&gt;             15\n36                      Philippines               &lt;NA&gt;             14\n16                             Iraq       Western Asia             13\n8                          Cambodia South-eastern Asia             12\n   missing_information_years most_recent_priority_year max_cases_per_100k\n1                         45                      2022              44.50\n14                        45                      2022              12.91\n34                        45                      2022              15.02\n50                        46                      2022             144.43\n32                        45                      2020              51.96\n13                        45                      2016               5.47\n25                        45                      2020              36.92\n36                        45                      2020              58.08\n16                        48                      2019             100.13\n8                         45                      2020             100.98",
+    "text": "Make a manuscript-style table\n\ntop_asia &lt;- head(asia_summaries, 10)\n\ntop_asia_table &lt;- top_asia[, c(\n  \"country\",\n  \"sub_region\",\n  \"priority_years\",\n  \"missing_information_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]\n\ntop_asia_counts &lt;- top_asia_table[, c(\n  \"country\",\n  \"sub_region\",\n  \"priority_years\"\n)]\n\ntop_asia_details &lt;- top_asia_table[, c(\n  \"country\",\n  \"missing_information_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2932,7 +2932,7 @@
     "href": "modules/Walkthrough2.html#active-checkpoint-solution",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Active checkpoint: solution",
-    "text": "Active checkpoint: solution\n\nafrica &lt;- measles[measles$region == \"Africa\", ]\nafrican_countries &lt;- sort(unique(africa$country))\n\nafrica_summary_list &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa\n)\n\nafrica_summaries &lt;- do.call(rbind, africa_summary_list)\n\nafrica_summaries &lt;- africa_summaries[\n  order(-africa_summaries$priority_years, africa_summaries$country),\n]\n\nhead(africa_summaries, 10)\n\n                             country region         sub_region years\n8                           Cameroon Africa Sub-Saharan Africa    68\n13 Congo, Democratic Republic of the Africa Sub-Saharan Africa    68\n38                             Niger   &lt;NA&gt;               &lt;NA&gt;    68\n39                           Nigeria   &lt;NA&gt;               &lt;NA&gt;    68\n20                          Ethiopia Africa Sub-Saharan Africa    68\n9           Central African Republic Africa Sub-Saharan Africa    68\n3                              Benin Africa Sub-Saharan Africa    68\n10                              Chad Africa Sub-Saharan Africa    68\n12                             Congo Africa Sub-Saharan Africa    68\n45                           Somalia   &lt;NA&gt;               &lt;NA&gt;    68\n   priority_years missing_information_years most_recent_priority_year\n8              22                        45                      2022\n13             22                        45                      2022\n38             22                        45                      2022\n39             21                        45                      2022\n20             20                        45                      2022\n9              19                        45                      2022\n3              18                        45                      2022\n10             18                        45                      2022\n12             18                        45                      2022\n45             18                        46                      2022\n   max_cases_per_100k\n8              154.48\n13             370.40\n38             508.73\n39             172.71\n20              19.00\n9               85.31\n3               81.24\n10             291.70\n12             112.52\n45             155.00",
+    "text": "Active checkpoint: solution\n\nafrica &lt;- measles[measles$region == \"Africa\", ]\nafrican_countries &lt;- sort(unique(africa$country))\n\nafrica_summary_list &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa\n)\n\nafrica_summaries &lt;- do.call(rbind, africa_summary_list)",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -2954,7 +2954,7 @@
     "href": "modules/Walkthrough2.html#active-checkpoint-solution-1",
     "title": "Data science walkthrough 2: Repeating an analysis",
     "section": "Active checkpoint: solution",
-    "text": "Active checkpoint: solution\n\nafrica_summary_list_strict &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa,\n  coverage_cutoff = 90,\n  incidence_cutoff = 5\n)\n\nafrica_summaries_strict &lt;- do.call(rbind, africa_summary_list_strict)\n\nafrica_summaries_strict &lt;- africa_summaries_strict[\n  order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),\n]\n\nhead(africa_summaries_strict, 10)\n\n                             country region         sub_region years\n13 Congo, Democratic Republic of the Africa Sub-Saharan Africa    68\n45                           Somalia   &lt;NA&gt;               &lt;NA&gt;    68\n38                             Niger   &lt;NA&gt;               &lt;NA&gt;    68\n39                           Nigeria   &lt;NA&gt;               &lt;NA&gt;    68\n9           Central African Republic Africa Sub-Saharan Africa    68\n10                              Chad Africa Sub-Saharan Africa    68\n2                             Angola Africa Sub-Saharan Africa    68\n12                             Congo Africa Sub-Saharan Africa    68\n15                          Djibouti Africa Sub-Saharan Africa    68\n28                           Liberia   &lt;NA&gt;               &lt;NA&gt;    68\n   priority_years missing_information_years most_recent_priority_year\n13             21                        45                      2021\n45             17                        46                      2022\n38             16                        45                      2022\n39             15                        45                      2022\n9              13                        45                      2021\n10             13                        45                      2022\n2              12                        45                      2022\n12             11                        45                      2022\n15             11                        48                      2022\n28             11                        45                      2022\n   max_cases_per_100k\n13             370.40\n45             155.00\n38             508.73\n39             172.71\n9               85.31\n10             291.70\n2               68.19\n12             112.52\n15              74.30\n28             206.44",
+    "text": "Active checkpoint: solution\n\nafrica_summary_list_strict &lt;- lapply(\n  african_countries,\n  summarize_priority_years,\n  data = africa,\n  coverage_cutoff = 90,\n  incidence_cutoff = 5\n)\n\nafrica_summaries_strict &lt;- do.call(rbind, africa_summary_list_strict)",
     "crumbs": [
       "Day 2 core",
       "Data science walkthrough 2: iteration"
@@ -3107,7 +3107,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply",
     "title": "Module 5: Functional Programming",
     "section": "You try it with apply()!",
-    "text": "You try it with apply()!\nStudent prompt\n\nYou’ll use apply() less often because it’s specifically for matrices, where all data types have to be the same.\nFirst, make a matrix from the QCRC main dataset that only has the columns Died, 30D_Mortality, and 60D_Mortality.\n\n\nd_matrix &lt;- sheet_list[[\"Main_Dataset\"]] |&gt;\n    dplyr::select(Died, `30D_Mortality`, `60D_Mortality`) |&gt;\n    as.matrix()\n\nhead(d_matrix)\n\n\n\n\nDied\n30D_Mortality\n60D_Mortality\n\n\n\n\n1\n1\n1\n\n\n0\n0\n0\n\n\n0\n0\n0\n\n\n1\n1\n1\n\n\n1\n1\n1\n\n\n1\n1\n1\n\n\n\n\n\n\nNext use apply with the correct choice of MARGIN and FUN to get the proportion of cases that resulted in death at all three time points in one function call.\n\n\nHint\n\napply(\n    d_matrix,\n    MARGIN = (1 or 2),\n    FUN = some_function\n)\n\n\nAnother hint: you can tell if you chose the correct MARGIN argument by counting the number of elements in the output. There should be 3, one for each column.\n\n\n\nSolution\n\napply(\n    d_matrix,\n    MARGIN = 2,\n    FUN = mean\n)\n\n         Died 30D_Mortality 60D_Mortality \n    0.3402778     0.3263889     0.3333333",
+    "text": "You try it with apply()!\nStudent prompt\n\nYou’ll use apply() less often because it’s specifically for matrices, where all data types have to be the same.\nFirst, make a matrix from the QCRC main dataset that only has the columns Died, 30D_Mortality, and 60D_Mortality.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -3118,7 +3118,7 @@
     "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply",
     "title": "Module 5: Functional Programming",
     "section": "You try it with split() + lapply()!",
-    "text": "You try it with split() + lapply()!\nStudent prompt\n\nLoad the measles dataset. Filter the dataset so you only have records from 2005, and keep complete cases for the variables used in the model.\nThen, use split to split the dataframe into a list by region.\nNow, use lapply() to fit a Poisson glm for each region separately that includes effects of MCV1 and MCV2 coverage.\nFind a way, using lapply() or sapply(), coef(), and do.call() to make a nice matrix of the coefficients.\nThis is a more advanced version of the same pattern you will use for repeated checks and model summaries in Exercise 2.\n\n\nHint\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\nmeas_2005 &lt;- meas |&gt;\n    dplyr::filter(year == 2005) |&gt;\n    tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)\n\nmeas_regions &lt;- split(..., ...)\nmodel_list &lt;- lapply(\n    meas_regions,\n    \\(d) glm(...)\n)\nmodel_coefs_list &lt;- lapply(model_list, ...)\nmodel_coefs_mat &lt;- do.call(...)\n\n\n\nSolution\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\nmeas_2005 &lt;- meas |&gt;\n    dplyr::filter(year == 2005) |&gt;\n    tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)\n\nmeas_regions &lt;- split(meas_2005, meas_2005$region)\n\nmodel_list &lt;- lapply(\n    meas_regions,\n    \\(d) glm(\n        measles_cases ~ MCV1_coverage + MCV2_coverage,\n        data = d, family = \"poisson\"\n    )\n)\nmodel_coefs_list &lt;- lapply(model_list, coef)\nmodel_coefs_mat &lt;- do.call(rbind, model_coefs_list)\n\nmodel_coefs_mat\n\n\n\n\n\n(Intercept)\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nAfrica\n17.676171\n-0.2813935\n0.1419766\n\n\nAmericas\n7.278677\n-0.0790399\n0.0169828\n\n\nAsia\n11.417256\n-0.0440387\n0.0143116\n\n\nEurope\n-12.027052\n0.1838390\n0.0008544\n\n\nOceania\n-4.186932\n0.0360717\n0.0111061",
+    "text": "You try it with split() + lapply()!\nStudent prompt\n\nLoad the measles dataset. Filter the dataset so you only have records from 2005, and keep complete cases for the variables used in the model.\nThen, use split to split the dataframe into a list by region.\nNow, use lapply() to fit a Poisson glm for each region separately that includes effects of MCV1 and MCV2 coverage.",
     "crumbs": [
       "Day 2 core",
       "Module 5: Functional programming"
@@ -3151,7 +3151,7 @@
     "href": "modules/ODEs.html#compartment-models",
     "title": "Day 3: ODEs with deSolve",
     "section": "Compartment models",
-    "text": "Compartment models\nCompartment models divide a population into states.\n\nSource: DOI 10.3390/sym14122583For a simple SIR model:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= -\\beta S I \\\\\n\\frac{dI}{dt} &= \\beta S I - \\gamma I \\\\\n\\frac{dR}{dt} &= \\gamma I\n\\end{aligned}\n\\]\nThe equations say how quickly people move between compartments.",
+    "text": "Compartment models\nCompartment models divide a population into states.\n\nSource: DOI 10.3390/sym14122583",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3184,7 +3184,7 @@
     "href": "modules/ODEs.html#step-3-derivative-function",
     "title": "Day 3: ODEs with deSolve",
     "section": "Step 3: derivative function",
-    "text": "Step 3: derivative function\nThe function signature is always:\nfunction(t, state, parameters) {\n  ...\n}\nInside the function, calculate one derivative per state variable.\n\nsir_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n\n  dS &lt;- -beta * S * I\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I\n\n  list(c(S = dS, I = dI, R = dR))\n}",
+    "text": "Step 3: derivative function\nThe function signature is always:\nfunction(t, state, parameters) {\n  ...\n}\nInside the function, calculate one derivative per state variable.",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3206,7 +3206,7 @@
     "href": "modules/ODEs.html#step-5-plot",
     "title": "Day 3: ODEs with deSolve",
     "section": "Step 5: plot",
-    "text": "Step 5: plot\n\nsir_df &lt;- as.data.frame(sir_solution)\nsir_colors &lt;- c(S = \"deepskyblue3\", I = \"darkorange2\", R = \"seagreen4\")\n\nmatplot(\n  x = sir_df$time,\n  y = sir_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\",\n  lty = 1,\n  lwd = 2,\n  col = sir_colors,\n  xlab = \"Time\",\n  ylab = \"Number of people\",\n  main = \"SIR model\"\n)\n\nlegend(\n  \"right\",\n  inset = 0.02,\n  legend = names(sir_colors),\n  col = sir_colors,\n  lty = 1,\n  lwd = 2,\n  bty = \"n\"\n)",
+    "text": "Step 5: plot\n\nsir_df &lt;- as.data.frame(sir_solution)\nsir_colors &lt;- c(S = \"deepskyblue3\", I = \"darkorange2\", R = \"seagreen4\")\n\nmatplot(\n  sir_df$time, sir_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\", lty = 1, lwd = 2, col = sir_colors,\n  xlab = \"Time\", ylab = \"Number of people\", main = \"SIR model\"\n)\n\nlegend(\n  \"right\", inset = 0.02, legend = names(sir_colors),\n  col = sir_colors, lty = 1, lwd = 2, bty = \"n\"\n)",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3217,7 +3217,7 @@
     "href": "modules/ODEs.html#sanity-checks",
     "title": "Day 3: ODEs with deSolve",
     "section": "Sanity checks",
-    "text": "Sanity checks\nBefore trusting a simulation, ask:\n\nAre all compartments non-negative?\nDoes the total population stay constant if the model has no births or deaths?\nDoes the direction of movement match the diagram?\nDoes changing one parameter move the curve in the direction you expect?\n\n\nrange(sir_df$S, sir_df$I, sir_df$R)\n\n[1]   0.0000 999.4448\n\nsir_total &lt;- sir_df$S + sir_df$I + sir_df$R\nrange(sir_total)\n\n[1] 1000 1000",
+    "text": "Sanity checks\nBefore trusting a simulation, ask:\n\nAre all compartments non-negative?\nDoes the total population stay constant if the model has no births or deaths?\nDoes the direction of movement match the diagram?\nDoes changing one parameter move the curve in the direction you expect?",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3228,7 +3228,7 @@
     "href": "modules/ODEs.html#practice-checkpoint-sirs",
     "title": "Day 3: ODEs with deSolve",
     "section": "Practice checkpoint: SIRS",
-    "text": "Practice checkpoint: SIRS\nPrompt\nModify the SIR model so recovered people lose immunity and become susceptible again. Call the new parameter zeta.\n\nSource: DOI 10.3390/sym14122583 with course editUse:\nsirs_parameters &lt;- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)\nsirs_initial_state &lt;- c(S = 999, I = 1, R = 0)\nsirs_times &lt;- seq(0, 160, by = 0.25)\nPlot the result and compare it with the SIR curve.",
+    "text": "Practice checkpoint: SIRS\nPrompt\nModify the SIR model so recovered people lose immunity and become susceptible again. Call the new parameter zeta.\n\nSource: DOI 10.3390/sym14122583 with course edit",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3261,7 +3261,7 @@
     "href": "modules/ODEs.html#practice-checkpoint-solution-plot",
     "title": "Day 3: ODEs with deSolve",
     "section": "Practice checkpoint: solution plot",
-    "text": "Practice checkpoint: solution plot\n\nmatplot(\n  x = sirs_df$time,\n  y = sirs_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\",\n  lty = 1,\n  lwd = 2,\n  col = sir_colors,\n  xlab = \"Time\",\n  ylab = \"Number of people\",\n  main = \"SIRS model\"\n)\n\nlegend(\n  \"right\",\n  inset = 0.02,\n  legend = names(sir_colors),\n  col = sir_colors,\n  lty = 1,\n  lwd = 2,\n  bty = \"n\"\n)\n\n\nWith waning immunity, infection can persist at a low level instead of dying out after a single epidemic wave.",
+    "text": "Practice checkpoint: solution plot\n\nmatplot(\n  sirs_df$time, sirs_df[, c(\"S\", \"I\", \"R\")],\n  type = \"l\", lty = 1, lwd = 2, col = sir_colors,\n  xlab = \"Time\", ylab = \"Number of people\", main = \"SIRS model\"\n)\n\nlegend(\n  \"right\", inset = 0.02, legend = names(sir_colors),\n  col = sir_colors, lty = 1, lwd = 2, bty = \"n\"\n)\n\n\nWith waning immunity, infection can persist at a low level instead of dying out after a single epidemic wave.",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3272,7 +3272,7 @@
     "href": "modules/ODEs.html#optional-stretch-environmental-pathogen",
     "title": "Day 3: ODEs with deSolve",
     "section": "Optional stretch: environmental pathogen",
-    "text": "Optional stretch: environmental pathogen\nPrompt\nFor a faster student or take-home extension, add an environmental pathogen compartment P.\n\nSource: Andreas Handel’s DSAIDE packageUse these equations:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= n - b_I I S - b_P P S - mS \\\\\n\\frac{dI}{dt} &= b_I I S + b_P P S - gI - mI \\\\\n\\frac{dR}{dt} &= gI - mR \\\\\n\\frac{dP}{dt} &= qI - cP\n\\end{aligned}\n\\]\nHint\nAdd a fourth state named P. Your derivative function should return four values: dS, dI, dR, and dP.\nSolution outline\nStart from sirs_ode(), add P &lt;- state[\"P\"], add parameters named n, b_I, b_P, m, g, q, and c, then return:\nlist(c(S = dS, I = dI, R = dR, P = dP))\nSet n = 0 and m = 0 for the first run if you want to focus only on the environmental transmission path.",
+    "text": "Optional stretch: environmental pathogen\nPrompt\nFor a faster student or take-home extension, add an environmental pathogen compartment P.\n\nSource: Andreas Handel’s DSAIDE package",
     "crumbs": [
       "Day 3 core",
       "ODEs with deSolve"
@@ -3647,6 +3647,996 @@
     "text": "The online slide decks are linked in the site navigation. There is not a separate PDF bundle in this repository right now.\nFor offline use:\n\ndownload the full repository ZIP,\nopen SISMID-2026.Rproj,\nuse the .qmd files in modules/,\nrender locally if you need a fresh HTML copy.\n\nIf you want a PDF copy of a deck during class, use the browser print dialog or ask an instructor which output format is best for that deck.",
     "crumbs": [
       "Course Resources"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#check-the-subset-continued",
+    "href": "modules/Walkthrough1.html#check-the-subset-continued",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Check the subset, continued",
+    "text": "Check the subset, continued\n\ntail(pakistan_check_rows)\n\n      country year measles_cases MCV1_coverage\nNA.18    &lt;NA&gt;   NA            NA            NA\nNA.19    &lt;NA&gt;   NA            NA            NA\nNA.20    &lt;NA&gt;   NA            NA            NA\nNA.21    &lt;NA&gt;   NA            NA            NA\nNA.22    &lt;NA&gt;   NA            NA            NA\nNA.23    &lt;NA&gt;   NA            NA            NA",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-solution-rule",
+    "href": "modules/Walkthrough1.html#active-checkpoint-solution-rule",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: solution rule",
+    "text": "Active checkpoint: solution rule\n\nafghanistan$priority_year &lt;- ifelse(\n  (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage &lt; 80) |\n    (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k &gt;= 5),\n  \"priority year\",\n  ifelse(\n    is.na(afghanistan$MCV2_coverage) | is.na(afghanistan$cases_per_100k),\n    \"missing information\",\n    \"not priority\"\n  )\n)",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-solution-table",
+    "href": "modules/Walkthrough1.html#active-checkpoint-solution-table",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: solution table",
+    "text": "Active checkpoint: solution table\n\nafghanistan_result &lt;- afghanistan[, c(\n  \"year\",\n  \"measles_cases\",\n  \"MCV2_coverage\",\n  \"cases_per_100k\",\n  \"priority_year\"\n)]\n\nafghanistan_result$cases_per_100k &lt;- round(afghanistan_result$cases_per_100k, 2)\n\nafghanistan_labels &lt;- afghanistan_result[, c(\"year\", \"priority_year\")]\nhead(afghanistan_labels, 7)\n\n   year priority_year\n14 2010 priority year\n13 2011 priority year\n12 2012 priority year\n11 2013 priority year\n10 2014 priority year\n9  2015 priority year\n8  2016 priority year",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution-table",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution-table",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution table",
+    "text": "Active checkpoint: solution table\n\nafrica_top_columns &lt;- africa_summaries[, c(\n  \"country\",\n  \"priority_years\"\n)]\n\nhead(africa_top_columns, 5)\n\n                             country priority_years\n8                           Cameroon             22\n13 Congo, Democratic Republic of the             22\n38                             Niger             22\n39                           Nigeria             21\n20                          Ethiopia             20",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution-table-1",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution-table-1",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution table",
+    "text": "Active checkpoint: solution table\n\nafrica_summaries_strict &lt;- africa_summaries_strict[\n  order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),\n]\n\nhead(africa_summaries_strict[, c(\n  \"country\",\n  \"priority_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)], 10)\n\n                             country priority_years most_recent_priority_year\n13 Congo, Democratic Republic of the             21                      2021\n45                           Somalia             17                      2022\n38                             Niger             16                      2022\n39                           Nigeria             15                      2022\n9           Central African Republic             13                      2021\n10                              Chad             13                      2022\n2                             Angola             12                      2022\n12                             Congo             11                      2022\n15                          Djibouti             11                      2022\n28                           Liberia             11                      2022\n   max_cases_per_100k\n13             370.40\n45             155.00\n38             508.73\n39             172.71\n9               85.31\n10             291.70\n2               68.19\n12             112.52\n15              74.30\n28             206.44",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#ok-but-why-one-country-function",
+    "href": "modules/Module05-FunctionalProgramming.html#ok-but-why-one-country-function",
+    "title": "Module 5: Functional Programming",
+    "section": "Ok, but why?: one-country function",
+    "text": "Ok, but why?: one-country function\n\nget_country_stats &lt;- function(df, iso3_code){\n    \n    country_data &lt;- subset(df, iso3c == iso3_code)\n    \n    # Get the summary statistics for this country\n    country_cases &lt;- country_data$measles_cases\n    country_quart &lt;- quantile(\n        country_cases, na.rm = TRUE, probs = c(0.25, 0.5, 0.75)\n    )\n    country_range &lt;- range(country_cases, na.rm = TRUE)\n    \n    country_name &lt;- unique(country_data$country)\n    \n    country_summary &lt;- data.frame(\n        country = country_name,\n        min = country_range[[1]],\n        Q1 = country_quart[[1]],\n        median = country_quart[[2]],\n        Q3 = country_quart[[3]],\n        max = country_range[[2]]\n    )\n    \n    return(country_summary)\n}",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#ok-but-why-repeat-with-a-loop",
+    "href": "modules/Module05-FunctionalProgramming.html#ok-but-why-repeat-with-a-loop",
+    "title": "Module 5: Functional Programming",
+    "section": "Ok, but why?: repeat with a loop",
+    "text": "Ok, but why?: repeat with a loop\n\nWe could write a loop to get stats for many countries.\n\n\nmeas &lt;- readRDS(here::here(\"data\", \"measles_final.Rds\"))\ncountry_codes &lt;- c(\"IND\", \"PAK\", \"BGD\", \"NPL\")\n\n# Loop setup\nout &lt;- vector(mode = \"list\", length = length(country_codes))\nfor (i in seq_along(country_codes)) {\n    out[[i]] &lt;- get_country_stats(meas, country_codes[[i]]) \n}",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#ok-but-why-repeat-with-lapply",
+    "href": "modules/Module05-FunctionalProgramming.html#ok-but-why-repeat-with-lapply",
+    "title": "Module 5: Functional Programming",
+    "section": "Ok, but why?: repeat with lapply()",
+    "text": "Ok, but why?: repeat with lapply()\n\nBut if we use a functional programming tool called lapply, look how easy it is!\n\n\nout2 &lt;- lapply(country_codes, function(code) get_country_stats(meas, code))",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#a-tapply-example-grouped-means",
+    "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example-grouped-means",
+    "title": "Module 5: Functional Programming",
+    "section": "A tapply() example: grouped means",
+    "text": "A tapply() example: grouped means\n\nOnce the data are long, tapply() can average coverage by country and vaccine.\n\n\nout &lt;- tapply(\n    meas_long$vaccine_coverage,\n    list(meas_long$iso3c, meas_long$vaccine_antigen),\n    FUN = mean\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#a-tapply-example-missing-values",
+    "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example-missing-values",
+    "title": "Module 5: Functional Programming",
+    "section": "A tapply() example: missing values",
+    "text": "A tapply() example: missing values\n\nUh oh.\nIf we want to handle the missing values, we can use an anonymous function.\n\n\nout &lt;- tapply(\n    meas_long$vaccine_coverage,\n    list(meas_long$iso3c, meas_long$vaccine_antigen),\n    FUN = \\(x) mean(x, na.rm = TRUE)\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-hint",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-hint",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with lapply(): hint",
+    "text": "You try it with lapply(): hint\nHint\n\ndata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(\n    sheet_names,\n    \\(name) readxl::read_xlsx(data_file, sheet = name)\n)\nnames(sheet_list) &lt;- ...\n\nsheet_inventory &lt;- data.frame(\n    sheet = ...,\n    rows = ...,\n    columns = ...\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-solution",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-solution",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with lapply(): solution",
+    "text": "You try it with lapply(): solution\nSolution\n\ndata_file &lt;- here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\nsheet_names &lt;- readxl::excel_sheets(data_file)\nsheet_list &lt;- lapply(\n    sheet_names,\n    \\(name) readxl::read_xlsx(data_file, sheet = name)\n)\nnames(sheet_list) &lt;- sheet_names",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-hint",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-hint",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with apply(): hint",
+    "text": "You try it with apply(): hint\n\nNext use apply with the correct choice of MARGIN and FUN to get the proportion of cases that resulted in death at all three time points in one function call.\n\nHint\n\napply(\n    d_matrix,\n    MARGIN = (1 or 2),\n    FUN = some_function\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-solution",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-solution",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with apply(): solution",
+    "text": "You try it with apply(): solution\nSolution\n\napply(\n    d_matrix,\n    MARGIN = 2,\n    FUN = mean\n)\n\n         Died 30D_Mortality 60D_Mortality \n    0.3402778     0.3263889     0.3333333",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-hint",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-hint",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): hint",
+    "text": "You try it with split() + lapply(): hint\nHint\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\nmeas_2005 &lt;- meas |&gt;\n    dplyr::filter(year == 2005) |&gt;\n    tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)\n\nmeas_regions &lt;- split(..., ...)\nmodel_list &lt;- lapply(\n    meas_regions,\n    \\(d) glm(...)\n)\nmodel_coefs_list &lt;- lapply(model_list, ...)\nmodel_coefs_mat &lt;- do.call(...)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-setup",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-setup",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): solution setup",
+    "text": "You try it with split() + lapply(): solution setup\nSolution\n\nmeas &lt;- readr::read_rds(here::here(\"data\", \"measles_final.Rds\"))\nmeas_2005 &lt;- meas |&gt;\n    dplyr::filter(year == 2005) |&gt;\n    tidyr::drop_na(measles_cases, MCV1_coverage, MCV2_coverage, region)\n\nmeas_regions &lt;- split(meas_2005, meas_2005$region)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-model",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-model",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): solution model",
+    "text": "You try it with split() + lapply(): solution model\n\nmodel_list &lt;- lapply(\n    meas_regions,\n    \\(d) glm(\n        measles_cases ~ MCV1_coverage + MCV2_coverage,\n        data = d, family = \"poisson\"\n    )\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-coefficients",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-solution-coefficients",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): solution coefficients",
+    "text": "You try it with split() + lapply(): solution coefficients\n\nmodel_coefs_list &lt;- lapply(model_list, coef)\nmodel_coefs_mat &lt;- do.call(rbind, model_coefs_list)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#summary-for-an-lm",
+    "href": "modules/Module06-S3-lm-formulas.html#summary-for-an-lm",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "summary() for an lm",
+    "text": "summary() for an lm\n\nclass(an_lm)\n\n[1] \"lm\"\n\ncoef(summary(an_lm))\n\n\n\n\n\nEstimate\nStd. Error\nt value\nPr(&gt;|t|)\n\n\n\n\n(Intercept)\n2655.74447\n238.85709\n11.118550\n0.0000000\n\n\nage\n12.42971\n10.02278\n1.240146\n0.2164752",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#summary-for-a-glm",
+    "href": "modules/Module06-S3-lm-formulas.html#summary-for-a-glm",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "summary() for a glm",
+    "text": "summary() for a glm\n\nclass(a_glm)\n\n[1] \"glm\" \"lm\" \n\ncoef(summary(a_glm))\n\n\n\n\n\nEstimate\nStd. Error\nz value\nPr(&gt;|z|)\n\n\n\n\n(Intercept)\n0.3845819\n0.7321248\n0.5252956\n0.5993777\n\n\nage\n-0.0511529\n0.0315138\n-1.6231937\n0.1045480",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#summary-for-a-mixed-model",
+    "href": "modules/Module06-S3-lm-formulas.html#summary-for-a-mixed-model",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "summary() for a mixed model",
+    "text": "summary() for a mixed model\n\nclass(a_glmm)\n\n[1] \"glmerMod\"\nattr(,\"package\")\n[1] \"lme4\"\n\ncoef(summary(a_glmm))\n\n\n\n\n\nEstimate\nStd. Error\nz value\nPr(&gt;|z|)\n\n\n\n\n(Intercept)\n0.3854014\n0.7353431\n0.524111\n0.6002013\n\n\nage\n-0.0512689\n0.0323364\n-1.585484\n0.1128564",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#some-oop-definitions-continued",
+    "href": "modules/Module06-S3-lm-formulas.html#some-oop-definitions-continued",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Some OOP definitions, continued",
+    "text": "Some OOP definitions, continued\n\nMethod dispatch is the process where you call a generic function, the generic function checks the class of the input, and the generic function calls the method for that class.\nA default method is dispatched by a generic function when there is no specific method for the class of the input. Not every generic has a default method.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-model-objects",
+    "href": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-model-objects",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "S3 classes (and types): model objects",
+    "text": "S3 classes (and types): model objects\n\nMany S3 objects you will meet in modeling, including lm and glm objects, are lists with a class attribute.\nSome S3 objects are built on other types, like factors and dates, so do not use “is it a list?” as the definition of S3.\nComplicated model objects are usually lists where the elements have specific names.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-help-page",
+    "href": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-help-page",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "S3 classes (and types): help page",
+    "text": "S3 classes (and types): help page\n\nHelp pages for modeling functions often document those list elements.\n\n?lm",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#finding-methods-for-a-generic",
+    "href": "modules/Module06-S3-lm-formulas.html#finding-methods-for-a-generic",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Finding methods for a generic",
+    "text": "Finding methods for a generic\n\nUse the methods() function to find all methods that are available for a specific generic function.\n\n\nsummary_methods &lt;- methods(summary)\nlength(summary_methods)\n\n[1] 88\n\ncat(head(summary_methods, 8), sep = \"\\n\")\n\nsummary,ANY-method\nsummary,diagonalMatrix-method\nsummary,sparseMatrix-method\nsummary.allFit\nsummary.aov\nsummary.aovlist\nsummary.aspell\nsummary.check_packages_in_dir",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#finding-methods-for-a-class",
+    "href": "modules/Module06-S3-lm-formulas.html#finding-methods-for-a-class",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Finding methods for a class",
+    "text": "Finding methods for a class\n\nAlso use the methods(class = ...) function to find all methods that are available for a specific class.\n\n\nmethods(class = \"lm\")\n\n [1] add1           alias          anova          case.names     coerce        \n [6] confint        cooks.distance deviance       dfbeta         dfbetas       \n[11] dffits         drop1          dummy.coef     effects        extractAIC    \n[16] family         formula        hatvalues      influence      initialize    \n[21] kappa          labels         logLik         model.frame    model.matrix  \n[26] nobs           plot           predict        print          proj          \n[31] qqnorm         qr             residuals      rstandard      rstudent      \n[36] show           simulate       slotsFromS3    summary        variable.names\n[41] vcov          \nsee '?methods' for accessing help and source code",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#opening-a-specific-method",
+    "href": "modules/Module06-S3-lm-formulas.html#opening-a-specific-method",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Opening a specific method",
+    "text": "Opening a specific method\n\nYou can use a dot (.) to reference specific methods, not just generics.\n\n?summary.lm",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#formula-example-methods",
+    "href": "modules/Module06-S3-lm-formulas.html#formula-example-methods",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Formula example: methods",
+    "text": "Formula example: methods\n\nBut if we inspect the methods for cor.test, we see it is an S3 generic with a method for formula class objects.\n\n\nmethods(cor.test)\n\n[1] cor.test.default* cor.test.formula*\nsee '?methods' for accessing help and source code",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#formula-example-formula-method",
+    "href": "modules/Module06-S3-lm-formulas.html#formula-example-formula-method",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Formula example: formula method",
+    "text": "Formula example: formula method\n\nTyping in the code is easier, and reading the output is easier.\n\n\nformula_cor &lt;- cor.test(\n    ~ measles_cases + MCV1_coverage,\n    data = subset(meas, iso3c == \"PAK\")\n)\n\ncat(sprintf(\n    \"estimate: %.3f\\np-value: %.3g\\n\",\n    unname(formula_cor$estimate),\n    formula_cor$p.value\n))\n\nestimate: -0.447\np-value: 0.00263\n\n\n\nBut it pays to understand S3, because in certain circumstances, using the default method is easier!",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-hint",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-hint",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it: hint",
+    "text": "You try it: hint\nHint\nYour code should look like this for the correct DV and IV.\n\nboxplot(dv ~ iv, data = subset(meas, year == 2002))",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-solution",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-solution",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it: solution",
+    "text": "You try it: solution\nSolution\n\nboxplot(measles_cases ~ region, data = subset(meas, year == 2002))",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-read-the-data",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-read-the-data",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): read the data",
+    "text": "You try it (more advanced): read the data\nHint\nTo read in the data, do this. You might need to do some data cleaning, because missing data are written as a period in the spreadsheet.\n\nqcrc &lt;- readxl::read_xlsx(\n    here::here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n    sheet = \"Main_Dataset\"\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-hint",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-hint",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): model hint",
+    "text": "You try it (more advanced): model hint\nHint\nYour logistic regression code should look like this. You need to put backticks (this thing: `, NOT an apostrophe. It’s made by the ~ key on American keyboards.) around the name of the variable `30D_Mortality`.\n\nmodel_30dm &lt;- glm(\n    something ~ something + something + ...,\n    data = qcrc,\n    family = \"binomial\"\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-method-hint",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-method-hint",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): method hint",
+    "text": "You try it (more advanced): method hint\nHint\nSome useful functions with methods for glm-class objects are summary, coef, and confint. (You probably also need the function exp!)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-setup",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-setup",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): solution setup",
+    "text": "You try it (more advanced): solution setup\nSolution\nOne solution, you could have used any predictors you want, though you should be able to explain why they might affect 30 day mortality.\n\n# A little cleaning for D Dimer\n# First turn the \".\" into actual NA's and make it a real number\nqcrc$d_dimer &lt;- as.numeric(dplyr::na_if(qcrc$`D dimer`, \".\"))\n# Take the log cause it's skewed and positive\nqcrc$d_dimer &lt;- log(qcrc$d_dimer)\n# Impute missing values with the median -- there are much better ways to do this\nmed_d_dimer &lt;- median(qcrc$d_dimer, na.rm = TRUE)\nqcrc$d_dimer &lt;- ifelse(is.na(qcrc$d_dimer), med_d_dimer, qcrc$d_dimer)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-model",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-model",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): solution model",
+    "text": "You try it (more advanced): solution model\n\n# Fit a model that controls for treatment, d_dimer, and race/ethnicity\nmodel_30dm &lt;- glm(\n    `30D_Mortality` ~ Remdesivir_or_placebo + d_dimer + Race,\n    data = qcrc,\n    family = \"binomial\"\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-summary",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-summary",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): model summary",
+    "text": "You try it (more advanced): model summary\n\nLook at a lot of useful information with summary().\n\n\nmodel_summary &lt;- round(coef(summary(model_30dm)), 3)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-odds-ratios",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-odds-ratios",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): odds ratios",
+    "text": "You try it (more advanced): odds ratios\n\nGet the OR’s with coef().\n\n\ncoef(model_30dm) |&gt;\n    exp() |&gt;\n    round(2)\n\n                   (Intercept)          Remdesivir_or_placebo \n                          0.13                           0.44 \n                       d_dimer RaceAfrican American  or Black \n                          1.18                           1.13 \n                     RaceOther \n                          1.78",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-confidence-intervals",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-confidence-intervals",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): confidence intervals",
+    "text": "You try it (more advanced): confidence intervals\n\nGet the profile CI’s with confint().\n\n\nmodel_ci &lt;- suppressMessages(confint(model_30dm)) |&gt;\n    exp() |&gt;\n    round(2)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-interpretation",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-interpretation",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): interpretation",
+    "text": "You try it (more advanced): interpretation\n\nA basic interpretation of the coefficient for Remdesivir_or_placebo (coded as 1 for remdesivir and 0 for placebo) might be “Odds of mortality after 30 days in the remdesivir group were 0.48 times the odds in the placebo group, for patients with the same D dimer level and race/ethnicity. The 95% CI for the odds ratio was 0.20 to 1.04. The effect was not significant at the \\(\\alpha = 0.05\\) significance level, but is suggestive that at least some patients benefitted from remdesivir treatment.”",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#compartment-models-equations",
+    "href": "modules/ODEs.html#compartment-models-equations",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Compartment models: equations",
+    "text": "Compartment models: equations\nFor a simple SIR model:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= -\\beta S I \\\\\n\\frac{dI}{dt} &= \\beta S I - \\gamma I \\\\\n\\frac{dR}{dt} &= \\gamma I\n\\end{aligned}\n\\]\nThe equations say how quickly people move between compartments.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#step-3-derivative-function-continued",
+    "href": "modules/ODEs.html#step-3-derivative-function-continued",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Step 3: derivative function, continued",
+    "text": "Step 3: derivative function, continued\n\nsir_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n\n  dS &lt;- -beta * S * I\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I\n\n  list(c(S = dS, I = dI, R = dR))\n}",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-sirs-setup",
+    "href": "modules/ODEs.html#practice-checkpoint-sirs-setup",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: SIRS setup",
+    "text": "Practice checkpoint: SIRS setup\nUse:\nsirs_parameters &lt;- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)\nsirs_initial_state &lt;- c(S = 999, I = 1, R = 0)\nsirs_times &lt;- seq(0, 160, by = 0.25)\nPlot the result and compare it with the SIR curve.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-solution-setup",
+    "href": "modules/ODEs.html#practice-checkpoint-solution-setup",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: solution setup",
+    "text": "Practice checkpoint: solution setup\n\nsirs_parameters &lt;- c(beta = 0.0015, gamma = 0.20, zeta = 0.02)\nsirs_initial_state &lt;- c(S = 999, I = 1, R = 0)\nsirs_times &lt;- seq(0, 160, by = 0.25)",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-solution-derivative",
+    "href": "modules/ODEs.html#practice-checkpoint-solution-derivative",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: solution derivative",
+    "text": "Practice checkpoint: solution derivative\n\nsirs_ode &lt;- function(t, state, parameters) {\n  S &lt;- state[\"S\"]\n  I &lt;- state[\"I\"]\n  R &lt;- state[\"R\"]\n\n  beta &lt;- parameters[\"beta\"]\n  gamma &lt;- parameters[\"gamma\"]\n  zeta &lt;- parameters[\"zeta\"]\n\n  dS &lt;- -beta * S * I + zeta * R\n  dI &lt;- beta * S * I - gamma * I\n  dR &lt;- gamma * I - zeta * R\n\n  list(c(S = dS, I = dI, R = dR))\n}",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#practice-checkpoint-solution-solve",
+    "href": "modules/ODEs.html#practice-checkpoint-solution-solve",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Practice checkpoint: solution solve",
+    "text": "Practice checkpoint: solution solve\n\nsirs_solution &lt;- deSolve::ode(\n  y = sirs_initial_state,\n  times = sirs_times,\n  func = sirs_ode,\n  parms = sirs_parameters\n)\n\nsirs_df &lt;- as.data.frame(sirs_solution)\nhead(sirs_df)\n\n  time        S        I          R\n1 0.00 999.0000 1.000000 0.00000000\n2 0.25 998.5577 1.383405 0.05892916\n3 0.50 997.9464 1.913432 0.14014973\n4 0.75 997.1020 2.645816 0.25218121\n5 1.00 995.9361 3.657155 0.40677265\n6 1.25 994.3274 5.052466 0.62010994",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#optional-stretch-equations",
+    "href": "modules/ODEs.html#optional-stretch-equations",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Optional stretch: equations",
+    "text": "Optional stretch: equations\nUse these equations:\n\\[\n\\begin{aligned}\n\\frac{dS}{dt} &= n - b_I I S - b_P P S - mS \\\\\n\\frac{dI}{dt} &= b_I I S + b_P P S - gI - mI \\\\\n\\frac{dR}{dt} &= gI - mR \\\\\n\\frac{dP}{dt} &= qI - cP\n\\end{aligned}\n\\]",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#optional-stretch-implementation-hints",
+    "href": "modules/ODEs.html#optional-stretch-implementation-hints",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Optional stretch: implementation hints",
+    "text": "Optional stretch: implementation hints\nHint\nAdd a fourth state named P. Your derivative function should return four values: dS, dI, dR, and dP.\nSolution outline\nStart from sirs_ode(), add P &lt;- state[\"P\"], add parameters named n, b_I, b_P, m, g, q, and c, then return:\nlist(c(S = dS, I = dI, R = dR, P = dP))\nSet n = 0 and m = 0 for the first run if you want to focus only on the environmental transmission path.",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#a-small-manuscript-problem-manuscript-arc",
+    "href": "modules/Walkthrough1.html#a-small-manuscript-problem-manuscript-arc",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "A small manuscript problem: manuscript arc",
+    "text": "A small manuscript problem: manuscript arc\nThis is a miniature version of the Exercise 1 manuscript arc:\n\nState a question.\nTranslate the question into a data rule.\nRun the rule.\nWrite a cautious result.",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#step-5-inspect-recent-years",
+    "href": "modules/Walkthrough1.html#step-5-inspect-recent-years",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Step 5: inspect recent years",
+    "text": "Step 5: inspect recent years\n\ntail(pakistan_result, 8)\n\n      year measles_cases MCV1_coverage cases_per_100k       priority_year\nNA.16   NA            NA            NA             NA missing information\nNA.17   NA            NA            NA             NA missing information\nNA.18   NA            NA            NA             NA missing information\nNA.19   NA            NA            NA             NA missing information\nNA.20   NA            NA            NA             NA missing information\nNA.21   NA            NA            NA             NA missing information\nNA.22   NA            NA            NA             NA missing information\nNA.23   NA            NA            NA             NA missing information",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#sort-the-results-top-countries",
+    "href": "modules/Walkthrough2.html#sort-the-results-top-countries",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Sort the results: top countries",
+    "text": "Sort the results: top countries\n\nasia_top_columns &lt;- asia_summaries[, c(\n  \"country\",\n  \"priority_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]\n\nhead(asia_top_columns, 5)\n\n       country priority_years most_recent_priority_year max_cases_per_100k\n1  Afghanistan             22                      2022              44.50\n14   Indonesia             19                      2022              12.91\n34    Pakistan             18                      2022              15.02\n50       Yemen             17                      2022             144.43\n32       Nepal             16                      2020              51.96",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#sort-the-results-top-countries-continued",
+    "href": "modules/Walkthrough2.html#sort-the-results-top-countries-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Sort the results: top countries, continued",
+    "text": "Sort the results: top countries, continued\n\nhead(asia_top_columns, 10)[6:10, ]\n\n                            country priority_years most_recent_priority_year\n13                            India             15                      2016\n25 Lao People's Democratic Republic             15                      2020\n36                      Philippines             14                      2020\n16                             Iraq             13                      2019\n8                          Cambodia             12                      2020\n   max_cases_per_100k\n13               5.47\n25              36.92\n36              58.08\n16             100.13\n8              100.98",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-continued",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table, continued",
+    "text": "Make a manuscript-style table, continued\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncountry\nsub_region\npriority_years\nmissing_information_years\nmost_recent_priority_year\nmax_cases_per_100k\n\n\n\n\n13\nIndia\nSouthern Asia\n15\n45\n2016\n5.47\n\n\n25\nLao People’s Democratic Republic\nNA\n15\n45\n2020\n36.92\n\n\n36\nPhilippines\nNA\n14\n45\n2020\n58.08\n\n\n16\nIraq\nWestern Asia\n13\n48\n2019\n100.13\n\n\n8\nCambodia\nSouth-eastern Asia\n12\n45\n2020\n100.98",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution-sort",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution-sort",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution sort",
+    "text": "Active checkpoint: solution sort\n\nafrica_summaries &lt;- africa_summaries[\n  order(-africa_summaries$priority_years, africa_summaries$country),\n]",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-solution-table-continued",
+    "href": "modules/Walkthrough2.html#active-checkpoint-solution-table-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: solution table, continued",
+    "text": "Active checkpoint: solution table, continued\n\nhead(africa_top_columns, 10)[6:10, ]\n\n                    country priority_years\n9  Central African Republic             19\n3                     Benin             18\n10                     Chad             18\n12                    Congo             18\n45                  Somalia             18",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-strict-solution-sort",
+    "href": "modules/Walkthrough2.html#active-checkpoint-strict-solution-sort",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: strict solution sort",
+    "text": "Active checkpoint: strict solution sort\n\nafrica_summaries_strict &lt;- africa_summaries_strict[\n  order(-africa_summaries_strict$priority_years, africa_summaries_strict$country),\n]",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-strict-solution-table",
+    "href": "modules/Walkthrough2.html#active-checkpoint-strict-solution-table",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: strict solution table",
+    "text": "Active checkpoint: strict solution table\n\nafrica_strict_top_columns &lt;- africa_summaries_strict[, c(\n  \"country\",\n  \"priority_years\"\n)]\n\nhead(africa_strict_top_columns, 5)\n\n                             country priority_years\n13 Congo, Democratic Republic of the             21\n45                           Somalia             17\n38                             Niger             16\n39                           Nigeria             15\n9           Central African Republic             13",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#active-checkpoint-strict-solution-table-continued",
+    "href": "modules/Walkthrough2.html#active-checkpoint-strict-solution-table-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Active checkpoint: strict solution table, continued",
+    "text": "Active checkpoint: strict solution table, continued\n\nhead(africa_strict_top_columns, 10)[6:10, ]\n\n    country priority_years\n10     Chad             13\n2    Angola             12\n12    Congo             11\n15 Djibouti             11\n28  Liberia             11",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#what-is-functional-programming-functionals",
+    "href": "modules/Module05-FunctionalProgramming.html#what-is-functional-programming-functionals",
+    "title": "Module 5: Functional Programming",
+    "section": "What is functional programming?: functionals",
+    "text": "What is functional programming?: functionals\n\nSpecifically, we want to be able to compose functions, which you might remember hating in precalculus.\n\n\\[g \\circ f = g(f(x))\\]\n\nIn computer science, a functional is a function that accepts a function as an argument.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#functional-vs.-imperative-programming-imperative",
+    "href": "modules/Module05-FunctionalProgramming.html#functional-vs.-imperative-programming-imperative",
+    "title": "Module 5: Functional Programming",
+    "section": "Functional vs. imperative programming: imperative",
+    "text": "Functional vs. imperative programming: imperative\n\nSo far, we’ve been using imperative programming: we save variables, and we update them with new commands. Our code is structured as a list of instructions.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#functional-vs.-imperative-programming-functional",
+    "href": "modules/Module05-FunctionalProgramming.html#functional-vs.-imperative-programming-functional",
+    "title": "Module 5: Functional Programming",
+    "section": "Functional vs. imperative programming: functional",
+    "text": "Functional vs. imperative programming: functional\n\nIn functional programming, we write everything as a function, and we get the results we want by composing many functions.\nBut we’re just going to show you some useful parts of functional programming that you can include in your regular code.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#ok-but-why-loop-result",
+    "href": "modules/Module05-FunctionalProgramming.html#ok-but-why-loop-result",
+    "title": "Module 5: Functional Programming",
+    "section": "Ok, but why?: loop result",
+    "text": "Ok, but why?: loop result\n\ndo.call(rbind, out)\n\n\n\n\ncountry\nmin\nQ1\nmedian\nQ3\nmax\n\n\n\n\nIndia\n3305\n31135.50\n47109.5\n80797.25\n252940\n\n\nPakistan\n386\n2065.50\n4075.5\n17422.00\n55543\n\n\nBangladesh\n203\n2193.75\n5270.5\n9889.50\n27327\n\n\nNepal\n59\n190.00\n1268.0\n3100.00\n13344",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#ok-but-why-lapply-result",
+    "href": "modules/Module05-FunctionalProgramming.html#ok-but-why-lapply-result",
+    "title": "Module 5: Functional Programming",
+    "section": "Ok, but why?: lapply() result",
+    "text": "Ok, but why?: lapply() result\n\ndo.call(rbind, out2)\n\n\n\n\ncountry\nmin\nQ1\nmedian\nQ3\nmax\n\n\n\n\nIndia\n3305\n31135.50\n47109.5\n80797.25\n252940\n\n\nPakistan\n386\n2065.50\n4075.5\n17422.00\n55543\n\n\nBangladesh\n203\n2193.75\n5270.5\n9889.50\n27327\n\n\nNepal\n59\n190.00\n1268.0\n3100.00\n13344\n\n\n\n\n\n\nFunctional programming techniques can help us avoid writing messy loops and clean up our code.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#anonymous-functions-named-equivalent",
+    "href": "modules/Module05-FunctionalProgramming.html#anonymous-functions-named-equivalent",
+    "title": "Module 5: Functional Programming",
+    "section": "Anonymous functions: named equivalent",
+    "text": "Anonymous functions: named equivalent\n\nThis code works just as well, but can be a bit of a hassle.\n\n\nget_country_stats_from_meas &lt;- function(code) get_country_stats(meas, code)\nout3 &lt;- lapply(country_codes, get_country_stats_from_meas)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#apply-and-friends-common-tools",
+    "href": "modules/Module05-FunctionalProgramming.html#apply-and-friends-common-tools",
+    "title": "Module 5: Functional Programming",
+    "section": "*apply() and friends: common tools",
+    "text": "*apply() and friends: common tools\n\nlapply(): repeat the function on a list of things.\nsapply(): same as lapply() but try to simplify the output to a matrix or vector.\napply(): repeat the function over the rows (margin = 1) or columns (margin = 2) of a matrix.\ntapply(): repeat the function over combinations of grouping factors.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#a-tapply-example-reshape-data",
+    "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example-reshape-data",
+    "title": "Module 5: Functional Programming",
+    "section": "A tapply() example: reshape data",
+    "text": "A tapply() example: reshape data\n\nmeas &lt;- readRDS(here::here(\"data\", \"measles_final.Rds\"))\nmeas_long &lt;- meas |&gt;\n    tidyr::pivot_longer(\n        dplyr::starts_with(\"MCV\"),\n        names_to = \"vaccine_antigen\",\n        values_to = \"vaccine_coverage\"\n    )",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#a-tapply-example-grouped-means-result",
+    "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example-grouped-means-result",
+    "title": "Module 5: Functional Programming",
+    "section": "A tapply() example: grouped means result",
+    "text": "A tapply() example: grouped means result\n\nhead(out, 4)\n\n\n\n\n\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nABW\nNA\nNA\n\n\nAFG\nNA\nNA\n\n\nAGO\nNA\nNA\n\n\nAIA\nNA\nNA",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#a-tapply-example-missing-values-result",
+    "href": "modules/Module05-FunctionalProgramming.html#a-tapply-example-missing-values-result",
+    "title": "Module 5: Functional Programming",
+    "section": "A tapply() example: missing values result",
+    "text": "A tapply() example: missing values result\n\nhead(out, 4)\n\n\n\n\n\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nABW\nNaN\nNaN\n\n\nAFG\n41.80952\n31.73684\n\n\nAGO\n47.17500\n22.75000\n\n\nAIA\nNaN\nNaN",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-inventory",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-inventory",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with lapply(): inventory",
+    "text": "You try it with lapply(): inventory\n\n\n[1] 10\n\n\n\n\n\n\nsheet\nrows\ncolumns\n\n\n\n\nMain_Dataset\nMain_Dataset\n288\n37\n\n\nOxygen_Delivery\nOxygen_Delivery\n42606\n6\n\n\nSOFA\nSOFA\n288\n8\n\n\nLong_Labs\nLong_Labs\n15919\n29\n\n\nLong_Vitals\nLong_Vitals\n143220\n11",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-matrix-setup",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-matrix-setup",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with apply(): matrix setup",
+    "text": "You try it with apply(): matrix setup\n\nd_matrix &lt;- sheet_list[[\"Main_Dataset\"]] |&gt;\n    dplyr::select(Died, `30D_Mortality`, `60D_Mortality`) |&gt;\n    as.matrix()\n\nhead(d_matrix, 4)\n\n\n\n\nDied\n30D_Mortality\n60D_Mortality\n\n\n\n\n1\n1\n1\n\n\n0\n0\n0\n\n\n0\n0\n0\n\n\n1\n1\n1",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-output-goal",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-output-goal",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): output goal",
+    "text": "You try it with split() + lapply(): output goal\n\nFind a way, using lapply() or sapply(), coef(), and do.call() to make a nice matrix of the coefficients.\nThis is a more advanced version of the same pattern you will use for repeated checks and model summaries in Exercise 2.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#summary-next-steps",
+    "href": "modules/Module05-FunctionalProgramming.html#summary-next-steps",
+    "title": "Module 5: Functional Programming",
+    "section": "Summary: next steps",
+    "text": "Summary: next steps\n\nSide note: purrr is a modern version of *apply() with a more consistent interface. It’s worth learning and covered in the Advanced R book, but most people still use *apply().\nThis book also covers more standard FP tools like reduction and filtering that we didn’t have time to talk about.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-report-pattern",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-report-pattern",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): report pattern",
+    "text": "You try it (more advanced): report pattern\n\nThis is the same formula and model-inspection pattern you will use in the Exercise 2 QCRC report.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-setup-continued",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-solution-setup-continued",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): solution setup, continued",
+    "text": "You try it (more advanced): solution setup, continued\n\n# A little cleaning for Race\nqcrc$Race &lt;- factor(qcrc$Race) |&gt;\n    # Make White the reference level\n    relevel(ref = \"Caucasian or White\") |&gt;\n    # Groups other than \"Caucasian or White\" and \"Black or African American\" are\n    # really small and heterogeneous so put them together\n    # Not ideal but sometimes the best we can do\n    forcats::fct_lump_n(n = 2)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/ODEs.html#sanity-checks-code",
+    "href": "modules/ODEs.html#sanity-checks-code",
+    "title": "Day 3: ODEs with deSolve",
+    "section": "Sanity checks: code",
+    "text": "Sanity checks: code\n\nrange(sir_df$S, sir_df$I, sir_df$R)\n\n[1]   0.0000 999.4448\n\nsir_total &lt;- sir_df$S + sir_df$I + sir_df$R\nrange(sir_total)\n\n[1] 1000 1000",
+    "crumbs": [
+      "Day 3 core",
+      "ODEs with deSolve"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough1.html#active-checkpoint-solution-table-continued",
+    "href": "modules/Walkthrough1.html#active-checkpoint-solution-table-continued",
+    "title": "Data science walkthrough 1: Conditionals",
+    "section": "Active checkpoint: solution table, continued",
+    "text": "Active checkpoint: solution table, continued\n\ntail(afghanistan_labels, 7)\n\n      year       priority_year\nNA.7    NA missing information\nNA.8    NA missing information\nNA.9    NA missing information\nNA.10   NA missing information\nNA.11   NA missing information\nNA.12   NA missing information\nNA.13   NA missing information",
+    "crumbs": [
+      "Day 1 core",
+      "Data science walkthrough 1: conditionals"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#repeat-with-a-for-loop-result",
+    "href": "modules/Walkthrough2.html#repeat-with-a-for-loop-result",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Repeat with a for loop: result",
+    "text": "Repeat with a for loop: result\n\ncountry_summaries[, c(\n  \"country\",\n  \"priority_years\",\n  \"most_recent_priority_year\",\n  \"max_cases_per_100k\"\n)]\n\n      country priority_years most_recent_priority_year max_cases_per_100k\n1 Afghanistan             22                      2022              44.50\n2  Bangladesh              9                      2012              18.40\n3       India             15                      2016               5.47\n4       Nepal             16                      2020              51.96\n5    Pakistan             18                      2022              15.02",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-top-countries",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-top-countries",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table: top countries",
+    "text": "Make a manuscript-style table: top countries\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncountry\nsub_region\npriority_years\nmissing_information_years\nmost_recent_priority_year\nmax_cases_per_100k\n\n\n\n\n1\nAfghanistan\nSouthern Asia\n22\n45\n2022\n44.50\n\n\n14\nIndonesia\nSouth-eastern Asia\n19\n45\n2022\n12.91\n\n\n34\nPakistan\nNA\n18\n45\n2022\n15.02\n\n\n50\nYemen\nNA\n17\n46\n2022\n144.43\n\n\n32\nNepal\nNA\n16\n45\n2020\n51.96",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-solution-inventory",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-lapply-solution-inventory",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with lapply(): solution inventory",
+    "text": "You try it with lapply(): solution inventory\n\nsheet_inventory &lt;- data.frame(\n    sheet = names(sheet_list),\n    rows = sapply(sheet_list, nrow),\n    columns = sapply(sheet_list, ncol)\n)",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-hint-continued",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-apply-hint-continued",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with apply(): hint, continued",
+    "text": "You try it with apply(): hint, continued\n\nYou can tell if you chose the correct MARGIN argument by counting the number of elements in the output.\nThere should be 3, one for each column.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-summary-table",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-model-summary-table",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): model summary table",
+    "text": "You try it (more advanced): model summary table\n\n\n\n\n\n\n\n\n\n\n\n\n\nEstimate\nStd. Error\nz value\nPr(&gt;|z|)\n\n\n\n\n(Intercept)\n-2.032\n0.788\n-2.580\n0.010\n\n\nRemdesivir_or_placebo\n-0.811\n0.387\n-2.097\n0.036\n\n\nd_dimer\n0.165\n0.099\n1.662\n0.096\n\n\nRaceAfrican American or Black\n0.118\n0.348\n0.339\n0.735\n\n\nRaceOther\n0.577\n0.465\n1.239\n0.215",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-confidence-interval-table",
+    "href": "modules/Module06-S3-lm-formulas.html#you-try-it-more-advanced-confidence-interval-table",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "You try it (more advanced): confidence interval table",
+    "text": "You try it (more advanced): confidence interval table\n\n\n\n\n\n\n2.5 %\n97.5 %\n\n\n\n\n(Intercept)\n0.03\n0.61\n\n\nRemdesivir_or_placebo\n0.20\n0.92\n\n\nd_dimer\n0.97\n1.44\n\n\nRaceAfrican American or Black\n0.58\n2.28\n\n\nRaceOther\n0.71\n4.47",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-counts",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-counts",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table: counts",
+    "text": "Make a manuscript-style table: counts\n\nhead(top_asia_counts, 5)\n\n       country         sub_region priority_years\n1  Afghanistan      Southern Asia             22\n14   Indonesia South-eastern Asia             19\n34    Pakistan               &lt;NA&gt;             18\n50       Yemen               &lt;NA&gt;             17\n32       Nepal               &lt;NA&gt;             16",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-counts-continued",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-counts-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table: counts, continued",
+    "text": "Make a manuscript-style table: counts, continued\n\ntail(top_asia_counts, 5)\n\n                            country         sub_region priority_years\n13                            India      Southern Asia             15\n25 Lao People's Democratic Republic               &lt;NA&gt;             15\n36                      Philippines               &lt;NA&gt;             14\n16                             Iraq       Western Asia             13\n8                          Cambodia South-eastern Asia             12",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-details",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-details",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table: details",
+    "text": "Make a manuscript-style table: details\n\nhead(top_asia_details, 5)\n\n       country missing_information_years most_recent_priority_year\n1  Afghanistan                        45                      2022\n14   Indonesia                        45                      2022\n34    Pakistan                        45                      2022\n50       Yemen                        46                      2022\n32       Nepal                        45                      2020\n   max_cases_per_100k\n1               44.50\n14              12.91\n34              15.02\n50             144.43\n32              51.96",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Walkthrough2.html#make-a-manuscript-style-table-details-continued",
+    "href": "modules/Walkthrough2.html#make-a-manuscript-style-table-details-continued",
+    "title": "Data science walkthrough 2: Repeating an analysis",
+    "section": "Make a manuscript-style table: details, continued",
+    "text": "Make a manuscript-style table: details, continued\n\ntail(top_asia_details, 5)\n\n                            country missing_information_years\n13                            India                        45\n25 Lao People's Democratic Republic                        45\n36                      Philippines                        45\n16                             Iraq                        48\n8                          Cambodia                        45\n   most_recent_priority_year max_cases_per_100k\n13                      2016               5.47\n25                      2020              36.92\n36                      2020              58.08\n16                      2019             100.13\n8                       2020             100.98",
+    "crumbs": [
+      "Day 2 core",
+      "Data science walkthrough 2: iteration"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#utility-of-s3-methods-examples",
+    "href": "modules/Module06-S3-lm-formulas.html#utility-of-s3-methods-examples",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Utility of S3 methods: examples",
+    "text": "Utility of S3 methods: examples\n\ncat(head(formula_methods, 4), sep = \"\\n\")\n\n[.formula\naggregate.formula\nalias.formula\nall.equal.formula\n\n\n\nAnd that doesn’t include functions like lm() which ONLY have methods for formulas, not generics.",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-coefficient-table",
+    "href": "modules/Module05-FunctionalProgramming.html#you-try-it-with-split-lapply-coefficient-table",
+    "title": "Module 5: Functional Programming",
+    "section": "You try it with split() + lapply(): coefficient table",
+    "text": "You try it with split() + lapply(): coefficient table\n\n\n\n\n\n\n(Intercept)\nMCV1_coverage\nMCV2_coverage\n\n\n\n\nAfrica\n17.676\n-0.281\n0.142\n\n\nAmericas\n7.279\n-0.079\n0.017\n\n\nAsia\n11.417\n-0.044\n0.014\n\n\nEurope\n-12.027\n0.184\n0.001\n\n\nOceania\n-4.187\n0.036\n0.011",
+    "crumbs": [
+      "Day 2 core",
+      "Module 5: Functional programming"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-model-object-names",
+    "href": "modules/Module06-S3-lm-formulas.html#s3-classes-and-types-model-object-names",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "S3 classes (and types): model object names",
+    "text": "S3 classes (and types): model object names\n\nclass(an_lm)\n\n[1] \"lm\"\n\ncat(head(names(an_lm), 8), sep = \"\\n\")\n\ncoefficients\nresiduals\neffects\nrank\nfitted.values\nassign\nqr\ndf.residual",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-S3-lm-formulas.html#formula-example-vector-result",
+    "href": "modules/Module06-S3-lm-formulas.html#formula-example-vector-result",
+    "title": "Module 6: S3 and R Formulas",
+    "section": "Formula example: vector result",
+    "text": "Formula example: vector result\n\ncat(sprintf(\n    \"estimate: %.3f\\np-value: %.3g\\n\",\n    unname(vector_cor$estimate),\n    vector_cor$p.value\n))\n\nestimate: -0.447\np-value: 0.00263",
+    "crumbs": [
+      "Day 2 core",
+      "Module 6: S3 and formulas"
     ]
   }
 ]
