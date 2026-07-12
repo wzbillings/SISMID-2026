@@ -1,5 +1,5 @@
 ---
-title: "Intro To Quarto"
+title: "Module 1: Quarto"
 format: revealjs
 editor: visual
 ---

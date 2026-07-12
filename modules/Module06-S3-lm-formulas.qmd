@@ -1,5 +1,5 @@
 ---
-title: "Module 6: S3 and R Formulas"
+title: "Module 7: S3 and R Formulas"
 format:
   revealjs:
     toc: false

@@ -1,5 +1,5 @@
 ---
-title: "Disease mapping and GIS"
+title: "Module 9: Disease mapping and GIS"
 format:
   revealjs:
     toc: false

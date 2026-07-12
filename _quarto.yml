@@ -33,11 +33,7 @@ website:
             href: support/dataset-catalog.qmd
           - text: "Troubleshooting checklist"
             href: support/troubleshooting.qmd
-          - text: "Model-reporting cheat sheet"
-            href: support/model-reporting.qmd
-          - text: "Loops/functions/apply guide"
-            href: support/loops-functions-apply.qmd
-      - section: "Day 1 core"
+      - section: "Day 1 material"
         contents:
           - text: "Module 0: Welcome"
             href: modules/Module00-Welcome.qmd
@@ -54,36 +50,33 @@ website:
           - text: "Module 4: Writing functions"
             href: modules/Module04-Functions.qmd
             target: _blank
-          - text: "Data science walkthrough 1: conditionals"
+          - text: "Data science walkthrough 1"
             href: modules/Walkthrough1.qmd
             target: _blank
-      - section: "Day 2 core"
+      - section: "Day 2 material"
         contents:
           - text: "Module 5: Functional programming"
             href: modules/Module05-FunctionalProgramming.qmd
             target: _blank
-          - text: "Useful R packages"
+          - text: "Module 6: Useful R packages"
             href: modules/UsefulPackages.qmd
             target: _blank
-          - text: "Module 6: S3 and formulas"
+          - text: "Module 7: S3 and formulas"
             href: modules/Module06-S3-lm-formulas.qmd
             target: _blank
-          - text: "Data science walkthrough 2: iteration"
+          - text: "Data science walkthrough 2"
             href: modules/Walkthrough2.qmd
             target: _blank
-      - section: "Day 3 core"
+      - section: "Day 3 material"
         contents:
-          - text: "ODEs with deSolve"
+          - text: "Module 8: ODEs with deSolve"
             href: modules/ODEs.qmd
             target: _blank
-          - text: "Disease mapping and GIS"
+          - text: "Module 9: Disease mapping and GIS"
             href: modules/DiseaseMapping.qmd
             target: _blank
       - section: "Exercises"
         contents:
-          - text: "QCRC report checklist/rubric"
-            href: exercises/qcrc-report-checklist-rubric.qmd
-            target: _blank
           - text: "QCRC starter template"
             href: exercises/qcrc-mini-manuscript-starter.qmd
             target: _blank
@@ -93,7 +86,7 @@ website:
           - text: "Exercise 2"
             href: exercises/Exercise2.qmd
             target: _blank
-      - section: "Optional / advanced / take-home"
+      - section: "Advanced take-home materials"
         contents:
           - text: "Bootstrapping"
             href: modules/bootstrapping.qmd

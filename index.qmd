@@ -8,18 +8,6 @@ This website contains the material for the [2026 Summer Institute in Statistics
 and Modeling in Infectious Diseases (SISMID) Module "R Programming for
 Infectious Disease Modeling"](https://sismid.sph.emory.edu/modules/intro-to-r/index.html).
 
-## 2026 course path {.unnumbered}
-
-The core course covers Quarto, statistics in R, iteration, functions,
-functional programming, useful R packages, formulas and model objects, ODEs, and
-disease mapping/GIS. Exercise 1 begins on Day 1 and continues on Day 2; Exercise
-2 begins on Day 2 and gives you structured time to build a short Quarto report.
-
-Bootstrapping, Arrow, and power simulation are available as optional or
-take-home materials. General sample-size demonstrations and the advanced linear
-models draft are archived for 2026 rather than presented as active course
-modules.
-
 ## Prerequisites {.unnumbered}
 
 Participants are expected to have a basic understanding of R, including how to
@@ -45,6 +33,18 @@ After installing, run the [setup check](support/setup-check.qmd). It confirms
 that R, Quarto, the main packages, and the QCRC data are ready before the first
 exercise.
 
+## Website info {.unnumbered}
+
+The core course covers Quarto, statistics in R, iteration, functions,
+functional programming, useful R packages, formulas and model objects, ODEs, and
+disease mapping/GIS. Exercise 1 begins on Day 1 and continues on Day 2; Exercise
+2 begins on Day 2 and gives you structured time to build a short Quarto report.
+
+Bootstrapping, Arrow, and power simulation are available as optional or
+take-home materials. General sample-size demonstrations and the advanced linear
+models draft are archived for 2026 rather than presented as active course
+modules.
+
 ## About the instructors {.unnumbered}
 
 <div class="container">
@@ -69,7 +69,7 @@ endeavors.
 <div class="box" style="--width: 50%">
 <h3 style="margin-top:0px; text-align: center">Co-Instructor: [Zane Billings](https://wzbillings.com/ )</h3>
 
-<img src="./images/zane.JPG" style="width: 100%"/>
+<img src="./images/zane.jpg" style="width: 100%"/>
 
 Zane Billings is a Data Scientist at State Farm. He completed his PhD in 2025 at
 the University of Georgia under the supervision of Andreas Handel. Zane has been

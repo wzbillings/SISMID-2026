@@ -1,5 +1,5 @@
 ---
-title: "Day 3: ODEs with deSolve"
+title: "Module 8: ODEs with deSolve"
 format:
   revealjs:
     toc: false

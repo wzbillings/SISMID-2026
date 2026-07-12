@@ -8,7 +8,7 @@ title: "Course Schedule"
 * Tuesday, July 14, 9:00 AM - 5:00 PM
 * Wednesday, July 15, 9:00 AM - 12:30 PM
 
-*Location:* TBA
+*Location:* Randall Rollins 205
 
 ::: {.callout-important}
 All times are in Eastern Daylight Time (EDT; UTC-4).
@@ -38,10 +38,10 @@ All times are in Eastern Daylight Time (EDT; UTC-4).
 |:--------------------|:--------|
 | 09:00 am - 10:30 am | Module 5: Functional programming |
 | 10:30 am - 11:00 am | Coffee break |
-| 11:00 am - 11:45 am | [Useful R packages for analysis and reporting](modules/UsefulPackages.qmd) |
+| 11:00 am - 11:45 am | [Module 6: Useful R packages for analysis and reporting](modules/UsefulPackages.qmd) |
 | 11:45 am - 12:00 pm | Exercise 1 continuation and questions |
 | 12:00 pm - 01:00 pm | Lunch (2nd floor lobby); **Lunch and Learn!** |
-| 01:00 pm - 02:15 pm | Module 6: S3, formulas, and model objects |
+| 01:00 pm - 02:15 pm | Module 7: S3, formulas, and model objects |
 | 02:15 pm - 03:00 pm | [Data science walkthrough 2: iteration and functional programming](modules/Walkthrough2.qmd) |
 | 03:00 pm - 03:30 pm | Coffee break |
 | 03:30 pm - 04:15 pm | Exercise 1 continuation, debrief, and transition |
@@ -53,9 +53,10 @@ All times are in Eastern Daylight Time (EDT; UTC-4).
 
 | Time                | Section |
 |:--------------------|:--------|
-| 09:00 am - 10:30 am | [ODEs in R with `deSolve`](modules/ODEs.qmd) |
+| 09:00 am - 09:30 am | Open questions, review |
+| 09:30 am - 10:30 am | [Module 8: ODEs in R with `deSolve`](modules/ODEs.qmd) |
 | 10:30 am - 11:00 am | Coffee break |
-| 11:00 am - 12:00 pm | [Disease mapping and GIS](modules/DiseaseMapping.qmd) |
-| 12:00 pm - 12:30 pm | Open questions, review, and Exercise 2 support |
+| 11:00 am - 12:00 pm | [Module 9: Disease mapping and GIS](modules/DiseaseMapping.qmd) |
+| 12:00 pm - 12:30 pm | Open questions, wrap-up |
 
 : {.striped .hover tbl-colwidths="[25,75]"}

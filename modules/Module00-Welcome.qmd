@@ -1,5 +1,5 @@
 ---
-title: "Welcome!"
+title: "Module 0: Welcome"
 format: 
   revealjs:
     scrollable: true
@@ -11,6 +11,8 @@ editor:
 ---
 
 ## Welcome to SISMID Workshop: R Programming for Infectious Disease Modeling!
+
+</br>
 
 **Alex Edwards (Any)**
 
@@ -25,7 +27,7 @@ Email: Alex.edwards\@emory.edu
 
 Data Scientist, State Farm
 
-Email: wzbillings\@proton.me
+Email: wz.billings\@gmail.com
 
 ## Introductions
 
@@ -36,14 +38,9 @@ Email: wzbillings\@proton.me
 ## Course website
 
 -   All of the materials for this course can be found online here:
-    https://wzbillings.github.io/SISMID-2026/.
+    [https://wzbillings.github.io/SISMID-2026/](https://wzbillings.github.io/SISMID-2026/).
 -   This contains the schedule, course resources, and online versions of
     all of our slide decks.
--   The **Course Resources** page explains how to download the full
-    repository, individual data files, and editable exercise files.
--   The **Learner support** pages include a setup check, dataset catalog,
-    troubleshooting checklist, model-reporting cheat sheet, and
-    loops/functions/apply guide.
 -   Please feel free to download these resources and share them -- all
     of the course content is under the [Creative Commons BY-NC 4.0
     license](https://creativecommons.org/licenses/by-nc/4.0/).
@@ -77,43 +74,7 @@ The 2026 core schedule is set, and we also keep a few optional or take-home topi
 - Day 1 core: Quarto, statistics in R, iteration, functions, data science walkthrough 1, and Exercise 1.
 - Day 2 core: functional programming, useful packages, S3/formulas, data science walkthrough 2, Exercise 1 continuation, and Exercise 2.
 - Day 3 core: ODEs in R, disease mapping/GIS, and time for questions.
-- Optional or take-home: bootstrapping, Arrow, and power simulation.
-
-## Useful (+ Free) Resources
-
-**Want more?**
-
--   R for Data Science: https://r4ds.hadley.nz/\
-    (great general information)
-
--   Fundamentals of Data Visualization: https://clauswilke.com/dataviz/
-
--   R for Epidemiology: https://www.r4epi.com/
-
--   The Epidemiologist R Handbook: https://epirhandbook.com/en/
-
--   R basics by Rafael A. Irizarry:
-    https://rafalab.github.io/dsbook/r-basics.html (great general
-    information)
-
--   Open Case Studies: https://www.opencasestudies.org/\
-    (resource for specific public health cases with statistical
-    implementation and interpretation)
-
-## Useful (+Free) Resources
-
-**Need help?**
-
--   Various "Cheat Sheets": https://github.com/rstudio/cheatsheets/
-
--   R reference card:
-    http://cran.r-project.org/doc/contrib/Short-refcard.pdf
-
--   R jargon:
-    https://link.springer.com/content/pdf/bbm%3A978-1-4419-1318-0%2F1.pdf
-
--   R terminology:
-    https://cran.r-project.org/doc/manuals/r-release/R-lang.pdf
+- Our website lists additional free resources for learning R in a stats and epi context, and also has some more advanced materials you can use to practice what you've learned if you want.
 
 ## Installing R
 

@@ -1,5 +1,5 @@
 ---
-title: "Useful R packages"
+title: "Module 6: Useful R packages"
 format:
   revealjs:
     toc: false

@@ -1,5 +1,5 @@
 ---
-title: "Inferential Statistics and Modeling Review"
+title: "Module 2: Stats in R"
 echo: TRUE
 format:
   revealjs: 
