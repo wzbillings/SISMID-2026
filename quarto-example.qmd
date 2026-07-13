@@ -1,0 +1,67 @@
+---
+title: "My report"
+author: "Zane"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+## My report section
+
+The number of rows in the iris dataset is `r nrow(iris)`
+
+```{r}
+plot(iris$Sepal.Length, iris$Petal.Length)
+```
+
+Let's do some summary statistics.
+
+```{r}
+#| echo: false
+
+my_model \<- lm(iris$Petal.Length ~ iris$Sepal.Length)
+
+my_summary \<- summary(my_model)
+
+r2 \<- my_summary\$adj.r.square
+```
+
+The $R^2$ for the linear model that I fit was `r round(r2, 2)`.
+
+$\hat{y}=\hat{\beta}_0 + \hat{\beta}_1$
+
+My equation for this line is:
+
+$$
+y = \beta_0 + \beta_1Sex+\beta_2Time +\epsilon
+$$
+
+$R^2_1$
+
+\$ \displaystyle\sum\_{i=1}\^{23} x\^2 \$
+
+We can calculate the integral
+
+$$
+\int_{\mathbb{R}} x \ dx \ \text{ where } x is some number
+$$
