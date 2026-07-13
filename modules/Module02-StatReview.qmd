@@ -3,7 +3,6 @@ title: "Module 2: Stats in R"
 echo: TRUE
 format:
   revealjs: 
-    theme: dark
     code-line-numbers: false
 bibliography: references.bib
 ---

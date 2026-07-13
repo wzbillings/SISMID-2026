@@ -30,7 +30,7 @@ library(printr)
 
 - Yes, but we are using the technical definition of functional programming: programming that is based on functions.
 
-## What is functional programming?: functionals
+## What is functional programming?
 
 - Specifically, we want to be able to compose functions, which you might remember hating in precalculus.
 
@@ -38,22 +38,20 @@ $$g \circ f = g(f(x))$$
 
 - In computer science, a **functional** is a function that accepts a function as an argument.
 
-## Functional vs. imperative programming: imperative
+## Functional vs. imperative programming
 
 - So far, we've been using **imperative** programming: we save variables, and we update them with new commands. Our code is structured as a list of instructions.
 
-## Functional vs. imperative programming: functional
-
 - In **functional** programming, we write everything as a function, and we get the results we want by composing many functions.
 
-- But we're just going to show you some useful parts of functional programming that you can include in your regular code.
+- We'll show you some useful functional programming tools, we aren't expecting you to write crazy code.
 
 ## Ok, but why?
 
 - Recall our function from the previous Module.
 - It takes one country code and returns one row of summary statistics.
 
-## Ok, but why?: one-country function
+## Ok, but why?
 
 ```{r eval=TRUE, echo=TRUE}
 get_country_stats <- function(df, iso3_code){
@@ -82,7 +80,7 @@ get_country_stats <- function(df, iso3_code){
 }
 ```
 
-## Ok, but why?: repeat with a loop
+## Ok, but why?
 
 - We could write a loop to get stats for many countries.
 
@@ -97,13 +95,13 @@ for (i in seq_along(country_codes)) {
 }
 ```
 
-## Ok, but why?: loop result
+## Ok, but why?
 
 ```{r}
 do.call(rbind, out)
 ```
 
-## Ok, but why?: repeat with `lapply()`
+## Ok, but why?
 
 - But if we use a functional programming tool called `lapply`, look how easy it is!
 
@@ -111,7 +109,7 @@ do.call(rbind, out)
 out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
 ```
 
-## Ok, but why?: `lapply()` result
+## Ok, but why?
 
 ```{r}
 do.call(rbind, out2)
@@ -123,8 +121,8 @@ do.call(rbind, out2)
 
 - R is a functional programming language at its core.
 - In R, functions are objects like everything else.
-- You never *have* to use FP, but it can help you write neater code.
-- More information: https://adv-r.hadley.nz/fp.html.
+- You never *have* to use FP, but FP tools can help you write neat and efficient code.
+- More information: [Advanced R book](https://adv-r.hadley.nz/fp.html).
 
 ## Anonymous functions
 
@@ -136,12 +134,13 @@ out2 <- lapply(country_codes, function(code) get_country_stats(meas, code))
 
 . . .
 
-- The function `function(code) get_country_stats(meas, code)` is called an **anonymous function** (or sometimes a lambda).
+- The function `function(code) get_country_stats(meas, code)` is called an **anonymous function** (or sometimes a lambda, in Python and C especially).
 - It's anonymous because it has no name assigned -- this is just a shortcut for when you only need a function once.
 - In R, you can also write `\(code) ...` as a shortcut for writing `function(code) ...` as an anonymous function.
 
-## Anonymous functions: named equivalent
+## Anonymous functions
 
+- You never *need* an anonymous function, so if you don't like them, don't use them!
 - This code works just as well, but can be a bit of a hassle.
 
 ```{r}
@@ -151,10 +150,7 @@ out3 <- lapply(country_codes, get_country_stats_from_meas)
 
 ## `*apply()` and friends {.incremental}
 
-- R includes many functional programming tools collectively called `*apply()`. Here are the specific ones that are most useful:
-
-## `*apply()` and friends: common tools
-
+- `*apply()` is a powerful and useful set of FP tools in R.
 - `lapply()`: repeat the function on a list of things.
 - `sapply()`: same as `lapply()` but try to simplify the output to a matrix or vector.
 - `apply()`: repeat the function over the rows (`margin = 1`) or columns (`margin = 2`) of a matrix.
@@ -166,7 +162,7 @@ out3 <- lapply(country_codes, get_country_stats_from_meas)
 - We want to get the average vaccine coverage for each country in the measles dataset -- we need to separate this by the two vaccines as well.
 - First reshape the vaccine columns into one long coverage column.
 
-## A `tapply()` example: reshape data
+## A `tapply()` example
 
 ```{r}
 meas <- readRDS(here::here("data", "measles_final.Rds"))
@@ -176,9 +172,11 @@ meas_long <- meas |>
 		names_to = "vaccine_antigen",
 		values_to = "vaccine_coverage"
 	)
+
+str(meas_long)
 ```
 
-## A `tapply()` example: grouped means
+## A `tapply()` example
 
 - Once the data are long, `tapply()` can average coverage by country and vaccine.
 
@@ -190,13 +188,13 @@ out <- tapply(
 )
 ```
 
-## A `tapply()` example: grouped means result
+## A `tapply()` example
 
 ```{r}
 head(out, 4)
 ```
 
-## A `tapply()` example: missing values
+## A `tapply()` example
 
 - Uh oh.
 - If we want to handle the missing values, we can use an anonymous function.
@@ -209,7 +207,7 @@ out <- tapply(
 )
 ```
 
-## A `tapply()` example: missing values result
+## A `tapply()` example
 
 ```{r}
 head(out, 4)
@@ -217,16 +215,12 @@ head(out, 4)
 
 ## You try it with `lapply()`!
 
-**Student prompt**
-
 - Read all sheets of the `QCRC_FINAL_Deidentified.xlsx` workbook using a vector of sheet names and `lapply()`.
 - Name the resulting list with the sheet names.
 - Make a small workbook inventory with one row per sheet and columns for sheet name, number of rows, and number of columns.
 - This is the same repeated-data task you will use in the Exercise 2 report appendix.
 
 ## You try it with `lapply()`: hint
-
-**Hint**
 
 ```{r, eval = FALSE}
 data_file <- here::here("data", "QCRC_FINAL_Deidentified.xlsx")
@@ -260,7 +254,7 @@ sheet_list <- lapply(
 names(sheet_list) <- sheet_names
 ```
 
-## You try it with `lapply()`: solution inventory
+## You try it with `lapply()`: solution
 
 ```{r}
 sheet_inventory <- data.frame(
@@ -270,7 +264,7 @@ sheet_inventory <- data.frame(
 )
 ```
 
-## You try it with `lapply()`: inventory
+## You try it with `lapply()`: solution
 
 ```{r}
 #| echo: false

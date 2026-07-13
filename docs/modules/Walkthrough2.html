@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Data science walkthrough 2: Repeating an analysis</title>
+  <title>SISMID R for ID Materials (2026) – Data science walkthrough 2</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -193,7 +193,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Data science walkthrough 2: Repeating an analysis</h1>
+  <h1 class="title">Data science walkthrough 2</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -209,20 +209,18 @@
 </div>
 
 </section>
-<section id="the-same-problem-repeated" class="slide level2">
-<h2>The same problem, repeated</h2>
-<p>In Walkthrough 1, we answered one country-level question:</p>
+<section id="from-one-region-to-many-countries" class="slide level2">
+<h2>From one region to many countries</h2>
+<p>Last time we looked at coverage and incidence in one specific region.</p>
+<p>That works when the question is small enough to inspect directly.</p>
+<p>This time, let’s think about a bigger manuscript problem:</p>
 <blockquote>
-<p>In Pakistan since 2000, which years should we flag because MCV1 coverage was low and measles incidence was elevated?</p>
-</blockquote>
-<p>Today we ask the next manuscript question:</p>
-<blockquote>
-<p>Is Pakistan unusual, or do we see the same pattern across other countries in the region?</p>
+<p>How can we flag issues across multiple countries when there is too much data to look through manually?</p>
 </blockquote>
 </section>
 <section id="what-changes-today" class="slide level2">
 <h2>What changes today?</h2>
-<p>The analysis rule does not change:</p>
+<p>To make the repeated task concrete, we will use a simple flagging rule:</p>
 <blockquote>
 <p>Priority year = MCV1 coverage below 90% and at least 1 measles case per 100,000 people.</p>
 </blockquote>
@@ -237,13 +235,9 @@
 <section id="load-the-data" class="slide level2">
 <h2>Load the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>data_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
 <span id="cb1-2"><a></a></span>
-<span id="cb1-3"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(data_file)) {</span>
-<span id="cb1-4"><a></a>  data_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
-<span id="cb1-5"><a></a>}</span>
-<span id="cb1-6"><a></a></span>
-<span id="cb1-7"><a></a>measles <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a></a>measles <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(data_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="before-we-loop" class="slide level2">
@@ -257,7 +251,9 @@
 <li>Count the priority years.</li>
 <li>Return one row of results.</li>
 </ol>
-<p>That is a function-shaped problem.</p>
+<div class="fragment">
+<p>Sounds like a good use of a function!</p>
+</div>
 </section>
 <section id="function-1-apply-the-rule" class="slide level2">
 <h2>Function 1: apply the rule</h2>
@@ -268,20 +264,15 @@
 <span id="cb2-4"><a></a>  country_data<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> (</span>
 <span id="cb2-5"><a></a>    country_data<span class="sc">$</span>measles_cases <span class="sc">/</span> country_data<span class="sc">$</span>population <span class="sc">*</span> <span class="dv">100000</span></span>
 <span id="cb2-6"><a></a>  )</span>
-<span id="cb2-7"><a></a></span>
-<span id="cb2-8"><a></a>  country_data<span class="sc">$</span>priority_year <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb2-9"><a></a>    <span class="fu">is.na</span>(country_data<span class="sc">$</span>MCV1_coverage) <span class="sc">|</span> <span class="fu">is.na</span>(country_data<span class="sc">$</span>cases_per_100k),</span>
-<span id="cb2-10"><a></a>    <span class="st">"missing information"</span>,</span>
-<span id="cb2-11"><a></a>    <span class="fu">ifelse</span>(</span>
-<span id="cb2-12"><a></a>      country_data<span class="sc">$</span>MCV1_coverage <span class="sc">&lt;</span> coverage_cutoff <span class="sc">&amp;</span></span>
-<span id="cb2-13"><a></a>        country_data<span class="sc">$</span>cases_per_100k <span class="sc">&gt;=</span> incidence_cutoff,</span>
-<span id="cb2-14"><a></a>      <span class="st">"priority year"</span>,</span>
-<span id="cb2-15"><a></a>      <span class="st">"not priority"</span></span>
-<span id="cb2-16"><a></a>    )</span>
-<span id="cb2-17"><a></a>  )</span>
-<span id="cb2-18"><a></a></span>
-<span id="cb2-19"><a></a>  country_data</span>
-<span id="cb2-20"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a>  </span>
+<span id="cb2-8"><a></a>  mcv_coverage_flag <span class="ot">&lt;-</span> country_data<span class="sc">$</span>MCV1_coverage <span class="sc">&lt;</span> coverage_cutoff</span>
+<span id="cb2-9"><a></a>  </span>
+<span id="cb2-10"><a></a>  incidence_flag <span class="ot">&lt;-</span> country_data<span class="sc">$</span>cases_per_100k <span class="sc">&gt;=</span> incidence_cutoff</span>
+<span id="cb2-11"><a></a></span>
+<span id="cb2-12"><a></a>  country_data<span class="sc">$</span>priority_year <span class="ot">&lt;-</span> mcv_coverage_flag <span class="sc">&amp;</span> incidence_flag</span>
+<span id="cb2-13"><a></a></span>
+<span id="cb2-14"><a></a>  <span class="fu">return</span>(country_data)</span>
+<span id="cb2-15"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="test-the-rule-on-one-country" class="slide level2">
@@ -294,15 +285,17 @@
 <span id="cb3-5"><a></a>pakistan <span class="ot">&lt;-</span> pakistan[<span class="fu">order</span>(pakistan<span class="sc">$</span>year), ]</span>
 <span id="cb3-6"><a></a>pakistan <span class="ot">&lt;-</span> <span class="fu">add_priority_rule</span>(pakistan)</span>
 <span id="cb3-7"><a></a></span>
-<span id="cb3-8"><a></a><span class="fu">tail</span>(pakistan[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"MCV1_coverage"</span>, <span class="st">"cases_per_100k"</span>, <span class="st">"priority_year"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a></a><span class="fu">head</span>(pakistan[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"MCV1_coverage"</span>, <span class="st">"cases_per_100k"</span>, <span class="st">"priority_year"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      year MCV1_coverage cases_per_100k       priority_year
-NA.18   NA            NA             NA missing information
-NA.19   NA            NA             NA missing information
-NA.20   NA            NA             NA missing information
-NA.21   NA            NA             NA missing information
-NA.22   NA            NA             NA missing information
-NA.23   NA            NA             NA missing information</code></pre>
+<pre><code># A tibble: 6 × 4
+   year MCV1_coverage cases_per_100k priority_year
+  &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt; &lt;lgl&gt;        
+1  2000            57           1.34 TRUE         
+2  2001            59           2.42 TRUE         
+3  2002            60           2.39 TRUE         
+4  2003            62           2.84 TRUE         
+5  2004            63           2.49 TRUE         
+6  2005            61           1.71 TRUE         </code></pre>
 </div>
 </div>
 </section>
@@ -314,37 +307,35 @@ NA.23   NA            NA             NA missing information</code></pre>
 <span id="cb5-3"><a></a>                                     <span class="at">min_year =</span> <span class="dv">2000</span>,</span>
 <span id="cb5-4"><a></a>                                     <span class="at">coverage_cutoff =</span> <span class="dv">90</span>,</span>
 <span id="cb5-5"><a></a>                                     <span class="at">incidence_cutoff =</span> <span class="dv">1</span>) {</span>
-<span id="cb5-6"><a></a>  country_data <span class="ot">&lt;-</span> data[</span>
-<span id="cb5-7"><a></a>    data<span class="sc">$</span>country <span class="sc">==</span> country_name <span class="sc">&amp;</span> data<span class="sc">$</span>year <span class="sc">&gt;=</span> min_year,</span>
-<span id="cb5-8"><a></a>  ]</span>
-<span id="cb5-9"><a></a></span>
-<span id="cb5-10"><a></a>  country_data <span class="ot">&lt;-</span> <span class="fu">add_priority_rule</span>(</span>
-<span id="cb5-11"><a></a>    country_data, coverage_cutoff, incidence_cutoff</span>
-<span id="cb5-12"><a></a>  )</span>
-<span id="cb5-13"><a></a></span>
-<span id="cb5-14"><a></a>  priority_years <span class="ot">&lt;-</span> country_data<span class="sc">$</span>year[</span>
-<span id="cb5-15"><a></a>    country_data<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span></span>
-<span id="cb5-16"><a></a>  ]</span>
-<span id="cb5-17"><a></a></span>
-<span id="cb5-18"><a></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb5-19"><a></a>    <span class="at">country =</span> country_name,</span>
-<span id="cb5-20"><a></a>    <span class="at">region =</span> country_data<span class="sc">$</span>region[<span class="dv">1</span>],</span>
-<span id="cb5-21"><a></a>    <span class="at">sub_region =</span> country_data<span class="sc">$</span>sub_region[<span class="dv">1</span>],</span>
-<span id="cb5-22"><a></a>    <span class="at">years =</span> <span class="fu">nrow</span>(country_data),</span>
-<span id="cb5-23"><a></a>    <span class="at">priority_years =</span> <span class="fu">length</span>(priority_years),</span>
-<span id="cb5-24"><a></a>    <span class="at">missing_information_years =</span> <span class="fu">sum</span>(country_data<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"missing information"</span>),</span>
-<span id="cb5-25"><a></a>    <span class="at">most_recent_priority_year =</span> <span class="cf">if</span> (<span class="fu">length</span>(priority_years) <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb5-26"><a></a>      <span class="cn">NA_integer_</span></span>
-<span id="cb5-27"><a></a>    } <span class="cf">else</span> {</span>
-<span id="cb5-28"><a></a>      <span class="fu">max</span>(priority_years)</span>
-<span id="cb5-29"><a></a>    },</span>
-<span id="cb5-30"><a></a>    <span class="at">max_cases_per_100k =</span> <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(country_data<span class="sc">$</span>cases_per_100k))) {</span>
-<span id="cb5-31"><a></a>      <span class="cn">NA_real_</span></span>
-<span id="cb5-32"><a></a>    } <span class="cf">else</span> {</span>
-<span id="cb5-33"><a></a>      <span class="fu">round</span>(<span class="fu">max</span>(country_data<span class="sc">$</span>cases_per_100k, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)</span>
-<span id="cb5-34"><a></a>    }</span>
-<span id="cb5-35"><a></a>  )</span>
-<span id="cb5-36"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a></a>  country_data <span class="ot">&lt;-</span> <span class="fu">subset</span>(</span>
+<span id="cb5-7"><a></a>    data,</span>
+<span id="cb5-8"><a></a>    country <span class="sc">==</span> country_name <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> min_year</span>
+<span id="cb5-9"><a></a>  )</span>
+<span id="cb5-10"><a></a></span>
+<span id="cb5-11"><a></a>  country_data <span class="ot">&lt;-</span> <span class="fu">add_priority_rule</span>(</span>
+<span id="cb5-12"><a></a>    country_data, coverage_cutoff, incidence_cutoff</span>
+<span id="cb5-13"><a></a>  )</span>
+<span id="cb5-14"><a></a></span>
+<span id="cb5-15"><a></a>  priority_years <span class="ot">&lt;-</span> <span class="fu">subset</span>(country_data, priority_year)<span class="sc">$</span>year</span>
+<span id="cb5-16"><a></a></span>
+<span id="cb5-17"><a></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb5-18"><a></a>    <span class="at">country =</span> country_name,</span>
+<span id="cb5-19"><a></a>    <span class="at">region =</span> country_data<span class="sc">$</span>region[<span class="dv">1</span>],</span>
+<span id="cb5-20"><a></a>    <span class="at">sub_region =</span> country_data<span class="sc">$</span>sub_region[<span class="dv">1</span>],</span>
+<span id="cb5-21"><a></a>    <span class="at">years =</span> <span class="fu">nrow</span>(country_data),</span>
+<span id="cb5-22"><a></a>    <span class="at">priority_years =</span> <span class="fu">length</span>(priority_years),</span>
+<span id="cb5-23"><a></a>    <span class="at">most_recent_priority_year =</span> <span class="cf">if</span> (<span class="fu">length</span>(priority_years) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb5-24"><a></a>      <span class="cn">NA_integer_</span></span>
+<span id="cb5-25"><a></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-26"><a></a>      <span class="fu">max</span>(priority_years)</span>
+<span id="cb5-27"><a></a>    },</span>
+<span id="cb5-28"><a></a>    <span class="at">max_cases_per_100k =</span> <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(country_data<span class="sc">$</span>cases_per_100k))) {</span>
+<span id="cb5-29"><a></a>      <span class="cn">NA_real_</span></span>
+<span id="cb5-30"><a></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-31"><a></a>      <span class="fu">round</span>(<span class="fu">max</span>(country_data<span class="sc">$</span>cases_per_100k, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)</span>
+<span id="cb5-32"><a></a>    }</span>
+<span id="cb5-33"><a></a>  )</span>
+<span id="cb5-34"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="test-the-summary-function" class="slide level2">
@@ -352,10 +343,10 @@ NA.23   NA            NA             NA missing information</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">summarize_priority_years</span>(<span class="st">"Pakistan"</span>, <span class="at">data =</span> measles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   country region sub_region years priority_years missing_information_years
-1 Pakistan   &lt;NA&gt;       &lt;NA&gt;    48             18                        25
-  most_recent_priority_year max_cases_per_100k
-1                      2022              15.02</code></pre>
+<pre><code>   country region    sub_region years priority_years most_recent_priority_year
+1 Pakistan   Asia Southern Asia    24             18                      2022
+  max_cases_per_100k
+1              15.02</code></pre>
 </div>
 </div>
 </section>
@@ -364,7 +355,6 @@ NA.23   NA            NA             NA missing information</code></pre>
 <p>Before writing a loop, we made one repeatable unit:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">summarize_priority_years</span>(<span class="st">"Pakistan"</span>, <span class="at">data =</span> measles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If that works for Pakistan, the loop only needs to change the country name.</p>
-<p>That is the main trick.</p>
 </section>
 <section id="repeat-with-a-for-loop" class="slide level2">
 <h2>Repeat with a <code>for</code> loop</h2>
@@ -382,19 +372,20 @@ NA.23   NA            NA             NA missing information</code></pre>
 <section id="repeat-with-a-for-loop-result" class="slide level2">
 <h2>Repeat with a <code>for</code> loop: result</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>country_summaries[, <span class="fu">c</span>(</span>
-<span id="cb10-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb10-3"><a></a>  <span class="st">"priority_years"</span>,</span>
-<span id="cb10-4"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
-<span id="cb10-5"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
-<span id="cb10-6"><a></a>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>country_summaries</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      country priority_years most_recent_priority_year max_cases_per_100k
-1 Afghanistan             22                      2022              44.50
-2  Bangladesh              9                      2012              18.40
-3       India             15                      2016               5.47
-4       Nepal             16                      2020              51.96
-5    Pakistan             18                      2022              15.02</code></pre>
+<pre><code>      country region    sub_region years priority_years
+1 Afghanistan   Asia Southern Asia    24             22
+2  Bangladesh   Asia Southern Asia    24              9
+3       India   Asia Southern Asia    24             15
+4       Nepal   Asia Southern Asia    24             16
+5    Pakistan   Asia Southern Asia    24             18
+  most_recent_priority_year max_cases_per_100k
+1                      2022              44.50
+2                      2012              18.40
+3                      2016               5.47
+4                      2020              51.96
+5                      2022              15.02</code></pre>
 </div>
 </div>
 </section>
@@ -406,7 +397,6 @@ NA.23   NA            NA             NA missing information</code></pre>
 <li>Run <code>summarize_priority_years()</code> for that country.</li>
 <li>Add the one-row answer to the growing results table.</li>
 </ol>
-<p>The computer is doing the repeated typing for us.</p>
 </section>
 <section id="repeat-with-lapply" class="slide level2">
 <h2>Repeat with <code>lapply()</code></h2>
@@ -425,31 +415,34 @@ NA.23   NA            NA             NA missing information</code></pre>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>summary_list[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      country region    sub_region years priority_years
-1 Afghanistan   Asia Southern Asia    48             22
-  missing_information_years most_recent_priority_year max_cases_per_100k
-1                        25                      2022               44.5</code></pre>
+1 Afghanistan   Asia Southern Asia    24             22
+  most_recent_priority_year max_cases_per_100k
+1                      2022               44.5</code></pre>
 </div>
 </div>
 </section>
 <section id="combine-the-list" class="slide level2">
 <h2>Combine the list</h2>
+<ul>
+<li>It’s worth understanding how to use <code>do.call()</code> even though it’s weird.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>country_summaries_lapply <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, summary_list)</span>
 <span id="cb16-2"><a></a></span>
 <span id="cb16-3"><a></a>country_summaries_lapply</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      country region    sub_region years priority_years
-1 Afghanistan   Asia Southern Asia    48             22
-2  Bangladesh   Asia Southern Asia    48              9
-3       India   Asia Southern Asia    48             15
-4       Nepal   &lt;NA&gt;          &lt;NA&gt;    48             16
-5    Pakistan   &lt;NA&gt;          &lt;NA&gt;    48             18
-  missing_information_years most_recent_priority_year max_cases_per_100k
-1                        25                      2022              44.50
-2                        25                      2012              18.40
-3                        25                      2016               5.47
-4                        25                      2020              51.96
-5                        25                      2022              15.02</code></pre>
+1 Afghanistan   Asia Southern Asia    24             22
+2  Bangladesh   Asia Southern Asia    24              9
+3       India   Asia Southern Asia    24             15
+4       Nepal   Asia Southern Asia    24             16
+5    Pakistan   Asia Southern Asia    24             18
+  most_recent_priority_year max_cases_per_100k
+1                      2022              44.50
+2                      2012              18.40
+3                      2016               5.47
+4                      2020              51.96
+5                      2022              15.02</code></pre>
 </div>
 </div>
 </section>
@@ -496,101 +489,76 @@ NA.23   NA            NA             NA missing information</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>asia_summaries <span class="ot">&lt;-</span> asia_summaries[</span>
 <span id="cb23-2"><a></a>  <span class="fu">order</span>(<span class="sc">-</span>asia_summaries<span class="sc">$</span>priority_years, asia_summaries<span class="sc">$</span>country),</span>
-<span id="cb23-3"><a></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="sort-the-results-top-countries" class="slide level2">
-<h2>Sort the results: top countries</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>asia_top_columns <span class="ot">&lt;-</span> asia_summaries[, <span class="fu">c</span>(</span>
-<span id="cb24-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb24-3"><a></a>  <span class="st">"priority_years"</span>,</span>
-<span id="cb24-4"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
-<span id="cb24-5"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
-<span id="cb24-6"><a></a>)]</span>
-<span id="cb24-7"><a></a></span>
-<span id="cb24-8"><a></a><span class="fu">head</span>(asia_top_columns, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-3"><a></a>]</span>
+<span id="cb23-4"><a></a></span>
+<span id="cb23-5"><a></a><span class="fu">head</span>(asia_summaries)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       country priority_years most_recent_priority_year max_cases_per_100k
-1  Afghanistan             22                      2022              44.50
-14   Indonesia             19                      2022              12.91
-34    Pakistan             18                      2022              15.02
-50       Yemen             17                      2022             144.43
-32       Nepal             16                      2020              51.96</code></pre>
-</div>
-</div>
-</section>
-<section id="sort-the-results-top-countries-continued" class="slide level2">
-<h2>Sort the results: top countries, continued</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">head</span>(asia_top_columns, <span class="dv">10</span>)[<span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                            country priority_years most_recent_priority_year
-13                            India             15                      2016
-25 Lao People's Democratic Republic             15                      2020
-36                      Philippines             14                      2020
-16                             Iraq             13                      2019
-8                          Cambodia             12                      2020
-   max_cases_per_100k
-13               5.47
-25              36.92
-36              58.08
-16             100.13
-8              100.98</code></pre>
+<pre><code>       country region         sub_region years priority_years
+1  Afghanistan   Asia      Southern Asia    24             22
+14   Indonesia   Asia South-eastern Asia    24             19
+34    Pakistan   Asia      Southern Asia    24             18
+50       Yemen   Asia       Western Asia    24             17
+32       Nepal   Asia      Southern Asia    24             16
+13       India   Asia      Southern Asia    24             15
+   most_recent_priority_year max_cases_per_100k
+1                       2022              44.50
+14                      2022              12.91
+34                      2022              15.02
+50                      2022             144.43
+32                      2020              51.96
+13                      2016               5.47</code></pre>
 </div>
 </div>
 </section>
 <section id="make-a-manuscript-style-table" class="slide level2">
 <h2>Make a manuscript-style table</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>top_asia <span class="ot">&lt;-</span> <span class="fu">head</span>(asia_summaries, <span class="dv">10</span>)</span>
-<span id="cb28-2"><a></a></span>
-<span id="cb28-3"><a></a>top_asia_table <span class="ot">&lt;-</span> top_asia[, <span class="fu">c</span>(</span>
-<span id="cb28-4"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb28-5"><a></a>  <span class="st">"sub_region"</span>,</span>
-<span id="cb28-6"><a></a>  <span class="st">"priority_years"</span>,</span>
-<span id="cb28-7"><a></a>  <span class="st">"missing_information_years"</span>,</span>
-<span id="cb28-8"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
-<span id="cb28-9"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
-<span id="cb28-10"><a></a>)]</span>
-<span id="cb28-11"><a></a></span>
-<span id="cb28-12"><a></a>top_asia_counts <span class="ot">&lt;-</span> top_asia_table[, <span class="fu">c</span>(</span>
-<span id="cb28-13"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb28-14"><a></a>  <span class="st">"sub_region"</span>,</span>
-<span id="cb28-15"><a></a>  <span class="st">"priority_years"</span></span>
-<span id="cb28-16"><a></a>)]</span>
-<span id="cb28-17"><a></a></span>
-<span id="cb28-18"><a></a>top_asia_details <span class="ot">&lt;-</span> top_asia_table[, <span class="fu">c</span>(</span>
-<span id="cb28-19"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb28-20"><a></a>  <span class="st">"missing_information_years"</span>,</span>
-<span id="cb28-21"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
-<span id="cb28-22"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
-<span id="cb28-23"><a></a>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>top_asia <span class="ot">&lt;-</span> <span class="fu">head</span>(asia_summaries, <span class="dv">10</span>)</span>
+<span id="cb25-2"><a></a></span>
+<span id="cb25-3"><a></a>top_asia_table <span class="ot">&lt;-</span> top_asia[, <span class="fu">c</span>(</span>
+<span id="cb25-4"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb25-5"><a></a>  <span class="st">"sub_region"</span>,</span>
+<span id="cb25-6"><a></a>  <span class="st">"priority_years"</span>,</span>
+<span id="cb25-7"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
+<span id="cb25-8"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
+<span id="cb25-9"><a></a>)]</span>
+<span id="cb25-10"><a></a></span>
+<span id="cb25-11"><a></a>top_asia_counts <span class="ot">&lt;-</span> top_asia_table[, <span class="fu">c</span>(</span>
+<span id="cb25-12"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb25-13"><a></a>  <span class="st">"sub_region"</span>,</span>
+<span id="cb25-14"><a></a>  <span class="st">"priority_years"</span></span>
+<span id="cb25-15"><a></a>)]</span>
+<span id="cb25-16"><a></a></span>
+<span id="cb25-17"><a></a>top_asia_details <span class="ot">&lt;-</span> top_asia_table[, <span class="fu">c</span>(</span>
+<span id="cb25-18"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb25-19"><a></a>  <span class="st">"most_recent_priority_year"</span>,</span>
+<span id="cb25-20"><a></a>  <span class="st">"max_cases_per_100k"</span></span>
+<span id="cb25-21"><a></a>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="make-a-manuscript-style-table-counts" class="slide level2">
 <h2>Make a manuscript-style table: counts</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">head</span>(top_asia_counts, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">head</span>(top_asia_counts, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       country         sub_region priority_years
 1  Afghanistan      Southern Asia             22
 14   Indonesia South-eastern Asia             19
-34    Pakistan               &lt;NA&gt;             18
-50       Yemen               &lt;NA&gt;             17
-32       Nepal               &lt;NA&gt;             16</code></pre>
+34    Pakistan      Southern Asia             18
+50       Yemen       Western Asia             17
+32       Nepal      Southern Asia             16</code></pre>
 </div>
 </div>
 </section>
 <section id="make-a-manuscript-style-table-counts-continued" class="slide level2">
 <h2>Make a manuscript-style table: counts, continued</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">tail</span>(top_asia_counts, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">tail</span>(top_asia_counts, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                            country         sub_region priority_years
 13                            India      Southern Asia             15
-25 Lao People's Democratic Republic               &lt;NA&gt;             15
-36                      Philippines               &lt;NA&gt;             14
+25 Lao People's Democratic Republic South-eastern Asia             15
+36                      Philippines South-eastern Asia             14
 16                             Iraq       Western Asia             13
 8                          Cambodia South-eastern Asia             12</code></pre>
 </div>
@@ -599,71 +567,38 @@ NA.23   NA            NA             NA missing information</code></pre>
 <section id="make-a-manuscript-style-table-details" class="slide level2">
 <h2>Make a manuscript-style table: details</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">head</span>(top_asia_details, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">head</span>(top_asia_details, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       country missing_information_years most_recent_priority_year
-1  Afghanistan                        45                      2022
-14   Indonesia                        45                      2022
-34    Pakistan                        45                      2022
-50       Yemen                        46                      2022
-32       Nepal                        45                      2020
-   max_cases_per_100k
-1               44.50
-14              12.91
-34              15.02
-50             144.43
-32              51.96</code></pre>
-</div>
-</div>
-</section>
-<section id="make-a-manuscript-style-table-details-continued" class="slide level2">
-<h2>Make a manuscript-style table: details, continued</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">tail</span>(top_asia_details, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                            country missing_information_years
-13                            India                        45
-25 Lao People's Democratic Republic                        45
-36                      Philippines                        45
-16                             Iraq                        48
-8                          Cambodia                        45
-   most_recent_priority_year max_cases_per_100k
-13                      2016               5.47
-25                      2020              36.92
-36                      2020              58.08
-16                      2019             100.13
-8                       2020             100.98</code></pre>
+<pre><code>       country most_recent_priority_year max_cases_per_100k
+1  Afghanistan                      2022              44.50
+14   Indonesia                      2022              12.91
+34    Pakistan                      2022              15.02
+50       Yemen                      2022             144.43
+32       Nepal                      2020              51.96</code></pre>
 </div>
 </div>
 </section>
 <section id="make-a-quick-figure" class="slide level2">
 <h2>Make a quick figure</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">barplot</span>(</span>
-<span id="cb37-2"><a></a>  top_asia<span class="sc">$</span>priority_years,</span>
-<span id="cb37-3"><a></a>  <span class="at">names.arg =</span> top_asia<span class="sc">$</span>country,</span>
-<span id="cb37-4"><a></a>  <span class="at">las =</span> <span class="dv">2</span>,</span>
-<span id="cb37-5"><a></a>  <span class="at">ylab =</span> <span class="st">"Priority years since 2000"</span>,</span>
-<span id="cb37-6"><a></a>  <span class="at">main =</span> <span class="st">"Countries in Asia with the most priority years"</span></span>
-<span id="cb37-7"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">barplot</span>(</span>
+<span id="cb32-2"><a></a>  top_asia<span class="sc">$</span>priority_years,</span>
+<span id="cb32-3"><a></a>  <span class="at">names.arg =</span> top_asia<span class="sc">$</span>country,</span>
+<span id="cb32-4"><a></a>  <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb32-5"><a></a>  <span class="at">ylab =</span> <span class="st">"Priority years since 2000"</span>,</span>
+<span id="cb32-6"><a></a>  <span class="at">main =</span> <span class="st">"Countries in Asia with the most priority years"</span></span>
+<span id="cb32-7"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="Walkthrough2_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
-<section id="what-goes-in-the-report" class="slide level2">
-<h2>What goes in the report?</h2>
-<p><strong>Methods sentence</strong></p>
-<p>We wrote a reusable function to classify each country-year as a priority year when MCV1 coverage was below 90% and measles incidence was at least 1 case per 100,000 people, then applied that function to every country in Asia.</p>
-<p><strong>Results sentence</strong></p>
-<p>The repeated analysis identified several countries in Asia with many priority years since 2000, suggesting that the Pakistan pattern was not unique under this simple rule.</p>
-</section>
-<section id="active-checkpoint" class="slide level2">
-<h2>Active checkpoint</h2>
+<img data-src="Walkthrough2_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="you-try-it" class="slide level2">
+<h2>You try it!</h2>
 <p><strong>Student prompt</strong></p>
 <p>Repeat the regional analysis for Africa.</p>
 <p>Your goal is to produce a table of the 10 countries in Africa with the most priority years since 2000.</p>
 </section>
-<section id="active-checkpoint-hint" class="slide level2">
-<h2>Active checkpoint: hint</h2>
+<section id="you-try-it-hint" class="slide level2">
+<h2>You try it!: hint</h2>
 <p>Reuse the objects we already built.</p>
 <p>You only need to change:</p>
 <ol type="1">
@@ -672,38 +607,38 @@ NA.23   NA            NA             NA missing information</code></pre>
 <li>the object names, if you want them to be easier to read</li>
 </ol>
 </section>
-<section id="active-checkpoint-solution" class="slide level2">
-<h2>Active checkpoint: solution</h2>
+<section id="you-try-it-solution" class="slide level2">
+<h2>You try it!: solution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>africa <span class="ot">&lt;-</span> measles[measles<span class="sc">$</span>region <span class="sc">==</span> <span class="st">"Africa"</span>, ]</span>
-<span id="cb38-2"><a></a>african_countries <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(africa<span class="sc">$</span>country))</span>
-<span id="cb38-3"><a></a></span>
-<span id="cb38-4"><a></a>africa_summary_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb38-5"><a></a>  african_countries,</span>
-<span id="cb38-6"><a></a>  summarize_priority_years,</span>
-<span id="cb38-7"><a></a>  <span class="at">data =</span> africa</span>
-<span id="cb38-8"><a></a>)</span>
-<span id="cb38-9"><a></a></span>
-<span id="cb38-10"><a></a>africa_summaries <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, africa_summary_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>africa <span class="ot">&lt;-</span> measles[measles<span class="sc">$</span>region <span class="sc">==</span> <span class="st">"Africa"</span>, ]</span>
+<span id="cb33-2"><a></a>african_countries <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(africa<span class="sc">$</span>country))</span>
+<span id="cb33-3"><a></a></span>
+<span id="cb33-4"><a></a>africa_summary_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb33-5"><a></a>  african_countries,</span>
+<span id="cb33-6"><a></a>  summarize_priority_years,</span>
+<span id="cb33-7"><a></a>  <span class="at">data =</span> africa</span>
+<span id="cb33-8"><a></a>)</span>
+<span id="cb33-9"><a></a></span>
+<span id="cb33-10"><a></a>africa_summaries <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, africa_summary_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="active-checkpoint-solution-sort" class="slide level2">
-<h2>Active checkpoint: solution sort</h2>
+<section id="you-try-it-solution-sort" class="slide level2">
+<h2>You try it!: solution sort</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>africa_summaries <span class="ot">&lt;-</span> africa_summaries[</span>
-<span id="cb39-2"><a></a>  <span class="fu">order</span>(<span class="sc">-</span>africa_summaries<span class="sc">$</span>priority_years, africa_summaries<span class="sc">$</span>country),</span>
-<span id="cb39-3"><a></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>africa_summaries <span class="ot">&lt;-</span> africa_summaries[</span>
+<span id="cb34-2"><a></a>  <span class="fu">order</span>(<span class="sc">-</span>africa_summaries<span class="sc">$</span>priority_years, africa_summaries<span class="sc">$</span>country),</span>
+<span id="cb34-3"><a></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="active-checkpoint-solution-table" class="slide level2">
-<h2>Active checkpoint: solution table</h2>
+<section id="you-try-it-solution-table" class="slide level2">
+<h2>You try it!: solution table</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>africa_top_columns <span class="ot">&lt;-</span> africa_summaries[, <span class="fu">c</span>(</span>
-<span id="cb40-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb40-3"><a></a>  <span class="st">"priority_years"</span></span>
-<span id="cb40-4"><a></a>)]</span>
-<span id="cb40-5"><a></a></span>
-<span id="cb40-6"><a></a><span class="fu">head</span>(africa_top_columns, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>africa_top_columns <span class="ot">&lt;-</span> africa_summaries[, <span class="fu">c</span>(</span>
+<span id="cb35-2"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb35-3"><a></a>  <span class="st">"priority_years"</span></span>
+<span id="cb35-4"><a></a>)]</span>
+<span id="cb35-5"><a></a></span>
+<span id="cb35-6"><a></a><span class="fu">head</span>(africa_top_columns, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                             country priority_years
 8                           Cameroon             22
@@ -714,10 +649,10 @@ NA.23   NA            NA             NA missing information</code></pre>
 </div>
 </div>
 </section>
-<section id="active-checkpoint-solution-table-continued" class="slide level2">
-<h2>Active checkpoint: solution table, continued</h2>
+<section id="you-try-it-solution-table-continued" class="slide level2">
+<h2>You try it!: solution table, continued</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">head</span>(africa_top_columns, <span class="dv">10</span>)[<span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">head</span>(africa_top_columns, <span class="dv">10</span>)[<span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                    country priority_years
 9  Central African Republic             19
@@ -728,8 +663,8 @@ NA.23   NA            NA             NA missing information</code></pre>
 </div>
 </div>
 </section>
-<section id="active-checkpoint-one-more-change" class="slide level2">
-<h2>Active checkpoint: one more change</h2>
+<section id="you-try-it-one-more-change" class="slide level2">
+<h2>You try it!: one more change</h2>
 <p>What if the manuscript team decides that 1 case per 100,000 is too sensitive?</p>
 <p>Try the Africa analysis again with:</p>
 <ul>
@@ -737,37 +672,37 @@ NA.23   NA            NA             NA missing information</code></pre>
 <li>incidence cutoff: 5 cases per 100,000</li>
 </ul>
 </section>
-<section id="active-checkpoint-solution-1" class="slide level2">
-<h2>Active checkpoint: solution</h2>
+<section id="you-try-it-solution-1" class="slide level2">
+<h2>You try it!: solution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>africa_summary_list_strict <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
-<span id="cb44-2"><a></a>  african_countries,</span>
-<span id="cb44-3"><a></a>  summarize_priority_years,</span>
-<span id="cb44-4"><a></a>  <span class="at">data =</span> africa,</span>
-<span id="cb44-5"><a></a>  <span class="at">coverage_cutoff =</span> <span class="dv">90</span>,</span>
-<span id="cb44-6"><a></a>  <span class="at">incidence_cutoff =</span> <span class="dv">5</span></span>
-<span id="cb44-7"><a></a>)</span>
-<span id="cb44-8"><a></a></span>
-<span id="cb44-9"><a></a>africa_summaries_strict <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, africa_summary_list_strict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>africa_summary_list_strict <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb39-2"><a></a>  african_countries,</span>
+<span id="cb39-3"><a></a>  summarize_priority_years,</span>
+<span id="cb39-4"><a></a>  <span class="at">data =</span> africa,</span>
+<span id="cb39-5"><a></a>  <span class="at">coverage_cutoff =</span> <span class="dv">90</span>,</span>
+<span id="cb39-6"><a></a>  <span class="at">incidence_cutoff =</span> <span class="dv">5</span></span>
+<span id="cb39-7"><a></a>)</span>
+<span id="cb39-8"><a></a></span>
+<span id="cb39-9"><a></a>africa_summaries_strict <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, africa_summary_list_strict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="active-checkpoint-strict-solution-sort" class="slide level2">
-<h2>Active checkpoint: strict solution sort</h2>
+<section id="you-try-it-strict-solution-sort" class="slide level2">
+<h2>You try it!: strict solution sort</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>africa_summaries_strict <span class="ot">&lt;-</span> africa_summaries_strict[</span>
-<span id="cb45-2"><a></a>  <span class="fu">order</span>(<span class="sc">-</span>africa_summaries_strict<span class="sc">$</span>priority_years, africa_summaries_strict<span class="sc">$</span>country),</span>
-<span id="cb45-3"><a></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>africa_summaries_strict <span class="ot">&lt;-</span> africa_summaries_strict[</span>
+<span id="cb40-2"><a></a>  <span class="fu">order</span>(<span class="sc">-</span>africa_summaries_strict<span class="sc">$</span>priority_years, africa_summaries_strict<span class="sc">$</span>country),</span>
+<span id="cb40-3"><a></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="active-checkpoint-strict-solution-table" class="slide level2">
-<h2>Active checkpoint: strict solution table</h2>
+<section id="you-try-it-strict-solution-table" class="slide level2">
+<h2>You try it!: strict solution table</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>africa_strict_top_columns <span class="ot">&lt;-</span> africa_summaries_strict[, <span class="fu">c</span>(</span>
-<span id="cb46-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb46-3"><a></a>  <span class="st">"priority_years"</span></span>
-<span id="cb46-4"><a></a>)]</span>
-<span id="cb46-5"><a></a></span>
-<span id="cb46-6"><a></a><span class="fu">head</span>(africa_strict_top_columns, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>africa_strict_top_columns <span class="ot">&lt;-</span> africa_summaries_strict[, <span class="fu">c</span>(</span>
+<span id="cb41-2"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb41-3"><a></a>  <span class="st">"priority_years"</span></span>
+<span id="cb41-4"><a></a>)]</span>
+<span id="cb41-5"><a></a></span>
+<span id="cb41-6"><a></a><span class="fu">head</span>(africa_strict_top_columns, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                             country priority_years
 13 Congo, Democratic Republic of the             21
@@ -778,10 +713,10 @@ NA.23   NA            NA             NA missing information</code></pre>
 </div>
 </div>
 </section>
-<section id="active-checkpoint-strict-solution-table-continued" class="slide level2">
-<h2>Active checkpoint: strict solution table, continued</h2>
+<section id="you-try-it-strict-solution-table-continued" class="slide level2">
+<h2>You try it!: strict solution table, continued</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">head</span>(africa_strict_top_columns, <span class="dv">10</span>)[<span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">head</span>(africa_strict_top_columns, <span class="dv">10</span>)[<span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    country priority_years
 10     Chad             13

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Visual and source editor modes</title>
+  <desc id="desc">A side-by-side schematic comparing Quarto visual editor mode and source editor mode.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #1f2937; stroke-width: 3; }
+      .bar { fill: #263238; }
+      .visual { fill: #d6f0ef; stroke: #0f766e; }
+      .source { fill: #fef3c7; stroke: #b45309; }
+      .label { font: 700 30px Arial, sans-serif; fill: #111827; }
+      .text { font: 23px Arial, sans-serif; fill: #111827; }
+      .small { font: 18px Arial, sans-serif; fill: #374151; }
+      .mono { font: 21px Consolas, "Courier New", monospace; fill: #111827; }
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="620" rx="24"/>
+  <rect class="panel visual" x="65" y="85" width="455" height="430" rx="20"/>
+  <rect class="bar" x="65" y="85" width="455" height="52" rx="20"/>
+  <text class="label" x="105" y="122" fill="#ffffff">Visual editor</text>
+  <rect x="105" y="170" width="375" height="42" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+  <text class="text" x="125" y="199">Toolbar: B  I  link  image  table</text>
+  <text class="label" x="105" y="270">Results</text>
+  <circle cx="125" cy="316" r="7" fill="#0f766e"/>
+  <text class="text" x="145" y="324">Formatted list item</text>
+  <rect x="105" y="355" width="130" height="74" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+  <rect x="235" y="355" width="130" height="74" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+  <text class="small" x="122" y="398">Table cell</text>
+  <text class="small" x="252" y="398">Table cell</text>
+
+  <rect class="panel source" x="580" y="85" width="455" height="430" rx="20"/>
+  <rect class="bar" x="580" y="85" width="455" height="52" rx="20"/>
+  <text class="label" x="620" y="122" fill="#ffffff">Source editor</text>
+  <text class="mono" x="620" y="190">## Results</text>
+  <text class="mono" x="620" y="230">- Formatted list item</text>
+  <text class="mono" x="620" y="278">| Group | Count |</text>
+  <text class="mono" x="620" y="310">|-------|-------|</text>
+  <text class="mono" x="620" y="342">| A     | 42    |</text>
+  <rect x="620" y="382" width="350" height="50" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="2"/>
+  <text class="mono" x="640" y="415">```{r results-table}</text>
+
+  <rect x="495" y="280" width="110" height="55" rx="28" fill="#334155"/>
+  <circle cx="530" cy="308" r="19" fill="#ffffff"/>
+  <text class="small" x="470" y="375">Same file, two editing views</text>
+</svg>

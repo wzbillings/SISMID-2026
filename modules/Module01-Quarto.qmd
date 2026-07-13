@@ -1,185 +1,231 @@
 ---
 title: "Module 1: Quarto"
 format: revealjs
+toc: false
 editor: visual
 ---
 
-## Learning objectives:
+<!-- Graphics in this deck are hand-authored course schematics, not external image assets. -->
 
--   Understand the basic components of a Quarto document.
+## Learning objectives {.unnumbered}
 
-## Introduction {.unnumbered}
+By the end of this module, you should be able to:
 
--   Quarto is a command line interface tool, not an R package.
+- Explain what a Quarto document contains.
+- Create and render a basic `.qmd` file.
+- Add text, code chunks, chunk labels, options, figures, and tables.
+- Use Visual and Source editor modes intentionally.
 
--   Quarto unifies the functionality of many packages from the R Markdown ecosystem: rmarkdown, bookdown, distill, xaringan, etc. into a single consistent system.
+## What Quarto does {.unnumbered}
 
--   Quarto -\> native support for multiple programming languages like Python and Julia in addition to R
+Quarto turns one source document into a finished output.
 
-## Where to find help
+![A schematic showing a Quarto document flowing through render into HTML, Word, PDF, and slides.](../images/module01-render-flow.svg){fig-align="center" width="90%"}
 
--   [Documentation](https://quarto.org/)
+## Why use Quarto? {.unnumbered}
 
-## Why Quarto documents:
+- Reproducible work: code and conclusions live together.
+- Communication: readers can focus on results, not just scripts.
+- Collaboration: future you can see exactly how the output was made.
+- Flexibility: the same source can become HTML, Word, PDF, or slides.
 
--   reproducible
+## Where to find help {.unnumbered}
 
--   support dozens of output formats: PDFs, Word files, presentations, and more.
+- Main documentation: <https://quarto.org/>
+- In RStudio: **Help > Markdown Quick Reference**
+- In your own document: render early, render often, and read the first error carefully.
 
-## 3 main uses:
+## Quarto document anatomy {.unnumbered}
 
-1.  Communication: focus on conclusions not code.
-2.  Collaborating with other scientists (including future you!): conclusions and code.
-3.  Environment in which to do data science.
+![A schematic Quarto file with YAML, Markdown prose, an R code chunk, and rendered output.](../images/module01-quarto-anatomy.svg){fig-align="center" width="92%"}
 
 ## Quarto basics {.unnumbered}
 
--   Quarto files have `.qmd` extension.
+Quarto files have a `.qmd` extension.
 
--   Contains 3 types of contents:
+They usually contain three things:
 
-    -   and optional YAML header surrounded by 3 dashes (---) at the beginning and end
-    -   chunks of R code surrounded by 3 back ticks (\`\`\`)
-    -   text mixed with simple formatting like #heading or **italics**
+- A YAML header between `---` lines.
+- Markdown text for prose and formatting.
+- Code chunks for analysis, tables, and figures.
 
-## Getting Started
+## Getting started {.unnumbered}
 
--   To get started with your own .qmd file, select File \> New File \> Quarto Document… in the menu bar.
+In RStudio or Positron:
 
--   For the first few examples, choose HTML output. HTML renders quickly and
-    makes it easy to see what changed.
+1. Choose **File > New File > Quarto Document...**
+2. Start with **HTML** output for the first few examples.
+3. Click **Render** after each small change.
 
-## Run code in quarto {.unnumbered}
+HTML renders quickly and makes it easy to see what changed.
 
--   Run each code chunk by clicking the Run icon (each chunk will have this green arrow).
+## Editor modes {.unnumbered}
 
--   You can choose to have the plots and output displayed in the document or on RStudio's console and plot panes. Go to the gear icon next to "Render" and switch to "Chunk Output Console".
-
--   To run the complete report, click "Render" and your report will be displayed in the viewer pane as an HTML file (unless the YAML includes .pdf or other extension).
+![A side-by-side schematic comparing Quarto Visual editor mode with Source editor mode.](../images/module01-editor-modes.svg){fig-align="center" width="92%"}
 
 ## Visual editor {.unnumbered}
 
-::::: {style="display: flex;"}
-<div>
-
--   Visual editor -\> use the buttons on the menu bar to insert images, tables, cross-references, etc. or you can use the catch-all ⌘ + / or Ctrl + / shortcut to insert just about anything.
--   The visual editor displays your content with formatting, but under the hood, it saves your content in plain Markdown and you can switch back and forth between the visual and source editors.
-
-</div>
-
-<div>
-
--   Use the editor toggle to switch between Visual and Source modes. The
-    rendered document is the same either way; the difference is how much raw
-    Markdown you see while editing.
-
-</div>
-:::::
+- Shows formatted headings, lists, tables, links, and images while you edit.
+- Lets you insert common elements from menus and toolbar buttons.
+- Still saves plain Markdown underneath, so the file remains portable.
 
 ## Source editor {.unnumbered}
 
-::::: {style="display: flex;"}
-<div>
+- Shows the raw Markdown and code.
+- Feels closer to writing an R script or R Markdown document.
+- Helps when you need to debug Quarto syntax.
 
--   The Source editor will feel familiar to those with experience writing R scripts or R Markdown documents.
--   Can also be useful for debugging any Quarto syntax errors since it’s often easier to catch these in plain text.
--   If you forget, you can get to a handy reference sheet with Help \> Markdown Quick Reference.
+## Source editor: common Markdown {.unnumbered .smaller}
 
-</div>
+````markdown
+## Results
 
-<div>
+This is **bold** text and this is `code`.
 
-```{r}
-#| echo: false
-#| comment: ""
+- first item
+- second item
 
-cat(readr::read_file("quarto/markdown.qmd"))
-```
+[Quarto documentation](https://quarto.org/)
+````
 
-</div>
-:::::
+## Running code in Quarto {.unnumbered}
+
+- Run one chunk with the green arrow on that chunk.
+- Run the whole report with **Render**.
+- Use the gear next to **Render** to choose where chunk output appears.
+- If render fails, fix the first error before moving on.
 
 ## Code chunks {.unnumbered}
 
--   To run code inside a Quarto document, you need to insert a chunk.
-    1.  The keyboard shortcut Cmd + Option + I / Ctrl + Alt + I.
-    2.  The “Insert” button icon in the editor toolbar.
+To insert an R chunk:
 
-## Chunk label {.unnumbered}
+1. Use **Insert > Code Chunk**.
+2. Or use the shortcut **Ctrl + Alt + I** on Windows/Linux.
+3. Or use **Cmd + Option + I** on macOS.
 
-Chunks can be given an optional label, e.g.
+## Chunk labels and options {.unnumbered}
 
--   Chunk header: ```` ```{r qcrc-bmi-histogram} ````
--   Chunk option: `#| fig-cap: "BMI distribution in the QCRC sample"`
--   Chunk code: `hist(qcrc_main$bmi)`
+![A schematic R code chunk showing a chunk label, chunk options, and the code body.](../images/module01-chunk-options.svg){fig-align="center" width="92%"}
 
-## This has three advantages:
+## Chunk labels {.unnumbered}
 
-1.  Navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor:
-2.  Graphics produced by the chunks will have useful names that make them easier to use elsewhere.
+A useful label is short, unique, and descriptive.
 
-3.  You can set up networks of cached chunks to avoid re-performing expensive computations on every run.
+````markdown
+{r qcrc-bmi-histogram}
+hist(qcrc_main$bmi)
+````
 
-## Important!
+Prefer dashes or plain words. Avoid spaces and special characters.
 
--   Your chunk labels should be short but evocative and should not contain spaces.
--   We recommend using dashes (`-`) to separate words (instead of underscores, `_`) and no other special characters in chunk labels.
--   Use whatever name, except: `setup`, which is used for a specific reason.
--   Additionally, chunk labels cannot be duplicated.
--   Each chunk label must be unique.
+## Why labels help {.unnumbered}
+
+Chunk labels make it easier to:
+
+- Jump to a specific chunk in the editor.
+- Find generated figure files later.
+- Cache expensive chunks.
+- Debug render errors.
+
+Never duplicate a chunk label in the same document.
 
 ## Chunk options {.unnumbered}
 
--   Chunk output can be customized with **options**.
+Chunk options begin with `#|` inside the chunk.
 
--   You can see the full list at <https://yihui.org/knitr/options.>
+````markdown
+{r qcrc-bmi-histogram}
+#| echo: false
+#| warning: false
+#| fig-cap: "BMI distribution in the QCRC sample"
 
--   Each of these chunk options get added to the header of the chunk, following `#|`.
+hist(qcrc_main$bmi)
+````
 
-    -   `#| echo: false`
-    -   `#| warning: false`
-    -   `summary(cars)`
+## Common chunk options {.unnumbered}
 
-## The main options are:
+- `eval: false`: show code without running it.
+- `echo: false`: run code but hide it in the output.
+- `message: false`: hide messages.
+- `warning: false`: hide warnings.
+- `error: true`: keep rendering after an error.
 
--   `eval: false` prevents code from being evaluated. And obviously if the code is not run, no results will be generated.
-
--   `echo: false` prevents code, but not the results from appearing in the finished file.
-
--   `message: false` or `warning: false` prevents messages or warnings from appearing in the finished file.
-
--   `error: true` causes the render to continue even if code returns an error. This is rarely something you'll want to include in the final version of your report, but can be very useful to debug. The default, `error: false` causes rendering to fail if there is a single error in the document.
+Use `error: true` sparingly in final reports.
 
 ## Inline code {.unnumbered}
 
--   There is one other way to embed R code into a Quarto document: directly into the text, with r inside back ticks.
-    -   For example, you can inline code include in between text and that will show a result.
+Inline code places a result directly into a sentence.
 
-> The data frame iris has `r nrow(iris)` rows.
+````markdown
+The data frame iris has `r nrow(iris)` rows.
+````
 
-## Figures {.unnumbered}
+Rendered result:
 
--   The figures in a Quarto document can be embedded (e.g., a PNG or JPEG file) or generated as a result of a code chunk.
-
--   It's best if plots have consistent width. To enforce this, set fig-width: 6 (6”) and fig-asp: 0.618 (the golden ratio) in the defaults. Then in individual chunks, only adjust fig-asp.
-
--   Control the output size with out-width and set it to a percentage of the body width of the output document. We suggest to out-width: "70%" and fig-align: center.
+> The data frame iris has 150 rows.
 
 ## Figures {.unnumbered}
 
--   To put multiple plots in a single row, set the layout-ncol to 2 for two plots, 3 for three plots, etc. This effectively sets out-width to “50%” for each of your plots if layout-ncol is 2,
+Figures can be:
 
--   Great [blog post](https://www.tidyverse.org/blog/2020/08/taking-control-of-plot-scaling/) by Thomas Lin Pedersen about controling plot scaling.
+- Embedded files, such as PNG, JPEG, or SVG.
+- Generated by a code chunk.
+
+Use informative captions and alt text when a figure is part of the argument.
+
+## Figure sizing {.unnumbered}
+
+Good defaults keep plots consistent:
+
+- `fig-width: 6`
+- `fig-asp: 0.618`
+- `out-width: "70%"`
+- `fig-align: center`
+
+Adjust `fig-asp` for unusually tall or wide figures.
+
+## Multiple figures {.unnumbered}
+
+To place generated plots in a row, set a layout option:
+
+````markdown
+#| layout-ncol: 2
+````
+
+For more detail, see Thomas Lin Pedersen's post:
+
+<https://www.tidyverse.org/blog/2020/08/taking-control-of-plot-scaling/>
 
 ## Tables {.unnumbered}
 
--   You can include two types of tables in a Quarto document:
-    -   markdown tables that you create directly in your Quarto document, or
-    -   tables generated as a result of a code chunk.
+Quarto reports can include:
 
-**More on Tables Soon :)**
+- Markdown tables you type directly.
+- Tables generated by R code.
+- Styled tables from packages such as `gt` or `gtsummary`.
+
+We will return to tables later in the course.
 
 ## YAML header {.unnumbered}
 
--   You can control many other “whole document” settings by tweaking the parameters of the YAML header. You might wonder what YAML stands for: it’s “YAML Ain’t Markup Language"
--   [***Be careful with the YAML!***]{.underline}
+The YAML header controls whole-document settings.
+
+````yaml
+---
+title: "My report"
+format: html
+execute:
+  warning: false
+---
+````
+
+Be careful with indentation. YAML is powerful, but picky.
+
+## First-report habit {.unnumbered}
+
+When writing a Quarto report:
+
+1. Start small.
+2. Render after each meaningful change.
+3. Label chunks as you create them.
+4. Keep prose, code, and conclusions close together.

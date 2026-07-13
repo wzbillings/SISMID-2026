@@ -1,5 +1,5 @@
 ---
-title: "Data science walkthrough 1: Conditionals"
+title: "Data science walkthrough 1"
 format:
   revealjs:
     toc: false
@@ -10,62 +10,45 @@ execute:
   message: false
 ---
 
-## A small manuscript problem
+## An example research question
 
-We are going to answer one concrete question with the measles data:
-
-> In Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?
-
-## A small manuscript problem: manuscript arc
-
-This is a miniature version of the Exercise 1 manuscript arc:
-
-1. State a question.
-1. Translate the question into a data rule.
-1. Run the rule.
-1. Write a cautious result.
+> Since 2000, did the country in Asia with the lowest MCV1 coverage also have the highest measles incidence per capita?
 
 ## The programming idea
 
-We can describe the rule in plain English:
+- This is something that would be pretty easy to do by hand (e.g. with Excel), since the dataset is not all that big.
+- The difficult part for programming is **translating this question into computer code.**
+- The computer will always do exactly what we tell it to, so we have to turn the steps to solving this question into specific computer code.
 
-> If MCV1 coverage is below 90% and measles incidence is at least 1 case per 100,000 people, call it a priority year.
+## Steps to solve this problem
 
-Now the problem is not "Can I memorize R?"
-
-The problem is:
-
-> How do I turn that sentence into computer code?
+1. Get the dataset
+1. Separate out countries in Asia and years since 2000
+1. Calculate per capita incidence
+1. Find the country with the lowest MCV1 coverage
+1. Find the country with the highest per capita incidence
+1. Are they the same?
 
 ## Load the data
 
 ```{r}
-data_file <- file.path("data", "measles_final.Rds")
+data_file <- here::here("data", "measles_final.Rds")
 
-if (!file.exists(data_file)) {
-  data_file <- file.path("..", "data", "measles_final.Rds")
-}
-
-measles <- readRDS(data_file)
+measles <- readr::read_rds(data_file)
 ```
 
 ## Look at the data
 
 ```{r}
-str(measles[, c(
-  "country",
-  "year",
-  "measles_cases",
-  "population",
-  "MCV1_coverage"
-)])
+str(measles)
 ```
 
 ## What do we need?
 
 For this question, we need:
 
-- `country`, because we are starting with Pakistan
+- `country`, because we need to compare the countries in the two results
+- `region`, because we only want countries in Asia
 - `year`, because we only want 2000 and later
 - `measles_cases`, because we need incidence
 - `population`, because raw case counts are hard to compare
@@ -74,303 +57,276 @@ For this question, we need:
 ## Step 1: keep the country-years we need
 
 ```{r}
-pakistan <- measles[
-  measles$country == "Pakistan" & measles$year >= 2000,
-]
-
-pakistan <- pakistan[order(pakistan$year), ]
+asia2000 <- subset(measles, region == "Asia" & year >= 2000)
 ```
 
 ## Check the subset
 
 ```{r}
-pakistan_check_rows <- pakistan[, c(
-  "country",
-  "year",
-  "measles_cases",
-  "MCV1_coverage"
-)]
-
-head(pakistan_check_rows)
+head(asia2000)
 ```
 
-## Check the subset, continued
+## Check the subset
 
 ```{r}
-tail(pakistan_check_rows)
+summary(asia2000)
 ```
 
 ## Step 2: calculate incidence
 
-Raw case counts are useful, but they do not account for population size.
+::: {.incremental}
+* Raw case counts are useful, but they do not account for population size. Any ideas?
+* cases per 100,000 people
+:::
 
-So we make a new variable:
-
-> measles cases per 100,000 people
+. . .
 
 ```{r}
-pakistan$cases_per_100k <- pakistan$measles_cases / pakistan$population * 100000
+asia2000$cases_per_100k <- asia2000$measles_cases / asia2000$population * 100000
 ```
 
 ## Check the calculation
 
 ```{r}
-pakistan_check <- pakistan[, c(
+summary(asia2000)
+```
+
+## Step 3: lowest coverage
+
+Now we need to find the row with the lowest MCV1 coverage.
+
+`which.min()` gives us the row number for the smallest value in a vector.
+
+```{r}
+lowest_coverage_row <- asia2000[which.min(asia2000$MCV1_coverage), c(
+  "country",
   "year",
+  "MCV1_coverage",
   "measles_cases",
   "population",
   "cases_per_100k"
 )]
 
-pakistan_check$cases_per_100k <- round(pakistan_check$cases_per_100k, 2)
-
-tail(pakistan_check, 8)
+lowest_coverage_row
 ```
 
-## Step 3: translate each condition
+## What did `which.min()` do?
 
-The English rule has two parts:
+::: {.incremental}
+* `asia2000$MCV1_coverage` is one long vector of coverage values.
+* `which.min(asia2000$MCV1_coverage)` finds the position of the smallest non-missing value.
+* We use that position to pull out the whole row.
+:::
 
-1. MCV1 coverage is below 90%.
-1. Measles incidence is at least 1 case per 100,000 people.
+## Step 4: highest incidence
 
-In R, each part becomes a logical vector.
+Now we do the same thing for measles incidence.
+
+This time we want the largest value, so we use `which.max()`.
 
 ```{r}
-low_coverage <- pakistan$MCV1_coverage < 90
-elevated_incidence <- pakistan$cases_per_100k >= 1
-```
-
-## Inspect the logical vectors
-
-```{r}
-logic_check <- data.frame(
-  year = pakistan$year,
-  MCV1_coverage = pakistan$MCV1_coverage,
-  cases_per_100k = round(pakistan$cases_per_100k, 2),
-  low_coverage = low_coverage,
-  elevated_incidence = elevated_incidence
-)
-
-tail(logic_check, 8)
-```
-
-## Missing values matter
-
-If coverage is missing, R cannot decide whether coverage is below 90%.
-
-```{r}
-table(low_coverage, useNA = "ifany")
-```
-
-That is not a failure. It is R refusing to guess.
-
-For a manuscript-style analysis, we need to decide what we want to do with
-missing information.
-
-## Step 4: write the decision rule
-
-Here is the rule in full:
-
-1. If coverage or incidence is missing, label the row `"missing information"`.
-1. Otherwise, if coverage is below 90% and incidence is at least 1, label the
-   row `"priority year"`.
-1. Otherwise, label the row `"not priority"`.
-
-## Step 4: code the decision rule
-
-```{r}
-pakistan$priority_year <- ifelse(
-  is.na(pakistan$MCV1_coverage) | is.na(pakistan$cases_per_100k),
-  "missing information",
-  ifelse(
-    pakistan$MCV1_coverage < 90 & pakistan$cases_per_100k >= 1,
-    "priority year",
-    "not priority"
-  )
-)
-```
-
-## What did `ifelse()` do?
-
-`ifelse()` has three pieces:
-
-```r
-ifelse(test, value_if_true, value_if_false)
-```
-
-Our nested version says:
-
-- first check whether the data are missing
-- if not, check whether the year meets the priority rule
-- give every row one label
-
-## Step 5: inspect the answer
-
-```{r}
-pakistan_result <- pakistan[, c(
+highest_incidence_row <- asia2000[which.max(asia2000$cases_per_100k), c(
+  "country",
   "year",
-  "measles_cases",
   "MCV1_coverage",
-  "cases_per_100k",
-  "priority_year"
+  "measles_cases",
+  "population",
+  "cases_per_100k"
 )]
 
-pakistan_result$cases_per_100k <- round(pakistan_result$cases_per_100k, 2)
+highest_incidence_row
 ```
 
-## Step 5: inspect recent years
+## Step 5: are they the same country?
+
+We now have two rows:
+
+1. the row with the lowest MCV1 coverage
+1. the row with the highest measles incidence per capita
+
+The research question asks whether the **country** is the same.
 
 ```{r}
-tail(pakistan_result, 8)
+lowest_coverage_country <- lowest_coverage_row$country
+highest_incidence_country <- highest_incidence_row$country
+
+same_country <- lowest_coverage_country == highest_incidence_country
+
+lowest_coverage_country
+highest_incidence_country
 ```
 
-## Step 6: summarize the answer
+## Step 6: write the answer with `if` {.scrollable}
+
+This is a different kind of conditional.
+
+Here we are not labeling every row. We are asking one yes/no question and then
+choosing one sentence.
 
 ```{r}
-table(pakistan$priority_year)
+if (same_country) {
+  paste0(
+    "Yes. ",
+    lowest_coverage_country,
+    " had both the lowest MCV1 coverage and the highest measles incidence ",
+    "per capita."
+  )
+} else {
+  paste0(
+    "No. ",
+    lowest_coverage_country,
+    " had the lowest MCV1 coverage, but ",
+    highest_incidence_country,
+    " had the highest measles incidence per capita."
+  )
+}
 ```
 
-```{r}
-pakistan$year[pakistan$priority_year == "priority year"]
-```
-
-## Make a small manuscript table
+## Make a small table
 
 ```{r}
-priority_years <- pakistan$year[pakistan$priority_year == "priority year"]
-
-data.frame(
-  country = "Pakistan",
-  start_year = min(pakistan$year),
-  end_year = max(pakistan$year),
-  total_years = nrow(pakistan),
-  priority_years = length(priority_years),
-  most_recent_priority_year = max(priority_years)
+answer_table <- data.frame(
+  statistic = c("Lowest MCV1 coverage", "Highest measles incidence"),
+  country = c(lowest_coverage_row$country, highest_incidence_row$country),
+  year = c(lowest_coverage_row$year, highest_incidence_row$year),
+  MCV1_coverage = c(
+    lowest_coverage_row$MCV1_coverage,
+    highest_incidence_row$MCV1_coverage
+  ),
+  cases_per_100k = c(
+    lowest_coverage_row$cases_per_100k,
+    highest_incidence_row$cases_per_100k
+  )
 )
+
+answer_table
 ```
 
-## Make a quick figure
+## Make a quick figure {.scrollable}
 
 ```{r}
+plot_rows <- !is.na(asia2000$MCV1_coverage) &
+  !is.na(asia2000$cases_per_100k)
+
 plot(
-  pakistan$year,
-  pakistan$cases_per_100k,
-  type = "b",
-  xlab = "Year",
+  asia2000$MCV1_coverage[plot_rows],
+  asia2000$cases_per_100k[plot_rows],
+  pch = 16,
+  col = "gray70",
+  xlab = "MCV1 coverage (%)",
   ylab = "Measles cases per 100,000 people",
-  main = "Pakistan measles incidence since 2000"
+  main = "Asian country-years since 2000"
 )
-
-abline(h = 1, lty = 2)
 
 points(
-  pakistan$year[pakistan$priority_year == "priority year"],
-  pakistan$cases_per_100k[pakistan$priority_year == "priority year"],
+  lowest_coverage_row$MCV1_coverage,
+  lowest_coverage_row$cases_per_100k,
   pch = 19,
-  col = "red"
+  col = "red",
+  cex = 1.5
+)
+
+points(
+  highest_incidence_row$MCV1_coverage,
+  highest_incidence_row$cases_per_100k,
+  pch = 19,
+  col = "blue",
+  cex = 1.5
+)
+
+legend(
+  "topright",
+  legend = c("Lowest MCV1 coverage", "Highest incidence"),
+  pch = 19,
+  col = c("red", "blue"),
+  bty = "n"
 )
 ```
 
-## What goes in the report?
-
-**Methods sentence**
-
-We defined a priority year as a country-year with MCV1 coverage below 90% and
-at least 1 reported measles case per 100,000 people; country-years with missing
-coverage or incidence were labeled as missing information.
-
-**Results sentence**
-
-Pakistan had several priority years since 2000 under this rule, with the most
-recent priority year identified in the summary table.
-
-## Active checkpoint
-
-**Student prompt**
+## You try it!
 
 Change the question:
 
-> In Afghanistan since 2010, which years should be flagged if MCV2 coverage was
-> below 80% or measles incidence was at least 5 cases per 100,000 people?
+> Since 2010, did the country in the Americas with the lowest MCV2 coverage also
+> have the highest measles incidence per capita?
 
 Write the code before looking at the solution.
 
-## Active checkpoint: hint
+## You try it!: hint
 
 You need to change four pieces:
 
-1. the country
+1. the region
 1. the start year
-1. the coverage variable and cutoff
-1. the logical connector, because this rule uses "or"
+1. the coverage variable
+1. the object names, so you do not overwrite the first answer
 
-The R operator for "or" is `|`.
-
-## Active checkpoint: solution
+## You try it!: solution
 
 ```{r}
-afghanistan <- measles[
-  measles$country == "Afghanistan" & measles$year >= 2010,
-]
+americas2010 <- subset(measles, region == "Americas" & year >= 2010)
 
-afghanistan <- afghanistan[order(afghanistan$year), ]
-afghanistan$cases_per_100k <- afghanistan$measles_cases / afghanistan$population * 100000
+americas2010$cases_per_100k <- americas2010$measles_cases /
+  americas2010$population * 100000
 ```
 
-## Active checkpoint: solution rule
+## You try it!: solution rows
 
 ```{r}
-afghanistan$priority_year <- ifelse(
-  (!is.na(afghanistan$MCV2_coverage) & afghanistan$MCV2_coverage < 80) |
-    (!is.na(afghanistan$cases_per_100k) & afghanistan$cases_per_100k >= 5),
-  "priority year",
-  ifelse(
-    is.na(afghanistan$MCV2_coverage) | is.na(afghanistan$cases_per_100k),
-    "missing information",
-    "not priority"
-  )
-)
-```
-
-## Active checkpoint: solution table
-
-```{r}
-afghanistan_result <- afghanistan[, c(
+lowest_mcv2_row <- americas2010[which.min(americas2010$MCV2_coverage), c(
+  "country",
   "year",
-  "measles_cases",
   "MCV2_coverage",
-  "cases_per_100k",
-  "priority_year"
+  "measles_cases",
+  "population",
+  "cases_per_100k"
 )]
 
-afghanistan_result$cases_per_100k <- round(afghanistan_result$cases_per_100k, 2)
+highest_americas_incidence_row <- americas2010[
+  which.max(americas2010$cases_per_100k),
+  c(
+    "country",
+    "year",
+    "MCV2_coverage",
+    "measles_cases",
+    "population",
+    "cases_per_100k"
+  )
+]
 
-afghanistan_labels <- afghanistan_result[, c("year", "priority_year")]
-head(afghanistan_labels, 7)
+lowest_mcv2_row$cases_per_100k <- round(
+  lowest_mcv2_row$cases_per_100k,
+  2
+)
+
+highest_americas_incidence_row$cases_per_100k <- round(
+  highest_americas_incidence_row$cases_per_100k,
+  2
+)
+
+lowest_mcv2_row
 ```
 
-## Active checkpoint: solution table, continued
+## You try it!: solution rows, continued
 
 ```{r}
-tail(afghanistan_labels, 7)
+highest_americas_incidence_row
 ```
 
-## Active checkpoint: summarize it
+## You try it!: compare them
 
 ```{r}
-table(afghanistan$priority_year)
-```
-
-```{r}
-afghanistan$year[afghanistan$priority_year == "priority year"]
+lowest_mcv2_row$country
+highest_americas_incidence_row$country
 ```
 
 ## What did we practice?
 
 - Starting with a question that a reader can understand
-- Turning a plain-English rule into logical conditions
-- Using `&`, `|`, `is.na()`, and `ifelse()`
+- Filtering rows with a logical condition
+- Creating an incidence rate
+- Finding minimum and maximum rows with `which.min()` and `which.max()`
+- Using `if` and `else` to turn a comparison into a sentence
 - Creating a table, figure, and short manuscript-style interpretation
 
-Next time, we will repeat this same rule across many countries.
+Next time, we will repeat ideas like this across many countries.

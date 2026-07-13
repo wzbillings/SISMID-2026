@@ -10,10 +10,10 @@ format:
 The earlier mixed `deSolve` and `optim()` deck has been split for the 2026
 course.
 
-- Core Day 3 ODE material now lives in `modules/ODEs.qmd`.
-- Optional maximum-likelihood material now lives in `modules/optim-likelihood.qmd`.
+- Core Day 3 ODE material now lives in `modules/Module08-ODEs.qmd`.
+- Optional maximum-likelihood material now lives in `modules/advanced-optim-likelihood.qmd`.
 - Optional ODE parameter-fitting material now lives in
-  `modules/ODE-parameter-fitting.qmd`.
+  `modules/advanced-ODE-parameter-fitting.qmd`.
 
 This file is excluded from the Quarto render in `_quarto.yml` and is kept only
 as a pointer for anyone looking for the old combined source path.

@@ -5,8 +5,8 @@
 - `modules/Walkthrough1.qmd`
 - `modules/Walkthrough2.qmd`
 - `modules/Module05-FunctionalProgramming.qmd`
-- `modules/Module06-S3-lm-formulas.qmd`
-- `modules/ODEs.qmd`
+- `modules/Module07-S3-lm-formulas.qmd`
+- `modules/Module08-ODEs.qmd`
 - Generated HTML in `docs/modules/` for the five decks above.
 
 ## Change summary
@@ -33,15 +33,15 @@ Rendered successfully with Quarto:
 - `quarto render modules\Walkthrough1.qmd`
 - `quarto render modules\Walkthrough2.qmd`
 - `quarto render modules\Module05-FunctionalProgramming.qmd`
-- `quarto render modules\Module06-S3-lm-formulas.qmd`
-- `quarto render modules\ODEs.qmd`
+- `quarto render modules\Module07-S3-lm-formulas.qmd`
+- `quarto render modules\Module08-ODEs.qmd`
 
 Inspected the rendered HTML with Playwright using local Chrome at a 1280 x 800 viewport. The check visited every revealjs slide in:
 
 - `docs/modules/Walkthrough1.html`
 - `docs/modules/Walkthrough2.html`
 - `docs/modules/Module05-FunctionalProgramming.html`
-- `docs/modules/Module06-S3-lm-formulas.html`
-- `docs/modules/ODEs.html`
+- `docs/modules/Module07-S3-lm-formulas.html`
+- `docs/modules/Module08-ODEs.html`
 
 Result: no ordinary slides exceeded the reveal viewport. Remaining internal scroll regions were limited to the intentional long source-code blocks listed above.

@@ -76,6 +76,16 @@ The 2026 core schedule is set, and we also keep a few optional or take-home topi
 - Day 3 core: ODEs in R, disease mapping/GIS, and time for questions.
 - Our website lists additional free resources for learning R in a stats and epi context, and also has some more advanced materials you can use to practice what you've learned if you want.
 
+## Using AI in This Course
+
+AI tools are welcome in this course. Use them as learning partners for coding, debugging, explanation, planning, and checking your work.
+
+- **You are responsible for everything you submit**: code, analysis, figures, and interpretation.
+- Use AI to deepen your learning, **not to skip the thinking**. You should be able to explain and revise your work.
+- Be transparent. Acknowledge meaningful AI help, including code, text, analysis choices, or editing.
+- Cite or link any non-original code, text, data, or ideas, whether from AI, websites, examples, papers, or other people.
+- Do not upload private, sensitive, or unpublished data unless you know it is permitted.
+
 ## Installing R
 
 Hopefully everyone has pre-installed R and RStudio (and Quarto if needed). Let's take a minute to make sure everyone is set up and then jump in!

@@ -1,5 +1,5 @@
 ---
-title: "Data science walkthrough 2: Repeating an analysis"
+title: "Data science walkthrough 2"
 format:
   revealjs:
     toc: false
@@ -10,21 +10,20 @@ execute:
   message: false
 ---
 
-## The same problem, repeated
+## From one region to many countries
 
-In Walkthrough 1, we answered one country-level question:
+Last time we looked at coverage and incidence in one specific region.
 
-> In Pakistan since 2000, which years should we flag because MCV1 coverage was
-> low and measles incidence was elevated?
+That works when the question is small enough to inspect directly.
 
-Today we ask the next manuscript question:
+This time, let's think about a bigger manuscript problem:
 
-> Is Pakistan unusual, or do we see the same pattern across other countries in
-> the region?
+> How can we flag issues across multiple countries when there is too much data
+> to look through manually?
 
 ## What changes today?
 
-The analysis rule does not change:
+To make the repeated task concrete, we will use a simple flagging rule:
 
 > Priority year = MCV1 coverage below 90% and at least 1 measles case per
 > 100,000 people.
@@ -39,13 +38,9 @@ The workflow changes:
 ## Load the data
 
 ```{r}
-data_file <- file.path("data", "measles_final.Rds")
+data_file <- here::here("data", "measles_final.Rds")
 
-if (!file.exists(data_file)) {
-  data_file <- file.path("..", "data", "measles_final.Rds")
-}
-
-measles <- readRDS(data_file)
+measles <- readr::read_rds(data_file)
 ```
 
 ## Before we loop
@@ -60,7 +55,9 @@ For one country, we need to:
 1. Count the priority years.
 1. Return one row of results.
 
-That is a function-shaped problem.
+. . .
+
+Sounds like a good use of a function!
 
 ## Function 1: apply the rule
 
@@ -71,19 +68,14 @@ add_priority_rule <- function(country_data,
   country_data$cases_per_100k <- (
     country_data$measles_cases / country_data$population * 100000
   )
+  
+  mcv_coverage_flag <- country_data$MCV1_coverage < coverage_cutoff
+  
+  incidence_flag <- country_data$cases_per_100k >= incidence_cutoff
 
-  country_data$priority_year <- ifelse(
-    is.na(country_data$MCV1_coverage) | is.na(country_data$cases_per_100k),
-    "missing information",
-    ifelse(
-      country_data$MCV1_coverage < coverage_cutoff &
-        country_data$cases_per_100k >= incidence_cutoff,
-      "priority year",
-      "not priority"
-    )
-  )
+  country_data$priority_year <- mcv_coverage_flag & incidence_flag
 
-  country_data
+  return(country_data)
 }
 ```
 
@@ -97,7 +89,7 @@ pakistan <- measles[
 pakistan <- pakistan[order(pakistan$year), ]
 pakistan <- add_priority_rule(pakistan)
 
-tail(pakistan[, c("year", "MCV1_coverage", "cases_per_100k", "priority_year")])
+head(pakistan[, c("year", "MCV1_coverage", "cases_per_100k", "priority_year")])
 ```
 
 ## Function 2: summarize one country
@@ -108,17 +100,16 @@ summarize_priority_years <- function(country_name,
                                      min_year = 2000,
                                      coverage_cutoff = 90,
                                      incidence_cutoff = 1) {
-  country_data <- data[
-    data$country == country_name & data$year >= min_year,
-  ]
+  country_data <- subset(
+    data,
+    country == country_name & year >= min_year
+  )
 
   country_data <- add_priority_rule(
     country_data, coverage_cutoff, incidence_cutoff
   )
 
-  priority_years <- country_data$year[
-    country_data$priority_year == "priority year"
-  ]
+  priority_years <- subset(country_data, priority_year)$year
 
   data.frame(
     country = country_name,
@@ -126,7 +117,6 @@ summarize_priority_years <- function(country_name,
     sub_region = country_data$sub_region[1],
     years = nrow(country_data),
     priority_years = length(priority_years),
-    missing_information_years = sum(country_data$priority_year == "missing information"),
     most_recent_priority_year = if (length(priority_years) == 0) {
       NA_integer_
     } else {
@@ -157,8 +147,6 @@ summarize_priority_years("Pakistan", data = measles)
 
 If that works for Pakistan, the loop only needs to change the country name.
 
-That is the main trick.
-
 ## Repeat with a `for` loop
 
 ```{r}
@@ -175,12 +163,7 @@ for (country_name in countries) {
 ## Repeat with a `for` loop: result
 
 ```{r}
-country_summaries[, c(
-  "country",
-  "priority_years",
-  "most_recent_priority_year",
-  "max_cases_per_100k"
-)]
+country_summaries
 ```
 
 ## What did the loop do?
@@ -190,8 +173,6 @@ Each loop pass did the same job:
 1. Put one country name into `country_name`.
 1. Run `summarize_priority_years()` for that country.
 1. Add the one-row answer to the growing results table.
-
-The computer is doing the repeated typing for us.
 
 ## Repeat with `lapply()`
 
@@ -209,6 +190,8 @@ summary_list[[1]]
 ```
 
 ## Combine the list
+
+- It's worth understanding how to use `do.call()` even though it's weird.
 
 ```{r}
 country_summaries_lapply <- do.call(rbind, summary_list)
@@ -252,25 +235,8 @@ asia_summaries <- do.call(rbind, asia_summary_list)
 asia_summaries <- asia_summaries[
   order(-asia_summaries$priority_years, asia_summaries$country),
 ]
-```
 
-## Sort the results: top countries
-
-```{r}
-asia_top_columns <- asia_summaries[, c(
-  "country",
-  "priority_years",
-  "most_recent_priority_year",
-  "max_cases_per_100k"
-)]
-
-head(asia_top_columns, 5)
-```
-
-## Sort the results: top countries, continued
-
-```{r}
-head(asia_top_columns, 10)[6:10, ]
+head(asia_summaries)
 ```
 
 ## Make a manuscript-style table
@@ -282,7 +248,6 @@ top_asia_table <- top_asia[, c(
   "country",
   "sub_region",
   "priority_years",
-  "missing_information_years",
   "most_recent_priority_year",
   "max_cases_per_100k"
 )]
@@ -295,7 +260,6 @@ top_asia_counts <- top_asia_table[, c(
 
 top_asia_details <- top_asia_table[, c(
   "country",
-  "missing_information_years",
   "most_recent_priority_year",
   "max_cases_per_100k"
 )]
@@ -319,12 +283,6 @@ tail(top_asia_counts, 5)
 head(top_asia_details, 5)
 ```
 
-## Make a manuscript-style table: details, continued
-
-```{r}
-tail(top_asia_details, 5)
-```
-
 ## Make a quick figure
 
 ```{r}
@@ -337,21 +295,7 @@ barplot(
 )
 ```
 
-## What goes in the report?
-
-**Methods sentence**
-
-We wrote a reusable function to classify each country-year as a priority year
-when MCV1 coverage was below 90% and measles incidence was at least 1 case per
-100,000 people, then applied that function to every country in Asia.
-
-**Results sentence**
-
-The repeated analysis identified several countries in Asia with many priority
-years since 2000, suggesting that the Pakistan pattern was not unique under
-this simple rule.
-
-## Active checkpoint
+## You try it!
 
 **Student prompt**
 
@@ -360,7 +304,7 @@ Repeat the regional analysis for Africa.
 Your goal is to produce a table of the 10 countries in Africa with the most
 priority years since 2000.
 
-## Active checkpoint: hint
+## You try it!: hint
 
 Reuse the objects we already built.
 
@@ -370,7 +314,7 @@ You only need to change:
 1. the vector of country names
 1. the object names, if you want them to be easier to read
 
-## Active checkpoint: solution
+## You try it!: solution
 
 ```{r}
 africa <- measles[measles$region == "Africa", ]
@@ -385,7 +329,7 @@ africa_summary_list <- lapply(
 africa_summaries <- do.call(rbind, africa_summary_list)
 ```
 
-## Active checkpoint: solution sort
+## You try it!: solution sort
 
 ```{r}
 africa_summaries <- africa_summaries[
@@ -393,7 +337,7 @@ africa_summaries <- africa_summaries[
 ]
 ```
 
-## Active checkpoint: solution table
+## You try it!: solution table
 
 ```{r}
 africa_top_columns <- africa_summaries[, c(
@@ -404,13 +348,13 @@ africa_top_columns <- africa_summaries[, c(
 head(africa_top_columns, 5)
 ```
 
-## Active checkpoint: solution table, continued
+## You try it!: solution table, continued
 
 ```{r}
 head(africa_top_columns, 10)[6:10, ]
 ```
 
-## Active checkpoint: one more change
+## You try it!: one more change
 
 What if the manuscript team decides that 1 case per 100,000 is too sensitive?
 
@@ -419,7 +363,7 @@ Try the Africa analysis again with:
 - MCV1 cutoff: 90%
 - incidence cutoff: 5 cases per 100,000
 
-## Active checkpoint: solution
+## You try it!: solution
 
 ```{r}
 africa_summary_list_strict <- lapply(
@@ -433,7 +377,7 @@ africa_summary_list_strict <- lapply(
 africa_summaries_strict <- do.call(rbind, africa_summary_list_strict)
 ```
 
-## Active checkpoint: strict solution sort
+## You try it!: strict solution sort
 
 ```{r}
 africa_summaries_strict <- africa_summaries_strict[
@@ -441,7 +385,7 @@ africa_summaries_strict <- africa_summaries_strict[
 ]
 ```
 
-## Active checkpoint: strict solution table
+## You try it!: strict solution table
 
 ```{r}
 africa_strict_top_columns <- africa_summaries_strict[, c(
@@ -452,7 +396,7 @@ africa_strict_top_columns <- africa_summaries_strict[, c(
 head(africa_strict_top_columns, 5)
 ```
 
-## Active checkpoint: strict solution table, continued
+## You try it!: strict solution table, continued
 
 ```{r}
 head(africa_strict_top_columns, 10)[6:10, ]

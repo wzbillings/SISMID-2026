@@ -20,7 +20,7 @@ read_qmd_title <- function(path) {
 
 site <- yaml::read_yaml("_quarto.yml")
 sidebar <- site$website$sidebar$contents
-core_sections <- c("Day 1 core", "Day 2 core", "Day 3 core")
+core_sections <- c("Day 1 material", "Day 2 material", "Day 3 material")
 numbered_module_hrefs <- c(
   "modules/Module00-Welcome.qmd",
   "modules/Module01-Quarto.qmd",
@@ -28,14 +28,21 @@ numbered_module_hrefs <- c(
   "modules/Module03-Iteration.qmd",
   "modules/Module04-Functions.qmd",
   "modules/Module05-FunctionalProgramming.qmd",
-  "modules/UsefulPackages.qmd",
-  "modules/Module06-S3-lm-formulas.qmd",
-  "modules/ODEs.qmd",
-  "modules/DiseaseMapping.qmd"
+  "modules/Module06-UsefulPackages.qmd",
+  "modules/Module07-S3-lm-formulas.qmd",
+  "modules/Module08-ODEs.qmd",
+  "modules/Module09-DiseaseMapping.qmd"
 )
 unnumbered_core_hrefs <- c(
   "modules/Walkthrough1.qmd",
   "modules/Walkthrough2.qmd"
+)
+advanced_module_hrefs <- c(
+  "modules/advanced-bootstrapping.qmd",
+  "modules/advanced-Arrow.qmd",
+  "modules/advanced-power-sim.qmd",
+  "modules/advanced-optim-likelihood.qmd",
+  "modules/advanced-ODE-parameter-fitting.qmd"
 )
 
 failures <- character()
@@ -68,9 +75,22 @@ if (!identical(actual_module_hrefs, numbered_module_hrefs)) {
   )
 }
 
+missing_core_hrefs <- setdiff(c(numbered_module_hrefs, unnumbered_core_hrefs), core_hrefs)
+if (length(missing_core_hrefs)) {
+  failures <- c(
+    failures,
+    sprintf("Missing core module href(s): %s", paste(missing_core_hrefs, collapse = ", "))
+  )
+}
+
 for (module_number in seq_along(numbered_module_hrefs) - 1L) {
   href <- numbered_module_hrefs[[module_number + 1L]]
-  item <- core_items[[match(href, core_hrefs)]]
+  item_index <- match(href, core_hrefs)
+  if (is.na(item_index)) {
+    next
+  }
+
+  item <- core_items[[item_index]]
   prefix <- sprintf("Module %d: ", module_number)
 
   if (!startsWith(item$text, prefix)) {
@@ -99,7 +119,12 @@ for (module_number in seq_along(numbered_module_hrefs) - 1L) {
 }
 
 for (href in unnumbered_core_hrefs) {
-  item <- core_items[[match(href, core_hrefs)]]
+  item_index <- match(href, core_hrefs)
+  if (is.na(item_index)) {
+    next
+  }
+
+  item <- core_items[[item_index]]
   title <- read_qmd_title(href)
 
   if (startsWith(item$text, "Module ")) {
@@ -113,6 +138,40 @@ for (href in unnumbered_core_hrefs) {
     failures <- c(
       failures,
       sprintf("Non-module title %s should not start with 'Module '", shQuote(title))
+    )
+  }
+}
+
+advanced_matches <- vapply(
+  sidebar,
+  function(item) identical(item$section, "Advanced take-home materials"),
+  logical(1)
+)
+
+if (!any(advanced_matches)) {
+  failures <- c(failures, "Missing sidebar section: Advanced take-home materials")
+} else {
+  advanced_section <- sidebar[[which(advanced_matches)[[1]]]]
+  advanced_hrefs <- vapply(advanced_section$contents, `[[`, character(1), "href")
+
+  if (!identical(advanced_hrefs, advanced_module_hrefs)) {
+    failures <- c(
+      failures,
+      paste(
+        "Advanced module order does not match expected order:",
+        paste(advanced_hrefs, collapse = ", ")
+      )
+    )
+  }
+
+  advanced_filenames <- basename(advanced_hrefs)
+  if (!all(startsWith(advanced_filenames, "advanced-"))) {
+    failures <- c(
+      failures,
+      sprintf(
+        "Advanced module filename(s) missing advanced- prefix: %s",
+        paste(advanced_filenames[!startsWith(advanced_filenames, "advanced-")], collapse = ", ")
+      )
     )
   }
 }

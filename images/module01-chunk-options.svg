@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Code chunk label and options</title>
+  <desc id="desc">A schematic R code chunk showing a label, options, and code body.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .code { fill: #111827; stroke: #111827; stroke-width: 3; }
+      .line { fill: #1f2937; }
+      .labelBox { fill: #d6f0ef; stroke: #0f766e; }
+      .optionBox { fill: #fef3c7; stroke: #b45309; }
+      .bodyBox { fill: #ede9fe; stroke: #6d28d9; }
+      .title { font: 700 30px Arial, sans-serif; fill: #111827; }
+      .text { font: 22px Arial, sans-serif; fill: #111827; }
+      .small { font: 18px Arial, sans-serif; fill: #374151; }
+      .mono { font: 24px Consolas, "Courier New", monospace; fill: #f8fafc; }
+      .monoDim { font: 24px Consolas, "Courier New", monospace; fill: #bfdbfe; }
+      .arrow { stroke: #334155; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="1100" height="620" rx="24"/>
+
+  <rect class="code" x="85" y="90" width="610" height="430" rx="18"/>
+  <rect class="line" x="85" y="90" width="610" height="55" rx="18"/>
+  <circle cx="125" cy="118" r="9" fill="#ef4444"/>
+  <circle cx="155" cy="118" r="9" fill="#f59e0b"/>
+  <circle cx="185" cy="118" r="9" fill="#22c55e"/>
+  <text class="mono" x="125" y="195">```{r qcrc-bmi-histogram}</text>
+  <text class="monoDim" x="125" y="242">#| echo: false</text>
+  <text class="monoDim" x="125" y="289">#| fig-cap: "BMI distribution"</text>
+  <text class="mono" x="125" y="356">hist(qcrc_main$bmi)</text>
+  <text class="mono" x="125" y="430">```</text>
+
+  <rect class="labelBox" x="755" y="130" width="285" height="95" rx="16"/>
+  <text class="title" x="785" y="169">Chunk label</text>
+  <text class="small" x="785" y="201">Names files, navigation, caches</text>
+  <path class="arrow" d="M740 175 H615"/>
+
+  <rect class="optionBox" x="755" y="265" width="285" height="115" rx="16"/>
+  <text class="title" x="785" y="305">Chunk options</text>
+  <text class="small" x="785" y="337">Control echo, warning, figures,</text>
+  <text class="small" x="785" y="361">captions, and evaluation</text>
+  <path class="arrow" d="M740 320 H595"/>
+
+  <rect class="bodyBox" x="755" y="420" width="285" height="95" rx="16"/>
+  <text class="title" x="785" y="459">Code body</text>
+  <text class="small" x="785" y="491">The R code that gets run</text>
+  <path class="arrow" d="M740 470 H480"/>
+
+  <text class="text" x="105" y="570">A labeled chunk is easier to find, debug, cache, and reuse.</text>
+</svg>

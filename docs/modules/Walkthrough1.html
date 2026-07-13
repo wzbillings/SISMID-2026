@@ -11,7 +11,7 @@
 
   <meta name="author" content="Alex Edwards">
   <meta name="author" content="Zane Billings">
-  <title>SISMID R for ID Materials (2026) – Data science walkthrough 1: Conditionals</title>
+  <title>SISMID R for ID Materials (2026) – Data science walkthrough 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -193,7 +193,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Data science walkthrough 1: Conditionals</h1>
+  <h1 class="title">Data science walkthrough 1</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -209,64 +209,64 @@
 </div>
 
 </section>
-<section id="a-small-manuscript-problem" class="slide level2">
-<h2>A small manuscript problem</h2>
-<p>We are going to answer one concrete question with the measles data:</p>
+<section id="an-example-research-question" class="slide level2">
+<h2>An example research question</h2>
 <blockquote>
-<p>In Pakistan since 2000, which years should we flag for follow-up because first-dose measles vaccine coverage was low and measles incidence was elevated?</p>
+<p>Since 2000, did the country in Asia with the lowest MCV1 coverage also have the highest measles incidence per capita?</p>
 </blockquote>
-</section>
-<section id="a-small-manuscript-problem-manuscript-arc" class="slide level2">
-<h2>A small manuscript problem: manuscript arc</h2>
-<p>This is a miniature version of the Exercise 1 manuscript arc:</p>
-<ol type="1">
-<li>State a question.</li>
-<li>Translate the question into a data rule.</li>
-<li>Run the rule.</li>
-<li>Write a cautious result.</li>
-</ol>
 </section>
 <section id="the-programming-idea" class="slide level2">
 <h2>The programming idea</h2>
-<p>We can describe the rule in plain English:</p>
-<blockquote>
-<p>If MCV1 coverage is below 90% and measles incidence is at least 1 case per 100,000 people, call it a priority year.</p>
-</blockquote>
-<p>Now the problem is not “Can I memorize R?”</p>
-<p>The problem is:</p>
-<blockquote>
-<p>How do I turn that sentence into computer code?</p>
-</blockquote>
+<ul>
+<li>This is something that would be pretty easy to do by hand (e.g.&nbsp;with Excel), since the dataset is not all that big.</li>
+<li>The difficult part for programming is <strong>translating this question into computer code.</strong></li>
+<li>The computer will always do exactly what we tell it to, so we have to turn the steps to solving this question into specific computer code.</li>
+</ul>
+</section>
+<section id="steps-to-solve-this-problem" class="slide level2">
+<h2>Steps to solve this problem</h2>
+<ol type="1">
+<li>Get the dataset</li>
+<li>Separate out countries in Asia and years since 2000</li>
+<li>Calculate per capita incidence</li>
+<li>Find the country with the lowest MCV1 coverage</li>
+<li>Find the country with the highest per capita incidence</li>
+<li>Are they the same?</li>
+</ol>
 </section>
 <section id="load-the-data" class="slide level2">
 <h2>Load the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>data_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>data_file <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
 <span id="cb1-2"><a></a></span>
-<span id="cb1-3"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(data_file)) {</span>
-<span id="cb1-4"><a></a>  data_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"measles_final.Rds"</span>)</span>
-<span id="cb1-5"><a></a>}</span>
-<span id="cb1-6"><a></a></span>
-<span id="cb1-7"><a></a>measles <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a></a>measles <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(data_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="look-at-the-data" class="slide level2">
 <h2>Look at the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">str</span>(measles[, <span class="fu">c</span>(</span>
-<span id="cb2-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb2-3"><a></a>  <span class="st">"year"</span>,</span>
-<span id="cb2-4"><a></a>  <span class="st">"measles_cases"</span>,</span>
-<span id="cb2-5"><a></a>  <span class="st">"population"</span>,</span>
-<span id="cb2-6"><a></a>  <span class="st">"MCV1_coverage"</span></span>
-<span id="cb2-7"><a></a>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">str</span>(measles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Classes 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame':    9416 obs. of  5 variables:
- $ country      : chr  "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
- $ year         : num  2023 2022 2021 2020 2019 ...
- $ measles_cases: num  2792 5166 2900 640 353 ...
- $ population   : num  42239854 41128771 40099462 38972230 37769499 ...
- $ MCV1_coverage: num  NA 68 63 66 64 71 67 64 62 60 ...</code></pre>
+<pre><code>spc_tbl_ [9,416 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ iso3c        : chr [1:9416] "AFG" "AFG" "AFG" "AFG" ...
+ $ year         : num [1:9416] 2023 2022 2021 2020 2019 ...
+ $ measles_cases: num [1:9416] 2792 5166 2900 640 353 ...
+ $ population   : num [1:9416] 42239854 41128771 40099462 38972230 37769499 ...
+ $ MCV1_coverage: num [1:9416] NA 68 63 66 64 71 67 64 62 60 ...
+ $ MCV2_coverage: num [1:9416] NA 49 44 43 41 49 40 40 42 44 ...
+ $ country      : chr [1:9416] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
+ $ region       : chr [1:9416] "Asia" "Asia" "Asia" "Asia" ...
+ $ sub_region   : chr [1:9416] "Southern Asia" "Southern Asia" "Southern Asia" "Southern Asia" ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   iso3c = col_character(),
+  ..   year = col_double(),
+  ..   measles_cases = col_double(),
+  ..   population = col_double(),
+  ..   MCV1_coverage = col_double(),
+  ..   MCV2_coverage = col_double()
+  .. )
+ - attr(*, "problems")=&lt;pointer: (nil)&gt; </code></pre>
 </div>
 </div>
 </section>
@@ -274,7 +274,8 @@
 <h2>What do we need?</h2>
 <p>For this question, we need:</p>
 <ul>
-<li><code>country</code>, because we are starting with Pakistan</li>
+<li><code>country</code>, because we need to compare the countries in the two results</li>
+<li><code>region</code>, because we only want countries in Asia</li>
 <li><code>year</code>, because we only want 2000 and later</li>
 <li><code>measles_cases</code>, because we need incidence</li>
 <li><code>population</code>, because raw case counts are hard to compare</li>
@@ -284,376 +285,373 @@
 <section id="step-1-keep-the-country-years-we-need" class="slide level2">
 <h2>Step 1: keep the country-years we need</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>pakistan <span class="ot">&lt;-</span> measles[</span>
-<span id="cb4-2"><a></a>  measles<span class="sc">$</span>country <span class="sc">==</span> <span class="st">"Pakistan"</span> <span class="sc">&amp;</span> measles<span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="dv">2000</span>,</span>
-<span id="cb4-3"><a></a>]</span>
-<span id="cb4-4"><a></a></span>
-<span id="cb4-5"><a></a>pakistan <span class="ot">&lt;-</span> pakistan[<span class="fu">order</span>(pakistan<span class="sc">$</span>year), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>asia2000 <span class="ot">&lt;-</span> <span class="fu">subset</span>(measles, region <span class="sc">==</span> <span class="st">"Asia"</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">2000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="check-the-subset" class="slide level2">
 <h2>Check the subset</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>pakistan_check_rows <span class="ot">&lt;-</span> pakistan[, <span class="fu">c</span>(</span>
-<span id="cb5-2"><a></a>  <span class="st">"country"</span>,</span>
-<span id="cb5-3"><a></a>  <span class="st">"year"</span>,</span>
-<span id="cb5-4"><a></a>  <span class="st">"measles_cases"</span>,</span>
-<span id="cb5-5"><a></a>  <span class="st">"MCV1_coverage"</span></span>
-<span id="cb5-6"><a></a>)]</span>
-<span id="cb5-7"><a></a></span>
-<span id="cb5-8"><a></a><span class="fu">head</span>(pakistan_check_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">head</span>(asia2000)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      country year measles_cases MCV1_coverage
-6448 Pakistan 2000          2064            57
-6447 Pakistan 2001          3849            59
-6446 Pakistan 2002          3903            60
-6445 Pakistan 2003          4740            62
-6444 Pakistan 2004          4248            63
-6443 Pakistan 2005          2981            61</code></pre>
+<pre><code># A tibble: 6 × 9
+  iso3c  year measles_cases population MCV1_coverage MCV2_coverage country    
+  &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;      
+1 AFG    2023          2792   42239854            NA            NA Afghanistan
+2 AFG    2022          5166   41128771            68            49 Afghanistan
+3 AFG    2021          2900   40099462            63            44 Afghanistan
+4 AFG    2020           640   38972230            66            43 Afghanistan
+5 AFG    2019           353   37769499            64            41 Afghanistan
+6 AFG    2018          2012   36686784            71            49 Afghanistan
+# ℹ 2 more variables: region &lt;chr&gt;, sub_region &lt;chr&gt;</code></pre>
 </div>
 </div>
 </section>
-<section id="check-the-subset-continued" class="slide level2">
-<h2>Check the subset, continued</h2>
+<section id="check-the-subset-1" class="slide level2">
+<h2>Check the subset</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">tail</span>(pakistan_check_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">summary</span>(asia2000)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      country year measles_cases MCV1_coverage
-NA.18    &lt;NA&gt;   NA            NA            NA
-NA.19    &lt;NA&gt;   NA            NA            NA
-NA.20    &lt;NA&gt;   NA            NA            NA
-NA.21    &lt;NA&gt;   NA            NA            NA
-NA.22    &lt;NA&gt;   NA            NA            NA
-NA.23    &lt;NA&gt;   NA            NA            NA</code></pre>
+<pre><code>       iso3c           year      measles_cases      population       
+ Length   :1200   Min.   :2000   Min.   :     0   Min.   :2.825e+05  
+ N.unique :  50   1st Qu.:2006   1st Qu.:     6   1st Qu.:3.857e+06  
+ N.blank  :   0   Median :2012   Median :    94   Median :1.173e+07  
+ Min.nchar:   3   Mean   :2012   Mean   :  3457   Mean   :8.494e+07  
+ Max.nchar:   3   3rd Qu.:2017   3rd Qu.:  1223   3rd Qu.:4.811e+07  
+                  Max.   :2023   Max.   :131441   Max.   :1.429e+09  
+                                 NAs    :93                          
+ MCV1_coverage   MCV2_coverage        country           region    
+ Min.   : 0.00   Min.   : 0.00   Length   :1200   Length   :1200  
+ 1st Qu.:83.00   1st Qu.:80.75   N.unique :  50   N.unique :   1  
+ Median :95.00   Median :94.00   N.blank  :   0   N.blank  :   0  
+ Mean   :88.94   Mean   :84.80   Min.nchar:   4   Min.nchar:   4  
+ 3rd Qu.:98.00   3rd Qu.:98.00   Max.nchar:  38   Max.nchar:   4  
+ Max.   :99.00   Max.   :99.00                                    
+ NAs    :98      NAs    :288                                      
+     sub_region  
+ Length   :1200  
+ N.unique :   5  
+ N.blank  :   0  
+ Min.nchar:  12  
+ Max.nchar:  18  
+                 
+                 </code></pre>
 </div>
 </div>
 </section>
 <section id="step-2-calculate-incidence" class="slide level2">
 <h2>Step 2: calculate incidence</h2>
-<p>Raw case counts are useful, but they do not account for population size.</p>
-<p>So we make a new variable:</p>
-<blockquote>
-<p>measles cases per 100,000 people</p>
-</blockquote>
+<div>
+<ul>
+<li class="fragment">Raw case counts are useful, but they do not account for population size. Any ideas?</li>
+<li class="fragment">cases per 100,000 people</li>
+</ul>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>pakistan<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> pakistan<span class="sc">$</span>measles_cases <span class="sc">/</span> pakistan<span class="sc">$</span>population <span class="sc">*</span> <span class="dv">100000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>asia2000<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> asia2000<span class="sc">$</span>measles_cases <span class="sc">/</span> asia2000<span class="sc">$</span>population <span class="sc">*</span> <span class="dv">100000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section id="check-the-calculation" class="slide level2">
 <h2>Check the calculation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>pakistan_check <span class="ot">&lt;-</span> pakistan[, <span class="fu">c</span>(</span>
-<span id="cb10-2"><a></a>  <span class="st">"year"</span>,</span>
-<span id="cb10-3"><a></a>  <span class="st">"measles_cases"</span>,</span>
-<span id="cb10-4"><a></a>  <span class="st">"population"</span>,</span>
-<span id="cb10-5"><a></a>  <span class="st">"cases_per_100k"</span></span>
-<span id="cb10-6"><a></a>)]</span>
-<span id="cb10-7"><a></a></span>
-<span id="cb10-8"><a></a>pakistan_check<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> <span class="fu">round</span>(pakistan_check<span class="sc">$</span>cases_per_100k, <span class="dv">2</span>)</span>
-<span id="cb10-9"><a></a></span>
-<span id="cb10-10"><a></a><span class="fu">tail</span>(pakistan_check, <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">summary</span>(asia2000)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      year measles_cases population cases_per_100k
-NA.16   NA            NA         NA             NA
-NA.17   NA            NA         NA             NA
-NA.18   NA            NA         NA             NA
-NA.19   NA            NA         NA             NA
-NA.20   NA            NA         NA             NA
-NA.21   NA            NA         NA             NA
-NA.22   NA            NA         NA             NA
-NA.23   NA            NA         NA             NA</code></pre>
+<pre><code>       iso3c           year      measles_cases      population       
+ Length   :1200   Min.   :2000   Min.   :     0   Min.   :2.825e+05  
+ N.unique :  50   1st Qu.:2006   1st Qu.:     6   1st Qu.:3.857e+06  
+ N.blank  :   0   Median :2012   Median :    94   Median :1.173e+07  
+ Min.nchar:   3   Mean   :2012   Mean   :  3457   Mean   :8.494e+07  
+ Max.nchar:   3   3rd Qu.:2017   3rd Qu.:  1223   3rd Qu.:4.811e+07  
+                  Max.   :2023   Max.   :131441   Max.   :1.429e+09  
+                                 NAs    :93                          
+ MCV1_coverage   MCV2_coverage        country           region    
+ Min.   : 0.00   Min.   : 0.00   Length   :1200   Length   :1200  
+ 1st Qu.:83.00   1st Qu.:80.75   N.unique :  50   N.unique :   1  
+ Median :95.00   Median :94.00   N.blank  :   0   N.blank  :   0  
+ Mean   :88.94   Mean   :84.80   Min.nchar:   4   Min.nchar:   4  
+ 3rd Qu.:98.00   3rd Qu.:98.00   Max.nchar:  38   Max.nchar:   4  
+ Max.   :99.00   Max.   :99.00                                    
+ NAs    :98      NAs    :288                                      
+     sub_region   cases_per_100k     
+ Length   :1200   Min.   :  0.00000  
+ N.unique :   5   1st Qu.:  0.09461  
+ N.blank  :   0   Median :  0.75410  
+ Min.nchar:  12   Mean   :  8.31756  
+ Max.nchar:  18   3rd Qu.:  3.81598  
+                  Max.   :999.25567  
+                  NAs    :93         </code></pre>
 </div>
 </div>
 </section>
-<section id="step-3-translate-each-condition" class="slide level2">
-<h2>Step 3: translate each condition</h2>
-<p>The English rule has two parts:</p>
-<ol type="1">
-<li>MCV1 coverage is below 90%.</li>
-<li>Measles incidence is at least 1 case per 100,000 people.</li>
-</ol>
-<p>In R, each part becomes a logical vector.</p>
+<section id="step-3-lowest-coverage" class="slide level2">
+<h2>Step 3: lowest coverage</h2>
+<p>Now we need to find the row with the lowest MCV1 coverage.</p>
+<p><code>which.min()</code> gives us the row number for the smallest value in a vector.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>low_coverage <span class="ot">&lt;-</span> pakistan<span class="sc">$</span>MCV1_coverage <span class="sc">&lt;</span> <span class="dv">90</span></span>
-<span id="cb12-2"><a></a>elevated_incidence <span class="ot">&lt;-</span> pakistan<span class="sc">$</span>cases_per_100k <span class="sc">&gt;=</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="inspect-the-logical-vectors" class="slide level2">
-<h2>Inspect the logical vectors</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>logic_check <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb13-2"><a></a>  <span class="at">year =</span> pakistan<span class="sc">$</span>year,</span>
-<span id="cb13-3"><a></a>  <span class="at">MCV1_coverage =</span> pakistan<span class="sc">$</span>MCV1_coverage,</span>
-<span id="cb13-4"><a></a>  <span class="at">cases_per_100k =</span> <span class="fu">round</span>(pakistan<span class="sc">$</span>cases_per_100k, <span class="dv">2</span>),</span>
-<span id="cb13-5"><a></a>  <span class="at">low_coverage =</span> low_coverage,</span>
-<span id="cb13-6"><a></a>  <span class="at">elevated_incidence =</span> elevated_incidence</span>
-<span id="cb13-7"><a></a>)</span>
-<span id="cb13-8"><a></a></span>
-<span id="cb13-9"><a></a><span class="fu">tail</span>(logic_check, <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>lowest_coverage_row <span class="ot">&lt;-</span> asia2000[<span class="fu">which.min</span>(asia2000<span class="sc">$</span>MCV1_coverage), <span class="fu">c</span>(</span>
+<span id="cb12-2"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb12-3"><a></a>  <span class="st">"year"</span>,</span>
+<span id="cb12-4"><a></a>  <span class="st">"MCV1_coverage"</span>,</span>
+<span id="cb12-5"><a></a>  <span class="st">"measles_cases"</span>,</span>
+<span id="cb12-6"><a></a>  <span class="st">"population"</span>,</span>
+<span id="cb12-7"><a></a>  <span class="st">"cases_per_100k"</span></span>
+<span id="cb12-8"><a></a>)]</span>
+<span id="cb12-9"><a></a></span>
+<span id="cb12-10"><a></a>lowest_coverage_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   year MCV1_coverage cases_per_100k low_coverage elevated_incidence
-41   NA            NA             NA           NA                 NA
-42   NA            NA             NA           NA                 NA
-43   NA            NA             NA           NA                 NA
-44   NA            NA             NA           NA                 NA
-45   NA            NA             NA           NA                 NA
-46   NA            NA             NA           NA                 NA
-47   NA            NA             NA           NA                 NA
-48   NA            NA             NA           NA                 NA</code></pre>
+<pre><code># A tibble: 1 × 6
+  country             year MCV1_coverage measles_cases population cases_per_100k
+  &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Korea, Democratic…  2022             0             0   26069416              0</code></pre>
 </div>
 </div>
 </section>
-<section id="missing-values-matter" class="slide level2">
-<h2>Missing values matter</h2>
-<p>If coverage is missing, R cannot decide whether coverage is below 90%.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">table</span>(low_coverage, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>low_coverage
-TRUE &lt;NA&gt; 
-  23   25 </code></pre>
-</div>
-</div>
-<p>That is not a failure. It is R refusing to guess.</p>
-<p>For a manuscript-style analysis, we need to decide what we want to do with missing information.</p>
-</section>
-<section id="step-4-write-the-decision-rule" class="slide level2">
-<h2>Step 4: write the decision rule</h2>
-<p>Here is the rule in full:</p>
-<ol type="1">
-<li>If coverage or incidence is missing, label the row <code>"missing information"</code>.</li>
-<li>Otherwise, if coverage is below 90% and incidence is at least 1, label the row <code>"priority year"</code>.</li>
-<li>Otherwise, label the row <code>"not priority"</code>.</li>
-</ol>
-</section>
-<section id="step-4-code-the-decision-rule" class="slide level2">
-<h2>Step 4: code the decision rule</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>pakistan<span class="sc">$</span>priority_year <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb17-2"><a></a>  <span class="fu">is.na</span>(pakistan<span class="sc">$</span>MCV1_coverage) <span class="sc">|</span> <span class="fu">is.na</span>(pakistan<span class="sc">$</span>cases_per_100k),</span>
-<span id="cb17-3"><a></a>  <span class="st">"missing information"</span>,</span>
-<span id="cb17-4"><a></a>  <span class="fu">ifelse</span>(</span>
-<span id="cb17-5"><a></a>    pakistan<span class="sc">$</span>MCV1_coverage <span class="sc">&lt;</span> <span class="dv">90</span> <span class="sc">&amp;</span> pakistan<span class="sc">$</span>cases_per_100k <span class="sc">&gt;=</span> <span class="dv">1</span>,</span>
-<span id="cb17-6"><a></a>    <span class="st">"priority year"</span>,</span>
-<span id="cb17-7"><a></a>    <span class="st">"not priority"</span></span>
-<span id="cb17-8"><a></a>  )</span>
-<span id="cb17-9"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="what-did-ifelse-do" class="slide level2">
-<h2>What did <code>ifelse()</code> do?</h2>
-<p><code>ifelse()</code> has three pieces:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">ifelse</span>(test, value_if_true, value_if_false)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Our nested version says:</p>
+<section id="what-did-which.min-do" class="slide level2">
+<h2>What did <code>which.min()</code> do?</h2>
+<div>
 <ul>
-<li>first check whether the data are missing</li>
-<li>if not, check whether the year meets the priority rule</li>
-<li>give every row one label</li>
+<li class="fragment"><code>asia2000$MCV1_coverage</code> is one long vector of coverage values.</li>
+<li class="fragment"><code>which.min(asia2000$MCV1_coverage)</code> finds the position of the smallest non-missing value.</li>
+<li class="fragment">We use that position to pull out the whole row.</li>
 </ul>
-</section>
-<section id="step-5-inspect-the-answer" class="slide level2">
-<h2>Step 5: inspect the answer</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>pakistan_result <span class="ot">&lt;-</span> pakistan[, <span class="fu">c</span>(</span>
-<span id="cb19-2"><a></a>  <span class="st">"year"</span>,</span>
-<span id="cb19-3"><a></a>  <span class="st">"measles_cases"</span>,</span>
-<span id="cb19-4"><a></a>  <span class="st">"MCV1_coverage"</span>,</span>
-<span id="cb19-5"><a></a>  <span class="st">"cases_per_100k"</span>,</span>
-<span id="cb19-6"><a></a>  <span class="st">"priority_year"</span></span>
-<span id="cb19-7"><a></a>)]</span>
-<span id="cb19-8"><a></a></span>
-<span id="cb19-9"><a></a>pakistan_result<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> <span class="fu">round</span>(pakistan_result<span class="sc">$</span>cases_per_100k, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="step-5-inspect-recent-years" class="slide level2">
-<h2>Step 5: inspect recent years</h2>
+<section id="step-4-highest-incidence" class="slide level2">
+<h2>Step 4: highest incidence</h2>
+<p>Now we do the same thing for measles incidence.</p>
+<p>This time we want the largest value, so we use <code>which.max()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">tail</span>(pakistan_result, <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>highest_incidence_row <span class="ot">&lt;-</span> asia2000[<span class="fu">which.max</span>(asia2000<span class="sc">$</span>cases_per_100k), <span class="fu">c</span>(</span>
+<span id="cb14-2"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb14-3"><a></a>  <span class="st">"year"</span>,</span>
+<span id="cb14-4"><a></a>  <span class="st">"MCV1_coverage"</span>,</span>
+<span id="cb14-5"><a></a>  <span class="st">"measles_cases"</span>,</span>
+<span id="cb14-6"><a></a>  <span class="st">"population"</span>,</span>
+<span id="cb14-7"><a></a>  <span class="st">"cases_per_100k"</span></span>
+<span id="cb14-8"><a></a>)]</span>
+<span id="cb14-9"><a></a></span>
+<span id="cb14-10"><a></a>highest_incidence_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      year measles_cases MCV1_coverage cases_per_100k       priority_year
-NA.16   NA            NA            NA             NA missing information
-NA.17   NA            NA            NA             NA missing information
-NA.18   NA            NA            NA             NA missing information
-NA.19   NA            NA            NA             NA missing information
-NA.20   NA            NA            NA             NA missing information
-NA.21   NA            NA            NA             NA missing information
-NA.22   NA            NA            NA             NA missing information
-NA.23   NA            NA            NA             NA missing information</code></pre>
+<pre><code># A tibble: 1 × 6
+  country   year MCV1_coverage measles_cases population cases_per_100k
+  &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Mongolia  2016            98         30273    3029555           999.</code></pre>
 </div>
 </div>
 </section>
-<section id="step-6-summarize-the-answer" class="slide level2">
-<h2>Step 6: summarize the answer</h2>
+<section id="step-5-are-they-the-same-country" class="slide level2">
+<h2>Step 5: are they the same country?</h2>
+<p>We now have two rows:</p>
+<ol type="1">
+<li>the row with the lowest MCV1 coverage</li>
+<li>the row with the highest measles incidence per capita</li>
+</ol>
+<p>The research question asks whether the <strong>country</strong> is the same.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">table</span>(pakistan<span class="sc">$</span>priority_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>lowest_coverage_country <span class="ot">&lt;-</span> lowest_coverage_row<span class="sc">$</span>country</span>
+<span id="cb16-2"><a></a>highest_incidence_country <span class="ot">&lt;-</span> highest_incidence_row<span class="sc">$</span>country</span>
+<span id="cb16-3"><a></a></span>
+<span id="cb16-4"><a></a>same_country <span class="ot">&lt;-</span> lowest_coverage_country <span class="sc">==</span> highest_incidence_country</span>
+<span id="cb16-5"><a></a></span>
+<span id="cb16-6"><a></a>lowest_coverage_country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-missing information        not priority       priority year 
-                 25                   5                  18 </code></pre>
+<pre><code>[1] "Korea, Democratic People's Republic of"</code></pre>
 </div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>pakistan<span class="sc">$</span>year[pakistan<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>highest_incidence_country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 2000 2001 2002 2003 2004 2005 2006 2007 2010 2011 2012 2013 2016 2017 2018
-[16] 2020 2021 2022</code></pre>
+<pre><code>[1] "Mongolia"</code></pre>
 </div>
 </div>
 </section>
-<section id="make-a-small-manuscript-table" class="slide level2">
-<h2>Make a small manuscript table</h2>
+<section id="step-6-write-the-answer-with-if" class="slide level2 scrollable">
+<h2>Step 6: write the answer with <code>if</code></h2>
+<p>This is a different kind of conditional.</p>
+<p>Here we are not labeling every row. We are asking one yes/no question and then choosing one sentence.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>priority_years <span class="ot">&lt;-</span> pakistan<span class="sc">$</span>year[pakistan<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span>]</span>
-<span id="cb26-2"><a></a></span>
-<span id="cb26-3"><a></a><span class="fu">data.frame</span>(</span>
-<span id="cb26-4"><a></a>  <span class="at">country =</span> <span class="st">"Pakistan"</span>,</span>
-<span id="cb26-5"><a></a>  <span class="at">start_year =</span> <span class="fu">min</span>(pakistan<span class="sc">$</span>year),</span>
-<span id="cb26-6"><a></a>  <span class="at">end_year =</span> <span class="fu">max</span>(pakistan<span class="sc">$</span>year),</span>
-<span id="cb26-7"><a></a>  <span class="at">total_years =</span> <span class="fu">nrow</span>(pakistan),</span>
-<span id="cb26-8"><a></a>  <span class="at">priority_years =</span> <span class="fu">length</span>(priority_years),</span>
-<span id="cb26-9"><a></a>  <span class="at">most_recent_priority_year =</span> <span class="fu">max</span>(priority_years)</span>
-<span id="cb26-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="cf">if</span> (same_country) {</span>
+<span id="cb20-2"><a></a>  <span class="fu">paste0</span>(</span>
+<span id="cb20-3"><a></a>    <span class="st">"Yes. "</span>,</span>
+<span id="cb20-4"><a></a>    lowest_coverage_country,</span>
+<span id="cb20-5"><a></a>    <span class="st">" had both the lowest MCV1 coverage and the highest measles incidence "</span>,</span>
+<span id="cb20-6"><a></a>    <span class="st">"per capita."</span></span>
+<span id="cb20-7"><a></a>  )</span>
+<span id="cb20-8"><a></a>} <span class="cf">else</span> {</span>
+<span id="cb20-9"><a></a>  <span class="fu">paste0</span>(</span>
+<span id="cb20-10"><a></a>    <span class="st">"No. "</span>,</span>
+<span id="cb20-11"><a></a>    lowest_coverage_country,</span>
+<span id="cb20-12"><a></a>    <span class="st">" had the lowest MCV1 coverage, but "</span>,</span>
+<span id="cb20-13"><a></a>    highest_incidence_country,</span>
+<span id="cb20-14"><a></a>    <span class="st">" had the highest measles incidence per capita."</span></span>
+<span id="cb20-15"><a></a>  )</span>
+<span id="cb20-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   country start_year end_year total_years priority_years
-1 Pakistan         NA       NA          48             18
-  most_recent_priority_year
-1                      2022</code></pre>
+<pre><code>[1] "No. Korea, Democratic People's Republic of had the lowest MCV1 coverage, but Mongolia had the highest measles incidence per capita."</code></pre>
 </div>
 </div>
 </section>
-<section id="make-a-quick-figure" class="slide level2">
+<section id="make-a-small-table" class="slide level2">
+<h2>Make a small table</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>answer_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb22-2"><a></a>  <span class="at">statistic =</span> <span class="fu">c</span>(<span class="st">"Lowest MCV1 coverage"</span>, <span class="st">"Highest measles incidence"</span>),</span>
+<span id="cb22-3"><a></a>  <span class="at">country =</span> <span class="fu">c</span>(lowest_coverage_row<span class="sc">$</span>country, highest_incidence_row<span class="sc">$</span>country),</span>
+<span id="cb22-4"><a></a>  <span class="at">year =</span> <span class="fu">c</span>(lowest_coverage_row<span class="sc">$</span>year, highest_incidence_row<span class="sc">$</span>year),</span>
+<span id="cb22-5"><a></a>  <span class="at">MCV1_coverage =</span> <span class="fu">c</span>(</span>
+<span id="cb22-6"><a></a>    lowest_coverage_row<span class="sc">$</span>MCV1_coverage,</span>
+<span id="cb22-7"><a></a>    highest_incidence_row<span class="sc">$</span>MCV1_coverage</span>
+<span id="cb22-8"><a></a>  ),</span>
+<span id="cb22-9"><a></a>  <span class="at">cases_per_100k =</span> <span class="fu">c</span>(</span>
+<span id="cb22-10"><a></a>    lowest_coverage_row<span class="sc">$</span>cases_per_100k,</span>
+<span id="cb22-11"><a></a>    highest_incidence_row<span class="sc">$</span>cases_per_100k</span>
+<span id="cb22-12"><a></a>  )</span>
+<span id="cb22-13"><a></a>)</span>
+<span id="cb22-14"><a></a></span>
+<span id="cb22-15"><a></a>answer_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  statistic                                country year
+1      Lowest MCV1 coverage Korea, Democratic People's Republic of 2022
+2 Highest measles incidence                               Mongolia 2016
+  MCV1_coverage cases_per_100k
+1             0         0.0000
+2            98       999.2557</code></pre>
+</div>
+</div>
+</section>
+<section id="make-a-quick-figure" class="slide level2 scrollable">
 <h2>Make a quick figure</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">plot</span>(</span>
-<span id="cb28-2"><a></a>  pakistan<span class="sc">$</span>year,</span>
-<span id="cb28-3"><a></a>  pakistan<span class="sc">$</span>cases_per_100k,</span>
-<span id="cb28-4"><a></a>  <span class="at">type =</span> <span class="st">"b"</span>,</span>
-<span id="cb28-5"><a></a>  <span class="at">xlab =</span> <span class="st">"Year"</span>,</span>
-<span id="cb28-6"><a></a>  <span class="at">ylab =</span> <span class="st">"Measles cases per 100,000 people"</span>,</span>
-<span id="cb28-7"><a></a>  <span class="at">main =</span> <span class="st">"Pakistan measles incidence since 2000"</span></span>
-<span id="cb28-8"><a></a>)</span>
-<span id="cb28-9"><a></a></span>
-<span id="cb28-10"><a></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb28-11"><a></a></span>
-<span id="cb28-12"><a></a><span class="fu">points</span>(</span>
-<span id="cb28-13"><a></a>  pakistan<span class="sc">$</span>year[pakistan<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span>],</span>
-<span id="cb28-14"><a></a>  pakistan<span class="sc">$</span>cases_per_100k[pakistan<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span>],</span>
-<span id="cb28-15"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
-<span id="cb28-16"><a></a>  <span class="at">col =</span> <span class="st">"red"</span></span>
-<span id="cb28-17"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>plot_rows <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(asia2000<span class="sc">$</span>MCV1_coverage) <span class="sc">&amp;</span></span>
+<span id="cb24-2"><a></a>  <span class="sc">!</span><span class="fu">is.na</span>(asia2000<span class="sc">$</span>cases_per_100k)</span>
+<span id="cb24-3"><a></a></span>
+<span id="cb24-4"><a></a><span class="fu">plot</span>(</span>
+<span id="cb24-5"><a></a>  asia2000<span class="sc">$</span>MCV1_coverage[plot_rows],</span>
+<span id="cb24-6"><a></a>  asia2000<span class="sc">$</span>cases_per_100k[plot_rows],</span>
+<span id="cb24-7"><a></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb24-8"><a></a>  <span class="at">col =</span> <span class="st">"gray70"</span>,</span>
+<span id="cb24-9"><a></a>  <span class="at">xlab =</span> <span class="st">"MCV1 coverage (%)"</span>,</span>
+<span id="cb24-10"><a></a>  <span class="at">ylab =</span> <span class="st">"Measles cases per 100,000 people"</span>,</span>
+<span id="cb24-11"><a></a>  <span class="at">main =</span> <span class="st">"Asian country-years since 2000"</span></span>
+<span id="cb24-12"><a></a>)</span>
+<span id="cb24-13"><a></a></span>
+<span id="cb24-14"><a></a><span class="fu">points</span>(</span>
+<span id="cb24-15"><a></a>  lowest_coverage_row<span class="sc">$</span>MCV1_coverage,</span>
+<span id="cb24-16"><a></a>  lowest_coverage_row<span class="sc">$</span>cases_per_100k,</span>
+<span id="cb24-17"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb24-18"><a></a>  <span class="at">col =</span> <span class="st">"red"</span>,</span>
+<span id="cb24-19"><a></a>  <span class="at">cex =</span> <span class="fl">1.5</span></span>
+<span id="cb24-20"><a></a>)</span>
+<span id="cb24-21"><a></a></span>
+<span id="cb24-22"><a></a><span class="fu">points</span>(</span>
+<span id="cb24-23"><a></a>  highest_incidence_row<span class="sc">$</span>MCV1_coverage,</span>
+<span id="cb24-24"><a></a>  highest_incidence_row<span class="sc">$</span>cases_per_100k,</span>
+<span id="cb24-25"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb24-26"><a></a>  <span class="at">col =</span> <span class="st">"blue"</span>,</span>
+<span id="cb24-27"><a></a>  <span class="at">cex =</span> <span class="fl">1.5</span></span>
+<span id="cb24-28"><a></a>)</span>
+<span id="cb24-29"><a></a></span>
+<span id="cb24-30"><a></a><span class="fu">legend</span>(</span>
+<span id="cb24-31"><a></a>  <span class="st">"topright"</span>,</span>
+<span id="cb24-32"><a></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Lowest MCV1 coverage"</span>, <span class="st">"Highest incidence"</span>),</span>
+<span id="cb24-33"><a></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb24-34"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>),</span>
+<span id="cb24-35"><a></a>  <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb24-36"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="Walkthrough1_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
-<section id="what-goes-in-the-report" class="slide level2">
-<h2>What goes in the report?</h2>
-<p><strong>Methods sentence</strong></p>
-<p>We defined a priority year as a country-year with MCV1 coverage below 90% and at least 1 reported measles case per 100,000 people; country-years with missing coverage or incidence were labeled as missing information.</p>
-<p><strong>Results sentence</strong></p>
-<p>Pakistan had several priority years since 2000 under this rule, with the most recent priority year identified in the summary table.</p>
-</section>
-<section id="active-checkpoint" class="slide level2">
-<h2>Active checkpoint</h2>
-<p><strong>Student prompt</strong></p>
+<img data-src="Walkthrough1_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<section id="you-try-it" class="slide level2">
+<h2>You try it!</h2>
 <p>Change the question:</p>
 <blockquote>
-<p>In Afghanistan since 2010, which years should be flagged if MCV2 coverage was below 80% or measles incidence was at least 5 cases per 100,000 people?</p>
+<p>Since 2010, did the country in the Americas with the lowest MCV2 coverage also have the highest measles incidence per capita?</p>
 </blockquote>
 <p>Write the code before looking at the solution.</p>
 </section>
-<section id="active-checkpoint-hint" class="slide level2">
-<h2>Active checkpoint: hint</h2>
+<section id="you-try-it-hint" class="slide level2">
+<h2>You try it!: hint</h2>
 <p>You need to change four pieces:</p>
 <ol type="1">
-<li>the country</li>
+<li>the region</li>
 <li>the start year</li>
-<li>the coverage variable and cutoff</li>
-<li>the logical connector, because this rule uses “or”</li>
+<li>the coverage variable</li>
+<li>the object names, so you do not overwrite the first answer</li>
 </ol>
-<p>The R operator for “or” is <code>|</code>.</p>
 </section>
-<section id="active-checkpoint-solution" class="slide level2">
-<h2>Active checkpoint: solution</h2>
+<section id="you-try-it-solution" class="slide level2">
+<h2>You try it!: solution</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>afghanistan <span class="ot">&lt;-</span> measles[</span>
-<span id="cb29-2"><a></a>  measles<span class="sc">$</span>country <span class="sc">==</span> <span class="st">"Afghanistan"</span> <span class="sc">&amp;</span> measles<span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="dv">2010</span>,</span>
-<span id="cb29-3"><a></a>]</span>
-<span id="cb29-4"><a></a></span>
-<span id="cb29-5"><a></a>afghanistan <span class="ot">&lt;-</span> afghanistan[<span class="fu">order</span>(afghanistan<span class="sc">$</span>year), ]</span>
-<span id="cb29-6"><a></a>afghanistan<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> afghanistan<span class="sc">$</span>measles_cases <span class="sc">/</span> afghanistan<span class="sc">$</span>population <span class="sc">*</span> <span class="dv">100000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>americas2010 <span class="ot">&lt;-</span> <span class="fu">subset</span>(measles, region <span class="sc">==</span> <span class="st">"Americas"</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">2010</span>)</span>
+<span id="cb25-2"><a></a></span>
+<span id="cb25-3"><a></a>americas2010<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> americas2010<span class="sc">$</span>measles_cases <span class="sc">/</span></span>
+<span id="cb25-4"><a></a>  americas2010<span class="sc">$</span>population <span class="sc">*</span> <span class="dv">100000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="active-checkpoint-solution-rule" class="slide level2">
-<h2>Active checkpoint: solution rule</h2>
+<section id="you-try-it-solution-rows" class="slide level2">
+<h2>You try it!: solution rows</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>afghanistan<span class="sc">$</span>priority_year <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb30-2"><a></a>  (<span class="sc">!</span><span class="fu">is.na</span>(afghanistan<span class="sc">$</span>MCV2_coverage) <span class="sc">&amp;</span> afghanistan<span class="sc">$</span>MCV2_coverage <span class="sc">&lt;</span> <span class="dv">80</span>) <span class="sc">|</span></span>
-<span id="cb30-3"><a></a>    (<span class="sc">!</span><span class="fu">is.na</span>(afghanistan<span class="sc">$</span>cases_per_100k) <span class="sc">&amp;</span> afghanistan<span class="sc">$</span>cases_per_100k <span class="sc">&gt;=</span> <span class="dv">5</span>),</span>
-<span id="cb30-4"><a></a>  <span class="st">"priority year"</span>,</span>
-<span id="cb30-5"><a></a>  <span class="fu">ifelse</span>(</span>
-<span id="cb30-6"><a></a>    <span class="fu">is.na</span>(afghanistan<span class="sc">$</span>MCV2_coverage) <span class="sc">|</span> <span class="fu">is.na</span>(afghanistan<span class="sc">$</span>cases_per_100k),</span>
-<span id="cb30-7"><a></a>    <span class="st">"missing information"</span>,</span>
-<span id="cb30-8"><a></a>    <span class="st">"not priority"</span></span>
-<span id="cb30-9"><a></a>  )</span>
-<span id="cb30-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="active-checkpoint-solution-table" class="slide level2">
-<h2>Active checkpoint: solution table</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>afghanistan_result <span class="ot">&lt;-</span> afghanistan[, <span class="fu">c</span>(</span>
-<span id="cb31-2"><a></a>  <span class="st">"year"</span>,</span>
-<span id="cb31-3"><a></a>  <span class="st">"measles_cases"</span>,</span>
-<span id="cb31-4"><a></a>  <span class="st">"MCV2_coverage"</span>,</span>
-<span id="cb31-5"><a></a>  <span class="st">"cases_per_100k"</span>,</span>
-<span id="cb31-6"><a></a>  <span class="st">"priority_year"</span></span>
-<span id="cb31-7"><a></a>)]</span>
-<span id="cb31-8"><a></a></span>
-<span id="cb31-9"><a></a>afghanistan_result<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> <span class="fu">round</span>(afghanistan_result<span class="sc">$</span>cases_per_100k, <span class="dv">2</span>)</span>
-<span id="cb31-10"><a></a></span>
-<span id="cb31-11"><a></a>afghanistan_labels <span class="ot">&lt;-</span> afghanistan_result[, <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"priority_year"</span>)]</span>
-<span id="cb31-12"><a></a><span class="fu">head</span>(afghanistan_labels, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>lowest_mcv2_row <span class="ot">&lt;-</span> americas2010[<span class="fu">which.min</span>(americas2010<span class="sc">$</span>MCV2_coverage), <span class="fu">c</span>(</span>
+<span id="cb26-2"><a></a>  <span class="st">"country"</span>,</span>
+<span id="cb26-3"><a></a>  <span class="st">"year"</span>,</span>
+<span id="cb26-4"><a></a>  <span class="st">"MCV2_coverage"</span>,</span>
+<span id="cb26-5"><a></a>  <span class="st">"measles_cases"</span>,</span>
+<span id="cb26-6"><a></a>  <span class="st">"population"</span>,</span>
+<span id="cb26-7"><a></a>  <span class="st">"cases_per_100k"</span></span>
+<span id="cb26-8"><a></a>)]</span>
+<span id="cb26-9"><a></a></span>
+<span id="cb26-10"><a></a>highest_americas_incidence_row <span class="ot">&lt;-</span> americas2010[</span>
+<span id="cb26-11"><a></a>  <span class="fu">which.max</span>(americas2010<span class="sc">$</span>cases_per_100k),</span>
+<span id="cb26-12"><a></a>  <span class="fu">c</span>(</span>
+<span id="cb26-13"><a></a>    <span class="st">"country"</span>,</span>
+<span id="cb26-14"><a></a>    <span class="st">"year"</span>,</span>
+<span id="cb26-15"><a></a>    <span class="st">"MCV2_coverage"</span>,</span>
+<span id="cb26-16"><a></a>    <span class="st">"measles_cases"</span>,</span>
+<span id="cb26-17"><a></a>    <span class="st">"population"</span>,</span>
+<span id="cb26-18"><a></a>    <span class="st">"cases_per_100k"</span></span>
+<span id="cb26-19"><a></a>  )</span>
+<span id="cb26-20"><a></a>]</span>
+<span id="cb26-21"><a></a></span>
+<span id="cb26-22"><a></a>lowest_mcv2_row<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb26-23"><a></a>  lowest_mcv2_row<span class="sc">$</span>cases_per_100k,</span>
+<span id="cb26-24"><a></a>  <span class="dv">2</span></span>
+<span id="cb26-25"><a></a>)</span>
+<span id="cb26-26"><a></a></span>
+<span id="cb26-27"><a></a>highest_americas_incidence_row<span class="sc">$</span>cases_per_100k <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb26-28"><a></a>  highest_americas_incidence_row<span class="sc">$</span>cases_per_100k,</span>
+<span id="cb26-29"><a></a>  <span class="dv">2</span></span>
+<span id="cb26-30"><a></a>)</span>
+<span id="cb26-31"><a></a></span>
+<span id="cb26-32"><a></a>lowest_mcv2_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   year priority_year
-14 2010 priority year
-13 2011 priority year
-12 2012 priority year
-11 2013 priority year
-10 2014 priority year
-9  2015 priority year
-8  2016 priority year</code></pre>
+<pre><code># A tibble: 1 × 6
+  country             year MCV2_coverage measles_cases population cases_per_100k
+  &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Venezuela, Boliva…  2019            13           548   28971683           1.89</code></pre>
 </div>
 </div>
 </section>
-<section id="active-checkpoint-solution-table-continued" class="slide level2">
-<h2>Active checkpoint: solution table, continued</h2>
+<section id="you-try-it-solution-rows-continued" class="slide level2">
+<h2>You try it!: solution rows, continued</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">tail</span>(afghanistan_labels, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>highest_americas_incidence_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      year       priority_year
-NA.7    NA missing information
-NA.8    NA missing information
-NA.9    NA missing information
-NA.10   NA missing information
-NA.11   NA missing information
-NA.12   NA missing information
-NA.13   NA missing information</code></pre>
+<pre><code># A tibble: 1 × 6
+  country             year MCV2_coverage measles_cases population cases_per_100k
+  &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Venezuela, Boliva…  2018            39          5667   29825653             19</code></pre>
 </div>
 </div>
 </section>
-<section id="active-checkpoint-summarize-it" class="slide level2">
-<h2>Active checkpoint: summarize it</h2>
+<section id="you-try-it-compare-them" class="slide level2">
+<h2>You try it!: compare them</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">table</span>(afghanistan<span class="sc">$</span>priority_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>lowest_mcv2_row<span class="sc">$</span>country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-missing information       priority year 
-                 14                  14 </code></pre>
+<pre><code>[1] "Venezuela, Bolivarian Republic of"</code></pre>
 </div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>afghanistan<span class="sc">$</span>year[afghanistan<span class="sc">$</span>priority_year <span class="sc">==</span> <span class="st">"priority year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>highest_americas_incidence_row<span class="sc">$</span>country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023</code></pre>
+<pre><code>[1] "Venezuela, Bolivarian Republic of"</code></pre>
 </div>
 </div>
 </section>
@@ -661,11 +659,13 @@ missing information       priority year
 <h2>What did we practice?</h2>
 <ul>
 <li>Starting with a question that a reader can understand</li>
-<li>Turning a plain-English rule into logical conditions</li>
-<li>Using <code>&amp;</code>, <code>|</code>, <code>is.na()</code>, and <code>ifelse()</code></li>
+<li>Filtering rows with a logical condition</li>
+<li>Creating an incidence rate</li>
+<li>Finding minimum and maximum rows with <code>which.min()</code> and <code>which.max()</code></li>
+<li>Using <code>if</code> and <code>else</code> to turn a comparison into a sentence</li>
 <li>Creating a table, figure, and short manuscript-style interpretation</li>
 </ul>
-<p>Next time, we will repeat this same rule across many countries.</p>
+<p>Next time, we will repeat ideas like this across many countries.</p>
 
 
 </section>
