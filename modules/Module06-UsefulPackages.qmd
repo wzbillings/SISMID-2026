@@ -1,24 +1,577 @@
 ---
 title: "Module 6: Useful R packages"
-format:
+subtitle: "gt · gtsummary · sjPlot · table1 · likert · janitor · rio · here · pacman"
+author: "Alex Edwards & Zane Billings"
+date: today
+format: 
   revealjs:
+    theme: simple
+    slide-number: true
+    scrollable: true
+    transition: fade
+    code-line-numbers: true
+    highlight-style: github
+    incremental: false
     toc: false
+execute:
+  eval: false
+  echo: true
+editor:
+  markdown:
+    wrap: 72
 ---
 
-## 2026 placeholder
+# Welcome
 
-Alex will lead this Day 2 core module. The final deck will be added here when it
-is ready.
+## Agenda {.smaller}
 
-For now, this placeholder keeps the public schedule and navigation path stable.
+A one-hour tour of the R packages that take you from **messy data** to
+**publication-ready tables and reports** — demonstrated on a real,
+de-identified ICU dataset.
 
-## Planned scope
+## Agenda {.smaller}
 
-- Packages that make common analysis and reporting tasks easier.
-- Table-making and model-summary tools useful for Exercise 2.
-- Practical package choices rather than a long package survey.
+| Time  | Topic                                     |
+|-------|-------------------------------------------|
+| 2 min | Why these packages?                       |
+| 2 min | The dataset: QCRC ICU cohort              |
+| 3 min | `pacman::p_load()` — loading packages     |
+| 3 min | `here` — project-relative file paths      |
+| 6 min | `rio` — import/export anything            |
+| 6 min | `janitor::clean_names()` — tidy names     |
+| 7 min | `table1` — "Table 1"                      |
+| 6 min | `gt` — grammar of tables                  |
+| 8 min | `gtsummary` — summary & regression tables |
+| 8 min | `sjPlot` — `tab_model()` & `tab_xtab()`   |
+| 6 min | `likert` — ordinal clinical scores        |
+| 3 min | Wrap-up & resources                       |
 
-## Course connection
+## Why these packages?
 
-This module prepares you to make readable descriptive tables, model summaries,
-and polished report outputs in Exercise 2.
+-   Every analysis ends with a table, a report, or a slide someone else
+    has to read
+-   Base R output (`summary()`, `str()`) is fast to write but ugly to
+    share
+-   These packages sit **on top of** your normal analysis and turn it
+    into something you can paste into a paper, a report, or an email
+
+## Which packages?
+
+::: incremental
+-   `here`, `rio`, `janitor` → find, load, and clean your data
+-   `table1` → describe your sample
+-   `gt`, `gtsummary`, `sjPlot` → build the tables people actually read
+-   `likert` → visualize ordered/scale data
+-   `pacman` → glue that loads everything with one line
+:::
+
+------------------------------------------------------------------------
+
+## About the Dataset
+
+Every example in this deck uses the same real, de-identified file:
+**`QCRC_FINAL_Deidentified.xlsx`**
+
+-   288 patients admitted to the ICU with COVID-19
+-   10 sheets — `Main_Dataset` (demographics, treatments, outcomes),
+    daily `SOFA` organ-failure scores, `Long_Labs`, `Long_Vitals`,
+    ventilator settings, medications, and more
+-   We'll mainly use `Main_Dataset`: 37 variables including age, sex,
+    race, BMI, intubation, CRRT/dialysis, and mortality
+-   98 of 288 patients (34%) died — a natural grouping variable for
+    every table in this lecture
+
+::: notes
+Before running this deck live: save the workbook as
+`data/QCRC_FINAL_Deidentified.xlsx` inside your project folder — the
+`here()` and `rio::import()` calls later assume that path.
+:::
+
+# Setup: `pacman::p_load()`
+
+## The problem with `library()`
+
+A typical analysis script starts like this:
+
+```{r}
+library(here)
+library(rio)
+library(janitor)
+library(table1)
+library(gt)
+library(gtsummary)
+library(sjPlot)
+library(likert)
+library(tidyverse)
+```
+
+If **one** of these isn't installed, the whole script stops with an
+error — and you have to go install it manually, then re-run.
+
+## `pacman::p_load()`
+
+`pacman` is a package-management package. Its star function,
+**`p_load()`**, installs anything missing, then loads everything — in
+one line.
+
+```{r}
+# install.packages("pacman")   
+# only needed once
+
+pacman::p_load(
+  here, rio, janitor, table1,
+  gt, gtsummary, sjPlot, likert,
+  tidyverse
+)
+```
+
+## `pacman::p_load()`
+
+-   Checks each package name
+-   Installs it from CRAN **only if missing**
+-   Loads (`library()`s) all of them
+-   Great for shared scripts, teaching, and reproducibility setups
+
+# `here`: Project-Relative Paths
+
+## The problem with `setwd()`
+
+```{r}
+# fragile — breaks the moment this script runs on
+# a different machine, or is Source()'d vs rendered
+setwd("~/Downloads/SISMID2026")
+qcrc <- import("data/QCRC_FINAL_Deidentified.xlsx")
+```
+
+## `here::here()`
+
+```{r}
+library(here)
+
+#This is where it think we are
+here()
+
+#This gets us to our data
+here("data", "QCRC_FINAL_Deidentified.xlsx")
+
+#How do we read in data
+qcrcHere <- import(here("data", "QCRC_FINAL_Deidentified.xlsx"))
+```
+
+## `here::here()`
+
+-   Finds your project root automatically (looks for a `.Rproj` file,
+    `.git` folder, or similar) and builds paths **from there**
+-   The same `here()` call works identically whether you run it from
+    RStudio, the terminal, or a rendered Quarto document
+-   Pairs perfectly with `rio::import()` — see next section
+
+::: notes
+Rule of thumb: replace every `setwd()` and every hard-coded absolute
+path with `here()`.
+:::
+
+# `rio`: Import & Export Anything
+
+## One function in, one function out
+
+`rio` wraps dozens of format-specific packages (`haven`, `readxl`,
+`data.table`, `jsonlite`, ...) behind two simple verbs.
+
+```{r}
+#| eval: true
+library(rio)
+library(here)
+
+qcrc <- import(
+  here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "Main_Dataset"
+)
+
+dim(qcrc)
+```
+
+## One function in, one function out
+
+No more remembering `read_csv()` vs `read.spss()` vs `read_excel()` —
+and no hard-coded paths, thanks to `here()`.
+
+## Exporting is just as easy
+
+```{r}
+export(qcrc, here("data", "qcrc_clean.xlsx"))
+export(qcrc, here("data", "qcrc_clean.rds"))
+export(qcrc, here("data", "qcrc_clean.csv"))
+```
+
+## Exporting is just as easy
+
+-   Format is inferred from the file extension
+-   Supports 30+ formats: `.csv`, `.xlsx`, `.sav`, `.dta`, `.sas7bdat`,
+    `.json`, `.rds`, `.parquet`, and more
+-   `import_list()` reads **every sheet** at once — perfect for this
+    workbook, which has 10 sheets:
+
+```{r}
+#| eval: true
+#| warning: false
+#| message: false
+
+sheets <- import_list(here("data", "QCRC_FINAL_Deidentified.xlsx"))
+names(sheets)
+```
+
+::: notes
+Good moment for a live demo — scroll through `sheets` to show the whole
+workbook loaded in one call.
+:::
+
+# `janitor`: Clean Names Fast
+
+## Messy names are the #1 headache
+
+```{r}
+#| eval: true
+names(qcrc)
+```
+
+## Messy names are the #1 headache
+
+Notice the inconsistency: `Title Case With Spaces` (`Vent LOS`,
+`Peak troponin`), `ALL_CAPS_WITH_UNDERSCORES` (`ICU_ADMIT_DEID`), and
+even a colon (`P:F ratio at ICU admission`). All are painful to type or
+reference in code.
+
+## `clean_names()`
+
+```{r}
+#| eval: true
+library(janitor)
+
+qcrc_clean <- qcrc |> clean_names()
+names(qcrc_clean)
+```
+
+## `clean_names()`
+
+-   Converts everything to consistent `snake_case`
+-   Strips spaces and punctuation (even the colon), collapses repeated
+    separators, and prefixes names that start with a digit (`30D_...` →
+    `x30d_...`)
+-   One line, run right after `import()` — every variable name used for
+    the rest of this lecture assumes this has already happened
+
+## Bonus: fixing the `"."` missing code {.smaller}
+
+Like a lot of clinical exports, this dataset stores missing values as a
+literal `"."` string — which leaves numeric columns like `bmi`, `wbc`,
+and `crp` stuck as text.
+
+```{r}
+#| eval: true
+library(dplyr)
+
+num_cols <- c("bmi", "wbc", "d_dimer", "crp", "peak_troponin",
+              "calculated_cstat")
+
+qcrc_clean <- qcrc_clean |>
+  mutate(across(all_of(num_cols),
+                ~ na_if(as.character(.x), ".")|> 
+  								as.numeric())) |>
+  mutate(died = factor(died, labels = c("Survived", "Died")))
+```
+
+## Bonus: fixing the `"."` missing code {.smaller}
+
+Not a janitor function, but the natural next step after `clean_names()`
+— tidy the *names*, then tidy the *values*. This is the `qcrc_clean`
+object every later slide builds on.
+
+# `table1`: Describing Your Sample
+
+## The "Table 1" problem
+
+Nearly every clinical paper starts with a baseline characteristics table
+split by outcome or treatment group — this is almost always called
+**"Table 1."** Our cohort: 288 ICU patients, 98 of whom (34%) died.
+
+Building it by hand means computing means, SDs, counts, percentages, and
+p-values separately for every variable.
+
+## `table1()`
+
+```{r}
+#| eval: true
+library(table1)
+
+#Table One No Strata
+table1(~age+bmi+icu_los+intubated+crrt, data=qcrc_clean)
+```
+
+## `table1()`
+
+-   Older age, lower BMI, mechanical ventilation, and CRRT (dialysis)
+    were all significantly associated with death in this cohort
+-   Printed table can be coerced to a data frame and then piped into
+    `gt` for a polished, exportable version.
+
+## `table1() with strata`
+
+```{r}
+#| eval: true
+#Table one with strata
+table1(~age+bmi+icu_los+intubated+crrt|female, data=qcrc_clean)
+```
+
+## `table1() with two strata`
+
+```{r}
+#| eval: true
+#Table One with two strata
+table1(~age+bmi+icu_los+intubated+crrt|female*died, data=qcrc_clean)
+```
+
+# `gt`: A Grammar of Tables
+
+## Any data frame → a polished table
+
+```{r}
+#| eval: true
+library(gt)
+
+qcrc_clean |>
+  select(patient_deid, age, female, race, bmi, icu_los, died) |>
+  head(6) |>
+  gt() |>
+  tab_header(
+    title    = "QCRC ICU Cohort",
+    subtitle = "First 6 patients"
+  ) |>
+  fmt_number(columns = c(bmi, icu_los), decimals = 1) |>
+  cols_label(patient_deid = "Patient ID", icu_los = "ICU LOS (days)")
+```
+
+## Any data frame → a polished table
+
+-   `gt()` turns a data frame into a table object
+-   Everything after is a **layer**: header, formatting, labels,
+    footnotes, spanners, styling — piped together
+
+## Why `gt` matters
+
+-   It's the **rendering engine** many other packages (including
+    `gtsummary`) build on top of
+-   Output looks the same in HTML, PDF, Word, and RTF
+-   Useful layers to know:
+    -   `tab_spanner()` — group columns under a shared header
+    -   `tab_source_note()` — add a footnote/citation
+    -   `gtsave(tbl, "table.png")` — export to image, HTML, RTF, or Word
+
+# `gtsummary`: Summary & Regression Tables
+
+## `tbl_summary()` — descriptive tables
+
+```{r}
+#| eval: true
+library(gtsummary)
+
+qcrc_clean |>
+  select(age, bmi, wbc, crp, died) |>
+  tbl_summary(
+    by        = died,
+    statistic = list(all_continuous() ~ "{median} ({p25}, {p75})")
+  ) |>
+  add_p() |>
+  add_overall()
+```
+
+## `tbl_summary()` — descriptive tables
+
+-   Median (IQR) instead of mean (SD) — a better default for skewed labs
+    like CRP and WBC
+-   Same goal as `table1`, but the output is already a polished **gt
+    table** — ready to drop into a report
+-   `add_p()` adds group-comparison p-values; `add_overall()` adds a
+    combined column
+
+## `tbl_regression()` — model tables
+
+```{r}
+#| eval: true
+mod <- glm(died ~ age + bmi + intubated + crrt,
+           data = qcrc_clean, family = binomial)
+
+tbl_regression(mod, exponentiate = TRUE) |>
+  add_glance_source_note()
+```
+
+## `tbl_regression()` — model tables
+
+-   Turns any `lm`/`glm`/`coxph`/mixed model into a clean estimate table
+    (odds ratio, CI, p-value) — `exponentiate = TRUE` reports odds
+    ratios instead of log-odds
+-   `add_glance_source_note()` appends model fit stats (AIC, n)
+-   `tbl_merge()` and `tbl_stack()` combine multiple models/tables side
+    by side or on top of each other — handy for multi-model comparisons
+
+::: notes
+gtsummary is the "batteries included" option — sensible defaults,
+statistical tests built in, minimal code. This is the same
+`died ~ age + bmi + intubated + crrt` model sjPlot will show next, just
+formatted differently.
+:::
+
+# `sjPlot`: Regression & Crosstab Tables
+
+## `tab_model()` — regression output
+
+```{r}
+#| eval: true
+library(sjPlot)
+
+tab_model(
+  mod,
+  show.ci  = TRUE,
+  transform = "exp",
+  dv.labels = "Died (ICU, 0/1)"
+)
+```
+
+## `tab_model()` — regression output
+
+-   Formats coefficients, CIs, and p-values automatically — here as odds
+    ratios (`transform = "exp"`) since this is a logistic model
+-   Works with `lm`, `glm`, `lmer`, `coxph`, and more
+-   Pass **multiple models** as extra arguments to compare them side by
+    side in one table
+
+## `tab_xtab()` — cross-tabulations
+
+```{r}
+#| eval: true
+tab_xtab(
+  var.row      = qcrc_clean$race,
+  var.col      = qcrc_clean$died,
+  show.row.prc = TRUE,
+  show.summary = TRUE
+)
+```
+
+-   Builds a two-way frequency table for two categorical variables
+-   `show.row.prc` / `show.col.prc` add row/column percentages
+-   `show.summary` appends the chi-square test statistic and p-value
+-   Same polished HTML output style as `tab_model()`
+
+::: notes
+If time is short, this is the pair most useful to clinical audiences:
+one function for regression, one for crosstabs, both publication-ready
+with zero manual formatting.
+:::
+
+# `likert`: Ordinal / Scale Data
+
+## Beyond survey questions
+
+The `likert` package is built for survey agreement scales, but it works
+for **any** ordered categorical variable measured on a shared scale. The
+`SOFA` sheet has six organ-system subscores, each rated 0 (normal) to 4
+(severe failure) — structurally identical to a 5-point Likert item.
+
+```{r}
+#| eval: true
+sofa <- import(
+  here("data", "QCRC_FINAL_Deidentified.xlsx"),
+  sheet = "SOFA"
+) |>
+  clean_names()
+
+lvls <- as.character(0:4)
+
+sofa_items <- sofa |>
+  transmute(
+    Coagulation    = factor(coag,  levels = lvls),
+    Liver          = factor(liver, levels = lvls),
+    CNS            = factor(cns,   levels = lvls),
+    Renal          = factor(renal, levels = lvls),
+    Cardiovascular = factor(cvs,   levels = lvls),
+    Respiratory    = factor(resp,  levels = lvls)
+  )
+```
+
+## `likert()` + `plot()`
+
+```{r}
+#| eval: true
+library(likert)
+
+l <- likert(as.data.frame(sofa_items))
+summary(l)
+```
+
+```{r}
+#| eval: true
+#| fig-height: 3.5
+plot(l)
+```
+
+-   Renal and cardiovascular subscores show the most severe dysfunction
+    in this cohort (large "3"/"4" categories)
+-   `summary()` gives the % of patients per score, per organ system;
+    `plot()` produces the classic diverging stacked bar chart
+-   The exact same workflow applies to real Likert survey items —
+    agreement scales are just another ordered factor with a shared level
+    set
+
+# Putting It Together
+
+## Which package for which job? {.smaller}
+
+| Package     | Best for                                                   |
+|-------------|------------------------------------------------------------|
+| `pacman`    | Loading/installing packages in one line                    |
+| `here`      | Project-relative file paths, no more `setwd()`             |
+| `rio`       | Reading/writing any data file format                       |
+| `janitor`   | Cleaning column names & quick data checks                  |
+| `table1`    | Descriptive "Table 1" split by group                       |
+| `gt`        | Full control over any custom table's look                  |
+| `gtsummary` | Fast, statistically-aware summary & model tables           |
+| `sjPlot`    | Regression tables (`tab_model`) and crosstabs (`tab_xtab`) |
+| `likert`    | Visualizing ordered survey/scale data                      |
+
+## A typical workflow
+
+```{r}
+pacman::p_load(here, rio, janitor, table1, gt, gtsummary, sjPlot, likert)
+
+qcrc <- import(here("data", "QCRC_FINAL_Deidentified.xlsx"),
+                sheet = "Main_Dataset") |>
+  clean_names()
+
+table1(~age+bmi+female+icu_los+intubated+crrt|died, data=qcrc_clean)
+qcrc |>
+  tbl_summary(by = died) 
+
+mod <- glm(died ~ age + intubated + crrt,
+           data = qcrc, family = binomial)
+tab_model(mod)
+```
+
+Six packages, six lines, from a raw ICU spreadsheet to publication-ready
+output.
+
+# Wrap-Up
+
+## Resources
+
+-   `here`: <https://here.r-lib.org>
+-   `rio`: <https://gesistsa.github.io/rio>
+-   `janitor`: <https://sfirke.github.io/janitor>
+-   `table1`: CRAN vignette —
+    `vignette("introduction", package = "table1")`
+-   `gt`: <https://gt.rstudio.com>
+-   `gtsummary`: <https://www.danieldsjoberg.com/gtsummary>
+-   `sjPlot`: <https://strengejacke.github.io/sjPlot>
+-   `likert`: CRAN vignette — `vignette("likert", package = "likert")`
+-   `pacman`: <https://github.com/trinker/pacman>
+
+## Questions?

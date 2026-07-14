@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.42">
 
-  <meta name="author" content="Alex Edwards">
-  <meta name="author" content="Zane Billings">
+  <meta name="author" content="Alex Edwards &amp; Zane Billings">
+  <meta name="dcterms.date" content="2026-07-14">
   <title>SISMID R for ID Materials (2026) – Module 6: Useful R packages</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -29,8 +29,73 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8f3eebe07241f08526c91a7e9cbef8fd.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -46,6 +111,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -122,6 +188,7 @@
       margin-right: 0; 
     }
   </style>
+  <link href="../site_libs/table1-1.0/table1_defaults.css" rel="stylesheet">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -129,40 +196,2888 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Module 6: Useful R packages</h1>
+  <p class="subtitle">gt · gtsummary · sjPlot · table1 · likert · janitor · rio · here · pacman</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://sph.emory.edu/profile/faculty/alex-edwards">Alex Edwards</a> 
-</div>
-</div>
-<div class="quarto-title-author">
-<div class="quarto-title-author-name">
-<a href="https://wzbillings.com/">Zane Billings</a> 
+Alex Edwards &amp; Zane Billings 
 </div>
 </div>
 </div>
 
+  <p class="date">2026-07-14</p>
 </section>
-<section id="placeholder" class="slide level2">
-<h2>2026 placeholder</h2>
-<p>Alex will lead this Day 2 core module. The final deck will be added here when it is ready.</p>
-<p>For now, this placeholder keeps the public schedule and navigation path stable.</p>
+<section>
+<section id="welcome" class="title-slide slide level1 center">
+<h1>Welcome</h1>
+
 </section>
-<section id="planned-scope" class="slide level2">
-<h2>Planned scope</h2>
+<section id="agenda" class="slide level2 smaller">
+<h2>Agenda</h2>
+<p>A one-hour tour of the R packages that take you from <strong>messy data</strong> to <strong>publication-ready tables and reports</strong> — demonstrated on a real, de-identified ICU dataset.</p>
+</section>
+<section id="agenda-1" class="slide level2 smaller">
+<h2>Agenda</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Time</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2 min</td>
+<td>Why these packages?</td>
+</tr>
+<tr class="even">
+<td>2 min</td>
+<td>The dataset: QCRC ICU cohort</td>
+</tr>
+<tr class="odd">
+<td>3 min</td>
+<td><code>pacman::p_load()</code> — loading packages</td>
+</tr>
+<tr class="even">
+<td>3 min</td>
+<td><code>here</code> — project-relative file paths</td>
+</tr>
+<tr class="odd">
+<td>6 min</td>
+<td><code>rio</code> — import/export anything</td>
+</tr>
+<tr class="even">
+<td>6 min</td>
+<td><code>janitor::clean_names()</code> — tidy names</td>
+</tr>
+<tr class="odd">
+<td>7 min</td>
+<td><code>table1</code> — “Table 1”</td>
+</tr>
+<tr class="even">
+<td>6 min</td>
+<td><code>gt</code> — grammar of tables</td>
+</tr>
+<tr class="odd">
+<td>8 min</td>
+<td><code>gtsummary</code> — summary &amp; regression tables</td>
+</tr>
+<tr class="even">
+<td>8 min</td>
+<td><code>sjPlot</code> — <code>tab_model()</code> &amp; <code>tab_xtab()</code></td>
+</tr>
+<tr class="odd">
+<td>6 min</td>
+<td><code>likert</code> — ordinal clinical scores</td>
+</tr>
+<tr class="even">
+<td>3 min</td>
+<td>Wrap-up &amp; resources</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-these-packages" class="slide level2">
+<h2>Why these packages?</h2>
 <ul>
-<li>Packages that make common analysis and reporting tasks easier.</li>
-<li>Table-making and model-summary tools useful for Exercise 2.</li>
-<li>Practical package choices rather than a long package survey.</li>
+<li>Every analysis ends with a table, a report, or a slide someone else has to read</li>
+<li>Base R output (<code>summary()</code>, <code>str()</code>) is fast to write but ugly to share</li>
+<li>These packages sit <strong>on top of</strong> your normal analysis and turn it into something you can paste into a paper, a report, or an email</li>
 </ul>
 </section>
-<section id="course-connection" class="slide level2">
-<h2>Course connection</h2>
-<p>This module prepares you to make readable descriptive tables, model summaries, and polished report outputs in Exercise 2.</p>
-
+<section id="which-packages" class="slide level2">
+<h2>Which packages?</h2>
+<div>
+<ul>
+<li class="fragment"><code>here</code>, <code>rio</code>, <code>janitor</code> → find, load, and clean your data</li>
+<li class="fragment"><code>table1</code> → describe your sample</li>
+<li class="fragment"><code>gt</code>, <code>gtsummary</code>, <code>sjPlot</code> → build the tables people actually read</li>
+<li class="fragment"><code>likert</code> → visualize ordered/scale data</li>
+<li class="fragment"><code>pacman</code> → glue that loads everything with one line</li>
+</ul>
+</div>
+</section>
+<section id="about-the-dataset" class="slide level2">
+<h2>About the Dataset</h2>
+<p>Every example in this deck uses the same real, de-identified file: <strong><code>QCRC_FINAL_Deidentified.xlsx</code></strong></p>
+<ul>
+<li>288 patients admitted to the ICU with COVID-19</li>
+<li>10 sheets — <code>Main_Dataset</code> (demographics, treatments, outcomes), daily <code>SOFA</code> organ-failure scores, <code>Long_Labs</code>, <code>Long_Vitals</code>, ventilator settings, medications, and more</li>
+<li>We’ll mainly use <code>Main_Dataset</code>: 37 variables including age, sex, race, BMI, intubation, CRRT/dialysis, and mortality</li>
+<li>98 of 288 patients (34%) died — a natural grouping variable for every table in this lecture</li>
+</ul>
+<aside class="notes">
+<p>Before running this deck live: save the workbook as <code>data/QCRC_FINAL_Deidentified.xlsx</code> inside your project folder — the <code>here()</code> and <code>rio::import()</code> calls later assume that path.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="setup-pacmanp_load" class="title-slide slide level1 center">
+<h1>Setup: <code>pacman::p_load()</code></h1>
 
 </section>
+<section id="the-problem-with-library" class="slide level2">
+<h2>The problem with <code>library()</code></h2>
+<p>A typical analysis script starts like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(here)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(rio)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(table1)</span>
+<span id="cb1-5"><a></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-6"><a></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-7"><a></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb1-8"><a></a><span class="fu">library</span>(likert)</span>
+<span id="cb1-9"><a></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If <strong>one</strong> of these isn’t installed, the whole script stops with an error — and you have to go install it manually, then re-run.</p>
+</section>
+<section id="pacmanp_load" class="slide level2">
+<h2><code>pacman::p_load()</code></h2>
+<p><code>pacman</code> is a package-management package. Its star function, <strong><code>p_load()</code></strong>, installs anything missing, then loads everything — in one line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># install.packages("pacman")   </span></span>
+<span id="cb2-2"><a></a><span class="co"># only needed once</span></span>
+<span id="cb2-3"><a></a></span>
+<span id="cb2-4"><a></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb2-5"><a></a>  here, rio, janitor, table1,</span>
+<span id="cb2-6"><a></a>  gt, gtsummary, sjPlot, likert,</span>
+<span id="cb2-7"><a></a>  tidyverse</span>
+<span id="cb2-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pacmanp_load-1" class="slide level2">
+<h2><code>pacman::p_load()</code></h2>
+<ul>
+<li>Checks each package name</li>
+<li>Installs it from CRAN <strong>only if missing</strong></li>
+<li>Loads (<code>library()</code>s) all of them</li>
+<li>Great for shared scripts, teaching, and reproducibility setups</li>
+</ul>
+</section></section>
+<section>
+<section id="here-project-relative-paths" class="title-slide slide level1 center">
+<h1><code>here</code>: Project-Relative Paths</h1>
+
+</section>
+<section id="the-problem-with-setwd" class="slide level2">
+<h2>The problem with <code>setwd()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># fragile — breaks the moment this script runs on</span></span>
+<span id="cb3-2"><a></a><span class="co"># a different machine, or is Source()'d vs rendered</span></span>
+<span id="cb3-3"><a></a><span class="fu">setwd</span>(<span class="st">"~/Downloads/SISMID2026"</span>)</span>
+<span id="cb3-4"><a></a>qcrc <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">"data/QCRC_FINAL_Deidentified.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="herehere" class="slide level2">
+<h2><code>here::here()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(here)</span>
+<span id="cb4-2"><a></a></span>
+<span id="cb4-3"><a></a><span class="co">#This is where it think we are</span></span>
+<span id="cb4-4"><a></a><span class="fu">here</span>()</span>
+<span id="cb4-5"><a></a></span>
+<span id="cb4-6"><a></a><span class="co">#This gets us to our data</span></span>
+<span id="cb4-7"><a></a><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>)</span>
+<span id="cb4-8"><a></a></span>
+<span id="cb4-9"><a></a><span class="co">#How do we read in data</span></span>
+<span id="cb4-10"><a></a>qcrcHere <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="herehere-1" class="slide level2">
+<h2><code>here::here()</code></h2>
+<ul>
+<li>Finds your project root automatically (looks for a <code>.Rproj</code> file, <code>.git</code> folder, or similar) and builds paths <strong>from there</strong></li>
+<li>The same <code>here()</code> call works identically whether you run it from RStudio, the terminal, or a rendered Quarto document</li>
+<li>Pairs perfectly with <code>rio::import()</code> — see next section</li>
+</ul>
+<aside class="notes">
+<p>Rule of thumb: replace every <code>setwd()</code> and every hard-coded absolute path with <code>here()</code>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="rio-import-export-anything" class="title-slide slide level1 center">
+<h1><code>rio</code>: Import &amp; Export Anything</h1>
+
+</section>
+<section id="one-function-in-one-function-out" class="slide level2">
+<h2>One function in, one function out</h2>
+<p><code>rio</code> wraps dozens of format-specific packages (<code>haven</code>, <code>readxl</code>, <code>data.table</code>, <code>jsonlite</code>, …) behind two simple verbs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(rio)</span>
+<span id="cb5-2"><a></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at /Users/xpf100/Downloads/SISMID2026</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>qcrc <span class="ot">&lt;-</span> <span class="fu">import</span>(</span>
+<span id="cb7-2"><a></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>),</span>
+<span id="cb7-3"><a></a>  <span class="at">sheet =</span> <span class="st">"Main_Dataset"</span></span>
+<span id="cb7-4"><a></a>)</span>
+<span id="cb7-5"><a></a></span>
+<span id="cb7-6"><a></a><span class="fu">dim</span>(qcrc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 288  37</code></pre>
+</div>
+</div>
+</section>
+<section id="one-function-in-one-function-out-1" class="slide level2">
+<h2>One function in, one function out</h2>
+<p>No more remembering <code>read_csv()</code> vs <code>read.spss()</code> vs <code>read_excel()</code> — and no hard-coded paths, thanks to <code>here()</code>.</p>
+</section>
+<section id="exporting-is-just-as-easy" class="slide level2">
+<h2>Exporting is just as easy</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">export</span>(qcrc, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"qcrc_clean.xlsx"</span>))</span>
+<span id="cb9-2"><a></a><span class="fu">export</span>(qcrc, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"qcrc_clean.rds"</span>))</span>
+<span id="cb9-3"><a></a><span class="fu">export</span>(qcrc, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"qcrc_clean.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exporting-is-just-as-easy-1" class="slide level2">
+<h2>Exporting is just as easy</h2>
+<ul>
+<li>Format is inferred from the file extension</li>
+<li>Supports 30+ formats: <code>.csv</code>, <code>.xlsx</code>, <code>.sav</code>, <code>.dta</code>, <code>.sas7bdat</code>, <code>.json</code>, <code>.rds</code>, <code>.parquet</code>, and more</li>
+<li><code>import_list()</code> reads <strong>every sheet</strong> at once — perfect for this workbook, which has 10 sheets:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>sheets <span class="ot">&lt;-</span> <span class="fu">import_list</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>))</span>
+<span id="cb10-2"><a></a><span class="fu">names</span>(sheets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Main_Dataset"      "Oxygen_Delivery"   "SOFA"             
+ [4] "Long_Labs"         "Long_Vitals"       "Static_Compliance"
+ [7] "PAO2_FIO2"         "ICU_Meds"          "Intake_Form"      
+[10] "Daily_Form"       </code></pre>
+</div>
+</div>
+<aside class="notes">
+<p>Good moment for a live demo — scroll through <code>sheets</code> to show the whole workbook loaded in one call.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="janitor-clean-names-fast" class="title-slide slide level1 center">
+<h1><code>janitor</code>: Clean Names Fast</h1>
+
+</section>
+<section id="messy-names-are-the-1-headache" class="slide level2">
+<h2>Messy names are the #1 headache</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">names</span>(qcrc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Patient_DEID"                  "Decatur_Transfer"             
+ [3] "Age"                           "Female"                       
+ [5] "Race"                          "Died"                         
+ [7] "30D_Mortality"                 "60D_Mortality"                
+ [9] "Death date_deid"               "ICU_LOS"                      
+[11] "BMI"                           "Died in ICU"                  
+[13] "Code status"                   "Epoprostenol"                 
+[15] "Remdesivir_or_placebo"         "Intubated"                    
+[17] "ICU_ADMIT_DEID"                "ICU_DC_DEID"                  
+[19] "HOSPITAL_ADMIT_DEID"           "HOSPITAL_DC_DEID"             
+[21] "Vent LOS"                      "CRRT"                         
+[23] "CRRT days"                     "HD"                           
+[25] "HD days"                       "Pressor &gt;2 hours"             
+[27] "Pressor days"                  "Absolute lymphocyte"          
+[29] "WBC"                           "D dimer"                      
+[31] "CRP"                           "Peak troponin"                
+[33] "P:F ratio at ICU admission"    "P:F ratio at first intubation"
+[35] "Calculated_Cstat"              "First_Intubation_deid"        
+[37] "Last_Intubation_deid"         </code></pre>
+</div>
+</div>
+</section>
+<section id="messy-names-are-the-1-headache-1" class="slide level2">
+<h2>Messy names are the #1 headache</h2>
+<p>Notice the inconsistency: <code>Title Case With Spaces</code> (<code>Vent LOS</code>, <code>Peak troponin</code>), <code>ALL_CAPS_WITH_UNDERSCORES</code> (<code>ICU_ADMIT_DEID</code>), and even a colon (<code>P:F ratio at ICU admission</code>). All are painful to type or reference in code.</p>
+</section>
+<section id="clean_names" class="slide level2">
+<h2><code>clean_names()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>qcrc_clean <span class="ot">&lt;-</span> qcrc <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb17-2"><a></a><span class="fu">names</span>(qcrc_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "patient_deid"                  "decatur_transfer"             
+ [3] "age"                           "female"                       
+ [5] "race"                          "died"                         
+ [7] "x30d_mortality"                "x60d_mortality"               
+ [9] "death_date_deid"               "icu_los"                      
+[11] "bmi"                           "died_in_icu"                  
+[13] "code_status"                   "epoprostenol"                 
+[15] "remdesivir_or_placebo"         "intubated"                    
+[17] "icu_admit_deid"                "icu_dc_deid"                  
+[19] "hospital_admit_deid"           "hospital_dc_deid"             
+[21] "vent_los"                      "crrt"                         
+[23] "crrt_days"                     "hd"                           
+[25] "hd_days"                       "pressor_2_hours"              
+[27] "pressor_days"                  "absolute_lymphocyte"          
+[29] "wbc"                           "d_dimer"                      
+[31] "crp"                           "peak_troponin"                
+[33] "p_f_ratio_at_icu_admission"    "p_f_ratio_at_first_intubation"
+[35] "calculated_cstat"              "first_intubation_deid"        
+[37] "last_intubation_deid"         </code></pre>
+</div>
+</div>
+</section>
+<section id="clean_names-1" class="slide level2">
+<h2><code>clean_names()</code></h2>
+<ul>
+<li>Converts everything to consistent <code>snake_case</code></li>
+<li>Strips spaces and punctuation (even the colon), collapses repeated separators, and prefixes names that start with a digit (<code>30D_...</code> → <code>x30d_...</code>)</li>
+<li>One line, run right after <code>import()</code> — every variable name used for the rest of this lecture assumes this has already happened</li>
+</ul>
+</section>
+<section id="bonus-fixing-the-.-missing-code" class="slide level2 smaller">
+<h2>Bonus: fixing the <code>"."</code> missing code</h2>
+<p>Like a lot of clinical exports, this dataset stores missing values as a literal <code>"."</code> string — which leaves numeric columns like <code>bmi</code>, <code>wbc</code>, and <code>crp</code> stuck as text.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>num_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"bmi"</span>, <span class="st">"wbc"</span>, <span class="st">"d_dimer"</span>, <span class="st">"crp"</span>, <span class="st">"peak_troponin"</span>,</span>
+<span id="cb23-2"><a></a>              <span class="st">"calculated_cstat"</span>)</span>
+<span id="cb23-3"><a></a></span>
+<span id="cb23-4"><a></a>qcrc_clean <span class="ot">&lt;-</span> qcrc_clean <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(num_cols),</span>
+<span id="cb23-6"><a></a>                <span class="sc">~</span> <span class="fu">na_if</span>(<span class="fu">as.character</span>(.x), <span class="st">"."</span>)<span class="sc">|&gt;</span> </span>
+<span id="cb23-7"><a></a>                                <span class="fu">as.numeric</span>())) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a></a>  <span class="fu">mutate</span>(<span class="at">died =</span> <span class="fu">factor</span>(died, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Survived"</span>, <span class="st">"Died"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bonus-fixing-the-.-missing-code-1" class="slide level2 smaller">
+<h2>Bonus: fixing the <code>"."</code> missing code</h2>
+<p>Not a janitor function, but the natural next step after <code>clean_names()</code> — tidy the <em>names</em>, then tidy the <em>values</em>. This is the <code>qcrc_clean</code> object every later slide builds on.</p>
+</section></section>
+<section>
+<section id="table1-describing-your-sample" class="title-slide slide level1 center">
+<h1><code>table1</code>: Describing Your Sample</h1>
+
+</section>
+<section id="the-table-1-problem" class="slide level2">
+<h2>The “Table 1” problem</h2>
+<p>Nearly every clinical paper starts with a baseline characteristics table split by outcome or treatment group — this is almost always called <strong>“Table 1.”</strong> Our cohort: 288 ICU patients, 98 of whom (34%) died.</p>
+<p>Building it by hand means computing means, SDs, counts, percentages, and p-values separately for every variable.</p>
+</section>
+<section id="table1" class="slide level2">
+<h2><code>table1()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">library</span>(table1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'table1'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    units, units&lt;-</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co">#Table One No Strata</span></span>
+<span id="cb27-2"><a></a><span class="fu">table1</span>(<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>icu_los<span class="sc">+</span>intubated<span class="sc">+</span>crrt, <span class="at">data=</span>qcrc_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="Rtable1">
+<table class="Rtable1 caption-top" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th class="rowlabel firstrow lastrow" data-quarto-table-cell-role="th"></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Overall<br>
+<span class="stratn">(N=288)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">age</span></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>63.5 (15.5)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">65.0 [19.0, 89.0]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">bmi</span></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>31.6 (8.34)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Median [Min, Max]</td>
+<td>30.3 [15.4, 64.8]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Missing</td>
+<td class="lastrow">3 (1.0%)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">icu_los</span></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>10.5 (8.76)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">9.00 [0, 56.0]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">intubated</span></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.736 (0.442)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">crrt</span></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.229 (0.421)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="table1-1" class="slide level2">
+<h2><code>table1()</code></h2>
+<ul>
+<li>Older age, lower BMI, mechanical ventilation, and CRRT (dialysis) were all significantly associated with death in this cohort</li>
+<li>Printed table can be coerced to a data frame and then piped into <code>gt</code> for a polished, exportable version.</li>
+</ul>
+</section>
+<section id="table1-with-strata" class="slide level2">
+<h2><code>table1() with strata</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co">#Table one with strata</span></span>
+<span id="cb28-2"><a></a><span class="fu">table1</span>(<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>icu_los<span class="sc">+</span>intubated<span class="sc">+</span>crrt<span class="sc">|</span>female, <span class="at">data=</span>qcrc_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="Rtable1">
+<table class="Rtable1 caption-top" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th class="rowlabel firstrow lastrow" data-quarto-table-cell-role="th"></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Female<br>
+<span class="stratn">(N=131)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Male<br>
+<span class="stratn">(N=157)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Overall<br>
+<span class="stratn">(N=288)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">age</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>63.7 (17.3)</td>
+<td>63.3 (13.9)</td>
+<td>63.5 (15.5)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">65.0 [21.0, 89.0]</td>
+<td class="lastrow">65.0 [19.0, 89.0]</td>
+<td class="lastrow">65.0 [19.0, 89.0]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">bmi</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>32.5 (9.09)</td>
+<td>30.8 (7.60)</td>
+<td>31.6 (8.34)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Median [Min, Max]</td>
+<td>30.6 [16.4, 64.8]</td>
+<td>29.9 [15.4, 64.7]</td>
+<td>30.3 [15.4, 64.8]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Missing</td>
+<td class="lastrow">2 (1.5%)</td>
+<td class="lastrow">1 (0.6%)</td>
+<td class="lastrow">3 (1.0%)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">icu_los</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>9.88 (9.49)</td>
+<td>11.1 (8.10)</td>
+<td>10.5 (8.76)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">7.59 [0, 56.0]</td>
+<td class="lastrow">9.00 [0, 41.0]</td>
+<td class="lastrow">9.00 [0, 56.0]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">intubated</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.702 (0.459)</td>
+<td>0.764 (0.426)</td>
+<td>0.736 (0.442)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">crrt</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.145 (0.353)</td>
+<td>0.299 (0.459)</td>
+<td>0.229 (0.421)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="table1-with-two-strata" class="slide level2">
+<h2><code>table1() with two strata</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co">#Table One with two strata</span></span>
+<span id="cb29-2"><a></a><span class="fu">table1</span>(<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>icu_los<span class="sc">+</span>intubated<span class="sc">+</span>crrt<span class="sc">|</span>female<span class="sc">*</span>died, <span class="at">data=</span>qcrc_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="Rtable1">
+<table class="Rtable1 caption-top" style="width:100%;" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th class="grouplabel" data-quarto-table-cell-role="th"></th>
+<th colspan="2" class="grouplabel" data-quarto-table-cell-role="th"><div>
+Female
+</div></th>
+<th colspan="2" class="grouplabel" data-quarto-table-cell-role="th"><div>
+Male
+</div></th>
+<th colspan="2" class="grouplabel" data-quarto-table-cell-role="th"><div>
+Overall
+</div></th>
+</tr>
+<tr class="even">
+<th class="rowlabel firstrow lastrow" data-quarto-table-cell-role="th"></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Survived<br>
+<span class="stratn">(N=88)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Died<br>
+<span class="stratn">(N=43)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Survived<br>
+<span class="stratn">(N=102)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Died<br>
+<span class="stratn">(N=55)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Survived<br>
+<span class="stratn">(N=190)</span></span></th>
+<th class="firstrow lastrow" data-quarto-table-cell-role="th"><span class="stratlabel">Died<br>
+<span class="stratn">(N=98)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">age</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>60.9 (17.2)</td>
+<td>69.5 (16.1)</td>
+<td>59.2 (13.2)</td>
+<td>70.8 (12.0)</td>
+<td>60.0 (15.2)</td>
+<td>70.2 (13.9)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">60.5 [21.0, 89.0]</td>
+<td class="lastrow">70.0 [23.0, 89.0]</td>
+<td class="lastrow">61.0 [19.0, 89.0]</td>
+<td class="lastrow">71.0 [32.0, 89.0]</td>
+<td class="lastrow">61.0 [19.0, 89.0]</td>
+<td class="lastrow">71.0 [23.0, 89.0]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">bmi</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>34.2 (9.57)</td>
+<td>29.1 (6.96)</td>
+<td>32.4 (8.07)</td>
+<td>28.0 (5.75)</td>
+<td>33.2 (8.82)</td>
+<td>28.5 (6.30)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Median [Min, Max]</td>
+<td>31.6 [20.4, 64.8]</td>
+<td>29.3 [16.4, 50.3]</td>
+<td>31.2 [17.6, 64.7]</td>
+<td>27.0 [15.4, 40.0]</td>
+<td>31.4 [17.6, 64.8]</td>
+<td>28.5 [15.4, 50.3]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Missing</td>
+<td class="lastrow">2 (2.3%)</td>
+<td class="lastrow">0 (0%)</td>
+<td class="lastrow">1 (1.0%)</td>
+<td class="lastrow">0 (0%)</td>
+<td class="lastrow">3 (1.6%)</td>
+<td class="lastrow">0 (0%)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">icu_los</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>10.1 (10.3)</td>
+<td>9.45 (7.53)</td>
+<td>10.8 (7.73)</td>
+<td>11.5 (8.80)</td>
+<td>10.5 (9.02)</td>
+<td>10.6 (8.29)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">7.00 [0, 56.0]</td>
+<td class="lastrow">8.00 [0, 28.0]</td>
+<td class="lastrow">9.16 [0.435, 39.0]</td>
+<td class="lastrow">9.00 [0, 41.0]</td>
+<td class="lastrow">8.36 [0, 56.0]</td>
+<td class="lastrow">9.00 [0, 41.0]</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel firstrow"><span class="varlabel">intubated</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="even">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.682 (0.468)</td>
+<td>0.744 (0.441)</td>
+<td>0.696 (0.462)</td>
+<td>0.891 (0.315)</td>
+<td>0.689 (0.464)</td>
+<td>0.827 (0.381)</td>
+</tr>
+<tr class="odd">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+</tr>
+<tr class="even">
+<td class="rowlabel firstrow"><span class="varlabel">crrt</span></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr class="odd">
+<td class="rowlabel">Mean (SD)</td>
+<td>0.0909 (0.289)</td>
+<td>0.256 (0.441)</td>
+<td>0.167 (0.375)</td>
+<td>0.545 (0.503)</td>
+<td>0.132 (0.339)</td>
+<td>0.418 (0.496)</td>
+</tr>
+<tr class="even">
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">1.00 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+<td class="lastrow">0 [0, 1.00]</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="gt-a-grammar-of-tables" class="title-slide slide level1 center">
+<h1><code>gt</code>: A Grammar of Tables</h1>
+
+</section>
+<section id="any-data-frame-a-polished-table" class="slide level2">
+<h2>Any data frame → a polished table</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">library</span>(gt)</span>
+<span id="cb30-2"><a></a></span>
+<span id="cb30-3"><a></a>qcrc_clean <span class="sc">|&gt;</span></span>
+<span id="cb30-4"><a></a>  <span class="fu">select</span>(patient_deid, age, female, race, bmi, icu_los, died) <span class="sc">|&gt;</span></span>
+<span id="cb30-5"><a></a>  <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-6"><a></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb30-7"><a></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb30-8"><a></a>    <span class="at">title    =</span> <span class="st">"QCRC ICU Cohort"</span>,</span>
+<span id="cb30-9"><a></a>    <span class="at">subtitle =</span> <span class="st">"First 6 patients"</span></span>
+<span id="cb30-10"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb30-11"><a></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(bmi, icu_los), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-12"><a></a>  <span class="fu">cols_label</span>(<span class="at">patient_deid =</span> <span class="st">"Patient ID"</span>, <span class="at">icu_los =</span> <span class="st">"ICU LOS (days)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="bwvcresrbq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bwvcresrbq table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bwvcresrbq thead, #bwvcresrbq tbody, #bwvcresrbq tfoot, #bwvcresrbq tr, #bwvcresrbq td, #bwvcresrbq th {
+  border-style: none;
+}
+
+#bwvcresrbq p {
+  margin: 0;
+  padding: 0;
+}
+
+#bwvcresrbq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bwvcresrbq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bwvcresrbq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bwvcresrbq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bwvcresrbq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bwvcresrbq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bwvcresrbq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bwvcresrbq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bwvcresrbq .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bwvcresrbq .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bwvcresrbq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bwvcresrbq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bwvcresrbq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bwvcresrbq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bwvcresrbq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwvcresrbq .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bwvcresrbq .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bwvcresrbq .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bwvcresrbq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwvcresrbq .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bwvcresrbq .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwvcresrbq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bwvcresrbq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwvcresrbq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bwvcresrbq .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwvcresrbq .gt_left {
+  text-align: left;
+}
+
+#bwvcresrbq .gt_center {
+  text-align: center;
+}
+
+#bwvcresrbq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bwvcresrbq .gt_font_normal {
+  font-weight: normal;
+}
+
+#bwvcresrbq .gt_font_bold {
+  font-weight: bold;
+}
+
+#bwvcresrbq .gt_font_italic {
+  font-style: italic;
+}
+
+#bwvcresrbq .gt_super {
+  font-size: 65%;
+}
+
+#bwvcresrbq .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bwvcresrbq .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bwvcresrbq .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bwvcresrbq .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bwvcresrbq .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bwvcresrbq .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bwvcresrbq .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#bwvcresrbq .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bwvcresrbq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="7" class="gt_heading gt_title gt_font_normal">QCRC ICU Cohort</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="7" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">First 6 patients</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="patient_deid" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Patient ID</th>
+<th id="age" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">age</th>
+<th id="female" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">female</th>
+<th id="race" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">race</th>
+<th id="bmi" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">bmi</th>
+<th id="icu_los" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ICU LOS (days)</th>
+<th id="died" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">died</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="patient_deid">17205428</td>
+<td class="gt_row gt_right" headers="age">89</td>
+<td class="gt_row gt_left" headers="female">Female</td>
+<td class="gt_row gt_left" headers="race">Caucasian or White</td>
+<td class="gt_row gt_right" headers="bmi">26.2</td>
+<td class="gt_row gt_right" headers="icu_los">11.1</td>
+<td class="gt_row gt_center" headers="died">Died</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="patient_deid">17234405</td>
+<td class="gt_row gt_right" headers="age">73</td>
+<td class="gt_row gt_left" headers="female">Female</td>
+<td class="gt_row gt_left" headers="race">African American or Black</td>
+<td class="gt_row gt_right" headers="bmi">40.7</td>
+<td class="gt_row gt_right" headers="icu_los">25.0</td>
+<td class="gt_row gt_center" headers="died">Survived</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="patient_deid">17239956</td>
+<td class="gt_row gt_right" headers="age">53</td>
+<td class="gt_row gt_left" headers="female">Male</td>
+<td class="gt_row gt_left" headers="race">Caucasian or White</td>
+<td class="gt_row gt_right" headers="bmi">38.6</td>
+<td class="gt_row gt_right" headers="icu_los">17.0</td>
+<td class="gt_row gt_center" headers="died">Survived</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="patient_deid">17350926</td>
+<td class="gt_row gt_right" headers="age">55</td>
+<td class="gt_row gt_left" headers="female">Male</td>
+<td class="gt_row gt_left" headers="race">African American or Black</td>
+<td class="gt_row gt_right" headers="bmi">35.2</td>
+<td class="gt_row gt_right" headers="icu_los">21.0</td>
+<td class="gt_row gt_center" headers="died">Died</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="patient_deid">17377951</td>
+<td class="gt_row gt_right" headers="age">66</td>
+<td class="gt_row gt_left" headers="female">Female</td>
+<td class="gt_row gt_left" headers="race">African American or Black</td>
+<td class="gt_row gt_right" headers="bmi">32.9</td>
+<td class="gt_row gt_right" headers="icu_los">11.2</td>
+<td class="gt_row gt_center" headers="died">Died</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="patient_deid">17397040</td>
+<td class="gt_row gt_right" headers="age">78</td>
+<td class="gt_row gt_left" headers="female">Male</td>
+<td class="gt_row gt_left" headers="race">African American or Black</td>
+<td class="gt_row gt_right" headers="bmi">28.7</td>
+<td class="gt_row gt_right" headers="icu_los">6.0</td>
+<td class="gt_row gt_center" headers="died">Died</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="any-data-frame-a-polished-table-1" class="slide level2">
+<h2>Any data frame → a polished table</h2>
+<ul>
+<li><code>gt()</code> turns a data frame into a table object</li>
+<li>Everything after is a <strong>layer</strong>: header, formatting, labels, footnotes, spanners, styling — piped together</li>
+</ul>
+</section>
+<section id="why-gt-matters" class="slide level2">
+<h2>Why <code>gt</code> matters</h2>
+<ul>
+<li>It’s the <strong>rendering engine</strong> many other packages (including <code>gtsummary</code>) build on top of</li>
+<li>Output looks the same in HTML, PDF, Word, and RTF</li>
+<li>Useful layers to know:
+<ul>
+<li><code>tab_spanner()</code> — group columns under a shared header</li>
+<li><code>tab_source_note()</code> — add a footnote/citation</li>
+<li><code>gtsave(tbl, "table.png")</code> — export to image, HTML, RTF, or Word</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="gtsummary-summary-regression-tables" class="title-slide slide level1 center">
+<h1><code>gtsummary</code>: Summary &amp; Regression Tables</h1>
+
+</section>
+<section id="tbl_summary-descriptive-tables" class="slide level2">
+<h2><code>tbl_summary()</code> — descriptive tables</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb31-2"><a></a></span>
+<span id="cb31-3"><a></a>qcrc_clean <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a></a>  <span class="fu">select</span>(age, bmi, wbc, crp, died) <span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a></a>  <span class="fu">tbl_summary</span>(</span>
+<span id="cb31-6"><a></a>    <span class="at">by        =</span> died,</span>
+<span id="cb31-7"><a></a>    <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"{median} ({p25}, {p75})"</span>)</span>
+<span id="cb31-8"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a></a>  <span class="fu">add_p</span>() <span class="sc">|&gt;</span></span>
+<span id="cb31-10"><a></a>  <span class="fu">add_overall</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="nrqnkfkopv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nrqnkfkopv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nrqnkfkopv thead, #nrqnkfkopv tbody, #nrqnkfkopv tfoot, #nrqnkfkopv tr, #nrqnkfkopv td, #nrqnkfkopv th {
+  border-style: none;
+}
+
+#nrqnkfkopv p {
+  margin: 0;
+  padding: 0;
+}
+
+#nrqnkfkopv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nrqnkfkopv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nrqnkfkopv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nrqnkfkopv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nrqnkfkopv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nrqnkfkopv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nrqnkfkopv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nrqnkfkopv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nrqnkfkopv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nrqnkfkopv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nrqnkfkopv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nrqnkfkopv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nrqnkfkopv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nrqnkfkopv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nrqnkfkopv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nrqnkfkopv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nrqnkfkopv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nrqnkfkopv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nrqnkfkopv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nrqnkfkopv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nrqnkfkopv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nrqnkfkopv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nrqnkfkopv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nrqnkfkopv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nrqnkfkopv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nrqnkfkopv .gt_left {
+  text-align: left;
+}
+
+#nrqnkfkopv .gt_center {
+  text-align: center;
+}
+
+#nrqnkfkopv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nrqnkfkopv .gt_font_normal {
+  font-weight: normal;
+}
+
+#nrqnkfkopv .gt_font_bold {
+  font-weight: bold;
+}
+
+#nrqnkfkopv .gt_font_italic {
+  font-style: italic;
+}
+
+#nrqnkfkopv .gt_super {
+  font-size: 65%;
+}
+
+#nrqnkfkopv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nrqnkfkopv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nrqnkfkopv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nrqnkfkopv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nrqnkfkopv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nrqnkfkopv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nrqnkfkopv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#nrqnkfkopv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#nrqnkfkopv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="stat_0" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Overall</strong><br>
+N = 288<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Survived</strong><br>
+N = 190<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Died</strong><br>
+N = 98<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">age</td>
+<td class="gt_row gt_center" headers="stat_0">65 (55, 75)</td>
+<td class="gt_row gt_center" headers="stat_1">61 (51, 69)</td>
+<td class="gt_row gt_center" headers="stat_2">71 (64, 79)</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">bmi</td>
+<td class="gt_row gt_center" headers="stat_0">30 (26, 35)</td>
+<td class="gt_row gt_center" headers="stat_1">31 (27, 37)</td>
+<td class="gt_row gt_center" headers="stat_2">29 (25, 31)</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">3</td>
+<td class="gt_row gt_center" headers="stat_1">3</td>
+<td class="gt_row gt_center" headers="stat_2">0</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">wbc</td>
+<td class="gt_row gt_center" headers="stat_0">8.6 (6.2, 11.7)</td>
+<td class="gt_row gt_center" headers="stat_1">8.5 (6.2, 10.7)</td>
+<td class="gt_row gt_center" headers="stat_2">9.5 (6.2, 12.7)</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">5</td>
+<td class="gt_row gt_center" headers="stat_1">2</td>
+<td class="gt_row gt_center" headers="stat_2">3</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">crp</td>
+<td class="gt_row gt_center" headers="stat_0">169 (111, 234)</td>
+<td class="gt_row gt_center" headers="stat_1">171 (109, 229)</td>
+<td class="gt_row gt_center" headers="stat_2">169 (113, 246)</td>
+<td class="gt_row gt_center" headers="p.value">0.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">31</td>
+<td class="gt_row gt_center" headers="stat_1">14</td>
+<td class="gt_row gt_center" headers="stat_2">17</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_footnotes odd">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> Median (Q1, Q3)</td>
+</tr>
+<tr class="gt_footnotes even">
+<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span> Wilcoxon rank sum test</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="tbl_summary-descriptive-tables-1" class="slide level2">
+<h2><code>tbl_summary()</code> — descriptive tables</h2>
+<ul>
+<li>Median (IQR) instead of mean (SD) — a better default for skewed labs like CRP and WBC</li>
+<li>Same goal as <code>table1</code>, but the output is already a polished <strong>gt table</strong> — ready to drop into a report</li>
+<li><code>add_p()</code> adds group-comparison p-values; <code>add_overall()</code> adds a combined column</li>
+</ul>
+</section>
+<section id="tbl_regression-model-tables" class="slide level2">
+<h2><code>tbl_regression()</code> — model tables</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(died <span class="sc">~</span> age <span class="sc">+</span> bmi <span class="sc">+</span> intubated <span class="sc">+</span> crrt,</span>
+<span id="cb32-2"><a></a>           <span class="at">data =</span> qcrc_clean, <span class="at">family =</span> binomial)</span>
+<span id="cb32-3"><a></a></span>
+<span id="cb32-4"><a></a><span class="fu">tbl_regression</span>(mod, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-5"><a></a>  <span class="fu">add_glance_source_note</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="gpqekrqxzf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gpqekrqxzf table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#gpqekrqxzf thead, #gpqekrqxzf tbody, #gpqekrqxzf tfoot, #gpqekrqxzf tr, #gpqekrqxzf td, #gpqekrqxzf th {
+  border-style: none;
+}
+
+#gpqekrqxzf p {
+  margin: 0;
+  padding: 0;
+}
+
+#gpqekrqxzf .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#gpqekrqxzf .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#gpqekrqxzf .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#gpqekrqxzf .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#gpqekrqxzf .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#gpqekrqxzf .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#gpqekrqxzf .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#gpqekrqxzf .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#gpqekrqxzf .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#gpqekrqxzf .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#gpqekrqxzf .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#gpqekrqxzf .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#gpqekrqxzf .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#gpqekrqxzf .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#gpqekrqxzf .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gpqekrqxzf .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#gpqekrqxzf .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#gpqekrqxzf .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#gpqekrqxzf .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gpqekrqxzf .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#gpqekrqxzf .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gpqekrqxzf .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#gpqekrqxzf .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gpqekrqxzf .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gpqekrqxzf .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gpqekrqxzf .gt_left {
+  text-align: left;
+}
+
+#gpqekrqxzf .gt_center {
+  text-align: center;
+}
+
+#gpqekrqxzf .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#gpqekrqxzf .gt_font_normal {
+  font-weight: normal;
+}
+
+#gpqekrqxzf .gt_font_bold {
+  font-weight: bold;
+}
+
+#gpqekrqxzf .gt_font_italic {
+  font-style: italic;
+}
+
+#gpqekrqxzf .gt_super {
+  font-size: 65%;
+}
+
+#gpqekrqxzf .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#gpqekrqxzf .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#gpqekrqxzf .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#gpqekrqxzf .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#gpqekrqxzf .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#gpqekrqxzf .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#gpqekrqxzf .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#gpqekrqxzf .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#gpqekrqxzf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>OR</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">age</td>
+<td class="gt_row gt_center" headers="estimate">1.05</td>
+<td class="gt_row gt_center" headers="conf.low">1.03, 1.07</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">bmi</td>
+<td class="gt_row gt_center" headers="estimate">0.92</td>
+<td class="gt_row gt_center" headers="conf.low">0.87, 0.96</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">intubated</td>
+<td class="gt_row gt_center" headers="estimate">1.93</td>
+<td class="gt_row gt_center" headers="conf.low">0.94, 4.10</td>
+<td class="gt_row gt_center" headers="p.value">0.078</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">crrt</td>
+<td class="gt_row gt_center" headers="estimate">6.57</td>
+<td class="gt_row gt_center" headers="conf.low">3.28, 13.7</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, OR = Odds Ratio</td>
+</tr>
+<tr class="gt_sourcenotes even">
+<td colspan="4" class="gt_sourcenote">Null deviance = 367; Null df = 284; Log-likelihood = -142; AIC = 295; BIC = 313; Deviance = 285; Residual df = 280; No.&nbsp;Obs. = 285</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="tbl_regression-model-tables-1" class="slide level2">
+<h2><code>tbl_regression()</code> — model tables</h2>
+<ul>
+<li>Turns any <code>lm</code>/<code>glm</code>/<code>coxph</code>/mixed model into a clean estimate table (odds ratio, CI, p-value) — <code>exponentiate = TRUE</code> reports odds ratios instead of log-odds</li>
+<li><code>add_glance_source_note()</code> appends model fit stats (AIC, n)</li>
+<li><code>tbl_merge()</code> and <code>tbl_stack()</code> combine multiple models/tables side by side or on top of each other — handy for multi-model comparisons</li>
+</ul>
+<aside class="notes">
+<p>gtsummary is the “batteries included” option — sensible defaults, statistical tests built in, minimal code. This is the same <code>died ~ age + bmi + intubated + crrt</code> model sjPlot will show next, just formatted differently.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="sjplot-regression-crosstab-tables" class="title-slide slide level1 center">
+<h1><code>sjPlot</code>: Regression &amp; Crosstab Tables</h1>
+
+</section>
+<section id="tab_model-regression-output" class="slide level2">
+<h2><code>tab_model()</code> — regression output</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb33-2"><a></a></span>
+<span id="cb33-3"><a></a><span class="fu">tab_model</span>(</span>
+<span id="cb33-4"><a></a>  mod,</span>
+<span id="cb33-5"><a></a>  <span class="at">show.ci  =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb33-6"><a></a>  <span class="at">transform =</span> <span class="st">"exp"</span>,</span>
+<span id="cb33-7"><a></a>  <span class="at">dv.labels =</span> <span class="st">"Died (ICU, 0/1)"</span></span>
+<span id="cb33-8"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top" data-quarto-postprocess="true" style="border-collapse:collapse; border:none;">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: center; border-top: double; font-style: normal; font-weight: bold; padding: 0.2cm;">&nbsp;</td>
+<td colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-top: double; font-style: normal; font-weight: bold; padding: 0.2cm;">Died (ICU, 0/1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center; border-bottom: 1px solid; font-style: italic; font-weight: normal;">Predictors</td>
+<td style="text-align: center; border-bottom: 1px solid; font-style: italic; font-weight: normal;">Odds Ratios</td>
+<td style="text-align: center; border-bottom: 1px solid; font-style: italic; font-weight: normal;">CI</td>
+<td style="text-align: center; border-bottom: 1px solid; font-style: italic; font-weight: normal;">p</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">(Intercept)</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.11</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.00&nbsp;–&nbsp;Inf</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.070</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">age</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">1.05</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.00&nbsp;–&nbsp;Inf</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;"><strong>&lt;0.001</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">bmi</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.92</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.00&nbsp;–&nbsp;Inf</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;"><strong>&lt;0.001</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">intubated</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">1.93</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.00&nbsp;–&nbsp;Inf</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.078</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">crrt</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">6.57</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;">0.00&nbsp;–&nbsp;Inf</td>
+<td style="text-align: left; padding: 0.2cm; vertical-align: top;"><strong>&lt;0.001</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top; padding-top: 0.1cm; padding-bottom: 0.1cm; border-top: 1px solid;">Observations</td>
+<td colspan="3" style="text-align: left; padding: 0.2cm; vertical-align: top; padding-top: 0.1cm; padding-bottom: 0.1cm; border-top: 1px solid;">285</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding: 0.2cm; vertical-align: top; padding-top: 0.1cm; padding-bottom: 0.1cm;">R<sup>2</sup> Tjur</td>
+<td colspan="3" style="text-align: left; padding: 0.2cm; vertical-align: top; padding-top: 0.1cm; padding-bottom: 0.1cm;">0.263</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="tab_model-regression-output-1" class="slide level2">
+<h2><code>tab_model()</code> — regression output</h2>
+<ul>
+<li>Formats coefficients, CIs, and p-values automatically — here as odds ratios (<code>transform = "exp"</code>) since this is a logistic model</li>
+<li>Works with <code>lm</code>, <code>glm</code>, <code>lmer</code>, <code>coxph</code>, and more</li>
+<li>Pass <strong>multiple models</strong> as extra arguments to compare them side by side in one table</li>
+</ul>
+</section>
+<section id="tab_xtab-cross-tabulations" class="slide level2">
+<h2><code>tab_xtab()</code> — cross-tabulations</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">tab_xtab</span>(</span>
+<span id="cb34-2"><a></a>  <span class="at">var.row      =</span> qcrc_clean<span class="sc">$</span>race,</span>
+<span id="cb34-3"><a></a>  <span class="at">var.col      =</span> qcrc_clean<span class="sc">$</span>died,</span>
+<span id="cb34-4"><a></a>  <span class="at">show.row.prc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-5"><a></a>  <span class="at">show.summary =</span> <span class="cn">TRUE</span></span>
+<span id="cb34-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+ <tbody><tr>
+ <th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; border-bottom:1px solid;" rowspan="2">race</th>
+ <th style="border-top:double; text-align:center; font-style:italic; font-weight:normal;" colspan="2">died</th>
+ <th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; font-weight:bolder; font-style:italic; border-bottom:1px solid; " rowspan="2">Total</th>
+ </tr>
+ 
+<tr>
+ <td style="border-bottom:1px solid; text-align:center; padding:0.2cm;">Survived</td>
+ <td style="border-bottom:1px solid; text-align:center; padding:0.2cm;">Died</td>
+ </tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  text-align:left; vertical-align:middle;">African American  or<br>Black</td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">130</span><br><span style="color:#333399;">65.7&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">68</span><br><span style="color:#333399;">34.3&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;  "><span style="color:black;">198</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  text-align:left; vertical-align:middle;">Asian</td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">4</span><br><span style="color:#333399;">44.4&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">5</span><br><span style="color:#333399;">55.6&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;  "><span style="color:black;">9</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  text-align:left; vertical-align:middle;">Caucasian or White</td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">38</span><br><span style="color:#333399;">70.4&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">16</span><br><span style="color:#333399;">29.6&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;  "><span style="color:black;">54</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  text-align:left; vertical-align:middle;">Multiple</td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">0</span><br><span style="color:#333399;">0&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">1</span><br><span style="color:#333399;">100&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;  "><span style="color:black;">1</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  text-align:left; vertical-align:middle;">Unknown, Unavailable<br>or Unreported</td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">18</span><br><span style="color:#333399;">69.2&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center; "><span style="color:black;">8</span><br><span style="color:#333399;">30.8&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;  "><span style="color:black;">26</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+ 
+<tr> 
+<td style="padding:0.2cm;  border-bottom:double; font-weight:bolder; font-style:italic; text-align:left; vertical-align:middle;">Total</td>
+<td style="padding:0.2cm; text-align:center;   border-bottom:double;"><span style="color:black;">190</span><br><span style="color:#333399;">66&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;   border-bottom:double;"><span style="color:black;">98</span><br><span style="color:#333399;">34&nbsp;%</span></td>
+<td style="padding:0.2cm; text-align:center;   border-bottom:double;"><span style="color:black;">288</span><br><span style="color:#333399;">100&nbsp;%</span></td> 
+</tr>
+<tr><td style="text-align:right; font-size:0.9em; font-style:italic; padding:0.2cm;" colspan="4">χ<sup>2</sup>=4.394 · df=4 · Cramer's V=0.124 · Fisher's p=0.354</td> 
+</tr>
+ 
+</tbody></table>
+</div>
+</div>
+<ul>
+<li>Builds a two-way frequency table for two categorical variables</li>
+<li><code>show.row.prc</code> / <code>show.col.prc</code> add row/column percentages</li>
+<li><code>show.summary</code> appends the chi-square test statistic and p-value</li>
+<li>Same polished HTML output style as <code>tab_model()</code></li>
+</ul>
+<aside class="notes">
+<p>If time is short, this is the pair most useful to clinical audiences: one function for regression, one for crosstabs, both publication-ready with zero manual formatting.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="likert-ordinal-scale-data" class="title-slide slide level1 center">
+<h1><code>likert</code>: Ordinal / Scale Data</h1>
+
+</section>
+<section id="beyond-survey-questions" class="slide level2">
+<h2>Beyond survey questions</h2>
+<p>The <code>likert</code> package is built for survey agreement scales, but it works for <strong>any</strong> ordered categorical variable measured on a shared scale. The <code>SOFA</code> sheet has six organ-system subscores, each rated 0 (normal) to 4 (severe failure) — structurally identical to a 5-point Likert item.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>sofa <span class="ot">&lt;-</span> <span class="fu">import</span>(</span>
+<span id="cb35-2"><a></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>),</span>
+<span id="cb35-3"><a></a>  <span class="at">sheet =</span> <span class="st">"SOFA"</span></span>
+<span id="cb35-4"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb35-6"><a></a></span>
+<span id="cb35-7"><a></a>lvls <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb35-8"><a></a></span>
+<span id="cb35-9"><a></a>sofa_items <span class="ot">&lt;-</span> sofa <span class="sc">|&gt;</span></span>
+<span id="cb35-10"><a></a>  <span class="fu">transmute</span>(</span>
+<span id="cb35-11"><a></a>    <span class="at">Coagulation    =</span> <span class="fu">factor</span>(coag,  <span class="at">levels =</span> lvls),</span>
+<span id="cb35-12"><a></a>    <span class="at">Liver          =</span> <span class="fu">factor</span>(liver, <span class="at">levels =</span> lvls),</span>
+<span id="cb35-13"><a></a>    <span class="at">CNS            =</span> <span class="fu">factor</span>(cns,   <span class="at">levels =</span> lvls),</span>
+<span id="cb35-14"><a></a>    <span class="at">Renal          =</span> <span class="fu">factor</span>(renal, <span class="at">levels =</span> lvls),</span>
+<span id="cb35-15"><a></a>    <span class="at">Cardiovascular =</span> <span class="fu">factor</span>(cvs,   <span class="at">levels =</span> lvls),</span>
+<span id="cb35-16"><a></a>    <span class="at">Respiratory    =</span> <span class="fu">factor</span>(resp,  <span class="at">levels =</span> lvls)</span>
+<span id="cb35-17"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="likert-plot" class="slide level2">
+<h2><code>likert()</code> + <code>plot()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">library</span>(likert)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggplot2'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:sjPlot':
+
+    set_theme</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: xtable</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'xtable'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:table1':
+
+    label, label&lt;-</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'plyr':
+  method    from  
+  [.indexed table1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'likert'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>l <span class="ot">&lt;-</span> <span class="fu">likert</span>(<span class="fu">as.data.frame</span>(sofa_items))</span>
+<span id="cb46-2"><a></a><span class="fu">summary</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Item      low   neutral      high     mean        sd
+5 Cardiovascular 39.58333  7.986111 52.430556 2.753472 1.4185144
+4          Renal 42.70833 10.416667 46.875000 3.187500 1.7961195
+6    Respiratory 50.00000 25.694444 24.305556 2.364583 1.3391957
+3            CNS 83.33333  6.944444  9.722222 1.506944 1.0492840
+1    Coagulation 96.18056  2.430556  1.388889 1.208333 0.5828561
+2          Liver 98.61111  1.388889  0.000000 1.097222 0.3405150</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">plot</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+ℹ The deprecated feature was likely used in the likert package.
+  Please report the issue at &lt;https://github.com/jbryer/likert/issues&gt;.</code></pre>
+</div>
+
+</div>
+<img data-src="Module06-UsefulPackages_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"><ul>
+<li>Renal and cardiovascular subscores show the most severe dysfunction in this cohort (large “3”/“4” categories)</li>
+<li><code>summary()</code> gives the % of patients per score, per organ system; <code>plot()</code> produces the classic diverging stacked bar chart</li>
+<li>The exact same workflow applies to real Likert survey items — agreement scales are just another ordered factor with a shared level set</li>
+</ul>
+</section></section>
+<section>
+<section id="putting-it-together" class="title-slide slide level1 center">
+<h1>Putting It Together</h1>
+
+</section>
+<section id="which-package-for-which-job" class="slide level2 smaller">
+<h2>Which package for which job?</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 82%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pacman</code></td>
+<td>Loading/installing packages in one line</td>
+</tr>
+<tr class="even">
+<td><code>here</code></td>
+<td>Project-relative file paths, no more <code>setwd()</code></td>
+</tr>
+<tr class="odd">
+<td><code>rio</code></td>
+<td>Reading/writing any data file format</td>
+</tr>
+<tr class="even">
+<td><code>janitor</code></td>
+<td>Cleaning column names &amp; quick data checks</td>
+</tr>
+<tr class="odd">
+<td><code>table1</code></td>
+<td>Descriptive “Table 1” split by group</td>
+</tr>
+<tr class="even">
+<td><code>gt</code></td>
+<td>Full control over any custom table’s look</td>
+</tr>
+<tr class="odd">
+<td><code>gtsummary</code></td>
+<td>Fast, statistically-aware summary &amp; model tables</td>
+</tr>
+<tr class="even">
+<td><code>sjPlot</code></td>
+<td>Regression tables (<code>tab_model</code>) and crosstabs (<code>tab_xtab</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>likert</code></td>
+<td>Visualizing ordered survey/scale data</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="a-typical-workflow" class="slide level2">
+<h2>A typical workflow</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(here, rio, janitor, table1, gt, gtsummary, sjPlot, likert)</span>
+<span id="cb50-2"><a></a></span>
+<span id="cb50-3"><a></a>qcrc <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"QCRC_FINAL_Deidentified.xlsx"</span>),</span>
+<span id="cb50-4"><a></a>                <span class="at">sheet =</span> <span class="st">"Main_Dataset"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-5"><a></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb50-6"><a></a></span>
+<span id="cb50-7"><a></a><span class="fu">table1</span>(<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>female<span class="sc">+</span>icu_los<span class="sc">+</span>intubated<span class="sc">+</span>crrt<span class="sc">|</span>died, <span class="at">data=</span>qcrc_clean)</span>
+<span id="cb50-8"><a></a>qcrc <span class="sc">|&gt;</span></span>
+<span id="cb50-9"><a></a>  <span class="fu">tbl_summary</span>(<span class="at">by =</span> died) </span>
+<span id="cb50-10"><a></a></span>
+<span id="cb50-11"><a></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(died <span class="sc">~</span> age <span class="sc">+</span> intubated <span class="sc">+</span> crrt,</span>
+<span id="cb50-12"><a></a>           <span class="at">data =</span> qcrc, <span class="at">family =</span> binomial)</span>
+<span id="cb50-13"><a></a><span class="fu">tab_model</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Six packages, six lines, from a raw ICU spreadsheet to publication-ready output.</p>
+</section></section>
+<section>
+<section id="wrap-up" class="title-slide slide level1 center">
+<h1>Wrap-Up</h1>
+
+</section>
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
+<ul>
+<li><code>here</code>: <a href="https://here.r-lib.org" class="uri">https://here.r-lib.org</a></li>
+<li><code>rio</code>: <a href="https://gesistsa.github.io/rio" class="uri">https://gesistsa.github.io/rio</a></li>
+<li><code>janitor</code>: <a href="https://sfirke.github.io/janitor" class="uri">https://sfirke.github.io/janitor</a></li>
+<li><code>table1</code>: CRAN vignette — <code>vignette("introduction", package = "table1")</code></li>
+<li><code>gt</code>: <a href="https://gt.rstudio.com" class="uri">https://gt.rstudio.com</a></li>
+<li><code>gtsummary</code>: <a href="https://www.danieldsjoberg.com/gtsummary" class="uri">https://www.danieldsjoberg.com/gtsummary</a></li>
+<li><code>sjPlot</code>: <a href="https://strengejacke.github.io/sjPlot" class="uri">https://strengejacke.github.io/sjPlot</a></li>
+<li><code>likert</code>: CRAN vignette — <code>vignette("likert", package = "likert")</code></li>
+<li><code>pacman</code>: <a href="https://github.com/trinker/pacman" class="uri">https://github.com/trinker/pacman</a></li>
+</ul>
+</section>
+<section id="questions" class="slide level2">
+<h2>Questions?</h2>
+
+
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -219,7 +3134,7 @@
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: 'c/t',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -324,7 +3239,7 @@
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'fade',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
@@ -378,6 +3293,44 @@
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {

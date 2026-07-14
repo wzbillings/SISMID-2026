@@ -4441,5 +4441,511 @@
       "Learner support",
       "Setup check"
     ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#agenda",
+    "href": "modules/Module06-UsefulPackages.html#agenda",
+    "title": "Module 6: Useful R packages",
+    "section": "Agenda",
+    "text": "Agenda\nA one-hour tour of the R packages that take you from messy data to publication-ready tables and reports — demonstrated on a real, de-identified ICU dataset.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#why-these-packages",
+    "href": "modules/Module06-UsefulPackages.html#why-these-packages",
+    "title": "Module 6: Useful R packages",
+    "section": "Why these packages?",
+    "text": "Why these packages?\n\nEvery analysis ends with a table, a report, or a slide someone else has to read\nBase R output (summary(), str()) is fast to write but ugly to share\nThese packages sit on top of your normal analysis and turn it into something you can paste into a paper, a report, or an email",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#about-the-dataset",
+    "href": "modules/Module06-UsefulPackages.html#about-the-dataset",
+    "title": "Module 6: Useful R packages",
+    "section": "About the Dataset",
+    "text": "About the Dataset\nEvery example in this deck uses the same real, de-identified file: QCRC_FINAL_Deidentified.xlsx\n\n288 patients admitted to the ICU with COVID-19\n10 sheets — Main_Dataset (demographics, treatments, outcomes), daily SOFA organ-failure scores, Long_Labs, Long_Vitals, ventilator settings, medications, and more\nWe’ll mainly use Main_Dataset: 37 variables including age, sex, race, BMI, intubation, CRRT/dialysis, and mortality\n98 of 288 patients (34%) died — a natural grouping variable for every table in this lecture\n\n\nBefore running this deck live: save the workbook as data/QCRC_FINAL_Deidentified.xlsx inside your project folder — the here() and rio::import() calls later assume that path.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#the-problem-with-library",
+    "href": "modules/Module06-UsefulPackages.html#the-problem-with-library",
+    "title": "Module 6: Useful R packages",
+    "section": "The problem with library()",
+    "text": "The problem with library()\nA typical analysis script starts like this:\n\nlibrary(here)\nlibrary(rio)\nlibrary(janitor)\nlibrary(table1)\nlibrary(gt)\nlibrary(gtsummary)\nlibrary(sjPlot)\nlibrary(likert)\nlibrary(tidyverse)\n\nIf one of these isn’t installed, the whole script stops with an error — and you have to go install it manually, then re-run.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#pacmanp_load",
+    "href": "modules/Module06-UsefulPackages.html#pacmanp_load",
+    "title": "Module 6: Useful R packages",
+    "section": "pacman::p_load()",
+    "text": "pacman::p_load()\npacman is a package-management package. Its star function, p_load(), installs anything missing, then loads everything — in one line.\n\n# install.packages(\"pacman\")   \n# only needed once\n\npacman::p_load(\n  here, rio, janitor, table1,\n  gt, gtsummary, sjPlot, likert,\n  tidyverse\n)",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#the-problem-with-setwd",
+    "href": "modules/Module06-UsefulPackages.html#the-problem-with-setwd",
+    "title": "Module 6: Useful R packages",
+    "section": "The problem with setwd()",
+    "text": "The problem with setwd()\n\n# fragile — breaks the moment this script runs on\n# a different machine, or is Source()'d vs rendered\nsetwd(\"~/Downloads/SISMID2026\")\nqcrc &lt;- import(\"data/QCRC_FINAL_Deidentified.xlsx\")",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#herehere",
+    "href": "modules/Module06-UsefulPackages.html#herehere",
+    "title": "Module 6: Useful R packages",
+    "section": "here::here()",
+    "text": "here::here()\n\nlibrary(here)\n\n#This is where it think we are\nhere()\n\n#This gets us to our data\nhere(\"data\", \"QCRC_FINAL_Deidentified.xlsx\")\n\n#How do we read in data\nqcrcHere &lt;- import(here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"))",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#one-function-in-one-function-out",
+    "href": "modules/Module06-UsefulPackages.html#one-function-in-one-function-out",
+    "title": "Module 6: Useful R packages",
+    "section": "One function in, one function out",
+    "text": "One function in, one function out\nrio wraps dozens of format-specific packages (haven, readxl, data.table, jsonlite, …) behind two simple verbs.\n\nlibrary(rio)\nlibrary(here)\n\nhere() starts at /Users/xpf100/Downloads/SISMID2026\n\nqcrc &lt;- import(\n  here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n  sheet = \"Main_Dataset\"\n)\n\ndim(qcrc)\n\n[1] 288  37",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#exporting-is-just-as-easy",
+    "href": "modules/Module06-UsefulPackages.html#exporting-is-just-as-easy",
+    "title": "Module 6: Useful R packages",
+    "section": "Exporting is just as easy",
+    "text": "Exporting is just as easy\n\nexport(qcrc, here(\"data\", \"qcrc_clean.xlsx\"))\nexport(qcrc, here(\"data\", \"qcrc_clean.rds\"))\nexport(qcrc, here(\"data\", \"qcrc_clean.csv\"))",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#messy-names-are-the-1-headache",
+    "href": "modules/Module06-UsefulPackages.html#messy-names-are-the-1-headache",
+    "title": "Module 6: Useful R packages",
+    "section": "Messy names are the #1 headache",
+    "text": "Messy names are the #1 headache\n\nnames(qcrc)\n\n [1] \"Patient_DEID\"                  \"Decatur_Transfer\"             \n [3] \"Age\"                           \"Female\"                       \n [5] \"Race\"                          \"Died\"                         \n [7] \"30D_Mortality\"                 \"60D_Mortality\"                \n [9] \"Death date_deid\"               \"ICU_LOS\"                      \n[11] \"BMI\"                           \"Died in ICU\"                  \n[13] \"Code status\"                   \"Epoprostenol\"                 \n[15] \"Remdesivir_or_placebo\"         \"Intubated\"                    \n[17] \"ICU_ADMIT_DEID\"                \"ICU_DC_DEID\"                  \n[19] \"HOSPITAL_ADMIT_DEID\"           \"HOSPITAL_DC_DEID\"             \n[21] \"Vent LOS\"                      \"CRRT\"                         \n[23] \"CRRT days\"                     \"HD\"                           \n[25] \"HD days\"                       \"Pressor &gt;2 hours\"             \n[27] \"Pressor days\"                  \"Absolute lymphocyte\"          \n[29] \"WBC\"                           \"D dimer\"                      \n[31] \"CRP\"                           \"Peak troponin\"                \n[33] \"P:F ratio at ICU admission\"    \"P:F ratio at first intubation\"\n[35] \"Calculated_Cstat\"              \"First_Intubation_deid\"        \n[37] \"Last_Intubation_deid\"",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#clean_names",
+    "href": "modules/Module06-UsefulPackages.html#clean_names",
+    "title": "Module 6: Useful R packages",
+    "section": "clean_names()",
+    "text": "clean_names()\n\nlibrary(janitor)\n\n\nAttaching package: 'janitor'\n\n\nThe following objects are masked from 'package:stats':\n\n    chisq.test, fisher.test\n\nqcrc_clean &lt;- qcrc |&gt; clean_names()\nnames(qcrc_clean)\n\n [1] \"patient_deid\"                  \"decatur_transfer\"             \n [3] \"age\"                           \"female\"                       \n [5] \"race\"                          \"died\"                         \n [7] \"x30d_mortality\"                \"x60d_mortality\"               \n [9] \"death_date_deid\"               \"icu_los\"                      \n[11] \"bmi\"                           \"died_in_icu\"                  \n[13] \"code_status\"                   \"epoprostenol\"                 \n[15] \"remdesivir_or_placebo\"         \"intubated\"                    \n[17] \"icu_admit_deid\"                \"icu_dc_deid\"                  \n[19] \"hospital_admit_deid\"           \"hospital_dc_deid\"             \n[21] \"vent_los\"                      \"crrt\"                         \n[23] \"crrt_days\"                     \"hd\"                           \n[25] \"hd_days\"                       \"pressor_2_hours\"              \n[27] \"pressor_days\"                  \"absolute_lymphocyte\"          \n[29] \"wbc\"                           \"d_dimer\"                      \n[31] \"crp\"                           \"peak_troponin\"                \n[33] \"p_f_ratio_at_icu_admission\"    \"p_f_ratio_at_first_intubation\"\n[35] \"calculated_cstat\"              \"first_intubation_deid\"        \n[37] \"last_intubation_deid\"",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#bonus-fixing-the-.-missing-code",
+    "href": "modules/Module06-UsefulPackages.html#bonus-fixing-the-.-missing-code",
+    "title": "Module 6: Useful R packages",
+    "section": "Bonus: fixing the \".\" missing code",
+    "text": "Bonus: fixing the \".\" missing code\nLike a lot of clinical exports, this dataset stores missing values as a literal \".\" string — which leaves numeric columns like bmi, wbc, and crp stuck as text.\n\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\nnum_cols &lt;- c(\"bmi\", \"wbc\", \"d_dimer\", \"crp\", \"peak_troponin\",\n              \"calculated_cstat\")\n\nqcrc_clean &lt;- qcrc_clean |&gt;\n  mutate(across(all_of(num_cols),\n                ~ na_if(as.character(.x), \".\")|&gt; \n                                as.numeric())) |&gt;\n  mutate(died = factor(died, labels = c(\"Survived\", \"Died\")))",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#the-table-1-problem",
+    "href": "modules/Module06-UsefulPackages.html#the-table-1-problem",
+    "title": "Module 6: Useful R packages",
+    "section": "The “Table 1” problem",
+    "text": "The “Table 1” problem\nNearly every clinical paper starts with a baseline characteristics table split by outcome or treatment group — this is almost always called “Table 1.” Our cohort: 288 ICU patients, 98 of whom (34%) died.\nBuilding it by hand means computing means, SDs, counts, percentages, and p-values separately for every variable.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#createtable1",
+    "href": "modules/Module06-UsefulPackages.html#createtable1",
+    "title": "Module 6: Useful R packages",
+    "section": "Createtable1()",
+    "text": "Createtable1()\n\nlibrary(table1)\n\n\nAttaching package: 'table1'\n\n\nThe following objects are masked from 'package:base':\n\n    units, units&lt;-\n\n#Table One No Strata\ntable1(~age+bmi+icu_los+intubated+crrt, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\nOverall\n(N=288)\n\n\n\n\nage\n\n\n\nMean (SD)\n63.5 (15.5)\n\n\nMedian [Min, Max]\n65.0 [19.0, 89.0]\n\n\nbmi\n\n\n\nMean (SD)\n31.6 (8.34)\n\n\nMedian [Min, Max]\n30.3 [15.4, 64.8]\n\n\nMissing\n3 (1.0%)\n\n\nicu_los\n\n\n\nMean (SD)\n10.5 (8.76)\n\n\nMedian [Min, Max]\n9.00 [0, 56.0]\n\n\nintubated\n\n\n\nMean (SD)\n0.736 (0.442)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\nMean (SD)\n0.229 (0.421)\n\n\nMedian [Min, Max]\n0 [0, 1.00]\n\n\n\n\n\n\n#Table one with strata\ntable1(~age+bmi+icu_los+intubated+crrt|female, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\n\n\nFemale\n(N=131)\nMale\n(N=157)\nOverall\n(N=288)\n\n\n\n\nage\n\n\n\n\n\nMean (SD)\n63.7 (17.3)\n63.3 (13.9)\n63.5 (15.5)\n\n\nMedian [Min, Max]\n65.0 [21.0, 89.0]\n65.0 [19.0, 89.0]\n65.0 [19.0, 89.0]\n\n\nbmi\n\n\n\n\n\nMean (SD)\n32.5 (9.09)\n30.8 (7.60)\n31.6 (8.34)\n\n\nMedian [Min, Max]\n30.6 [16.4, 64.8]\n29.9 [15.4, 64.7]\n30.3 [15.4, 64.8]\n\n\nMissing\n2 (1.5%)\n1 (0.6%)\n3 (1.0%)\n\n\nicu_los\n\n\n\n\n\nMean (SD)\n9.88 (9.49)\n11.1 (8.10)\n10.5 (8.76)\n\n\nMedian [Min, Max]\n7.59 [0, 56.0]\n9.00 [0, 41.0]\n9.00 [0, 56.0]\n\n\nintubated\n\n\n\n\n\nMean (SD)\n0.702 (0.459)\n0.764 (0.426)\n0.736 (0.442)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\n\n\nMean (SD)\n0.145 (0.353)\n0.299 (0.459)\n0.229 (0.421)\n\n\nMedian [Min, Max]\n0 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]\n\n\n\n\n\n\n#Table One with two strata\ntable1(~age+bmi+icu_los+intubated+crrt|female*died, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFemale\n\n\nMale\n\n\nOverall\n\n\n\n\nSurvived\n(N=88)\nDied\n(N=43)\nSurvived\n(N=102)\nDied\n(N=55)\nSurvived\n(N=190)\nDied\n(N=98)\n\n\n\n\nage\n\n\n\n\n\n\n\n\nMean (SD)\n60.9 (17.2)\n69.5 (16.1)\n59.2 (13.2)\n70.8 (12.0)\n60.0 (15.2)\n70.2 (13.9)\n\n\nMedian [Min, Max]\n60.5 [21.0, 89.0]\n70.0 [23.0, 89.0]\n61.0 [19.0, 89.0]\n71.0 [32.0, 89.0]\n61.0 [19.0, 89.0]\n71.0 [23.0, 89.0]\n\n\nbmi\n\n\n\n\n\n\n\n\nMean (SD)\n34.2 (9.57)\n29.1 (6.96)\n32.4 (8.07)\n28.0 (5.75)\n33.2 (8.82)\n28.5 (6.30)\n\n\nMedian [Min, Max]\n31.6 [20.4, 64.8]\n29.3 [16.4, 50.3]\n31.2 [17.6, 64.7]\n27.0 [15.4, 40.0]\n31.4 [17.6, 64.8]\n28.5 [15.4, 50.3]\n\n\nMissing\n2 (2.3%)\n0 (0%)\n1 (1.0%)\n0 (0%)\n3 (1.6%)\n0 (0%)\n\n\nicu_los\n\n\n\n\n\n\n\n\nMean (SD)\n10.1 (10.3)\n9.45 (7.53)\n10.8 (7.73)\n11.5 (8.80)\n10.5 (9.02)\n10.6 (8.29)\n\n\nMedian [Min, Max]\n7.00 [0, 56.0]\n8.00 [0, 28.0]\n9.16 [0.435, 39.0]\n9.00 [0, 41.0]\n8.36 [0, 56.0]\n9.00 [0, 41.0]\n\n\nintubated\n\n\n\n\n\n\n\n\nMean (SD)\n0.682 (0.468)\n0.744 (0.441)\n0.696 (0.462)\n0.891 (0.315)\n0.689 (0.464)\n0.827 (0.381)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\n\n\n\n\n\nMean (SD)\n0.0909 (0.289)\n0.256 (0.441)\n0.167 (0.375)\n0.545 (0.503)\n0.132 (0.339)\n0.418 (0.496)\n\n\nMedian [Min, Max]\n0 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]\n1.00 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]\n\n\n\n\n\n\n\n\nOlder age, lower BMI, mechanical ventilation, and CRRT (dialysis) were all significantly associated with death in this cohort\nPrinted table can be coerced to a data frame and then piped into gt for a polished, exportable version.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#any-data-frame-a-polished-table",
+    "href": "modules/Module06-UsefulPackages.html#any-data-frame-a-polished-table",
+    "title": "Module 6: Useful R packages",
+    "section": "Any data frame → a polished table",
+    "text": "Any data frame → a polished table\n\nlibrary(gt)\n\nqcrc_clean |&gt;\n  select(patient_deid, age, female, race, bmi, icu_los, died) |&gt;\n  head(6) |&gt;\n  gt() |&gt;\n  tab_header(\n    title    = \"QCRC ICU Cohort\",\n    subtitle = \"First 6 patients\"\n  ) |&gt;\n  fmt_number(columns = c(bmi, icu_los), decimals = 1) |&gt;\n  cols_label(patient_deid = \"Patient ID\", icu_los = \"ICU LOS (days)\")\n\n\n\n\n\n\n\nQCRC ICU Cohort\n\n\nFirst 6 patients\n\n\nPatient ID\nage\nfemale\nrace\nbmi\nICU LOS (days)\ndied\n\n\n\n\n17205428\n89\nFemale\nCaucasian or White\n26.2\n11.1\nDied\n\n\n17234405\n73\nFemale\nAfrican American or Black\n40.7\n25.0\nSurvived\n\n\n17239956\n53\nMale\nCaucasian or White\n38.6\n17.0\nSurvived\n\n\n17350926\n55\nMale\nAfrican American or Black\n35.2\n21.0\nDied\n\n\n17377951\n66\nFemale\nAfrican American or Black\n32.9\n11.2\nDied\n\n\n17397040\n78\nMale\nAfrican American or Black\n28.7\n6.0\nDied",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#why-gt-matters",
+    "href": "modules/Module06-UsefulPackages.html#why-gt-matters",
+    "title": "Module 6: Useful R packages",
+    "section": "Why gt matters",
+    "text": "Why gt matters\n\nIt’s the rendering engine many other packages (including gtsummary) build on top of\nOutput looks the same in HTML, PDF, Word, and RTF\nUseful layers to know:\n\ntab_spanner() — group columns under a shared header\ntab_source_note() — add a footnote/citation\ngtsave(tbl, \"table.png\") — export to image, HTML, RTF, or Word",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tbl_summary-descriptive-tables",
+    "href": "modules/Module06-UsefulPackages.html#tbl_summary-descriptive-tables",
+    "title": "Module 6: Useful R packages",
+    "section": "tbl_summary() — descriptive tables",
+    "text": "tbl_summary() — descriptive tables\n\nlibrary(gtsummary)\n\nqcrc_clean |&gt;\n  select(age, bmi, wbc, crp, died) |&gt;\n  tbl_summary(\n    by        = died,\n    statistic = list(all_continuous() ~ \"{median} ({p25}, {p75})\")\n  ) |&gt;\n  add_p() |&gt;\n  add_overall()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nOverall\nN = 2881\nSurvived\nN = 1901\nDied\nN = 981\np-value2\n\n\n\n\nage\n65 (55, 75)\n61 (51, 69)\n71 (64, 79)\n&lt;0.001\n\n\nbmi\n30 (26, 35)\n31 (27, 37)\n29 (25, 31)\n&lt;0.001\n\n\n    Unknown\n3\n3\n0\n\n\n\n\nwbc\n8.6 (6.2, 11.7)\n8.5 (6.2, 10.7)\n9.5 (6.2, 12.7)\n0.2\n\n\n    Unknown\n5\n2\n3\n\n\n\n\ncrp\n169 (111, 234)\n171 (109, 229)\n169 (113, 246)\n0.6\n\n\n    Unknown\n31\n14\n17\n\n\n\n\n\n1 Median (Q1, Q3)\n\n\n2 Wilcoxon rank sum test",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables",
+    "href": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables",
+    "title": "Module 6: Useful R packages",
+    "section": "tbl_regression() — model tables",
+    "text": "tbl_regression() — model tables\n\nmod &lt;- glm(died ~ age + bmi + intubated + crrt,\n           data = qcrc_clean, family = binomial)\n\ntbl_regression(mod, exponentiate = TRUE) |&gt;\n  add_glance_source_note()\n\n\n\n\n\n\n\nCharacteristic\nOR\n95% CI\np-value\n\n\n\n\nage\n1.05\n1.03, 1.07\n&lt;0.001\n\n\nbmi\n0.92\n0.87, 0.96\n&lt;0.001\n\n\nintubated\n1.93\n0.94, 4.10\n0.078\n\n\ncrrt\n6.57\n3.28, 13.7\n&lt;0.001\n\n\n\nAbbreviations: CI = Confidence Interval, OR = Odds Ratio\n\n\nNull deviance = 367; Null df = 284; Log-likelihood = -142; AIC = 295; BIC = 313; Deviance = 285; Residual df = 280; No. Obs. = 285",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tab_model-regression-output",
+    "href": "modules/Module06-UsefulPackages.html#tab_model-regression-output",
+    "title": "Module 6: Useful R packages",
+    "section": "tab_model() — regression output",
+    "text": "tab_model() — regression output\n\nlibrary(sjPlot)\n\ntab_model(\n  mod,\n  show.ci  = TRUE,\n  transform = \"exp\",\n  dv.labels = \"Died (ICU, 0/1)\"\n)\n\n\n\n\n \nDied (ICU, 0/1)\n\n\nPredictors\nOdds Ratios\nCI\np\n\n\n(Intercept)\n0.11\n0.00 – Inf\n0.070\n\n\nage\n1.05\n0.00 – Inf\n&lt;0.001\n\n\nbmi\n0.92\n0.00 – Inf\n&lt;0.001\n\n\nintubated\n1.93\n0.00 – Inf\n0.078\n\n\ncrrt\n6.57\n0.00 – Inf\n&lt;0.001\n\n\nObservations\n285\n\n\nR2 Tjur\n0.263",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tab_xtab-cross-tabulations",
+    "href": "modules/Module06-UsefulPackages.html#tab_xtab-cross-tabulations",
+    "title": "Module 6: Useful R packages",
+    "section": "tab_xtab() — cross-tabulations",
+    "text": "tab_xtab() — cross-tabulations\n\ntab_xtab(\n  var.row      = qcrc_clean$race,\n  var.col      = qcrc_clean$died,\n  show.row.prc = TRUE,\n  show.summary = TRUE\n)\n\n\n \n race\n died\n Total\n \n \n\n Survived\n Died\n \n \n \nAfrican American  orBlack\n13065.7 %\n6834.3 %\n198100 % \n\n \n \nAsian\n444.4 %\n555.6 %\n9100 % \n\n \n \nCaucasian or White\n3870.4 %\n1629.6 %\n54100 % \n\n \n \nMultiple\n00 %\n1100 %\n1100 % \n\n \n \nUnknown, Unavailableor Unreported\n1869.2 %\n830.8 %\n26100 % \n\n \n \nTotal\n19066 %\n9834 %\n288100 % \n\nχ2=4.394 · df=4 · Cramer's V=0.124 · Fisher's p=0.354 \n\n \n\n\n\n\nBuilds a two-way frequency table for two categorical variables\nshow.row.prc / show.col.prc add row/column percentages\nshow.summary appends the chi-square test statistic and p-value\nSame polished HTML output style as tab_model()\n\n\nIf time is short, this is the pair most useful to clinical audiences: one function for regression, one for crosstabs, both publication-ready with zero manual formatting.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#beyond-survey-questions",
+    "href": "modules/Module06-UsefulPackages.html#beyond-survey-questions",
+    "title": "Module 6: Useful R packages",
+    "section": "Beyond survey questions",
+    "text": "Beyond survey questions\nThe likert package is built for survey agreement scales, but it works for any ordered categorical variable measured on a shared scale. The SOFA sheet has six organ-system subscores, each rated 0 (normal) to 4 (severe failure) — structurally identical to a 5-point Likert item.\n\nsofa &lt;- import(\n  here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n  sheet = \"SOFA\"\n) |&gt;\n  clean_names()\n\nlvls &lt;- as.character(0:4)\n\nsofa_items &lt;- sofa |&gt;\n  transmute(\n    Coagulation    = factor(coag,  levels = lvls),\n    Liver          = factor(liver, levels = lvls),\n    CNS            = factor(cns,   levels = lvls),\n    Renal          = factor(renal, levels = lvls),\n    Cardiovascular = factor(cvs,   levels = lvls),\n    Respiratory    = factor(resp,  levels = lvls)\n  )",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#likert-plot",
+    "href": "modules/Module06-UsefulPackages.html#likert-plot",
+    "title": "Module 6: Useful R packages",
+    "section": "likert() + plot()",
+    "text": "likert() + plot()\n\nlibrary(likert)\n\nLoading required package: ggplot2\n\n\n\nAttaching package: 'ggplot2'\n\n\nThe following object is masked from 'package:sjPlot':\n\n    set_theme\n\n\nLoading required package: xtable\n\n\n\nAttaching package: 'xtable'\n\n\nThe following objects are masked from 'package:table1':\n\n    label, label&lt;-\n\n\nRegistered S3 method overwritten by 'plyr':\n  method    from  \n  [.indexed table1\n\n\n\nAttaching package: 'likert'\n\n\nThe following object is masked from 'package:dplyr':\n\n    recode\n\nl &lt;- likert(as.data.frame(sofa_items))\nsummary(l)\n\n            Item      low   neutral      high     mean        sd\n5 Cardiovascular 39.58333  7.986111 52.430556 2.753472 1.4185144\n4          Renal 42.70833 10.416667 46.875000 3.187500 1.7961195\n6    Respiratory 50.00000 25.694444 24.305556 2.364583 1.3391957\n3            CNS 83.33333  6.944444  9.722222 1.506944 1.0492840\n1    Coagulation 96.18056  2.430556  1.388889 1.208333 0.5828561\n2          Liver 98.61111  1.388889  0.000000 1.097222 0.3405150\n\n\n\nplot(l)\n\nWarning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead.\nℹ The deprecated feature was likely used in the likert package.\n  Please report the issue at &lt;https://github.com/jbryer/likert/issues&gt;.\n\n\n\n\nRenal and cardiovascular subscores show the most severe dysfunction in this cohort (large “3”/“4” categories)\nsummary() gives the % of patients per score, per organ system; plot() produces the classic diverging stacked bar chart\nThe exact same workflow applies to real Likert survey items — agreement scales are just another ordered factor with a shared level set",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#which-package-for-which-job",
+    "href": "modules/Module06-UsefulPackages.html#which-package-for-which-job",
+    "title": "Module 6: Useful R packages",
+    "section": "Which package for which job?",
+    "text": "Which package for which job?\n\n\n\n\n\n\n\nPackage\nBest for\n\n\n\n\npacman\nLoading/installing packages in one line\n\n\nhere\nProject-relative file paths, no more setwd()\n\n\nrio\nReading/writing any data file format\n\n\njanitor\nCleaning column names & quick data checks\n\n\ntable1\nDescriptive “Table 1” split by group\n\n\ngt\nFull control over any custom table’s look\n\n\ngtsummary\nFast, statistically-aware summary & model tables\n\n\nsjPlot\nRegression tables (tab_model) and crosstabs (tab_xtab)\n\n\nlikert\nVisualizing ordered survey/scale data",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#a-typical-workflow",
+    "href": "modules/Module06-UsefulPackages.html#a-typical-workflow",
+    "title": "Module 6: Useful R packages",
+    "section": "A typical workflow",
+    "text": "A typical workflow\n\npacman::p_load(here, rio, janitor, table1, gt, gtsummary, sjPlot, likert)\n\nqcrc &lt;- import(here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"),\n                sheet = \"Main_Dataset\") |&gt;\n  clean_names()\n\ntable1(~age+bmi+female+icu_los+intubated+crrt|died, data=qcrc_clean)\nqcrc |&gt;\n  tbl_summary(by = died) \n\nmod &lt;- glm(died ~ age + intubated + crrt,\n           data = qcrc, family = binomial)\ntab_model(mod)\n\nSix packages, six lines, from a raw ICU spreadsheet to publication-ready output.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#resources",
+    "href": "modules/Module06-UsefulPackages.html#resources",
+    "title": "Module 6: Useful R packages",
+    "section": "Resources",
+    "text": "Resources\n\nhere: https://here.r-lib.org\nrio: https://gesistsa.github.io/rio\njanitor: https://sfirke.github.io/janitor\ntable1: CRAN vignette — vignette(\"introduction\", package = \"table1\")\ngt: https://gt.rstudio.com\ngtsummary: https://www.danieldsjoberg.com/gtsummary\nsjPlot: https://strengejacke.github.io/sjPlot\nlikert: CRAN vignette — vignette(\"likert\", package = \"likert\")\npacman: https://github.com/trinker/pacman",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#questions",
+    "href": "modules/Module06-UsefulPackages.html#questions",
+    "title": "Module 6: Useful R packages",
+    "section": "Questions?",
+    "text": "Questions?",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#why-these-packages-1",
+    "href": "modules/Module06-UsefulPackages.html#why-these-packages-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Why these packages?",
+    "text": "Why these packages?\n\n\nhere, rio, janitor → find, load, and clean your data\ntable1 → describe your sample\ngt, gtsummary, sjPlot → build the tables people actually read\nlikert → visualize ordered/scale data\npacman → glue that loads everything with one line",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#agenda-1",
+    "href": "modules/Module06-UsefulPackages.html#agenda-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Agenda",
+    "text": "Agenda\n\n\n\nTime\nTopic\n\n\n\n\n2 min\nWhy these packages?\n\n\n2 min\nThe dataset: QCRC ICU cohort\n\n\n3 min\npacman::p_load() — loading packages\n\n\n3 min\nhere — project-relative file paths\n\n\n6 min\nrio — import/export anything\n\n\n6 min\njanitor::clean_names() — tidy names\n\n\n7 min\ntable1 — “Table 1”\n\n\n6 min\ngt — grammar of tables\n\n\n8 min\ngtsummary — summary & regression tables\n\n\n8 min\nsjPlot — tab_model() & tab_xtab()\n\n\n6 min\nlikert — ordinal clinical scores\n\n\n3 min\nWrap-up & resources",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#which-packages",
+    "href": "modules/Module06-UsefulPackages.html#which-packages",
+    "title": "Module 6: Useful R packages",
+    "section": "Which packages?",
+    "text": "Which packages?\n\n\nhere, rio, janitor → find, load, and clean your data\ntable1 → describe your sample\ngt, gtsummary, sjPlot → build the tables people actually read\nlikert → visualize ordered/scale data\npacman → glue that loads everything with one line",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#pacmanp_load-1",
+    "href": "modules/Module06-UsefulPackages.html#pacmanp_load-1",
+    "title": "Module 6: Useful R packages",
+    "section": "pacman::p_load()",
+    "text": "pacman::p_load()\n\nChecks each package name\nInstalls it from CRAN only if missing\nLoads (library()s) all of them\nGreat for shared scripts, teaching, and reproducibility setups",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#herehere-1",
+    "href": "modules/Module06-UsefulPackages.html#herehere-1",
+    "title": "Module 6: Useful R packages",
+    "section": "here::here()",
+    "text": "here::here()\n\nFinds your project root automatically (looks for a .Rproj file, .git folder, or similar) and builds paths from there\nThe same here() call works identically whether you run it from RStudio, the terminal, or a rendered Quarto document\nPairs perfectly with rio::import() — see next section\n\n\nRule of thumb: replace every setwd() and every hard-coded absolute path with here().",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#one-function-in-one-function-out-1",
+    "href": "modules/Module06-UsefulPackages.html#one-function-in-one-function-out-1",
+    "title": "Module 6: Useful R packages",
+    "section": "One function in, one function out",
+    "text": "One function in, one function out\nNo more remembering read_csv() vs read.spss() vs read_excel() — and no hard-coded paths, thanks to here().",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#exporting-is-just-as-easy-1",
+    "href": "modules/Module06-UsefulPackages.html#exporting-is-just-as-easy-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Exporting is just as easy",
+    "text": "Exporting is just as easy\n\nFormat is inferred from the file extension\nSupports 30+ formats: .csv, .xlsx, .sav, .dta, .sas7bdat, .json, .rds, .parquet, and more\nimport_list() reads every sheet at once — perfect for this workbook, which has 10 sheets:\n\n\nsheets &lt;- import_list(here(\"data\", \"QCRC_FINAL_Deidentified.xlsx\"))\nnames(sheets)\n\n [1] \"Main_Dataset\"      \"Oxygen_Delivery\"   \"SOFA\"             \n [4] \"Long_Labs\"         \"Long_Vitals\"       \"Static_Compliance\"\n [7] \"PAO2_FIO2\"         \"ICU_Meds\"          \"Intake_Form\"      \n[10] \"Daily_Form\"       \n\n\n\nGood moment for a live demo — scroll through sheets to show the whole workbook loaded in one call.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#messy-names-are-the-1-headache-1",
+    "href": "modules/Module06-UsefulPackages.html#messy-names-are-the-1-headache-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Messy names are the #1 headache",
+    "text": "Messy names are the #1 headache\nNotice the inconsistency: Title Case With Spaces (Vent LOS, Peak troponin), ALL_CAPS_WITH_UNDERSCORES (ICU_ADMIT_DEID), and even a colon (P:F ratio at ICU admission). All are painful to type or reference in code.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#clean_names-1",
+    "href": "modules/Module06-UsefulPackages.html#clean_names-1",
+    "title": "Module 6: Useful R packages",
+    "section": "clean_names()",
+    "text": "clean_names()\n\nConverts everything to consistent snake_case\nStrips spaces and punctuation (even the colon), collapses repeated separators, and prefixes names that start with a digit (30D_... → x30d_...)\nOne line, run right after import() — every variable name used for the rest of this lecture assumes this has already happened",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#bonus-fixing-the-.-missing-code-1",
+    "href": "modules/Module06-UsefulPackages.html#bonus-fixing-the-.-missing-code-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Bonus: fixing the \".\" missing code",
+    "text": "Bonus: fixing the \".\" missing code\nNot a janitor function, but the natural next step after clean_names() — tidy the names, then tidy the values. This is the qcrc_clean object every later slide builds on.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#table1",
+    "href": "modules/Module06-UsefulPackages.html#table1",
+    "title": "Module 6: Useful R packages",
+    "section": "table1()",
+    "text": "table1()\n\nlibrary(table1)\n\n\nAttaching package: 'table1'\n\n\nThe following objects are masked from 'package:base':\n\n    units, units&lt;-\n\n#Table One No Strata\ntable1(~age+bmi+icu_los+intubated+crrt, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\nOverall\n(N=288)\n\n\n\n\nage\n\n\n\nMean (SD)\n63.5 (15.5)\n\n\nMedian [Min, Max]\n65.0 [19.0, 89.0]\n\n\nbmi\n\n\n\nMean (SD)\n31.6 (8.34)\n\n\nMedian [Min, Max]\n30.3 [15.4, 64.8]\n\n\nMissing\n3 (1.0%)\n\n\nicu_los\n\n\n\nMean (SD)\n10.5 (8.76)\n\n\nMedian [Min, Max]\n9.00 [0, 56.0]\n\n\nintubated\n\n\n\nMean (SD)\n0.736 (0.442)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\nMean (SD)\n0.229 (0.421)\n\n\nMedian [Min, Max]\n0 [0, 1.00]",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#table1-1",
+    "href": "modules/Module06-UsefulPackages.html#table1-1",
+    "title": "Module 6: Useful R packages",
+    "section": "table1()",
+    "text": "table1()\n\nOlder age, lower BMI, mechanical ventilation, and CRRT (dialysis) were all significantly associated with death in this cohort\nPrinted table can be coerced to a data frame and then piped into gt for a polished, exportable version.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#any-data-frame-a-polished-table-1",
+    "href": "modules/Module06-UsefulPackages.html#any-data-frame-a-polished-table-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Any data frame → a polished table",
+    "text": "Any data frame → a polished table\n\ngt() turns a data frame into a table object\nEverything after is a layer: header, formatting, labels, footnotes, spanners, styling — piped together",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#why-gt-matters-1",
+    "href": "modules/Module06-UsefulPackages.html#why-gt-matters-1",
+    "title": "Module 6: Useful R packages",
+    "section": "Why gt matters",
+    "text": "Why gt matters\n\n‘gt’ is the “engine room” — gtsummary and sjPlot both ultimately produce gt-compatible or gt-based tables.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tbl_summary-descriptive-tables-1",
+    "href": "modules/Module06-UsefulPackages.html#tbl_summary-descriptive-tables-1",
+    "title": "Module 6: Useful R packages",
+    "section": "tbl_summary() — descriptive tables",
+    "text": "tbl_summary() — descriptive tables\n\nMedian (IQR) instead of mean (SD) — a better default for skewed labs like CRP and WBC\nSame goal as table1, but the output is already a polished gt table — ready to drop into a report\nadd_p() adds group-comparison p-values; add_overall() adds a combined column",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables-1",
+    "href": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables-1",
+    "title": "Module 6: Useful R packages",
+    "section": "tbl_regression() — model tables",
+    "text": "tbl_regression() — model tables\n\nTurns any lm/glm/coxph/mixed model into a clean estimate table (odds ratio, CI, p-value) — exponentiate = TRUE reports odds ratios instead of log-odds\nadd_glance_source_note() appends model fit stats (AIC, n)\ntbl_merge() and tbl_stack() combine multiple models/tables side by side or on top of each other — handy for multi-model comparisons\n\n\ngtsummary is the “batteries included” option — sensible defaults, statistical tests built in, minimal code. This is the same died ~ age + bmi + intubated + crrt model sjPlot will show next, just formatted differently.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables-2",
+    "href": "modules/Module06-UsefulPackages.html#tbl_regression-model-tables-2",
+    "title": "Module 6: Useful R packages",
+    "section": "tbl_regression() — model tables",
+    "text": "tbl_regression() — model tables\n\ngtsummary is the “batteries included” option — sensible defaults, statistical tests built in, minimal code. This is the same died ~ age + bmi + intubated + crrt model sjPlot will show next, just formatted differently.",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#tab_model-regression-output-1",
+    "href": "modules/Module06-UsefulPackages.html#tab_model-regression-output-1",
+    "title": "Module 6: Useful R packages",
+    "section": "tab_model() — regression output",
+    "text": "tab_model() — regression output\n\nFormats coefficients, CIs, and p-values automatically — here as odds ratios (transform = \"exp\") since this is a logistic model\nWorks with lm, glm, lmer, coxph, and more\nPass multiple models as extra arguments to compare them side by side in one table",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#table1-with-strata",
+    "href": "modules/Module06-UsefulPackages.html#table1-with-strata",
+    "title": "Module 6: Useful R packages",
+    "section": "table1() with strata",
+    "text": "table1() with strata\n\n#Table one with strata\ntable1(~age+bmi+icu_los+intubated+crrt|female, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\n\n\nFemale\n(N=131)\nMale\n(N=157)\nOverall\n(N=288)\n\n\n\n\nage\n\n\n\n\n\nMean (SD)\n63.7 (17.3)\n63.3 (13.9)\n63.5 (15.5)\n\n\nMedian [Min, Max]\n65.0 [21.0, 89.0]\n65.0 [19.0, 89.0]\n65.0 [19.0, 89.0]\n\n\nbmi\n\n\n\n\n\nMean (SD)\n32.5 (9.09)\n30.8 (7.60)\n31.6 (8.34)\n\n\nMedian [Min, Max]\n30.6 [16.4, 64.8]\n29.9 [15.4, 64.7]\n30.3 [15.4, 64.8]\n\n\nMissing\n2 (1.5%)\n1 (0.6%)\n3 (1.0%)\n\n\nicu_los\n\n\n\n\n\nMean (SD)\n9.88 (9.49)\n11.1 (8.10)\n10.5 (8.76)\n\n\nMedian [Min, Max]\n7.59 [0, 56.0]\n9.00 [0, 41.0]\n9.00 [0, 56.0]\n\n\nintubated\n\n\n\n\n\nMean (SD)\n0.702 (0.459)\n0.764 (0.426)\n0.736 (0.442)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\n\n\nMean (SD)\n0.145 (0.353)\n0.299 (0.459)\n0.229 (0.421)\n\n\nMedian [Min, Max]\n0 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
+  },
+  {
+    "objectID": "modules/Module06-UsefulPackages.html#table1-with-two-strata",
+    "href": "modules/Module06-UsefulPackages.html#table1-with-two-strata",
+    "title": "Module 6: Useful R packages",
+    "section": "table1() with two strata",
+    "text": "table1() with two strata\n\n#Table One with two strata\ntable1(~age+bmi+icu_los+intubated+crrt|female*died, data=qcrc_clean)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFemale\n\n\nMale\n\n\nOverall\n\n\n\n\nSurvived\n(N=88)\nDied\n(N=43)\nSurvived\n(N=102)\nDied\n(N=55)\nSurvived\n(N=190)\nDied\n(N=98)\n\n\n\n\nage\n\n\n\n\n\n\n\n\nMean (SD)\n60.9 (17.2)\n69.5 (16.1)\n59.2 (13.2)\n70.8 (12.0)\n60.0 (15.2)\n70.2 (13.9)\n\n\nMedian [Min, Max]\n60.5 [21.0, 89.0]\n70.0 [23.0, 89.0]\n61.0 [19.0, 89.0]\n71.0 [32.0, 89.0]\n61.0 [19.0, 89.0]\n71.0 [23.0, 89.0]\n\n\nbmi\n\n\n\n\n\n\n\n\nMean (SD)\n34.2 (9.57)\n29.1 (6.96)\n32.4 (8.07)\n28.0 (5.75)\n33.2 (8.82)\n28.5 (6.30)\n\n\nMedian [Min, Max]\n31.6 [20.4, 64.8]\n29.3 [16.4, 50.3]\n31.2 [17.6, 64.7]\n27.0 [15.4, 40.0]\n31.4 [17.6, 64.8]\n28.5 [15.4, 50.3]\n\n\nMissing\n2 (2.3%)\n0 (0%)\n1 (1.0%)\n0 (0%)\n3 (1.6%)\n0 (0%)\n\n\nicu_los\n\n\n\n\n\n\n\n\nMean (SD)\n10.1 (10.3)\n9.45 (7.53)\n10.8 (7.73)\n11.5 (8.80)\n10.5 (9.02)\n10.6 (8.29)\n\n\nMedian [Min, Max]\n7.00 [0, 56.0]\n8.00 [0, 28.0]\n9.16 [0.435, 39.0]\n9.00 [0, 41.0]\n8.36 [0, 56.0]\n9.00 [0, 41.0]\n\n\nintubated\n\n\n\n\n\n\n\n\nMean (SD)\n0.682 (0.468)\n0.744 (0.441)\n0.696 (0.462)\n0.891 (0.315)\n0.689 (0.464)\n0.827 (0.381)\n\n\nMedian [Min, Max]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n1.00 [0, 1.00]\n\n\ncrrt\n\n\n\n\n\n\n\n\nMean (SD)\n0.0909 (0.289)\n0.256 (0.441)\n0.167 (0.375)\n0.545 (0.503)\n0.132 (0.339)\n0.418 (0.496)\n\n\nMedian [Min, Max]\n0 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]\n1.00 [0, 1.00]\n0 [0, 1.00]\n0 [0, 1.00]",
+    "crumbs": [
+      "Day 2 material",
+      "Module 6: Useful R packages"
+    ]
   }
 ]
