@@ -1,0 +1,966 @@
+---
+title: "Buffy, Vampires, and Ordinary Differential Equations"
+subtitle: "A guided practice exercise with R and deSolve"
+author: "SISMID 2026"
+format:
+  html:
+    toc: true
+    code-copy: true
+    code-fold: false
+  pdf:
+    toc: true
+    number-sections: true
+    geometry:
+      - margin=1in
+execute:
+  echo: true
+  message: false
+  warning: true
+editor: source
+---
+
+# Purpose
+
+In this exercise, you will build and explore a two-population ordinary
+differential equation (ODE) model using `deSolve`. The model tracks humans and
+vampires in Sunnydale, the fictional setting of *Buffy the Vampire Slayer*.
+
+The workflow you'll use for this silly example problem is the
+same one used for epidemic, ecological, pharmacokinetic, and other dynamical
+models.
+
+By the end of the exercise, you should be able to:
+
+1. translate a verbal description into a system of ODEs;
+2. write a derivative function in the format required by `deSolve`;
+3. solve an initial-value problem with `deSolve::ode()`;
+4. inspect and plot a numerical solution;
+5. perform basic sanity checks before interpreting a simulation;
+6. use simulation to investigate equilibria and interventions.
+
+::: {.callout-note}
+## How to use this worksheet
+
+Work through the tasks in order. Most code chunks contain usable scaffolding,
+but some lines are marked `TODO`. Chunks that depend on unfinished code use
+`#| eval: false` so that the blank worksheet can render without errors.
+
+After completing a chunk, remove its `#| eval: false` line, run the chunk, and
+render the document again. Save often.
+:::
+
+# Background and model
+
+Buffy the Vampire Slayer follows Buffy Summers, a young woman charged with protecting the fictional town
+of Sunnydale from vampires and other supernatural threats. Vampires feed on humans, and some of their
+victims are turned into new vampires. Buffy and her allies patrol Sunnydale and destroy as many vampires
+as they can, but the town is built over a supernatural gateway called the Hellmouth, which continually
+attracts new vampires.
+
+The residents of Sunnydale would like to know whether Buffy’s patrols are enough to keep the vampire
+population under contro
+
+Sunnydale has two populations:
+
+- $H(t)$: the number of humans at time $t$;
+- $V(t)$: the number of vampires at time $t$.
+
+Time is measured in **years**. Treat $H(t)$ and $V(t)$ as continuous expected
+population sizes. A model value such as 15.8 vampires means an expected or
+long-run average population near 16, not a literal fraction of a vampire.
+
+We will make the following assumptions.
+
+1. Without vampires, the human population grows logistically at an intrinsic
+   rate of 0.10 per year and has a carrying capacity of 90,000.
+2. Human-vampire encounters occur at rate $aH(t)V(t)$, where
+   $a=1/300$.
+3. Each encounter removes one human.
+4. A proportion $p=1/240$ of those encounters turns the human into a new
+   vampire.
+5. Buffy and her allies destroy vampires at rate $d=2/3$ per vampire-year.
+6. The Hellmouth attracts or creates vampires at rate $m=0.075$ per
+   vampire-year.
+7. Initially, Sunnydale has 38,500 humans and 35 vampires.
+
+The model is
+
+$$
+\begin{aligned}
+\frac{dH}{dt}
+&=
+ rH\left(1-\frac{H}{K}\right)-aHV,\\[4pt]
+\frac{dV}{dt}
+&=
+ paHV-dV+mV.
+\end{aligned}
+$$
+
+The parameter values are summarized below.
+
+| Symbol | R name | Value | Interpretation |
+|---|---|---:|---|
+| $r$ | `human_growth_rate` | 0.10 | Intrinsic human growth rate per year |
+| $K$ | `carrying_capacity` | 90,000 | Human carrying capacity |
+| $a$ | `encounter_rate` | $1/300$ | Human-vampire encounter coefficient |
+| $p$ | `turning_probability` | $1/240$ | Proportion of encounters producing a new vampire |
+| $d$ | `slaying_rate` | $2/3$ | Vampire removal rate per year |
+| $m$ | `hellmouth_rate` | 0.075 | Background vampire recruitment rate per year |
+
+# Task 0: Set up R
+
+The course setup includes `deSolve`. If it is not installed, run the following
+once in the R console:
+
+```r
+install.packages("deSolve")
+```
+
+Load it in your document.
+
+```{r}
+#| label: setup
+
+library(deSolve)
+```
+
+The [Module 8 ODE notes](../modules/Module08-ODEs.qmd) use the same basic
+`deSolve` workflow as this exercise.
+
+# Task 1: Read the equations as flows
+
+Before writing code, identify the biological or narrative meaning of each term.
+Complete the table in prose.
+
+| Term | Which population changes? | Does the term add or remove individuals? | Interpretation |
+|---|---|---|---|
+| $rH(1-H/K)$ | | | |
+| $aHV$ in the human equation | | | |
+| $paHV$ | | | |
+| $dV$ | | | |
+| $mV$ | | | |
+
+**Student prompt**
+
+In two or three sentences, explain why the human encounter term is $aHV$ but
+the vampire turning term is $paHV$. Why do these terms have different
+coefficients even though they arise from the same encounters?
+
+**Hint**
+
+Every encounter removes a human, but only some encounters produce a new
+vampire.
+
+**Deliverable**
+
+A completed table and a short explanation of the difference between removal
+of humans and production of vampires.
+
+# Task 2: Create parameters, initial conditions, and output times
+
+`deSolve::ode()` needs:
+
+1. a named vector of initial state values;
+2. a vector of times where output should be returned;
+3. a derivative function;
+4. a named vector of parameters.
+
+The names are important. They let us retrieve values safely inside the model
+function and become column names in the result.
+
+The following setup is complete. Run it and inspect each object.
+
+```{r}
+#| label: model-inputs
+
+buffy_parameters <- c(
+  human_growth_rate = 0.10,
+  carrying_capacity = 90000,
+  encounter_rate = 1 / 300,
+  turning_probability = 1 / 240,
+  slaying_rate = 2 / 3,
+  hellmouth_rate = 0.075
+)
+
+buffy_initial_state <- c(
+  humans = 38500,
+  vampires = 35
+)
+
+buffy_times <- seq(
+  from = 0,
+  to = 100,
+  by = 0.1
+)
+
+buffy_parameters
+buffy_initial_state
+head(buffy_times)
+tail(buffy_times)
+```
+
+**Student prompt**
+
+Answer the following questions.
+
+1. How many output rows should the final solution contain?
+2. What does `by = 0.1` mean in years? Approximately how many days is this?
+3. Does `by = 0.1` force the numerical solver to use steps of exactly 0.1
+   years internally?
+
+**Hint**
+
+The `times` vector specifies where you want `deSolve` to report results.
+Adaptive solvers may take additional internal steps between those times.
+
+**Deliverable**
+
+Three brief answers. Use R to calculate the expected number of rows and the
+approximate number of days in 0.1 years.
+
+# Task 3: Write the derivative function
+
+A `deSolve` derivative function has this structure:
+
+```r
+function(time, state, parameters) {
+  # Unpack the state and parameters.
+  # Calculate all derivatives.
+  # Return the derivatives inside a list.
+}
+```
+
+The order of the arguments matters. Even if your equations do not explicitly
+use `time`, the first argument must still be present.
+
+Complete the two derivative lines marked `TODO` below. The helper quantities
+are written separately so that each process can be checked and interpreted.
+
+```{r}
+#| label: buffy-derivative
+
+buffy_ode <- function(time, state, parameters) {
+  # State variables
+  H <- state[["humans"]]
+  V <- state[["vampires"]]
+
+  # Parameters
+  r <- parameters[["human_growth_rate"]]
+  K <- parameters[["carrying_capacity"]]
+  a <- parameters[["encounter_rate"]]
+  p <- parameters[["turning_probability"]]
+  d <- parameters[["slaying_rate"]]
+  m <- parameters[["hellmouth_rate"]]
+
+  # Individual flows
+  human_logistic_growth <- r * H * (1 - H / K)
+  human_encounter_loss <- a * H * V
+  vampire_turning <- p * human_encounter_loss
+  vampire_slaying <- d * V
+  vampire_hellmouth_recruitment <- m * V
+
+  # TODO: replace NA_real_ with the correct net rates of change.
+  d_humans <- NA_real_
+  d_vampires <- NA_real_
+
+  list(
+    c(
+      humans = d_humans,
+      vampires = d_vampires
+    ),
+    human_logistic_growth = human_logistic_growth,
+    human_encounter_loss = human_encounter_loss,
+    vampire_turning = vampire_turning,
+    vampire_slaying = vampire_slaying,
+    vampire_hellmouth_recruitment = vampire_hellmouth_recruitment
+  )
+}
+```
+
+::: {.callout-tip}
+## Hint 1
+
+A derivative is the sum of all flows into a population minus all flows out of
+that population.
+:::
+
+::: {.callout-tip}
+## Hint 2
+
+For humans, logistic growth is an inflow and vampire encounters are an
+outflow. For vampires, turning and Hellmouth recruitment are inflows, while
+slaying is an outflow.
+:::
+
+::: {.callout-warning}
+Do not return only the two numbers. `deSolve` requires the derivatives to be
+inside a list: `list(c(humans = ..., vampires = ...))`. Additional named
+quantities may follow the derivative vector, as in the template above.
+:::
+
+**Deliverable**
+
+A derivative function with valid expressions for `d_humans` and
+`d_vampires`.
+
+# Task 4: Check the initial rates before solving
+
+It is good practice to test a derivative function at the initial state before
+asking a numerical solver to use it repeatedly.
+
+Complete Task 3 first. Then remove `#| eval: false`, run this chunk, and inspect
+the output.
+
+```{r}
+#| label: initial-rates
+#| eval: false
+
+initial_rates <- buffy_ode(
+  time = 0,
+  state = buffy_initial_state,
+  parameters = buffy_parameters
+)
+
+initial_rates[[1]]
+initial_rates[-1]
+```
+
+The first list element contains the derivatives. The remaining elements are
+auxiliary outputs describing individual flows.
+
+**Student prompt**
+
+1. Is the human population initially increasing or decreasing?
+2. Is the vampire population initially increasing or decreasing?
+3. Which two human flows are being balanced?
+4. Which three vampire flows are being balanced?
+5. Explain the units of `d_humans` and `d_vampires`.
+
+**Hint**
+
+A positive derivative means the population is increasing at that instant. A
+negative derivative means it is decreasing. The derivative is a rate, not the
+number that will necessarily be added or removed over a full year.
+
+**Deliverable**
+
+The initial derivatives and a short plain-language interpretation of their
+signs and units.
+
+# Task 5: Solve the initial-value problem with `ode()`
+
+After your derivative function works, solve the model.
+
+```{r}
+#| label: solve-model
+#| eval: false
+
+buffy_solution <- deSolve::ode(
+  y = buffy_initial_state,
+  times = buffy_times,
+  func = buffy_ode,
+  parms = buffy_parameters,
+  method = "lsoda"
+)
+
+buffy_df <- as.data.frame(buffy_solution)
+
+head(buffy_df)
+tail(buffy_df)
+```
+
+`ode()` returns a matrix-like object. The first column is `time`. State
+variables and auxiliary outputs occupy the remaining columns.
+
+**Student prompt**
+
+1. Confirm that the result contains columns named `time`, `humans`, and
+   `vampires`.
+2. Identify the columns corresponding to the auxiliary flows returned by the
+   derivative function.
+3. Compare the first row with `buffy_initial_state`. Why should they match?
+
+**Hint**
+
+Use `names(buffy_df)` and `nrow(buffy_df)` to inspect the result.
+
+**Deliverable**
+
+A successfully created `buffy_df` and three brief answers.
+
+# Task 6: Perform sanity checks
+
+A numerical result is not automatically a trustworthy result. Check the
+solution before interpreting it.
+
+Complete the missing checks below.
+
+```{r}
+#| label: sanity-checks
+#| eval: false
+
+# Check the structure.
+nrow(buffy_df)
+names(buffy_df)
+
+# Check that all state values are finite.
+all(is.finite(buffy_df$humans))
+all(is.finite(buffy_df$vampires))
+
+# TODO: check that both populations remain non-negative.
+all(buffy_df$humans >= 0)
+# Add the corresponding vampire check here.
+
+# Examine the simulated ranges.
+range(buffy_df$humans)
+range(buffy_df$vampires)
+
+# Find the row where the human population reaches its minimum.
+human_min_row <- which.min(buffy_df$humans)
+buffy_df[human_min_row, c("time", "humans", "vampires")]
+
+# TODO: find and print the row where vampires reach their minimum.
+```
+
+**Student prompt**
+
+1. Did either simulated population become negative or non-finite?
+2. When did the human population reach its minimum?
+3. When did the vampire population reach its minimum?
+4. Which population reached its minimum first?
+5. Does the ordering make sense for a predator-prey-like system? Explain.
+
+**Hint**
+
+Changes in one population affect the other with a delay. Do not expect the two
+minima to occur at the same time.
+
+**Deliverable**
+
+Completed checks and a short interpretation of the timing of the two minima.
+
+# Task 7: Plot both populations over time
+
+Humans and vampires are on very different numerical scales, so separate panels
+are clearer than placing both variables on one ordinary y-axis.
+
+Complete the second plot and add useful labels.
+
+```{r}
+#| label: time-series-plots
+#| eval: false
+#| fig-width: 8
+#| fig-height: 7
+
+old_par <- par(mfrow = c(2, 1), mar = c(4, 4, 2, 1))
+
+plot(
+  buffy_df$time,
+  buffy_df$humans,
+  type = "l",
+  lwd = 2,
+  xlab = "Time (years)",
+  ylab = "Humans",
+  main = "Human population"
+)
+
+# TODO: make a corresponding line plot for vampires.
+
+par(old_par)
+```
+
+**Student prompt**
+
+Describe the trajectories using complete sentences.
+
+- Which population declines first?
+- Do the populations appear to oscillate?
+- Does the size of the oscillation appear constant, increasing, or decreasing?
+- By year 100, does the system appear to have settled completely?
+
+**Hint**
+
+An oscillation may be damped: later peaks and valleys can be smaller than
+earlier peaks and valleys.
+
+**Deliverable**
+
+A two-panel time-series figure and a paragraph interpreting the main pattern.
+
+# Task 8: Create a phase-plane plot
+
+A phase-plane plot removes time from the axes and plots one state variable
+against another. Each point represents the state of the whole system at one
+time.
+
+```{r}
+#| label: phase-plane
+#| eval: false
+#| fig-width: 7
+#| fig-height: 6
+
+plot(
+  buffy_df$humans,
+  buffy_df$vampires,
+  type = "l",
+  lwd = 2,
+  xlab = "Humans",
+  ylab = "Vampires",
+  main = "Sunnydale phase plane"
+)
+
+# Mark the starting point.
+points(
+  buffy_df$humans[1],
+  buffy_df$vampires[1],
+  pch = 16,
+  cex = 1.2
+)
+
+# TODO: mark the final simulated point with a different plotting symbol.
+
+# Optional: add an arrow showing the direction near the beginning.
+# Choose two nearby rows, such as rows 1 and 15.
+arrows(
+  x0 = buffy_df$humans[1],
+  y0 = buffy_df$vampires[1],
+  x1 = buffy_df$humans[15],
+  y1 = buffy_df$vampires[15],
+  length = 0.10
+)
+```
+
+**Student prompt**
+
+1. Does the trajectory form a closed loop, move outward, or spiral inward?
+2. What would each of those three patterns imply about long-run behavior?
+3. How does the phase-plane plot support or revise your interpretation from
+   the time-series plots?
+
+**Hint**
+
+A trajectory that spirals inward suggests damped oscillation toward a steady
+state. A closed loop suggests persistent oscillation. A trajectory moving
+outward suggests instability.
+
+**Deliverable**
+
+A labeled phase-plane plot and a short interpretation.
+
+# Task 9: Find the steady states
+
+A steady state $(H^*,V^*)$ satisfies
+
+$$
+\frac{dH}{dt}=0
+\qquad\text{and}\qquad
+\frac{dV}{dt}=0.
+$$
+
+The equations can be factored as
+
+$$
+\frac{dH}{dt}
+=
+H\left[r\left(1-\frac{H}{K}\right)-aV\right]
+$$
+
+and
+
+$$
+\frac{dV}{dt}
+=
+V\left[paH-d+m\right].
+$$
+
+This immediately gives two boundary equilibria:
+
+- extinction of both populations: $(0,0)$;
+- humans at carrying capacity with no vampires: $(K,0)$.
+
+For a coexistence equilibrium, assume $H^*>0$ and $V^*>0$. Then the expressions
+inside both square brackets must equal zero.
+
+Complete the R code below using the factored equations.
+
+```{r}
+#| label: coexistence-equilibrium
+#| eval: false
+
+r <- buffy_parameters[["human_growth_rate"]]
+K <- buffy_parameters[["carrying_capacity"]]
+a <- buffy_parameters[["encounter_rate"]]
+p <- buffy_parameters[["turning_probability"]]
+d <- buffy_parameters[["slaying_rate"]]
+m <- buffy_parameters[["hellmouth_rate"]]
+
+# From paH* - d + m = 0:
+H_star <- NA_real_  # TODO
+
+# From r(1 - H*/K) - aV* = 0:
+V_star <- NA_real_  # TODO
+
+coexistence_equilibrium <- c(
+  humans = H_star,
+  vampires = V_star
+)
+
+coexistence_equilibrium
+```
+
+::: {.callout-tip}
+## Algebra hint
+
+Rearrange the vampire equation to isolate $H^*$. Then substitute that result
+into the human equation and isolate $V^*$.
+:::
+
+Check whether the derivatives are approximately zero at your proposed
+coexistence equilibrium.
+
+```{r}
+#| label: equilibrium-check
+#| eval: false
+
+equilibrium_rates <- buffy_ode(
+  time = 0,
+  state = coexistence_equilibrium,
+  parameters = buffy_parameters
+)
+
+equilibrium_rates[[1]]
+```
+
+Because calculations use floating-point arithmetic, values extremely close to
+zero are acceptable.
+
+**Student prompt**
+
+1. Report all three nonnegative equilibria.
+2. Which equilibrium appears relevant to the simulation beginning at
+   $(38{,}500,35)$?
+3. Compare the year-100 state with the coexistence equilibrium.
+4. Explain how to interpret a noninteger equilibrium vampire count.
+
+**Deliverable**
+
+The three equilibria, a numerical derivative check, and a short interpretation.
+
+# Task 10: Add the equilibrium to the figures
+
+Add horizontal reference lines for the coexistence equilibrium to the two
+time-series plots, and add the equilibrium point to the phase-plane plot.
+
+Template commands are shown below. Insert them in the appropriate plotting
+chunks rather than running them alone.
+
+```{r}
+#| eval: false
+
+# On the human time-series plot:
+abline(h = H_star, lty = 2)
+
+# On the vampire time-series plot:
+abline(h = V_star, lty = 2)
+
+# On the phase-plane plot:
+points(H_star, V_star, pch = 4, cex = 1.5, lwd = 2)
+```
+
+**Student prompt**
+
+Do the numerical trajectories cross the equilibrium values multiple times?
+Explain why crossing an equilibrium coordinate is not the same as the full
+system reaching equilibrium.
+
+**Hint**
+
+The system is at equilibrium only when **both** state variables simultaneously
+equal their equilibrium values and both derivatives are zero.
+
+**Deliverable**
+
+Revised figures with the coexistence equilibrium clearly marked.
+
+# Task 11: Extend the simulation
+
+One hundred years may not be long enough to see the limiting behavior clearly.
+Repeat the solution through year 500.
+
+```{r}
+#| label: long-simulation
+#| eval: false
+
+long_times <- seq(0, 500, by = 0.25)
+
+long_solution <- deSolve::ode(
+  y = buffy_initial_state,
+  times = long_times,
+  func = buffy_ode,
+  parms = buffy_parameters,
+  method = "lsoda"
+)
+
+long_df <- as.data.frame(long_solution)
+
+# TODO: plot humans and vampires through year 500.
+# TODO: compare the last row with coexistence_equilibrium.
+```
+
+A useful numerical comparison is the distance between the simulated state and
+the equilibrium:
+
+$$
+D(t)=\sqrt{[H(t)-H^*]^2+[V(t)-V^*]^2}.
+$$
+
+Because humans and vampires have different scales, this raw distance is mostly
+determined by the human difference. For a scale-adjusted comparison, use
+relative differences:
+
+$$
+D_{\mathrm{rel}}(t)
+=
+\sqrt{
+\left[\frac{H(t)-H^*}{H^*}\right]^2+
+\left[\frac{V(t)-V^*}{V^*}\right]^2
+}.
+$$
+
+Complete the calculation.
+
+```{r}
+#| label: equilibrium-distance
+#| eval: false
+
+long_df$relative_distance <- sqrt(
+  ((long_df$humans - H_star) / H_star)^2 +
+    # TODO: add the squared relative vampire difference.
+    0
+)
+
+plot(
+  long_df$time,
+  long_df$relative_distance,
+  type = "l",
+  log = "y",
+  xlab = "Time (years)",
+  ylab = "Relative distance from equilibrium",
+  main = "Approach to the coexistence equilibrium"
+)
+```
+
+**Student prompt**
+
+1. Does the distance from equilibrium generally decline?
+2. Why does it not necessarily decline smoothly at every time point?
+3. Based on the simulation, would you describe the coexistence equilibrium as
+   attracting or repelling nearby trajectories?
+
+**Deliverable**
+
+A long-run trajectory plot, a distance-to-equilibrium plot, and a short
+stability interpretation based on simulation.
+
+# Task 12: Investigate a stronger slaying intervention
+
+Now treat the slaying rate as an intervention parameter. Write a helper
+function that simulates the model for a supplied value of `slaying_rate`.
+
+Complete the missing lines.
+
+```{r}
+#| label: simulation-helper
+#| eval: false
+
+simulate_buffy <- function(slaying_rate, times = buffy_times) {
+  scenario_parameters <- buffy_parameters
+
+  # TODO: replace the slaying rate in scenario_parameters.
+  scenario_parameters[["slaying_rate"]] <- NA_real_
+
+  scenario_solution <- deSolve::ode(
+    y = buffy_initial_state,
+    times = times,
+    func = buffy_ode,
+    parms = scenario_parameters,
+    method = "lsoda"
+  )
+
+  scenario_df <- as.data.frame(scenario_solution)
+  scenario_df$slaying_rate <- slaying_rate
+  scenario_df
+}
+```
+
+Simulate several scenarios.
+
+```{r}
+#| label: intervention-scenarios
+#| eval: false
+
+slaying_scenarios <- c(
+  lower = 0.50,
+  original = 2 / 3,
+  higher = 0.90,
+  very_high = 1.35
+)
+
+scenario_results <- lapply(
+  slaying_scenarios,
+  simulate_buffy
+)
+
+names(scenario_results) <- names(slaying_scenarios)
+```
+
+Plot the vampire trajectory from each scenario on the same axes.
+
+```{r}
+#| label: intervention-plot
+#| eval: false
+#| fig-width: 8
+#| fig-height: 5
+
+plot(
+  scenario_results[[1]]$time,
+  scenario_results[[1]]$vampires,
+  type = "l",
+  lwd = 2,
+  ylim = range(vapply(
+    scenario_results,
+    function(x) range(x$vampires),
+    numeric(2)
+  )),
+  xlab = "Time (years)",
+  ylab = "Vampires",
+  main = "Vampire trajectories under different slaying rates"
+)
+
+# TODO: use a loop or lapply() to add the remaining trajectories with lines().
+# TODO: add a legend.
+```
+
+**Student prompt**
+
+1. How does increasing the slaying rate change the transient oscillations?
+2. Which tested values appear to permit long-run coexistence?
+3. Which tested values appear to drive vampires toward extinction?
+4. Does eliminating vampires necessarily minimize short-run human losses?
+   Explain what you see rather than assuming the answer.
+
+**Hint**
+
+The long-run condition for vampire growth can be studied from
+
+$$
+\frac{1}{V}\frac{dV}{dt}=paH-d+m.
+$$
+
+At the largest feasible human population, substitute $H=K$. Find the value of
+$d$ that makes this per-capita growth rate equal to zero.
+
+**Deliverable**
+
+A comparison plot and a paragraph explaining how the intervention changes both
+short-run and long-run behavior.
+
+# Optional challenge: Calculate the invasion threshold
+
+Suppose vampires are nearly absent and humans are near carrying capacity. The
+vampire population can invade only if its per-capita growth rate is positive:
+
+$$
+paK-d+m>0.
+$$
+
+Use R to calculate the critical slaying rate $d_{\mathrm{critical}}$ at which
+this expression equals zero.
+
+```{r}
+#| label: invasion-threshold
+#| eval: false
+
+d_critical <- NA_real_  # TODO
+
+d_critical
+```
+
+Then simulate values slightly below and slightly above this threshold. Because
+an ODE model treats $d$ as an instantaneous rate, a value greater than 1 per
+year is mathematically valid. It does **not** mean that more than 100% of the
+vampires are removed in one discrete annual event.
+
+**Optional deliverable**
+
+The critical value, two nearby simulations, and a one-paragraph explanation of
+why continuous-time rates are not restricted to the interval from 0 to 1.
+
+# Reflection questions
+
+Answer these after completing the simulation.
+
+1. Which model assumption seems least realistic or most consequential?
+2. What additional state variable would most improve the model?
+3. Which parameter would be hardest to estimate from real data?
+4. What observations would you need to distinguish vampire recruitment through
+   turning from vampire recruitment through the Hellmouth?
+5. Give one epidemiologic system that could be studied with a structurally
+   similar two-population ODE model.
+
+# Rendering this document to PDF with TinyTeX
+
+Quarto can render a `.qmd` file to PDF through LaTeX. TinyTeX is a compact TeX
+Live distribution and is the recommended option for most Quarto users.
+
+Install TinyTeX once from a terminal:
+
+```bash
+quarto install tinytex
+```
+
+Check that Quarto can see it:
+
+```bash
+quarto list tools
+```
+
+From the repository root, render this file to PDF with:
+
+```bash
+quarto render exercises/buffy-vampire-odes-desolve.qmd --to pdf
+```
+
+You can also use the **Render** menu in RStudio or Positron and choose PDF.
+If an older TinyTeX installation can no longer download LaTeX packages, update
+it with:
+
+```bash
+quarto update tinytex
+```
+
+An R-based alternative is:
+
+```r
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+Use either the Quarto installation route or the R route; you do not need to
+install TinyTeX twice.
+
+# Completion checklist
+
+Before considering the exercise complete, confirm that you have:
+
+- translated each model term into a population flow;
+- created named parameter and initial-state vectors;
+- completed and tested `buffy_ode()`;
+- solved the model with `deSolve::ode()`;
+- checked the result for finite and nonnegative state values;
+- produced human and vampire time-series plots;
+- produced and interpreted a phase-plane plot;
+- calculated and checked all nonnegative equilibria;
+- extended the simulation to investigate long-run behavior;
+- compared multiple slaying-rate interventions;
+- rendered your completed Quarto document successfully.
